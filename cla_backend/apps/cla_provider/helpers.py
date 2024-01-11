@@ -85,14 +85,11 @@ class ProviderAllocationHelper(object):
         @return: list
         """
 
+        if category.code == "education":
+            return self.get_valid_education_providers(category)
+
         if not self._providers_in_category:
             self._providers_in_category = ProviderAllocation.objects.filter(category=category, provider__active=True)
-
-        if category.code == "education":
-            self._providers_in_category = self._get_working_providers()
-            self._providers_in_category = self._remove_providers_above_allocation(
-                category, self._providers_in_category
-            )
 
         return self._providers_in_category
 
@@ -210,35 +207,69 @@ class ProviderAllocationHelper(object):
         # else everyone doesn't have any allocation so just pick randomly
         return self._get_random_provider(category)
 
-    def _get_working_providers(self):
+    @staticmethod
+    def _get_working_providers(category):
         """
-        Gets providers which are currently working today according to their
-        WorkingDays object. This is currently only used for Education providers.
+        Gets providers which are currently working today according to their WorkingDays object.
+
+        This is currently only used for Education providers.
         """
 
-        valid_education_providers = []
-        for provider in self._providers_in_category:
-            if provider.workingdays.is_provider_working_today():
-                valid_education_providers.append(provider)
-        return valid_education_providers
+        working_education_providers = []
 
-    def _remove_providers_above_allocation(self, category, provider_allocations):
+        for provider_allocation in ProviderAllocation.objects.filter(category=category).all():
+            if provider_allocation.is_working_today():
+                working_education_providers.append(provider_allocation)
+        return working_education_providers
+
+    def _get_providers_with_capacity(self, category):
         """
-        Takes in a list of ProviderAllocation objects and returns an
-        amended list with providers above their allocated contracted weighting removed.
+        Returns all ProviderAllocations below their current contracted capacity, as defined by ProviderAllocation.weighted_distribution
         """
         current_distribution = self.distribution.get_distribution(category, include_pre_allocations=True)
         total_current_cases = sum(current_distribution.values())
 
-        valid_providers = []
+        provider_allocations = ProviderAllocation.objects.filter(category=category).all()
+
+        provider_allocations_over_capacity = []
         for provider_id, provider_current_num_cases in current_distribution.iteritems():
             provider = Provider.objects.get(pk=provider_id)
-            provider_allocation = provider.providerallocation_set.filter(category=category)[0]
+            provider_allocation = provider.providerallocation_set.filter(category=category)[0]  # Providers are only allowed one ProviderAllocation per category
 
-            if provider_allocation.weighted_distribution < (provider_current_num_cases / total_current_cases):
-                # They have been allocated too many cases
-                if provider_allocation in provider_allocations:
-                    valid_providers.append(provider_allocation)
+            if provider_allocation.weighted_distribution < (provider_current_num_cases / total_current_cases):  # They are over their allocated capacity
+                provider_allocations_over_capacity.append(provider_allocation)
+
+        valid_provider_allocations = []
+        for provider_allocation in provider_allocations:
+            if provider_allocation not in provider_allocations_over_capacity:
+                valid_provider_allocations.append(provider_allocation)
+
+        return valid_provider_allocations
+
+    def get_valid_education_providers(self, education_category):
+        """Gets a list of education ProviderAllocations that
+        1) Are active
+        2) Are working today, as based off their WorkingDays model
+        3) Are under their contracted capacity, as determined by their weighted_distribution
+
+        Args:
+            education_category (LegalAid.category): The education LegalAid category
+
+        Returns:
+            List: Valid education provider allocations, as determined by the above rules.
+        """
+        _working_education_providers = self._get_working_providers(education_category)
+        _education_providers_with_capacity = self._get_providers_with_capacity(education_category)
+
+        _providers_in_category = ProviderAllocation.objects.filter(category=education_category, provider__active=True).all()
+
+        valid_providers = []
+        for provider_allocation in _providers_in_category:
+            if provider_allocation not in _working_education_providers:
+                continue
+            if provider_allocation not in _education_providers_with_capacity:
+                continue
+            valid_providers.append(provider_allocation)
 
         return valid_providers
 

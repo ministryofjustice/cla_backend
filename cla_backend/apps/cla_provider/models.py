@@ -132,12 +132,12 @@ class ProviderAllocation(TimeStampedModel):
 
         if not hasattr(self, 'workingdays'):
             return DEFAULT_WORKING_DAYS[weekday]
-        
+
         return self.workingdays.is_working_today()
 
     @property
     def working_days(self):
-        """Property containing a list of all the weekdays the provider allocation is working 
+        """Property containing a list of all the weekdays the provider allocation is working
 
         Returns:
             List[str]: A list of lower case weekday strings

@@ -16,6 +16,7 @@ from uuidfield import UUIDField
 from core.validators import validate_first_of_month
 from cla_common.constants import FEEDBACK_ISSUE
 from .signals import log_staff_created, log_staff_modified
+from .constants import DEFAULT_WORKING_DAYS
 
 
 def random_uuid_str():
@@ -53,20 +54,56 @@ class WorkingDays(models.Model):
         verbose_name = "Working Days"
         verbose_name_plural = "Working Days"
 
-    def is_provider_working_today(self):
+    def is_working_today(self):
+        """Function returns True or False if the provider is working today
+
+        Returns:
+            Boolean: Is the provider working today
+        """
         day_index = timezone.now().weekday()
         week = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+
         weekday = week[day_index]
-        return self.__getattribute__(weekday)
+
+        return self.is_working_on_day(weekday)
+
+    def is_working_on_day(self, day):
+        """Function takes in a day of the week as a string and returns if the provider works on said day
+
+        Args:
+            day (str): Day of the week as a string. E.g. "Monday"
+
+        Returns:
+            Boolean: Is the provider working on the given day, will return None if the day is invalid
+        """
+        week = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+        day = day.lower()
+        if day not in week:
+            return None
+
+        return self.__getattribute__(day)
+
+    @property
+    def working_days_list(self):
+        """Property containing a list of all the weekdays the provider allocation is working
+
+        Returns:
+            List[str]: A list of lower case weekday strings
+        """
+        week = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+
+        working_days = [day for day in week if self.is_working_on_day(day)]
+
+        return working_days
 
     provider_allocation = models.OneToOneField("ProviderAllocation", null=True)
-    monday = models.BooleanField(default=True)
-    tuesday = models.BooleanField(default=True)
-    wednesday = models.BooleanField(default=True)
-    thursday = models.BooleanField(default=True)
-    friday = models.BooleanField(default=True)
-    saturday = models.BooleanField(default=False)
-    sunday = models.BooleanField(default=False)
+    monday = models.BooleanField(default=DEFAULT_WORKING_DAYS['monday'])
+    tuesday = models.BooleanField(default=DEFAULT_WORKING_DAYS['tuesday'])
+    wednesday = models.BooleanField(default=DEFAULT_WORKING_DAYS['wednesday'])
+    thursday = models.BooleanField(default=DEFAULT_WORKING_DAYS['thursday'])
+    friday = models.BooleanField(default=DEFAULT_WORKING_DAYS['friday'])
+    saturday = models.BooleanField(default=DEFAULT_WORKING_DAYS['saturday'])
+    sunday = models.BooleanField(default=DEFAULT_WORKING_DAYS['sunday'])
 
 
 class ProviderAllocationManager(models.Manager):
@@ -82,19 +119,37 @@ class ProviderAllocation(TimeStampedModel):
     category = models.ForeignKey("legalaid.Category")
     weighted_distribution = models.FloatField()  # see XXXXXXXXXXXX
 
-    @property
     def is_working_today(self):
-        return self.workingdays.is_provider_working_today()
+        """Function returns True or False if the provider is working today, based on the WorkingDays model
+
+        Returns:
+            Boolean: Is the provider working today
+        """
+        day_index = timezone.now().weekday()
+        week = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+
+        weekday = week[day_index]
+
+        if not hasattr(self, 'workingdays'):
+            return DEFAULT_WORKING_DAYS[weekday]
+        
+        return self.workingdays.is_working_today()
 
     @property
     def working_days(self):
-        week = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+        """Property containing a list of all the weekdays the provider allocation is working 
 
-        working_days = []
-        for day in week:
-            if self.workingdays.__getattribute__(day):
-                working_days.append(day)
-        return working_days
+        Returns:
+            List[str]: A list of lower case weekday strings
+        """
+        if not hasattr(self, 'workingdays'):
+            working_day_list = []
+            for day, is_working in DEFAULT_WORKING_DAYS.iteritems():
+                if is_working:
+                    working_day_list.append(day)
+            return working_day_list
+
+        return self.workingdays.working_days_list
 
     objects = ProviderAllocationManager()
 

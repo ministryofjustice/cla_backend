@@ -1,4 +1,4 @@
-DEFAULT_WORKING_DAYS = {"monday": True, 
+DEFAULT_WORKING_DAYS = {"monday": True,
                         "tuesday": True,
                         "wednesday": True,
                         "thursday": True,

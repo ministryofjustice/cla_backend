@@ -3,6 +3,7 @@ import json
 import types
 
 import requests
+from dateutil.relativedelta import relativedelta
 from django.conf import settings
 from django.utils import timezone
 
@@ -440,8 +441,6 @@ class EligibilityChecker(object):
         """Translates CLA's CaseData to CFE-Civil request JSON"""
         if not submission_date:
             submission_date = datetime.date.today()
-        # default DOB to 'nothing special' 40 years old rules-wise
-        default_dob = str(datetime.date(submission_date.year - 40, submission_date.month, submission_date.day))
         request_data = {
             "assessment": {
                 "submission_date": str(submission_date),
@@ -461,7 +460,7 @@ class EligibilityChecker(object):
             request_data["assessment"].update(translate_under_18_passported(case_data.facts))
             request_data.update(translate_dependants(submission_date, case_data.facts))
             if hasattr(case_data, "partner") and case_data.facts.should_aggregate_partner:
-                request_data["partner"] = EligibilityChecker._translate_partner_data(case_data.partner, default_dob)
+                request_data["partner"] = EligibilityChecker._translate_partner_data(case_data.partner, submission_date)
 
         request_data.update(EligibilityChecker._translate_capital_data(case_data))
 
@@ -587,8 +586,12 @@ class EligibilityChecker(object):
             request_data["assessment"]["section_capital"] = "incomplete"
 
     @staticmethod
-    def _translate_partner_data(partner, default_dob):
-        request_data = {"partner": {"date_of_birth": default_dob}}
+    def _translate_partner_data(partner, submission_date):
+        # default DOB to 'nothing special' 40 years old rules-wise
+        # as all we have is you/partner over 60 - so we don't know or care
+        # how old the partner is
+        partner_dob = str(submission_date - relativedelta(years=40))
+        request_data = {"partner": {"date_of_birth": partner_dob}}
         if hasattr(partner, "savings"):
             request_data.update(translate_savings(partner.savings))
 

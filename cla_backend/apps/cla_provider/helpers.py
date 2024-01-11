@@ -14,6 +14,9 @@ from django.db.models import Count
 from govuk_notify.api import NotifyEmailOrchestrator
 from cla_provider.models import Provider, ProviderAllocation, OutOfHoursRota, ProviderPreAllocation
 from legalaid.models import Case
+import logging
+
+logger = logging.getLogger()
 
 
 class ProviderDistributionHelper(object):
@@ -222,29 +225,58 @@ class ProviderAllocationHelper(object):
                 working_education_providers.append(provider_allocation)
         return working_education_providers
 
-    def _get_providers_with_capacity(self, category):
-        """
-        Returns all ProviderAllocations below their current contracted capacity, as defined by ProviderAllocation.weighted_distribution
+    def is_provider_over_capacity(self, provider, category):
+        """Returns True or False depending on if the provider is over
+        their allocated capacity for a given category.
+
+        Args:
+            provider (cla_provider.Provider): A provider object
+            category (LegalAid.category): A Legal Aid category object
         """
         current_distribution = self.distribution.get_distribution(category, include_pre_allocations=True)
         total_current_cases = sum(current_distribution.values())
 
-        provider_allocations = ProviderAllocation.objects.filter(category=category).all()
+        provider_allocations = ProviderAllocation.objects.filter(category=category, provider=provider)
 
-        provider_allocations_over_capacity = []
-        for provider_id, provider_current_num_cases in current_distribution.iteritems():
-            provider = Provider.objects.get(pk=provider_id)
-            provider_allocation = provider.providerallocation_set.filter(category=category)[0]  # Providers are only allowed one ProviderAllocation per category
+        # There should be exactly 1 allocation for a given category
+        if provider_allocations is None or len(provider_allocations) == 0:
+            logger.error(
+                "{provider} does not have a {category} allocation".format(provider=provider, category=category)
+            )
+            return False
 
-            if provider_allocation.weighted_distribution < (provider_current_num_cases / total_current_cases):  # They are over their allocated capacity
-                provider_allocations_over_capacity.append(provider_allocation)
+        if len(provider_allocations) != 1:
+            logger.error("{provider} has multiple {category} allocations".format(provider=provider, category=category))
+            return False
 
-        valid_provider_allocations = []
+        if provider.id not in current_distribution.keys():
+            # The provider has not yet been assigned a case for this category
+            return False
+
+        provider_allocation = provider_allocations[0]
+
+        provider_current_num_cases = current_distribution[provider.id]
+        current_allocation = provider_current_num_cases / total_current_cases
+
+        if current_allocation > provider_allocation.weighted_distribution:
+            return True  # They are over their allocated capacity
+
+        return False
+
+    def get_providers_with_capacity(self, category):
+        """
+        Returns all ProviderAllocations below their current contracted capacity, as defined by ProviderAllocation.weighted_distribution
+        """
+
+        provider_allocations = ProviderAllocation.objects.filter(category=category)
+
+        providers_with_capacity = []
         for provider_allocation in provider_allocations:
-            if provider_allocation not in provider_allocations_over_capacity:
-                valid_provider_allocations.append(provider_allocation)
+            if self.is_provider_over_capacity(provider_allocation.provider, category):
+                continue
+            providers_with_capacity.append(provider_allocation)
 
-        return valid_provider_allocations
+        return providers_with_capacity
 
     def get_valid_education_providers(self, education_category):
         """Gets a list of education ProviderAllocations that
@@ -259,9 +291,11 @@ class ProviderAllocationHelper(object):
             List: Valid education provider allocations, as determined by the above rules.
         """
         _working_education_providers = self._get_working_providers(education_category)
-        _education_providers_with_capacity = self._get_providers_with_capacity(education_category)
+        _education_providers_with_capacity = self.get_providers_with_capacity(education_category)
 
-        _providers_in_category = ProviderAllocation.objects.filter(category=education_category, provider__active=True).all()
+        _providers_in_category = ProviderAllocation.objects.filter(
+            category=education_category, provider__active=True
+        ).all()
 
         valid_providers = []
         for provider_allocation in _providers_in_category:

@@ -392,7 +392,7 @@ class EligibilityChecker(object):
         return case_data.facts.on_nass_benefits and case_data.category == "immigration"
 
     def _do_cfe_civil_check(self):
-        # This doesn't appear to be called from anywhere, but keep it for compatibility
+        # This property is not used by clients, but we support it while it's in the API.
         # CFE doesn't know how to handle this scenario, so just code it here.
         if self.case_data.facts.has_passported_proceedings_letter:
             return ELIGIBILITY_STATES.YES, None, None

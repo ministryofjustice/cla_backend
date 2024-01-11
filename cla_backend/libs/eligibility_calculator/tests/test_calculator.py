@@ -883,7 +883,7 @@ class TestCalculator(CalculatorTestBase):
 
     def test_full_case(self):
         # yes it will be brittle, but let's have *one* complete case tested
-        case_data_dict = case_data_dict = {
+        case_data_dict = {
             "category": "family",
             "facts": {
                 "is_you_or_your_partner_over_60": False,

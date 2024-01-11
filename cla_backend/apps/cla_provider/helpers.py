@@ -88,7 +88,7 @@ class ProviderAllocationHelper(object):
         if not self._providers_in_category:
             self._providers_in_category = ProviderAllocation.objects.filter(category=category, provider__active=True)
 
-        if category.name == "Education":
+        if category.code == "education":
             self._providers_in_category = self._get_working_providers()
             self._providers_in_category = self._remove_providers_above_allocation(
                 category, self._providers_in_category

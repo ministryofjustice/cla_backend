@@ -7,6 +7,7 @@ from rest_framework.response import Response
 
 from eligibility_calculator.calculator import EligibilityChecker
 from eligibility_calculator.models import CaseData
+from cla_common.constants import ELIGIBILITY_STATES
 
 
 @api_view(["POST"])
@@ -18,7 +19,7 @@ def eligibility_batch_check(request):
 def pass_fail(scenario):
     case_data = CaseData(**to_case_data(scenario))
     scenario = EligibilityChecker(case_data)
-    return "P" if scenario.is_eligible() else "F"
+    return "P" if scenario.is_eligible() == ELIGIBILITY_STATES.YES else "F"
 
 
 def to_case_data(scenario):

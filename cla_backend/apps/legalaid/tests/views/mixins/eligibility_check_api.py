@@ -1180,7 +1180,7 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
 
         state, ec, reasons = self.resource.get_eligibility_state()
         self.assertEqual(state, ELIGIBILITY_STATES.UNKNOWN)
-        data = {"under_18_passported": True}
+        data = {"is_you_under_18": True, "under_18_passported": True}
         response = self.client.patch(
             self.detail_url, data=data, format="json", HTTP_AUTHORIZATION=self.get_http_authorization()
         )

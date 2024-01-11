@@ -369,21 +369,11 @@ class EligibilityChecker(object):
                     % (filter_out_zeros(cfe_calcs), filter_out_zeros(self.calcs))
                 )
 
-        # Gradual cut-over from using legacy_result to cfe_result
-        if (
-            self._is_non_means_tested(self.case_data)
-            or self._without_partner(self.case_data)
-            or self._with_partner(self.case_data)
-            or self._under_18_passported(self.case_data)
-        ):
-            # Calcs updated from CFE's result
-            self.calcs = cfe_calcs
+        # Calcs updated from CFE's result
+        self.calcs = cfe_calcs
 
-            logger.info("Eligibility result (using CFE): %s", cfe_result)
-            return cfe_result
-        else:
-            logger.info("Eligibility result (using legacy): %s", legacy_result)
-            return legacy_result
+        logger.info("Eligibility result (using CFE): %s", cfe_result)
+        return cfe_result
 
     @staticmethod
     def _pounds_to_pence(value):
@@ -409,6 +399,11 @@ class EligibilityChecker(object):
         return case_data.facts.on_nass_benefits and case_data.category == "immigration"
 
     def _do_cfe_civil_check(self):
+        # This doesn't appear to be called from anywhere, but keep it for compatibility
+        # CFE doesn't know how to handle this scenario, so just code it here.
+        if self.case_data.facts.has_passported_proceedings_letter:
+            return ELIGIBILITY_STATES.YES, None, None
+
         if not EligibilityChecker._is_data_complete_enough_to_call_cfe(self.case_data):
             # data is so incomplete that we can't even call CFE sensibly
             result = ELIGIBILITY_STATES.UNKNOWN

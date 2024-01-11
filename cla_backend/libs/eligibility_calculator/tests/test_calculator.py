@@ -1729,66 +1729,6 @@ class IsEligibleTestCase(unittest.TestCase):
         return ec, mocked_on_passported_benefits, mocked_on_nass_benefits
 
     @log_only_critical
-    def dont_test_is_disposable_capital_not_eligible(self):
-        """
-        TEST: with mocked is_disposable_capital_eligible = False
-        is_gross_income_eligible, is_disposable_income are not called
-        asserts is_eligible = False
-        """
-        ec, mocked_on_passported_benefits, mocked_on_nass_benefits = self.create_a_dummy_citizen(
-            is_passported=False, is_nass_benefits=False, is_disposable_capital=False
-        )
-
-        self.assertEqual("no", ec.is_eligible())
-        ec.is_disposable_capital_eligible.assert_called_once_with()
-        self.assertFalse(ec.is_gross_income_eligible.called)
-        self.assertFalse(ec.is_disposable_income_eligible.called)
-
-    @log_only_critical
-    def dont_test_is_gross_income_not_eligible(self):
-        """
-        TEST: with mocked:
-            is_gross_income_eligible = False,
-            is_disposable_capital = True
-
-        is_disposable_income is not called
-        asserts is_eligible = False
-        """
-
-        ec, mocked_on_passported_benefits, mocked_on_nass_benefits = self.create_a_dummy_citizen(
-            is_passported=False, is_nass_benefits=False, is_gross_income=False, is_disposable_capital=True
-        )
-
-        self.assertFalse(mocked_on_passported_benefits.called)
-        self.assertEqual("no", ec.is_eligible())
-        ec.is_disposable_capital_eligible.assert_called_once_with()
-        ec.is_gross_income_eligible.assert_called_once_with()
-        self.assertFalse(ec.is_disposable_income_eligible.called)
-
-    @log_only_critical
-    def dont_test_is_disposable_income_not_eligible(self):
-        """
-        TEST: with mocked:
-            is_gross_income_eligible = True,
-            is_disposable_capital = True,
-            is_disposable_income = False
-        asserts is_eligible = False
-        """
-        ec, mocked_on_passported_benefits, mocked_on_nass_benefits = self.create_a_dummy_citizen(
-            is_passported=False,
-            is_nass_benefits=False,
-            is_disposable_income=False,
-            is_gross_income=True,
-            is_disposable_capital=True,
-        )
-
-        self.assertFalse(mocked_on_passported_benefits.called)
-        self.assertEqual("no", ec.is_eligible())
-        ec.is_disposable_capital_eligible.assert_called_once_with()
-        ec.is_gross_income_eligible.assert_called_once_with()
-        ec.is_disposable_capital_eligible.assert_called_once_with()
-
-    @log_only_critical
     def test_is_disposable_income_eligible(self):
         """
         TEST: with mocked:
@@ -1822,45 +1762,6 @@ class IsEligibleTestCase(unittest.TestCase):
         )
 
         self.assertTrue(ec.is_eligible())
-        self.assertTrue(mocked_on_nass_benefits.called)
-
-    @log_only_critical
-    def dont_test_nass_benefit_is_not_eligible_and_category_isnt_immigration_and_disposable_capital_is_above_limit(
-        self,
-    ):
-        """
-        TEST: If a citizen is not in the category immigration or considered in any category in this instance,
-        if they have not qualified for NASS benefits and their disposable capital is above the set limit then they will
-        not qualify for legal aid.
-        """
-        ec, mocked_on_passported_benefits, mocked_on_nass_benefits = self.create_a_dummy_citizen(
-            is_category="not_immigration", is_passported=False, is_nass_benefits=False
-        )
-
-        ec.is_disposable_capital_eligible = mock.MagicMock(return_value=False)
-        self.assertEqual("no", ec.is_eligible())
-        self.assertTrue(mocked_on_nass_benefits.called)
-
-    @log_only_critical
-    def dont_test_nass_benefit_is_not_eligible_and_category_isnt_immigration_and_disposable_income_is_above_limit(
-        self,
-    ):
-        """
-        TEST:  If a citizen is not in the category immigration or considered in any category in this instance,
-        if they have not qualified for NASS benefits and their disposable income is above the set limit then they will
-        not qualify for legal aid.
-        """
-        ec, mocked_on_passported_benefits, mocked_on_nass_benefits = self.create_a_dummy_citizen(
-            is_category="not_immigration",
-            is_passported=False,
-            is_nass_benefits=False,
-            is_disposable_capital=True,
-            is_gross_income=True,
-            is_disposable_income=False,
-        )
-
-        self.assertEqual("no", ec.is_eligible())
-        self.assertTrue(ec.is_gross_income_eligible.called)
         self.assertTrue(mocked_on_nass_benefits.called)
 
 

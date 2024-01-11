@@ -464,7 +464,7 @@ SESSION_SECURITY_PASSIVE_URLS = []
 EMAIL_ORCHESTRATOR_URL = os.environ.get("EMAIL_ORCHESTRATOR_URL")
 
 CFE_URL = (
-    os.environ.get("CFE_HOST", "https://main-cfe-civil-uat.cloud-platform.service.justice.gov.uk") + "/v6/assessments"
+    os.environ.get("CFE_HOST", "https://cfe-civil-staging.cloud-platform.service.justice.gov.uk") + "/v6/assessments"
 )
 
 # .local.py overrides all the common settings.

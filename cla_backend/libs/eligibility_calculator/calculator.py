@@ -381,7 +381,7 @@ class EligibilityChecker(object):
 
             return cfe_result, cfe_response.is_gross_eligible, cfe_response.is_disposable_eligible, cfe_response.is_capital_eligible
         else:
-            return cfe_result, True, True, True
+            return cfe_result, None, None, None
 
     @staticmethod
     def _pounds_to_pence(value):

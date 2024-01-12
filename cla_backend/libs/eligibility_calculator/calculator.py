@@ -363,9 +363,9 @@ class EligibilityChecker(object):
                 return dict((k, v) for k, v in dict_.iteritems() if k in keys)
 
             if cfe_result != legacy_result:
-                logger.error("CFE and legacy_check() results disagree! %s %s" % (cfe_result, legacy_result))
+                logger.warn("CFE and legacy_check() results disagree! %s %s" % (cfe_result, legacy_result))
             if filter_to_keys(cfe_calcs, self.calcs) != self.calcs:
-                logger.error(
+                logger.warn(
                     "CFE and legacy_check() calcs disagree!\nCFE:    %s\nLegacy: %s"
                     % (filter_out_zeros(cfe_calcs), filter_out_zeros(self.calcs))
                 )

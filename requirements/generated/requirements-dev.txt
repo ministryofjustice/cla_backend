@@ -320,3 +320,4 @@ zipp==1.2.0
 # The following packages are considered to be unsafe in a requirements file:
 # pip
 # setuptools
+urllib3>=1.26.18 # not directly required, pinned by Snyk to avoid a vulnerability

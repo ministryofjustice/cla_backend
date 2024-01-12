@@ -46,7 +46,7 @@ ingress:
     name: ~
     weight: ~
   whitelist:
-    # MoJ
+    # MoJ Digital Wifi & Digital VPN
     - 81.134.202.29/32
     # MoJ/LAA
     - 52.17.239.55/32
@@ -81,6 +81,11 @@ ingress:
     - 185.91.131.4/32
     # CHS
     - 52.210.114.89/32
+    # GlobalProtect VPN (Digital Mac)
+    - 18.169.147.172/32
+    - 35.176.93.186/32
+    - 18.130.148.126/32
+    - 35.176.148.126/32
 
 localPostgres:
   enabled: false

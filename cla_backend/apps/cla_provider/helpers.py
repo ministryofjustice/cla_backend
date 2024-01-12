@@ -12,7 +12,13 @@ from django.conf import settings
 from django.db.models import Count
 
 from govuk_notify.api import NotifyEmailOrchestrator
-from cla_provider.models import Provider, ProviderAllocation, OutOfHoursRota, ProviderPreAllocation
+from cla_provider.models import (
+    Provider,
+    ProviderAllocation,
+    OutOfHoursRota,
+    ProviderPreAllocation,
+    get_current_day_as_string,
+)
 from legalaid.models import Case
 import logging
 
@@ -88,8 +94,8 @@ class ProviderAllocationHelper(object):
         @return: list
         """
 
-        if category.code == "education":
-            return self.get_valid_education_providers(category)
+        # if category.code == "education":
+        #    return self.get_valid_education_providers(category)
 
         if not self._providers_in_category:
             self._providers_in_category = ProviderAllocation.objects.filter(category=category, provider__active=True)
@@ -210,8 +216,8 @@ class ProviderAllocationHelper(object):
         # else everyone doesn't have any allocation so just pick randomly
         return self._get_random_provider(category)
 
-    def is_provider_over_capacity(self, provider_allocation):
-        """Returns True or False depending on if the provider is over
+    def is_provider_under_capacity(self, provider_allocation):
+        """Returns True or False depending on if the provider is under
         their allocated capacity for a given category.
 
         Args:
@@ -223,15 +229,15 @@ class ProviderAllocationHelper(object):
 
         if provider_allocation.provider.id not in current_distribution.keys():
             # The provider has not yet been assigned a case for this category
-            return False
+            return True
 
         provider_current_num_cases = current_distribution[provider_allocation.provider.id]
         current_allocation = provider_current_num_cases / total_current_cases
 
         if current_allocation > provider_allocation.weighted_distribution:
-            return True  # They are over their allocated capacity
+            return False  # They are over their allocated capacity
 
-        return False
+        return True
 
     def get_valid_education_providers(self, education_category):
         """Gets a list of education ProviderAllocations that
@@ -249,12 +255,13 @@ class ProviderAllocationHelper(object):
         provider_allocations = ProviderAllocation.objects.filter(
             category=education_category, provider__active=True
         ).all()
+        logger.log(700, provider_allocations)
+        provider_allocations = filter(ProviderAllocation.is_working_today, provider_allocations)
+        logger.log(700, provider_allocations)
 
-        provider_allocations = filter(ProviderAllocation.is_provider_working_today, provider_allocations)
-
-        # TODO: If today is a Thursday
-        provider_allocations = filter(self.is_provider_over_capacity, provider_allocations)
-
+        if get_current_day_as_string() == "thursday":
+            provider_allocations = filter(self.is_provider_under_capacity, provider_allocations)
+        logger.log(700, provider_allocations)
         return provider_allocations
 
     def get_suggested_provider(self, category):

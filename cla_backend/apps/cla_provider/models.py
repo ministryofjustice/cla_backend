@@ -17,6 +17,7 @@ from core.validators import validate_first_of_month
 from cla_common.constants import FEEDBACK_ISSUE
 from .signals import log_staff_created, log_staff_modified
 from .constants import DEFAULT_WORKING_DAYS
+from datetime import datetime
 
 
 def random_uuid_str():
@@ -60,12 +61,9 @@ class WorkingDays(models.Model):
         Returns:
             Boolean: Is the provider working today
         """
-        day_index = timezone.now().weekday()
-        week = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+        current_day = get_current_day_as_string()
 
-        weekday = week[day_index]
-
-        return self.is_working_on_day(weekday)
+        return self.is_working_on_day(current_day)
 
     def is_working_on_day(self, day):
         """Function takes in a day of the week as a string and returns if the provider works on said day
@@ -97,13 +95,22 @@ class WorkingDays(models.Model):
         return working_days
 
     provider_allocation = models.OneToOneField("ProviderAllocation")
-    monday = models.BooleanField(default=DEFAULT_WORKING_DAYS['monday'])
-    tuesday = models.BooleanField(default=DEFAULT_WORKING_DAYS['tuesday'])
-    wednesday = models.BooleanField(default=DEFAULT_WORKING_DAYS['wednesday'])
-    thursday = models.BooleanField(default=DEFAULT_WORKING_DAYS['thursday'])
-    friday = models.BooleanField(default=DEFAULT_WORKING_DAYS['friday'])
-    saturday = models.BooleanField(default=DEFAULT_WORKING_DAYS['saturday'])
-    sunday = models.BooleanField(default=DEFAULT_WORKING_DAYS['sunday'])
+    monday = models.BooleanField(default=DEFAULT_WORKING_DAYS["monday"])
+    tuesday = models.BooleanField(default=DEFAULT_WORKING_DAYS["tuesday"])
+    wednesday = models.BooleanField(default=DEFAULT_WORKING_DAYS["wednesday"])
+    thursday = models.BooleanField(default=DEFAULT_WORKING_DAYS["thursday"])
+    friday = models.BooleanField(default=DEFAULT_WORKING_DAYS["friday"])
+    saturday = models.BooleanField(default=DEFAULT_WORKING_DAYS["saturday"])
+    sunday = models.BooleanField(default=DEFAULT_WORKING_DAYS["sunday"])
+
+
+def get_current_day_as_string():
+    """ Returns the current day of the week as a lower case string.
+    """
+    week = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+    day_index = datetime.now().weekday()
+
+    return week[day_index]
 
 
 class ProviderAllocationManager(models.Manager):
@@ -125,13 +132,10 @@ class ProviderAllocation(TimeStampedModel):
         Returns:
             Boolean: Is the provider working today
         """
-        day_index = timezone.now().weekday()
-        week = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+        current_day = get_current_day_as_string()
 
-        weekday = week[day_index]
-
-        if not hasattr(self, 'workingdays'):
-            return DEFAULT_WORKING_DAYS[weekday]
+        if not hasattr(self, "workingdays"):
+            return DEFAULT_WORKING_DAYS[current_day]
 
         return self.workingdays.is_working_today()
 
@@ -142,7 +146,7 @@ class ProviderAllocation(TimeStampedModel):
         Returns:
             List[str]: A list of lower case weekday strings
         """
-        if not hasattr(self, 'workingdays'):
+        if not hasattr(self, "workingdays"):
             working_day_list = []
             for day, is_working in DEFAULT_WORKING_DAYS.iteritems():
                 if is_working:

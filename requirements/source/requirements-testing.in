@@ -7,3 +7,4 @@ mock==1.0.1
 model-mommy==1.2.4
 unittest-xml-reporting==2.5.1
 https://github.com/HassenPy/django-pdb/archive/refs/tags/0.3.2.tar.gz
+vcrpy==3.0.0

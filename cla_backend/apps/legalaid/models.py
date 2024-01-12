@@ -429,18 +429,14 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin):
         ec = EligibilityChecker(case_data)
         eligibility_state, is_gross_income_eligible, is_disposable_income_eligible, is_disposable_capital_eligible = ec.is_eligible_with_reasons()
 
+        reasons = []
         if eligibility_state == ELIGIBILITY_STATES.NO:
-            reasons = []
-
-            def add_reason(boolean, reason):
-                if not boolean:
-                    reasons.append(reason)
-
-            add_reason(is_disposable_capital_eligible, ELIGIBILITY_REASONS.DISPOSABLE_CAPITAL)
-            add_reason(is_gross_income_eligible, ELIGIBILITY_REASONS.GROSS_INCOME)
-            add_reason(is_disposable_income_eligible, ELIGIBILITY_REASONS.DISPOSABLE_INCOME)
-        else:
-            reasons = []
+            if is_disposable_capital_eligible is False:
+                reasons.append(ELIGIBILITY_REASONS.DISPOSABLE_CAPITAL)
+            if is_gross_income_eligible is False:
+                reasons.append(ELIGIBILITY_REASONS.GROSS_INCOME)
+            if is_disposable_income_eligible is False:
+                reasons.append(ELIGIBILITY_REASONS.DISPOSABLE_INCOME)
         return eligibility_state, ec, reasons
 
     def update_state(self):

@@ -18,20 +18,22 @@ class CfeResponse(object):
     def gross_upper_threshold(self):
         return self._result_summary["gross_income"]["proceeding_types"][0]["upper_threshold"]
 
+    # The 'is_xxx_eligible checks are actually looking for reasons of ineligibility
+    # hence we check for not 'ineligible' rather than the other way round
     @property
     def is_gross_eligible(self):
         result = self._result_summary["gross_income"]["proceeding_types"][0]
-        return result["result"] in ["eligible", "not_calculated"]
+        return result["result"] != "ineligible"
 
     @property
     def is_disposable_eligible(self):
         result = self._result_summary["disposable_income"]["proceeding_types"][0]
-        return result["result"] in ["eligible", "not_calculated"]
+        return result["result"] != "ineligible"
 
     @property
     def is_capital_eligible(self):
         result = self._result_summary["capital"]["proceeding_types"][0]
-        return result["result"] in ["eligible", "not_calculated"]
+        return result["result"] != "ineligible"
 
     def applicant_details(self):
         return self._cfe_data["assessment"]["applicant"]

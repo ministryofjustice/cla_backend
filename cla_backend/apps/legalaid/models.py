@@ -22,7 +22,6 @@ from core.cloning import clone_model, CloneModelMixin
 
 from eligibility_calculator.models import CaseData
 from eligibility_calculator.calculator import EligibilityChecker
-from eligibility_calculator.exceptions import PropertyExpectedException
 
 from diagnosis.models import DiagnosisTraversal
 
@@ -428,30 +427,21 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin):
         logger.debug('CaseData %s' % json.dumps(case_data_dict, indent=4, sort_keys=True))
         logger.debug('CaseData is missing: %s' % json.dumps(case_data_dict_missing, indent=4, sort_keys=True))
         ec = EligibilityChecker(case_data)
-        eligibility_state = ec.is_eligible()
+        eligibility_state, is_gross_income_eligible, is_disposable_income_eligible, is_disposable_capital_eligible = ec.is_eligible_with_reasons()
 
         if eligibility_state == ELIGIBILITY_STATES.NO:
-            reasons = self.get_ineligible_reason(ec)
+            reasons = []
+
+            def add_reason(boolean, reason):
+                if not boolean:
+                    reasons.append(reason)
+
+            add_reason(is_disposable_capital_eligible, ELIGIBILITY_REASONS.DISPOSABLE_CAPITAL)
+            add_reason(is_gross_income_eligible, ELIGIBILITY_REASONS.GROSS_INCOME)
+            add_reason(is_disposable_income_eligible, ELIGIBILITY_REASONS.DISPOSABLE_INCOME)
         else:
             reasons = []
         return eligibility_state, ec, reasons
-
-    def get_ineligible_reason(self, ec=None):
-        ec = ec or EligibilityChecker(self.to_case_data())
-        reasons = []
-
-        def add_reason(meth, reason):
-            try:
-                if not meth():
-                    reasons.append(reason)
-            except PropertyExpectedException:
-                pass
-
-        add_reason(ec.is_disposable_capital_eligible, ELIGIBILITY_REASONS.DISPOSABLE_CAPITAL)
-        add_reason(ec.is_gross_income_eligible, ELIGIBILITY_REASONS.GROSS_INCOME)
-        add_reason(ec.is_disposable_income_eligible, ELIGIBILITY_REASONS.DISPOSABLE_INCOME)
-
-        return reasons
 
     def update_state(self):
         self.state, checker, reasons = self.get_eligibility_state()

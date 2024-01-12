@@ -350,8 +350,17 @@ class EligibilityChecker(object):
         return self.disposable_capital_assets <= limit
 
     def is_eligible(self):
+        is_eligible, _, _, _ = self.is_eligible_with_reasons()
+        return is_eligible
+
+    def is_eligible_with_reasons(self):
         cfe_result, cfe_calcs, cfe_response = self._do_cfe_civil_check()
         legacy_result = self._legacy_check()
+
+        # Calcs updated from CFE's result
+        self.calcs = cfe_calcs
+
+        logger.info("Eligibility result (using CFE): %s", cfe_result)
 
         # Compare CFE and Legacy responses. To delete in LEP-457
         if cfe_response:
@@ -370,11 +379,9 @@ class EligibilityChecker(object):
                     % (filter_out_zeros(cfe_calcs), filter_out_zeros(self.calcs))
                 )
 
-        # Calcs updated from CFE's result
-        self.calcs = cfe_calcs
-
-        logger.info("Eligibility result (using CFE): %s", cfe_result)
-        return cfe_result
+            return cfe_result, cfe_response.is_gross_eligible, cfe_response.is_disposable_eligible, cfe_response.is_capital_eligible
+        else:
+            return cfe_result, True, True, True
 
     @staticmethod
     def _pounds_to_pence(value):

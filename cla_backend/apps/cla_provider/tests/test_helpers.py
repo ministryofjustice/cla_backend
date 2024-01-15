@@ -13,7 +13,6 @@ from legalaid.models import Case
 from core.tests.mommy_utils import make_recipe
 
 from cla_provider.helpers import ProviderAllocationHelper, ProviderDistributionHelper
-from freezegun import freeze_time
 
 
 class ProviderAllocationHelperTestCase(TestCase):
@@ -471,44 +470,44 @@ class ProviderAllocationHelperTestCase(TestCase):
 
         self.assertEqual(provider1.case_set.count(), provider2.case_set.count())
 
-    def test_get_working_providers_education(self):
-        category = make_recipe("legalaid.category", code="education")
 
-        provider1 = make_recipe("cla_provider.provider")
-        provider2 = make_recipe("cla_provider.provider")
+class TestIsProviderUnderCapacity(TestCase):
+    def setUp(self):
+        self.helper = ProviderAllocationHelper()
+        self.provider = make_recipe("cla_provider.provider", active=True, id=1)
 
-        provider_allocation_1 = make_recipe("cla_provider.provider_allocation", provider=provider1, category=category)
-        provider_allocation_2 = make_recipe("cla_provider.provider_allocation", provider=provider2, category=category)
+    test_case_0 = {2: 1}
 
-        make_recipe("cla_provider.working_days", monday=True, tuesday=True, wednesday=False, thursday=False, friday=True, saturday=False, sunday=False, provider_allocation=provider_allocation_1)
-        make_recipe("cla_provider.working_days", monday=True, tuesday=False, wednesday=False, thursday=True, friday=False, saturday=True, sunday=False, provider_allocation=provider_allocation_2)
+    @mock.patch("cla_provider.helpers.ProviderDistributionHelper.get_distribution", return_value=test_case_0)
+    def test_no_current_allocation(self, _):
+        self.provider_allocation = make_recipe(
+            "cla_provider.provider_allocation", weighted_distribution=1, provider=self.provider
+        )
+        assert self.helper.is_provider_under_capacity(self.provider_allocation) is True
 
-        helper = ProviderAllocationHelper()
+    test_case_1 = {1: 1, 2: 1}
 
-        with freeze_time("2024-01-08"):  # Monday the 8th of January
-            assert helper._get_working_providers(category) == [provider_allocation_1, provider_allocation_2]
+    @mock.patch("cla_provider.helpers.ProviderDistributionHelper.get_distribution", return_value=test_case_1)
+    def test_at_full_capacity(self, _):
+        provider_allocation = make_recipe(
+            "cla_provider.provider_allocation", weighted_distribution=0.5, provider=self.provider
+        )
+        assert self.helper.is_provider_under_capacity(provider_allocation) is False
 
-        with freeze_time("2024-01-09"):  # Tuesday the 8th of January
-            assert helper._get_working_providers(category) == [provider_allocation_1]
+    test_case_2 = {1: 5, 2: 2}
 
-        with freeze_time("2024-01-10"):  # Wednesday the 9th of January
-            assert helper._get_working_providers(category) == []
+    @mock.patch("cla_provider.helpers.ProviderDistributionHelper.get_distribution", return_value=test_case_2)
+    def test_above_capacity(self, _):
+        provider_allocation = make_recipe(
+            "cla_provider.provider_allocation", weighted_distribution=0.5, provider=self.provider
+        )
+        assert self.helper.is_provider_under_capacity(provider_allocation) is False
 
-        with freeze_time("2024-01-11"):  # Thursday the 10th of January
-            assert helper._get_working_providers(category) == [provider_allocation_2]
+    test_case_3 = {1: 2, 2: 5}
 
-    def test_get_providers_with_capacity(self):
-        category = make_recipe("legalaid.category", code="education")
-
-        provider1 = make_recipe("cla_provider.provider")
-        provider2 = make_recipe("cla_provider.provider")
-
-        provider_allocation_1 = make_recipe("cla_provider.provider_allocation", provider=provider1, category=category)
-        provider_allocation_2 = make_recipe("cla_provider.provider_allocation", provider=provider2, category=category)
-
-        make_recipe("cla_provider.working_days", monday=True, tuesday=True, wednesday=False, thursday=False, friday=True, saturday=False, sunday=False, provider_allocation=provider_allocation_1)
-        make_recipe("cla_provider.working_days", monday=True, tuesday=False, wednesday=False, thursday=True, friday=False, saturday=True, sunday=False, provider_allocation=provider_allocation_2)
-
-        helper = ProviderAllocationHelper()
-
-        assert helper._get_providers_with_capacity(category) == [provider_allocation_1, provider_allocation_2]
+    @mock.patch("cla_provider.helpers.ProviderDistributionHelper.get_distribution", return_value=test_case_3)
+    def test_below_capacity(self, _):
+        provider_allocation = make_recipe(
+            "cla_provider.provider_allocation", weighted_distribution=0.5, provider=self.provider
+        )
+        assert self.helper.is_provider_under_capacity(provider_allocation) is True

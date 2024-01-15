@@ -225,16 +225,20 @@ class ProviderAllocationHelper(object):
         """
         category = provider_allocation.category
         current_distribution = self.distribution.get_distribution(category, include_pre_allocations=True)
-        total_current_cases = sum(current_distribution.values())
+        total_current_cases = float(sum(current_distribution.values()))
+
+        if total_current_cases == 0:
+            # No providers have yet been assigned a case for this category
+            return True
 
         if provider_allocation.provider.id not in current_distribution.keys():
             # The provider has not yet been assigned a case for this category
             return True
 
-        provider_current_num_cases = current_distribution[provider_allocation.provider.id]
+        provider_current_num_cases = float(current_distribution[provider_allocation.provider.id])
         current_allocation = provider_current_num_cases / total_current_cases
 
-        if current_allocation > provider_allocation.weighted_distribution:
+        if current_allocation >= provider_allocation.weighted_distribution:
             return False  # They are over their allocated capacity
 
         return True

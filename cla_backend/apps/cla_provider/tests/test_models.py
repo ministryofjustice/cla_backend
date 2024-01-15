@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.db import IntegrityError
 from core.tests.mommy_utils import make_recipe
 from freezegun import freeze_time
+from cla_provider.models import get_current_day_as_string
 
 
 class ProviderModelTestCase(TestCase):
@@ -11,8 +12,26 @@ class ProviderModelTestCase(TestCase):
             make_recipe("cla_provider.provider", name="Stephensons")
 
 
-class WorkingDaysTestCase(TestCase):
+class TestGetCurrentDayAsString(TestCase):
+    def test_full_month(self):
+        week = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+        # The 1st of January 2024 was a Monday
+        for day in range(1, 31):
+            date = "2024-01-{day}".format(day=day)
+            with freeze_time(date):
+                expected_day = week[(day - 1) % len(week)]
+                assert get_current_day_as_string() == expected_day
 
+    def test_leap_year(self):
+        with freeze_time("2024-02-28"):
+            assert get_current_day_as_string() == "wednesday"
+        with freeze_time("2024-02-29"):
+            assert get_current_day_as_string() == "thursday"
+        with freeze_time("2024-03-01"):
+            assert get_current_day_as_string() == "friday"
+
+
+class WorkingDaysTestCase(TestCase):
     def test_is_provider_working_today(self):
         provider1 = make_recipe("cla_provider.provider", active=True)
         provider_allocation_1 = make_recipe("cla_provider.provider_allocation", provider=provider1)

@@ -63,3 +63,13 @@ cla_backend/static/
 
 # PyCharm
 .idea
+
+# VS Code
+.vscode*
+
+# pyenv
+.python-version
+/cla_backend/apps/knowledgebase/fixtures/kb_from_spreadsheet.json
+/celerybeat-schedule.dir
+/celerybeat-schedule.pag
+/.bash_history

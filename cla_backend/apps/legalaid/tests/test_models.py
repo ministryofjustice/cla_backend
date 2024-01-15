@@ -633,7 +633,7 @@ class EligibilityCheckTestCase(TestCase):
     @mock.patch("legalaid.models.EligibilityChecker")
     def test_update_state(self, MockedEligibilityChecker):
         """
-        calling .is_eligible() sequentially will:
+        calling .is_eligible_with_reasons() sequentially will:
 
         1. return "unknown"
         2. return "yes"
@@ -642,11 +642,11 @@ class EligibilityCheckTestCase(TestCase):
         """
         mocked_checker = MockedEligibilityChecker()
         mocked_checker.calcs = {}
-        mocked_checker.is_eligible.side_effect = [
-            "unknown",
-            "yes",
-            "no",
-            "unknown",
+        mocked_checker.is_eligible_with_reasons.side_effect = [
+            ("unknown", False, False, False),
+            ("yes", True, True, True),
+            ("no", False, True, True),
+            ("unknown", False, True, True)
         ]
 
         # 1. PropertyExpectedException => UNKNOWN

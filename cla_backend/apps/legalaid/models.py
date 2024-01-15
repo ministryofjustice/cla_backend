@@ -1,3 +1,4 @@
+import json
 import logging
 import datetime
 import re
@@ -21,7 +22,6 @@ from core.cloning import clone_model, CloneModelMixin
 
 from eligibility_calculator.models import CaseData
 from eligibility_calculator.calculator import EligibilityChecker
-from eligibility_calculator.exceptions import PropertyExpectedException
 
 from diagnosis.models import DiagnosisTraversal
 
@@ -422,31 +422,22 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin):
         Returns one of the ELIGIBILITY_STATES values depending on if the model
         is eligible or not, or UNKNOWN if there isn't enough data (yet) to determine.
         """
-        ec = EligibilityChecker(self.to_case_data())
-        eligibility_state = ec.is_eligible()
+        case_data = self.to_case_data()
+        case_data_dict, case_data_dict_missing = case_data.to_dict()
+        logger.debug('CaseData %s' % json.dumps(case_data_dict, indent=4, sort_keys=True))
+        logger.debug('CaseData is missing: %s' % json.dumps(case_data_dict_missing, indent=4, sort_keys=True))
+        ec = EligibilityChecker(case_data)
+        eligibility_state, is_gross_income_eligible, is_disposable_income_eligible, is_disposable_capital_eligible = ec.is_eligible_with_reasons()
 
-        if eligibility_state == ELIGIBILITY_STATES.NO:
-            reasons = self.get_ineligible_reason(ec)
-        else:
-            reasons = []
-        return eligibility_state, ec, reasons
-
-    def get_ineligible_reason(self, ec=None):
-        ec = ec or EligibilityChecker(self.to_case_data())
         reasons = []
-
-        def add_reason(meth, reason):
-            try:
-                if not meth():
-                    reasons.append(reason)
-            except PropertyExpectedException:
-                pass
-
-        add_reason(ec.is_disposable_capital_eligible, ELIGIBILITY_REASONS.DISPOSABLE_CAPITAL)
-        add_reason(ec.is_gross_income_eligible, ELIGIBILITY_REASONS.GROSS_INCOME)
-        add_reason(ec.is_disposable_income_eligible, ELIGIBILITY_REASONS.DISPOSABLE_INCOME)
-
-        return reasons
+        if eligibility_state == ELIGIBILITY_STATES.NO:
+            if is_disposable_capital_eligible is False:
+                reasons.append(ELIGIBILITY_REASONS.DISPOSABLE_CAPITAL)
+            if is_gross_income_eligible is False:
+                reasons.append(ELIGIBILITY_REASONS.GROSS_INCOME)
+            if is_disposable_income_eligible is False:
+                reasons.append(ELIGIBILITY_REASONS.DISPOSABLE_INCOME)
+        return eligibility_state, ec, reasons
 
     def update_state(self):
         self.state, checker, reasons = self.get_eligibility_state()

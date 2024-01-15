@@ -36,6 +36,8 @@ from .models import (
     ContactResearchMethod,
 )
 
+logger = __import__("logging").getLogger(__name__)
+
 
 class CategorySerializerBase(serializers.HyperlinkedModelSerializer):
     class Meta(object):
@@ -338,6 +340,7 @@ class EligibilityCheckSerializerBase(ClaModelSerializer):
         # need to check the category before saving the current instance
         has_category_changed = self.__has_category_changed()
         obj = super(EligibilityCheckSerializerBase, self).save(**kwargs)
+        logger.debug("Eligibility check - save form %s" % kwargs)
         obj.update_state()
         if has_category_changed:
             # if the category has been updated then reset mattertype on

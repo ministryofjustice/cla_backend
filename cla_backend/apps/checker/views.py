@@ -24,6 +24,8 @@ from .serializers import (
 )
 from .forms import WebCallMeBackForm
 
+logger = __import__("logging").getLogger(__name__)
+
 
 class PublicAPIViewSetMixin(object):
     permission_classes = (AllowAny,)
@@ -63,6 +65,7 @@ class EligibilityCheckViewSet(
     def is_eligible(self, request, *args, **kwargs):
         obj = self.get_object()
 
+        logger.info("Eligibility check - load form")
         response, ec, reasons = obj.get_eligibility_state()
         return DRFResponse({"is_eligible": response, "reasons": reasons})
 

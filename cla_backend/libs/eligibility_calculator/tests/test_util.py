@@ -1,3 +1,5 @@
+import functools
+import logging
 import unittest
 
 from ..util import BetweenDict
@@ -72,3 +74,17 @@ class BetweenDictTestCase(unittest.TestCase):
         self.assertRaises(ValueError, BetweenDict, {(0, 6): 1, (5, 10): 2})
 
         self.assertRaises(ValueError, BetweenDict, {(5, 6): 1, (0, 6): 2})
+
+
+def log_only_critical(f):
+    @functools.wraps(f)
+    def wrapper(*args, **kwargs):
+        """Temporarily set the calculator logger's log level to critical"""
+        calculator_logger = logging.getLogger("cla_backend.libs.eligibility_calculator.calculator")
+        existing_loglevel = calculator_logger.level
+        calculator_logger.setLevel(logging.CRITICAL)
+        try:
+            return f(*args, **kwargs)
+        finally:
+            calculator_logger.setLevel(existing_loglevel)
+    return wrapper

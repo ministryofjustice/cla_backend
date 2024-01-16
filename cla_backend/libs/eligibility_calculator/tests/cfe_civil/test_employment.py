@@ -95,3 +95,54 @@ class TestCfeIncome(TestCase):
             ],
         }
         self.assertEqual(expected, output)
+
+    def test_no_keys(self):
+        income = Income()
+        deductions = Deductions()
+        output = translate_employment(income, deductions)
+        expected = {"employment_details": []}
+        self.assertEqual(expected, output)
+
+    def test_missing_income_tax(self):
+        income = Income()
+        deductions = Deductions(national_insurance=1)
+        output = translate_employment(income, deductions)
+        expected = {
+            "employment_details": [
+                {
+                    "income": {
+                        "benefits_in_kind": 0,
+                        "frequency": "monthly",
+                        "gross": 0,
+                        "national_insurance": -0.01,
+                        "prisoner_levy": 0,
+                        "receiving_only_statutory_sick_or_maternity_pay": False,
+                        "student_debt_repayment": 0,
+                        "tax": 0,
+                    }
+                }
+            ]
+        }
+        self.assertEqual(expected, output)
+
+    def test_missing_national_insurance(self):
+        income = Income()
+        deductions = Deductions(income_tax=1)
+        output = translate_employment(income, deductions)
+        expected = {
+            "employment_details": [
+                {
+                    "income": {
+                        "benefits_in_kind": 0,
+                        "frequency": "monthly",
+                        "gross": 0,
+                        "national_insurance": 0,
+                        "prisoner_levy": 0,
+                        "receiving_only_statutory_sick_or_maternity_pay": False,
+                        "student_debt_repayment": 0,
+                        "tax": -0.01,
+                    }
+                }
+            ]
+        }
+        self.assertEqual(expected, output)

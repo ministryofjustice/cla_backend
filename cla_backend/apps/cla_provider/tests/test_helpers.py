@@ -511,3 +511,21 @@ class TestIsProviderUnderCapacity(TestCase):
             "cla_provider.provider_allocation", weighted_distribution=0.5, provider=self.provider
         )
         assert self.helper.is_provider_under_capacity(provider_allocation) is True
+
+    test_case_4 = {}
+
+    @mock.patch("cla_provider.helpers.ProviderDistributionHelper.get_distribution", return_value=test_case_4)
+    def test_blank_distribution(self, _):
+        provider_allocation = make_recipe(
+            "cla_provider.provider_allocation", weighted_distribution=0.1, provider=self.provider
+        )
+        assert self.helper.is_provider_under_capacity(provider_allocation) is True
+
+    test_case_5 = {1: 1000, 2: 5000, 51: 4000, 64: 10000}
+
+    @mock.patch("cla_provider.helpers.ProviderDistributionHelper.get_distribution", return_value=test_case_5)
+    def test_larger_sample_size(self, _):
+        provider_allocation = make_recipe(
+            "cla_provider.provider_allocation", weighted_distribution=0.051, provider=self.provider
+        )
+        assert self.helper.is_provider_under_capacity(provider_allocation) is True

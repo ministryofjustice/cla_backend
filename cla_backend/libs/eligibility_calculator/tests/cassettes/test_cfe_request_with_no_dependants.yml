@@ -1,0 +1,62 @@
+interactions:
+- request:
+    body: !!python/unicode '{"regular_transactions": [], "capitals": {"bank_accounts":
+      [], "non_liquid_capital": []}, "proceeding_types": [{"client_involvement_type":
+      "A", "ccms_code": "SE013"}], "dependants": [], "employment_details": [], "applicant":
+      {"date_of_birth": "1974-01-15"}, "assessment": {"submission_date": "2024-01-15",
+      "level_of_help": "controlled"}, "properties": {"main_home": {"subject_matter_of_dispute":
+      false, "percentage_owned": 100, "outstanding_mortgage": 0.0, "value": 10000.0,
+      "shared_with_housing_assoc": false}, "additional_properties": []}}'
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '541'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - cla_backend/1 (local)
+    method: POST
+    uri: https://main-cfe-civil-uat.cloud-platform.service.justice.gov.uk/v6/assessments
+  response:
+    body:
+      string: !!python/unicode '{"version":"6","timestamp":"2024-01-15T19:23:56.001Z","success":true,"result_summary":{"overall_result":{"result":"eligible","capital_contribution":0.0,"income_contribution":0.0,"proceeding_types":[{"ccms_code":"SE013","upper_threshold":0.0,"lower_threshold":0.0,"result":"eligible","client_involvement_type":"A"}]},"gross_income":{"total_gross_income":0.0,"proceeding_types":[{"ccms_code":"SE013","upper_threshold":2657.0,"lower_threshold":0.0,"result":"eligible","client_involvement_type":"A"}],"combined_total_gross_income":0.0},"disposable_income":{"dependant_allowance_under_16":0,"dependant_allowance_over_16":0,"dependant_allowance":0,"gross_housing_costs":0.0,"housing_costs":0.0,"housing_benefit":0.0,"net_housing_costs":0.0,"allowed_housing_costs":0.0,"maintenance_allowance":0.0,"total_outgoings_and_allowances":0.0,"total_disposable_income":0.0,"employment_income":{"gross_income":0.0,"benefits_in_kind":0.0,"tax":0.0,"national_insurance":0.0,"prisoner_levy":0.0,"student_debt_repayment":0.0,"fixed_employment_deduction":0.0,"net_employment_income":0.0},"proceeding_types":[{"ccms_code":"SE013","upper_threshold":733.0,"lower_threshold":733.0,"result":"eligible","client_involvement_type":"A"}],"combined_total_disposable_income":0.0,"combined_total_outgoings_and_allowances":0.0,"partner_allowance":0,"lone_parent_allowance":0,"income_contribution":0.0},"capital":{"pensioner_disregard_applied":0.0,"total_liquid":0.0,"total_non_liquid":0.0,"total_vehicle":0.0,"total_property":0.0,"total_mortgage_allowance":999999999999.0,"total_capital":0.0,"subject_matter_of_dispute_disregard":0.0,"assessed_capital":0.0,"total_capital_with_smod":0.0,"disputed_non_property_disregard":0,"proceeding_types":[{"ccms_code":"SE013","upper_threshold":8000.0,"lower_threshold":8000.0,"result":"eligible","client_involvement_type":"A"}],"combined_disputed_capital":0,"combined_non_disputed_capital":0.0,"capital_contribution":0.0,"pensioner_capital_disregard":0.0,"combined_assessed_capital":0.0}},"assessment":{"id":"2de995d3-95b9-4556-b8c7-eed792df19f5","client_reference_id":null,"submission_date":"2024-01-15","level_of_help":"controlled","applicant":{"date_of_birth":"1974-01-15","involvement_type":"applicant","employed":null,"has_partner_opponent":false,"receives_qualifying_benefit":false},"gross_income":{"employment_income":[],"irregular_income":{"monthly_equivalents":{"student_loan":0.0,"unspecified_source":0.0}},"state_benefits":{"monthly_equivalents":{"all_sources":0.0,"cash_transactions":0.0,"bank_transactions":[]}},"other_income":{"monthly_equivalents":{"all_sources":{"friends_or_family":0.0,"maintenance_in":0.0,"property_or_lodger":0.0,"pension":0.0},"bank_transactions":{"friends_or_family":0,"maintenance_in":0,"property_or_lodger":0,"pension":0},"cash_transactions":{"friends_or_family":0.0,"maintenance_in":0.0,"property_or_lodger":0.0,"pension":0.0}}}},"disposable_income":{"monthly_equivalents":{"all_sources":{"child_care":0.0,"rent_or_mortgage":0.0,"maintenance_out":0.0,"legal_aid":0.0,"pension_contribution":0.0,"council_tax":0.0,"priority_debt_repayment":0.0},"bank_transactions":{"child_care":0.0,"rent_or_mortgage":0.0,"maintenance_out":0.0,"legal_aid":0.0,"pension_contribution":0.0,"council_tax":0.0,"priority_debt_repayment":0.0},"cash_transactions":{"child_care":0.0,"rent_or_mortgage":0.0,"maintenance_out":0.0,"legal_aid":0.0,"pension_contribution":0.0,"council_tax":0.0,"priority_debt_repayment":0.0}},"childcare_allowance":0.0,"deductions":{"dependants_allowance":0.0,"disregarded_state_benefits":0.0}},"capital":{"capital_items":{"liquid":[],"non_liquid":[],"vehicles":[],"properties":{"main_home":{"value":10000.0,"outstanding_mortgage":0.0,"percentage_owned":100.0,"main_home":true,"shared_with_housing_assoc":false,"transaction_allowance":0.0,"allowable_outstanding_mortgage":0.0,"net_value":10000.0,"net_equity":10000.0,"smod_allowance":0,"main_home_equity_disregard":10000.0,"assessed_equity":0.0,"subject_matter_of_dispute":false},"additional_properties":[]}}},"remarks":{}}}'
+    headers:
+      cache-control:
+      - max-age=0, private, must-revalidate
+      connection:
+      - keep-alive
+      content-length:
+      - '4019'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Mon, 15 Jan 2024 19:23:56 GMT
+      etag:
+      - W/"e531713c0453a22c1889c29fbe30d167"
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      strict-transport-security:
+      - max-age=15724800; includeSubDomains
+      vary:
+      - Accept
+      x-content-type-options:
+      - nosniff
+      x-frame-options:
+      - SAMEORIGIN
+      x-permitted-cross-domain-policies:
+      - none
+      x-request-id:
+      - 649c0c9ab96b33d5453684ddf7806ade
+      x-runtime:
+      - '0.041244'
+      x-xss-protection:
+      - '0'
+    status:
+      code: 200
+      message: OK
+version: 1

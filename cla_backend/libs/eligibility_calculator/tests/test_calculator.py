@@ -3,7 +3,7 @@ import random
 import unittest
 
 import mock
-import vcr
+import test_vcr
 
 from . import fixtures
 from .test_util import log_only_critical
@@ -883,7 +883,7 @@ class TestCalculator(CalculatorTestBase):
         self.assertTrue(checker.is_gross_income_eligible())
         self.assertDictEqual(checker.calcs, {"gross_income": too_much_money})
 
-    @vcr.use_cassette()
+    @test_vcr.use_vcr_cassette
     def test_full_case(self):
         # yes it will be brittle, but let's have *one* complete case tested
         case_data_dict = {
@@ -1946,13 +1946,13 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
         case_data = CaseData(**cd)
         return EligibilityChecker(case_data=case_data)
 
-    @vcr.use_cassette()
+    @test_vcr.use_vcr_cassette
     def test_cfe_request_with_no_assets(self):
         result, _, cfe_response = self.checker_with_assets(0)._do_cfe_civil_check()
         self.assertEqual("eligible", cfe_response.overall_result)
         self.assertEqual("yes", result)
 
-    @vcr.use_cassette()
+    @test_vcr.use_vcr_cassette
     def test_cfe_request_with_too_much_savings(self):
         result, _, cfe_response = self.checker_with_assets(1000000)._do_cfe_civil_check()
         self.assertEqual("ineligible", cfe_response.overall_result)
@@ -1976,12 +1976,12 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
         case_data = CaseData(**cd)
         return EligibilityChecker(case_data=case_data)
 
-    @vcr.use_cassette()
+    @test_vcr.use_vcr_cassette
     def test_cfe_request_with_small_property(self):
         _, _, cfe_response = self.checker_with_property(100000)._do_cfe_civil_check()
         self.assertEqual("eligible", cfe_response.overall_result)
 
-    @vcr.use_cassette()
+    @test_vcr.use_vcr_cassette
     def test_cfe_request_with_large_property(self):
         _, _, cfe_response = self.checker_with_property(300000)._do_cfe_civil_check()
         self.assertEqual("ineligible", cfe_response.overall_result)
@@ -2041,7 +2041,7 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
         case_data = CaseData(**cd)
         return EligibilityChecker(case_data=case_data)
 
-    @vcr.use_cassette()
+    @test_vcr.use_vcr_cassette
     def test_income_complete_without_child_benefit(self):
         # Tests the circumstance, of child_benefit field is removed, but should still be considered complete.
         # This is encountered in cla_public, if you say yes to benefits but don't check "child benefit" checkbox.
@@ -2086,18 +2086,18 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
             if key not in case_data["you"]["deductions"]:
                 case_data["you"]["deductions"][key] = 0
 
-    @vcr.use_cassette()
+    @test_vcr.use_vcr_cassette
     def test_cfe_request_with_small_gross_income(self):
         # income is in pence
         _, _, cfe_response = self.checker_with_income(10000, 100)._do_cfe_civil_check()
         self.assertEqual(45.0, cfe_response.employment_allowance)
 
-    @vcr.use_cassette()
+    @test_vcr.use_vcr_cassette
     def test_cfe_request_self_employed(self):
         _, _, cfe_response = self.checker_with_income(10000, 100, self_employed=True)._do_cfe_civil_check()
         self.assertEqual(0.0, cfe_response.employment_allowance)
 
-    @vcr.use_cassette()
+    @test_vcr.use_vcr_cassette
     def test_cfe_request_with_large_gross_income(self):
         _, _, cfe_response = self.checker_with_income(1000000, 500)._do_cfe_civil_check()
         self.assertEqual("ineligible", cfe_response.overall_result)
@@ -2112,56 +2112,56 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
         _, _, cfe_result = checker._do_cfe_civil_check()
         return cfe_result
 
-    @vcr.use_cassette()
+    @test_vcr.use_vcr_cassette
     def test_cfe_request_with_no_dependants(self):
         checker = self.checker_with_dependants(0, 0)
         cfe_result = self.do_cfe_civil_check(checker)
         self.assertEqual("eligible", cfe_result.overall_result)
 
-    @vcr.use_cassette()
+    @test_vcr.use_vcr_cassette
     def test_cfe_request_with_many_young_dependants_increases_gross_threshold(self):
         checker = self.checker_with_dependants(6, 0)
         cfe_result = self.do_cfe_civil_check(checker)
         self.assertEqual(3101.0, cfe_result.gross_upper_threshold)
 
-    @vcr.use_cassette()
+    @test_vcr.use_vcr_cassette
     def test_cfe_request_with_many_old_dependants_doesnt_change_gross_threshold(self):
         checker = self.checker_with_dependants(0, 6)
         cfe_result = self.do_cfe_civil_check(checker)
         self.assertEqual(2657.0, cfe_result.gross_upper_threshold)
 
-    @vcr.use_cassette()
+    @test_vcr.use_vcr_cassette
     def test_small_income_without_earnings_cfe_eligible(self):
         checker = self.checker_with_income(income=10000, tax=500)
         cfe_result = self.do_cfe_civil_check(checker)
         self.assertEqual("eligible", cfe_result.overall_result)
 
-    @vcr.use_cassette()
+    @test_vcr.use_vcr_cassette
     def test_large_income_without_earnings_cfe_ineligible(self):
         checker = self.checker_with_income(income=100000, tax=500)
         cfe_result = self.do_cfe_civil_check(checker)
         self.assertEqual("ineligible", cfe_result.overall_result)
 
-    @vcr.use_cassette()
+    @test_vcr.use_vcr_cassette
     def test_cfe_with_incomplete_property_data_is_unknown(self):
         _, _, cfe_result = self.checker_with_blank_property()._do_cfe_civil_check()
         self.assertEqual("not_yet_known", cfe_result.overall_result)
 
-    @vcr.use_cassette()
+    @test_vcr.use_vcr_cassette
     def test_incomplete_income_data_is_unknown(self):
         _, _, cfe_result = self.checker_with_income_without_earnings(
             maintenance_received=100, child_benefits=500, tax_credits=None
         )._do_cfe_civil_check()
         self.assertEqual("not_yet_known", cfe_result.overall_result)
 
-    @vcr.use_cassette()
+    @test_vcr.use_vcr_cassette
     def test_incomplete_deductions_data_is_unknown(self):
         _, _, cfe_result = self.checker_with_income_without_earnings(
             maintenance_received=100, child_benefits=500, deductions={}
         )._do_cfe_civil_check()
         self.assertEqual("not_yet_known", cfe_result.overall_result)
 
-    @vcr.use_cassette()
+    @test_vcr.use_vcr_cassette
     def test_incomplete_self_employment_is_unknown(self):
         _, _, cfe_result = self.checker_with_income_without_earnings(
             maintenance_received=100, child_benefits=500, self_employed=True
@@ -2175,12 +2175,12 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
         case_data = CaseData(**cd)
         return EligibilityChecker(case_data=case_data)
 
-    @vcr.use_cassette()
+    @test_vcr.use_vcr_cassette
     def test_cfe_with_no_savings_data_is_unknown(self):
         _, _, cfe_result = self.checker_without_savings()._do_cfe_civil_check()
         self.assertEqual("not_yet_known", cfe_result.overall_result)
 
-    @vcr.use_cassette()
+    @test_vcr.use_vcr_cassette
     def test_under_60_with_capital(self):
         facts = dict(
             is_you_or_your_partner_over_60=False,
@@ -2193,7 +2193,7 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
         cfe_result = self.do_cfe_civil_check(checker)
         self.assertEqual("ineligible", cfe_result.overall_result)
 
-    @vcr.use_cassette()
+    @test_vcr.use_vcr_cassette
     def test_over_60_with_capital(self):
         facts = dict(
             is_you_or_your_partner_over_60=True,
@@ -2206,23 +2206,23 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
         cfe_result = self.do_cfe_civil_check(checker)
         self.assertEqual("eligible", cfe_result.overall_result)
 
-    @vcr.use_cassette()
+    @test_vcr.use_vcr_cassette
     def test_cfe_request_with_applicant_receives_qualifying_benefit(self):
         checker = self.checker_with_facts(dict(on_passported_benefits=True))
         cfe_result = self.do_cfe_civil_check(checker)
         self.assertTrue(cfe_result.applicant_details()["receives_qualifying_benefit"])
 
-    @vcr.use_cassette()
+    @test_vcr.use_vcr_cassette
     def test_cfe_request_with_applicant_receives_asylum_support(self):
         _, _, cfe_result = self.checker_with_facts(dict(on_nass_benefits=True))._do_cfe_civil_check()
         self.assertEqual("eligible", cfe_result.overall_result)
 
-    @vcr.use_cassette()
+    @test_vcr.use_vcr_cassette
     def test_cfe_request_with_proceeding_types(self):
         _, _, cfe_result = self.checker_with_category(category="immigration")._do_cfe_civil_check()
         self.assertEqual("eligible", cfe_result.overall_result)
 
-    @vcr.use_cassette()
+    @test_vcr.use_vcr_cassette
     def test_enough_deductions_creates_eligible_cfe_request(self):
         deductions = dict(
             income_tax=0,
@@ -2238,19 +2238,19 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
         )._do_cfe_civil_check()
         self.assertEqual("eligible", cfe_response.overall_result)
 
-    @vcr.use_cassette()
+    @test_vcr.use_vcr_cassette
     def test_smod_capital_below_limit_is_ignored(self):
         checker = self.checker_with_disputed_assets(50000 * 100)
         cfe_response = self.do_cfe_civil_check(checker)
         self.assertEqual("eligible", cfe_response.overall_result)
 
-    @vcr.use_cassette()
+    @test_vcr.use_vcr_cassette
     def test_smod_capital_above_limit_is_not_ignored(self):
         checker = self.checker_with_disputed_assets(150000 * 100)
         cfe_response = self.do_cfe_civil_check(checker)
         self.assertEqual("ineligible", cfe_response.overall_result)
 
-    @vcr.use_cassette()
+    @test_vcr.use_vcr_cassette
     def test_translate_capital_data_merges_savings(self):
         checker = self.checker_with_disputed_assets(60000, savings=self.savings_dict(150000))
         expected = {
@@ -2270,43 +2270,43 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
         }
         self.assertEqual(expected, checker._translate_capital_data(checker.case_data)["capitals"])
 
-    @vcr.use_cassette()
+    @test_vcr.use_vcr_cassette
     def test_partner_without_savings_is_unknown(self):
         checker = self.checker_with_facts(facts=dict(has_partner=True), partner=dict())
         cfe_response = self.do_cfe_civil_check(checker)
         self.assertEqual("eligible", cfe_response.overall_result)
 
-    @vcr.use_cassette()
+    @test_vcr.use_vcr_cassette
     def test_assessment_attribute_not_aggregated_no_income_low_capital_for_under_18_no_income(self):
         checker = self.checker_with_facts(dict(under_18_passported=True, is_you_under_18=True))
         cfe_response = self.do_cfe_civil_check(checker)
         self.assertEqual("eligible", cfe_response.overall_result)
 
-    @vcr.use_cassette()
+    @test_vcr.use_vcr_cassette
     def test_assessment_attribute_not_aggregated_no_income_low_capital_for_under_18_low_income(self):
         checker = self.checker_with_facts_and_income(under_18_passported=True, is_you_under_18=True, income=10000)
         cfe_response = self.do_cfe_civil_check(checker)
         self.assertEqual("eligible", cfe_response.overall_result)
 
-    @vcr.use_cassette()
+    @test_vcr.use_vcr_cassette
     def test_assessment_attribute_not_aggregated_no_income_low_capital_for_under_18_high_income(self):
         checker = self.checker_with_facts_and_income(under_18_passported=True, is_you_under_18=True, income=2000000)
         cfe_response = self.do_cfe_civil_check(checker)
         self.assertEqual("eligible", cfe_response.overall_result)
 
-    @vcr.use_cassette()
+    @test_vcr.use_vcr_cassette
     def test_assessment_attribute_not_aggregated_no_income_low_capital_for_under_18_high_income_non_passported(self):
         checker = self.checker_with_facts_and_income(under_18_passported=False, is_you_under_18=True, income=2000000)
         cfe_response = self.do_cfe_civil_check(checker)
         self.assertEqual("ineligible", cfe_response.overall_result)
 
-    @vcr.use_cassette()
+    @test_vcr.use_vcr_cassette
     def test_assessment_attribute_not_aggregated_no_income_low_capital_for_over_18_low_income(self):
         checker = self.checker_with_facts_and_income(under_18_passported=False, is_you_under_18=False, income=10000)
         cfe_response = self.do_cfe_civil_check(checker)
         self.assertEqual("not_yet_known", cfe_response.overall_result)
 
-    @vcr.use_cassette()
+    @test_vcr.use_vcr_cassette
     def test_assessment_attribute_not_aggregated_no_income_low_capital_for_over_18_high_income(self):
         checker = self.checker_with_facts_and_income(under_18_passported=False, is_you_under_18=False, income=2000000)
         cfe_response = self.do_cfe_civil_check(checker)

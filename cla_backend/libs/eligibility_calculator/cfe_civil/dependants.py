@@ -12,11 +12,11 @@ def _dependant_aged(todays_date, age, relationship):
 
 
 def translate_dependants(todays_date, facts):
-    if hasattr(facts, "dependants_young"):
+    if facts.dependants_young is not None:
         children = [_dependant_aged(todays_date, 15, "child_relative") for _ in range(facts.dependants_young)]
     else:
         children = []
-    if hasattr(facts, "dependants_old"):
+    if facts.dependants_old is not None:
         adults = [_dependant_aged(todays_date, 17, "adult_relative") for _ in range(facts.dependants_old)]
     else:
         adults = []

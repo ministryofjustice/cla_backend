@@ -1,8 +1,15 @@
+import types
+
 from . import exceptions
 
 
 class ModelMixin(object):
     PROPERTY_META = None
+
+    @staticmethod
+    def is_a_subclass_of_model_mixin(property_meta_value):
+        is_a_class = isinstance(property_meta_value, types.TypeType)
+        return is_a_class and issubclass(property_meta_value, ModelMixin)
 
     def __init__(self, *args, **kwargs):
         for kw, v in kwargs.items():
@@ -11,24 +18,26 @@ class ModelMixin(object):
                     "'{kw}' is not a valid property for '{obj_name}'".format(kw=kw, obj_name=self.__class__.__name__)
                 )
 
-            fk_clazz = self.PROPERTY_META.get(kw)
-            if fk_clazz:
-                v = fk_clazz(**v)
+            property_meta_value = self.PROPERTY_META.get(kw)
+            if self.is_a_subclass_of_model_mixin(property_meta_value):
+                v = property_meta_value(**v)
             setattr(self, kw, v)
 
     def __getattr__(self, kw):
         obj_name = self.__class__.__name__
 
         if kw in self.PROPERTY_META:
-            raise exceptions.PropertyExpectedException(
-                "'{obj_name}' requires attribute '{kw}' and was not given at __init__".format(kw=kw, obj_name=obj_name)
-            )
+            property_meta_value = self.PROPERTY_META[kw]
+            if self.is_a_subclass_of_model_mixin(property_meta_value):
+                return property_meta_value()
+            else:
+                return property_meta_value
 
         raise AttributeError("'{obj_name}' object has no attribute '{kw}'".format(obj_name=obj_name, kw=kw))
 
 
 class Savings(ModelMixin, object):
-    PROPERTY_META = {"bank_balance": None, "investment_balance": None, "credit_balance": None, "asset_balance": None}
+    PROPERTY_META = {"bank_balance": 0, "investment_balance": 0, "credit_balance": 0, "asset_balance": 0}
 
     @property
     def total(self):
@@ -47,10 +56,6 @@ class Income(ModelMixin, object):
         "other_income": None,
         "self_employed": None,
     }
-
-    @property
-    def has_employment_earnings(self):
-        return self.earnings
 
     @property
     def total(self):
@@ -88,18 +93,18 @@ class Facts(ModelMixin, object):
         super(Facts, self).__init__(*args, **kwargs)
 
     PROPERTY_META = {
-        "is_you_or_your_partner_over_60": None,
-        "on_passported_benefits": None,
-        "on_nass_benefits": None,
-        "has_partner": None,
-        "is_partner_opponent": None,
+        "is_you_or_your_partner_over_60": False,
+        "on_passported_benefits": False,
+        "on_nass_benefits": False,
+        "has_partner": True,
+        "is_partner_opponent": False,
         "dependants_old": None,
         "dependants_young": None,
-        "has_passported_proceedings_letter": None,
-        "under_18_passported": None,
-        "is_you_under_18": None,
-        "under_18_receive_regular_payment": None,
-        "under_18_has_valuables": None,
+        "has_passported_proceedings_letter": False,
+        "under_18_passported": False,
+        "is_you_under_18": False,
+        "under_18_receive_regular_payment": False,
+        "under_18_has_valuables": False,
     }
 
     @property
@@ -113,15 +118,11 @@ class Facts(ModelMixin, object):
                 return True
         return False
 
-    @property
-    def dependant_children(self):
-        return self.dependants_old + self.dependants_young
-
 
 class CaseData(ModelMixin, object):
 
     PROPERTY_META = {
-        "category": None,
+        "category": "unknown",
         "facts": Facts,
         "you": Person,
         "partner": Person,
@@ -163,12 +164,6 @@ class CaseData(ModelMixin, object):
         if self.facts.has_partner and not self.facts.has_disputed_partner:
             capital += self.partner.savings.total
         return capital
-
-    @property
-    def disputed_non_property_capital(self):
-        if hasattr(self, "disputed_savings") and self.disputed_savings:
-            return self.disputed_savings.total
-        return 0
 
     @property
     def total_income(self):

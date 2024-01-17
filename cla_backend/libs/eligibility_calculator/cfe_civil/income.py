@@ -15,8 +15,8 @@ def translate_income(income_data):
     regular_transactions = []
 
     for income_category in INCOME_CATEGORY_TO_REGULAR_TRANSACTION:
-        if hasattr(income_data, income_category):
-            amount_pence = getattr(income_data, income_category)
+        amount_pence = getattr(income_data, income_category)
+        if amount_pence is not None:
             regular_transactions.append(
                 {
                     "category": INCOME_CATEGORY_TO_REGULAR_TRANSACTION[income_category],

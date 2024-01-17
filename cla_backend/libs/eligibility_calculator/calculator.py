@@ -6,7 +6,6 @@ import requests
 from dateutil.relativedelta import relativedelta
 from django.conf import settings
 
-from . import exceptions
 from .cfe_civil.age import translate_age
 from .cfe_civil.deductions import translate_deductions
 from .cfe_civil.dependants import translate_dependants
@@ -42,7 +41,12 @@ class EligibilityChecker(object):
         logger.info("Eligibility result (using CFE): %s", cfe_result)
 
         if cfe_response:
-            return cfe_result, cfe_response.is_gross_eligible, cfe_response.is_disposable_eligible, cfe_response.is_capital_eligible
+            return (
+                cfe_result,
+                cfe_response.is_gross_eligible,
+                cfe_response.is_disposable_eligible,
+                cfe_response.is_capital_eligible,
+            )
         else:
             return cfe_result, None, None, None
 
@@ -87,14 +91,11 @@ class EligibilityChecker(object):
 
     @staticmethod
     def _is_data_complete_enough_to_call_cfe(case_data):
-        if not hasattr(case_data, "facts"):
-            # facts section is at the root of everything, so we require it call CFE
-            return False
         if EligibilityChecker._under_18_passported(case_data):
             # no more info needed
             return True
-        if not hasattr(case_data.facts, "dependants_young") and not (
-            hasattr(case_data.facts, "on_passported_benefits") and case_data.facts.on_passported_benefits
+        if (case_data.facts.on_passported_benefits is None) or (
+            case_data.facts.dependants_young is None and not case_data.facts.on_passported_benefits
         ):
             # the gross income threshold may increase, depending on the number of child dependants,
             # so we can't do gross income section - even if we tell CFE it is incomplete, if the gross income
@@ -131,7 +132,9 @@ class EligibilityChecker(object):
             request_data["assessment"].update(translate_under_18_passported(case_data.facts))
             request_data.update(translate_dependants(submission_date, case_data.facts))
             if hasattr(case_data, "partner") and case_data.facts.should_aggregate_partner:
-                request_data["partner"] = EligibilityChecker._translate_partner_data(case_data.partner, submission_date)
+                request_data["partner"] = EligibilityChecker._translate_partner_data(
+                    case_data.partner, submission_date
+                )
 
         request_data.update(EligibilityChecker._translate_capital_data(case_data))
 
@@ -142,29 +145,27 @@ class EligibilityChecker(object):
 
     @staticmethod
     def _translate_section_gross_income(case_data, request_data):
-        """
-        Determine if the questions for gross income section of the test have been completed by the user yet,
-        and put this in the CFE request.
-        """
-
-        def is_gross_income_complete(case_data):
-            if not hasattr(case_data, "you"):
-                return False
-            person = case_data.you
-            if not hasattr(person, "income"):
-                return False
-            income = person.income
-
+        def is_income_complete(income):
             income_keys_if_complete = set(income.PROPERTY_META.keys())
             # cla_public will remove the `income.child_benefits` key from CaseDict if you submit /benefits without
             # checking the child benefit checkbox (which doesn't even appear if dependants_young=0). So this key is not
             # required for income to be considered complete
             income_keys_if_complete.remove("child_benefits")
             for key in income_keys_if_complete:
-                if not hasattr(income, key):
+                if getattr(income, key) is None:
                     return False
+            return True
 
-            if not hasattr(case_data.facts, "has_partner"):
+        """
+        Determine if the questions for gross income section of the test have been completed by the user yet,
+        and put this in the CFE request.
+        """
+
+        def is_gross_income_complete(case_data):
+            if not is_income_complete(case_data.you.income):
+                return False
+
+            if case_data.facts.has_partner and not is_income_complete(case_data.partner.income):
                 # If they have a partner then their deductions can lower the disposable income further,
                 # so this section is not complete until we know the partners' figures
                 return False
@@ -182,17 +183,10 @@ class EligibilityChecker(object):
         """
 
         def is_disposable_income_complete(case_data):
-            if not hasattr(case_data, "you"):
+            if not is_deductions_complete(case_data.you.deductions):
                 return False
-            person = case_data.you
-            if not hasattr(person, "deductions"):
-                return False
-            deductions = case_data.you.deductions
-            for key in deductions.PROPERTY_META:
-                if not hasattr(deductions, key):
-                    return False
 
-            if not hasattr(case_data.facts, "has_partner"):
+            if case_data.facts.has_partner and not is_deductions_complete(case_data.partner.deductions):
                 # If they have a partner then their deductions can lower the disposable income further,
                 # so this section is not complete until we know the partners' figures
                 return False
@@ -216,20 +210,19 @@ class EligibilityChecker(object):
         return False
 
     @staticmethod
-    def is_savings_complete(case_data):
-        if not hasattr(case_data.facts, "has_partner"):
-            # If they have a partner then that may increase assets that they need to delare, so
-            # this section is not complete until we clear up if there is a partner
-            return False
-
-        try:
-            savings = case_data.you.savings
+    def _is_savings_complete(case_data):
+        def is_savings_data_complete(savings):
             for key in savings.PROPERTY_META:
                 if not isinstance(getattr(savings, key), (types.IntType, types.LongType)):
                     return False
-        except exceptions.PropertyExpectedException:
-            return False
-        return True
+            return True
+
+        if case_data.facts.has_partner:
+            # If they have a partner then that may increase assets that they need to delare, so
+            # this section is not complete until we clear up if there is a partner
+            if not is_savings_data_complete(case_data.partner.savings):
+                return False
+        return is_savings_data_complete(case_data.you.savings)
 
     @staticmethod
     def _translate_section_capital(case_data, request_data):
@@ -239,7 +232,7 @@ class EligibilityChecker(object):
         """
         has_completed_capital_questions = EligibilityChecker.is_property_complete(
             case_data
-        ) and EligibilityChecker.is_savings_complete(case_data)
+        ) and EligibilityChecker._is_savings_complete(case_data)
 
         # This capital logic is a bit complicated, and dependent on how cla_backend's clients set the CaseData.
         # If we wanted to simplify this logic, here are the concerns:
@@ -263,8 +256,7 @@ class EligibilityChecker(object):
         # how old the partner is
         partner_dob = str(submission_date - relativedelta(years=40))
         request_data = {"partner": {"date_of_birth": partner_dob}}
-        if hasattr(partner, "savings"):
-            request_data.update(translate_savings(partner.savings))
+        request_data.update(translate_savings(partner.savings))
 
         request_data.update(EligibilityChecker._translate_income_data(partner))
 
@@ -273,16 +265,10 @@ class EligibilityChecker(object):
     @staticmethod
     def _translate_income_data(person):
         request_data = {}
-        if hasattr(person, "income"):
-            regular_income = translate_income(person.income)
-            if hasattr(person, "deductions"):
-                request_data.update(translate_employment(person.income, person.deductions))
-                regular_outgoings = translate_deductions(person.deductions)
-                request_data.update(
-                    EligibilityChecker._merge_regular_transaction_data(regular_income, regular_outgoings)
-                )
-            else:
-                request_data.update(regular_income)
+        regular_income = translate_income(person.income)
+        request_data.update(translate_employment(person.income, person.deductions))
+        regular_outgoings = translate_deductions(person.deductions)
+        request_data.update(EligibilityChecker._merge_regular_transaction_data(regular_income, regular_outgoings))
 
         return request_data
 
@@ -310,21 +296,14 @@ class EligibilityChecker(object):
     @staticmethod
     def _translate_capital_data(case_data):
         request_data = {}
-        if hasattr(case_data, "you") and hasattr(case_data.you, "savings"):
-            request_data.update(translate_savings(case_data.you.savings))
+        request_data.update(translate_savings(case_data.you.savings))
+        request_data.update(translate_property(case_data.property_data))
 
-        if hasattr(case_data, "property_data"):
-            request_data.update(translate_property(case_data.property_data))
-
-        if hasattr(case_data, "disputed_savings"):
-            disputed_savings = translate_savings(case_data.disputed_savings, subject_matter_of_dispute=True)
-            if "capitals" in request_data:
-                capitals = request_data["capitals"]
-                disputed_capitals = disputed_savings["capitals"]
-                for key in capitals.keys():
-                    capitals[key] += disputed_capitals[key]
-            else:
-                request_data.update(disputed_savings)
+        disputed_savings = translate_savings(case_data.disputed_savings, subject_matter_of_dispute=True)
+        capitals = request_data["capitals"]
+        disputed_capitals = disputed_savings["capitals"]
+        for key in capitals.keys():
+            capitals[key] += disputed_capitals[key]
         return request_data
 
     def _translate_response(self, cfe_response):

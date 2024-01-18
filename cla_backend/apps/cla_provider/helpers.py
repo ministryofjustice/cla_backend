@@ -94,8 +94,9 @@ class ProviderAllocationHelper(object):
         @return: list
         """
 
-        if category.code == "education":
-            return self.get_valid_education_providers(category)
+        if settings.EDUCATION_ALLOCATION_FEATURE_FLAG:
+            if category.code == "education":
+                return self.get_valid_education_providers(category)
 
         if not self._providers_in_category:
             self._providers_in_category = ProviderAllocation.objects.filter(category=category, provider__active=True)

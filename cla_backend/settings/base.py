@@ -468,6 +468,8 @@ CFE_URL = (
     os.environ.get("CFE_HOST", "https://cfe-civil-staging.cloud-platform.service.justice.gov.uk") + "/v6/assessments"
 )
 
+EDUCATION_ALLOCATION_FEATURE_FLAG = os.environ.get("EDUCATION_ALLOCATION_FEATURE_FLAG", "False") == "True"
+
 # .local.py overrides all the common settings.
 try:
     from .local import *

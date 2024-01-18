@@ -114,6 +114,23 @@ To run all tests, this could be done from within the development container (as a
 
     ./run_local.sh test
 
+## CFE-Civil and vcrpy
+
+When the cfe-civil API was adopted to perform eligibility checks, it was decided to use a testing tool called vcrpy. 
+
+Docs for VCR are here: https://github.com/kevin1024/vcrpy/blob/v3.0.0/docs/configuration.rst  (We use older version of vcr due to needing python2 support)
+
+The idea is that the real interactions with the remote host are recorded (once) and subsequent test runs are then 'played back' rather than hitting the 
+remote service. This has 2 benefits:
+1. Using the real service means that responses are always correct - mocks can have undetected errors in them, and can be complex to maintain
+2. Not calling the real service during CI test runs means that the tests are not fragile due to network outages 
+
+If the requests to cfe-civil were to change, the tests will fail (as the configuration contains the post body).
+The date of the request has been frozen so that this doesn't happen during normal test runs
+
+Although CFE changes should always be backwards compatible, we should re-record every now and again, to test against the latest CFE responses. 
+Command for doing that.
+
 ## Lint and pre-commit hooks
 
 To lint with Black and flake8, install pre-commit hooks:

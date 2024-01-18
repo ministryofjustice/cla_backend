@@ -7,11 +7,11 @@ logger = __import__("logging").getLogger(__name__)
 def _common_income_fields(gross, deductions):
     return {
         "gross": gross,
-        "tax": -pence_to_pounds(deductions.income_tax),
+        "tax": -pence_to_pounds(deductions.income_tax) if hasattr(deductions, "income_tax") else 0,
         "frequency": "monthly",
         "prisoner_levy": 0,
         "student_debt_repayment": 0,
-        "national_insurance": -pence_to_pounds(deductions.national_insurance),
+        "national_insurance": -pence_to_pounds(deductions.national_insurance) if hasattr(deductions, "national_insurance") else 0,
     }
 
 

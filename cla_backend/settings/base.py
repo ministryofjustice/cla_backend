@@ -328,6 +328,16 @@ if "SENTRY_DSN" in os.environ:
 LOGIN_FAILURE_LIMIT = 5
 LOGIN_FAILURE_COOLOFF_TIME = 60  # in minutes
 
+# Whether to use the non-RFC standard httpOnly flag (IE, FF3+, others)
+SESSION_COOKIE_HTTPONLY = True
+CSRF_COOKIE_HTTPONLY = True
+
+# Whether the session cookie should be secure (https:// only).
+CSRF_COOKIE_SECURE = not DEBUG
+SESSION_COOKIE_SECURE = not DEBUG
+
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
 # Django rest-framework-overrides
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": ("oauth2_provider.ext.rest_framework.OAuth2Authentication",),

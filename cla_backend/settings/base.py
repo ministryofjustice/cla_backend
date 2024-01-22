@@ -191,6 +191,7 @@ MIDDLEWARE_CLASSES = (
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "status.middleware.MaintenanceModeMiddleware",
+    "django_cookies_samesite.middleware.CookiesSameSite",
 )
 
 ROOT_URLCONF = "cla_backend.urls"
@@ -338,6 +339,7 @@ CSRF_COOKIE_SECURE = not DEBUG
 SESSION_COOKIE_SECURE = not DEBUG
 
 SECURE_CONTENT_TYPE_NOSNIFF = True
+SESSION_COOKIE_SAMESITE = "strict"
 
 # Django rest-framework-overrides
 REST_FRAMEWORK = {

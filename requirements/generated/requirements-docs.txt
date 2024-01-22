@@ -50,6 +50,8 @@ django-braces==1.8.1
     # via
     #   -r requirements/source/requirements-base.in
     #   django-oauth-toolkit
+django-cookies-samesite==0.9.0
+    # via -r requirements/source/requirements-base.in
 django-docopt-command==0.2.0
     # via -r requirements/source/requirements-base.in
 django-extended-choices==0.3.0
@@ -227,6 +229,8 @@ typing==3.10.0.0
     # via
     #   pathlib2
     #   sphinx
+ua-parser==0.10.0
+    # via django-cookies-samesite
 urllib3==1.26.14
     # via
     #   botocore

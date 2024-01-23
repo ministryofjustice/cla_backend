@@ -56,7 +56,7 @@ class WorkingDays(models.Model):
         verbose_name_plural = "Working Days"
 
     def is_working_today(self):
-        """Function returns True or False if the provider is working today
+        """ Returns if the provider allocation is allocated to work today.s
 
         Returns:
             Boolean: Is the provider working today
@@ -66,7 +66,7 @@ class WorkingDays(models.Model):
         return self.is_working_on_day(current_day)
 
     def is_working_on_day(self, day):
-        """Function takes in a day of the week as a string and returns if the provider works on said day
+        """ Takes in a day of the week as a string and returns if the provider works on that day
 
         Args:
             day (str): Day of the week as a string. E.g. "Monday"
@@ -127,7 +127,7 @@ class ProviderAllocation(TimeStampedModel):
     weighted_distribution = models.FloatField()  # see XXXXXXXXXXXX
 
     def is_working_today(self):
-        """Function returns True or False if the provider is working today, based on the WorkingDays model
+        """Returns if the provider is working today, based on the WorkingDays model
 
         Returns:
             Boolean: Is the provider working today

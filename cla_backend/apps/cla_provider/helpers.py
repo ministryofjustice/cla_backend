@@ -242,7 +242,7 @@ class ProviderAllocationHelper(object):
         return True
 
     def get_valid_education_providers(self, education_category):
-        """Gets a list of education ProviderAllocations that
+        """ Gets a list of education ProviderAllocations that
         1) Are active
         2) Are working today, as based off their WorkingDays model
         3) If it is a Thursday:

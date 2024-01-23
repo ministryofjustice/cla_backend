@@ -12,6 +12,7 @@ from cla_provider.models import ProviderAllocation
 from legalaid.models import Case
 
 from core.tests.mommy_utils import make_recipe
+from freezegun import freeze_time
 
 from cla_provider.helpers import ProviderAllocationHelper, ProviderDistributionHelper
 
@@ -570,3 +571,156 @@ class TestEducationAllocationFeatureFlag(TestCase):
         helper.get_qualifying_providers_allocation(category)
 
         assert not get_valid_education_providers.called, "get_valid_education_providers was called"
+
+
+class TestGetValidEducationProviders(TestCase):
+    def setUp(self):
+        self.helper = ProviderAllocationHelper()
+        self.education_category = make_recipe("legalaid.category", code="education")
+
+    def test_no_providers(self):
+        provider_allocations = self.helper.get_valid_education_providers(self.education_category)
+
+        assert provider_allocations == []
+
+    def test_one_providers(self):
+        provider = make_recipe("cla_provider.provider", active=True)
+        provider_allocation = make_recipe(
+            "cla_provider.provider_allocation", provider=provider, category=self.education_category
+        )
+
+        actual_output = self.helper.get_valid_education_providers(self.education_category)
+
+        assert actual_output == [provider_allocation], actual_output
+
+    def test_two_providers(self):
+        provider_allocations = []
+        for id in range(2):
+            provider = make_recipe("cla_provider.provider", active=True, id=id)
+            provider_allocations.append(
+                make_recipe("cla_provider.provider_allocation", provider=provider, category=self.education_category)
+            )
+
+        actual_output = self.helper.get_valid_education_providers(self.education_category)
+
+        assert actual_output == provider_allocations, actual_output
+
+    def test_provider_not_working(self):
+        provider = make_recipe("cla_provider.provider", active=True)
+
+        provider_allocation = make_recipe(
+            "cla_provider.provider_allocation", provider=provider, category=self.education_category
+        )
+
+        make_recipe("cla_provider.working_days", monday=False, provider_allocation=provider_allocation)
+
+        # This is a Monday so we should expect the provider to be invalid.
+        with freeze_time("2024-01-01"):
+            actual_output = self.helper.get_valid_education_providers(self.education_category)
+
+        assert actual_output == [], actual_output
+
+    def test_some_providers_working(self):
+        provider_1 = make_recipe("cla_provider.provider", active=True, id=1)
+        provider_2 = make_recipe("cla_provider.provider", active=True, id=2)
+
+        provider_allocation_1 = make_recipe(
+            "cla_provider.provider_allocation", provider=provider_1, category=self.education_category
+        )
+        provider_allocation_2 = make_recipe(
+            "cla_provider.provider_allocation", provider=provider_2, category=self.education_category
+        )
+
+        make_recipe("cla_provider.working_days", monday=False, provider_allocation=provider_allocation_1)
+        make_recipe("cla_provider.working_days", monday=True, provider_allocation=provider_allocation_2)
+
+        # This is a Monday so we should expect the provider to be invalid.
+        with freeze_time("2024-01-01"):
+            actual_output = self.helper.get_valid_education_providers(self.education_category)
+
+        assert actual_output == [provider_allocation_2], actual_output
+
+    provider_distribution_1 = {
+        1: 2,
+        2: 0,
+    }  # This is a distribution where provider 1 is assigned 100% of the total cases.
+    provider_distribution_2 = {
+        1: 2,
+        2: 2,
+    }  # This is a distribution where provider 1 is assigned 50% of the total cases.
+
+    @mock.patch(
+        "cla_provider.helpers.ProviderDistributionHelper.get_distribution", return_value=provider_distribution_1
+    )
+    def test_provider_over_capacity_on_a_thursday(self, _):
+        """ If a provider is over capacity on a Thursday then the case should go to face to face.
+        In this situation, the provider is invalid and the operator will manually assign the case.
+        """
+        provider = make_recipe("cla_provider.provider", active=True, id=1)
+
+        provider_allocation = make_recipe(
+            "cla_provider.provider_allocation",
+            provider=provider,
+            weighted_distribution=0.6,
+            category=self.education_category,
+        )
+
+        # Check they are over their capacity
+        assert not self.helper.is_provider_under_capacity(provider_allocation)
+
+        # This is a Thursday
+        with freeze_time("2024-01-04"):
+            actual_output = self.helper.get_valid_education_providers(self.education_category)
+
+        assert actual_output == [], actual_output
+
+    @mock.patch(
+        "cla_provider.helpers.ProviderDistributionHelper.get_distribution", return_value=provider_distribution_2
+    )
+    def test_provider_under_capacity_on_a_thursday(self, _):
+        """ If a provider is over capacity on a Thursday then the case should go to face to face.
+        In this situation, the provider is invalid and the operator will manually assign the case.
+        """
+        provider = make_recipe("cla_provider.provider", active=True, id=1)
+
+        provider_allocation = make_recipe(
+            "cla_provider.provider_allocation",
+            provider=provider,
+            weighted_distribution=0.6,
+            category=self.education_category,
+        )
+
+        # Check they are over their capacity
+        assert self.helper.is_provider_under_capacity(provider_allocation)
+
+        # This is a Thursday
+        with freeze_time("2024-01-04"):
+            actual_output = self.helper.get_valid_education_providers(self.education_category)
+
+        assert actual_output == [provider_allocation], actual_output
+
+    @mock.patch(
+        "cla_provider.helpers.ProviderDistributionHelper.get_distribution", return_value=provider_distribution_1
+    )
+    def test_provider_over_capacity_on_a_wednesday(self, _):
+        """ If a provider is over capacity on a Wednesday they should still be a valid provider.
+        """
+        provider = make_recipe("cla_provider.provider", active=True, id=1)
+
+        provider_allocation = make_recipe(
+            "cla_provider.provider_allocation",
+            provider=provider,
+            weighted_distribution=0.6,
+            category=self.education_category,
+        )
+
+        # Check they are over their capacity
+        assert not self.helper.is_provider_under_capacity(provider_allocation)
+
+        # This is a Wednesday
+        with freeze_time("2024-01-03"):
+            actual_output = self.helper.get_valid_education_providers(self.education_category)
+
+        assert actual_output == [provider_allocation], actual_output
+
+    provider_distribution = {1: 2, 2: 2}  # This is a distribution where provider 1 is assigned 50% of the total cases.

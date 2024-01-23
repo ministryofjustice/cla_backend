@@ -20,9 +20,6 @@ from cla_provider.models import (
     get_current_day_as_string,
 )
 from legalaid.models import Case
-import logging
-
-logger = logging.getLogger()
 
 
 class ProviderDistributionHelper(object):
@@ -260,13 +257,10 @@ class ProviderAllocationHelper(object):
         provider_allocations = ProviderAllocation.objects.filter(
             category=education_category, provider__active=True
         ).all()
-        logger.log(700, provider_allocations)
         provider_allocations = filter(ProviderAllocation.is_working_today, provider_allocations)
-        logger.log(700, provider_allocations)
 
         if get_current_day_as_string() == "thursday":
             provider_allocations = filter(self.is_provider_under_capacity, provider_allocations)
-        logger.log(700, provider_allocations)
         return provider_allocations
 
     def get_suggested_provider(self, category):

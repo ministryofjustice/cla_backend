@@ -36,7 +36,6 @@ envVars:
       optional: true
   DB_PORT:
     secret:
-      key: port
       optional: true
   REPLICA_DB_HOST:
     secret:

@@ -129,7 +129,7 @@ If the requests to cfe-civil were to change, the tests will fail (as the configu
 The date of the request has been frozen so that this doesn't happen during normal test runs
 
 Although CFE changes should always be backwards compatible, we should re-record every now and again, to test against the latest CFE responses. 
-Command for doing that.
+This can be done by setting the record_mode option to 'all' and re-running the tests
 
 ## Lint and pre-commit hooks
 

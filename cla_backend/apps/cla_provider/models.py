@@ -94,6 +94,9 @@ class WorkingDays(models.Model):
 
         return working_days
 
+    def __unicode__(self):
+        return ""
+
     provider_allocation = models.OneToOneField("ProviderAllocation")
     monday = models.BooleanField(default=DEFAULT_WORKING_DAYS["monday"])
     tuesday = models.BooleanField(default=DEFAULT_WORKING_DAYS["tuesday"])

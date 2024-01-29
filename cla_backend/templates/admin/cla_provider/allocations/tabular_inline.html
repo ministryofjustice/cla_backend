@@ -23,7 +23,7 @@
     {% endblock %}
 
     {% block tablebody %}
-     <tbody {% tablebody-style %} {% endblock %}>
+     <tbody {% block tablebody-style %} {% endblock %}>
      {% for inline_admin_form in inline_admin_formset %}
         {% if inline_admin_form.form.non_field_errors %}
         <tr><td colspan="{{ inline_admin_form|cell_count }}">{{ inline_admin_form.form.non_field_errors }}</td></tr>

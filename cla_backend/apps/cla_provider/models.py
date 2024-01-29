@@ -51,6 +51,15 @@ class WorkingDays(models.Model):
     This model represents the working days for Education specialist providers, to align with the changes required as part of LGA-2904.
     """
 
+    provider_allocation = models.OneToOneField("ProviderAllocation")
+    monday = models.BooleanField(default=DEFAULT_WORKING_DAYS["monday"])
+    tuesday = models.BooleanField(default=DEFAULT_WORKING_DAYS["tuesday"])
+    wednesday = models.BooleanField(default=DEFAULT_WORKING_DAYS["wednesday"])
+    thursday = models.BooleanField(default=DEFAULT_WORKING_DAYS["thursday"])
+    friday = models.BooleanField(default=DEFAULT_WORKING_DAYS["friday"])
+    saturday = models.BooleanField(default=DEFAULT_WORKING_DAYS["saturday"])
+    sunday = models.BooleanField(default=DEFAULT_WORKING_DAYS["sunday"])
+
     class Meta:
         verbose_name = "Working Days"
         verbose_name_plural = "Working Days"
@@ -96,15 +105,6 @@ class WorkingDays(models.Model):
 
     def __unicode__(self):
         return ""
-
-    provider_allocation = models.OneToOneField("ProviderAllocation")
-    monday = models.BooleanField(default=DEFAULT_WORKING_DAYS["monday"])
-    tuesday = models.BooleanField(default=DEFAULT_WORKING_DAYS["tuesday"])
-    wednesday = models.BooleanField(default=DEFAULT_WORKING_DAYS["wednesday"])
-    thursday = models.BooleanField(default=DEFAULT_WORKING_DAYS["thursday"])
-    friday = models.BooleanField(default=DEFAULT_WORKING_DAYS["friday"])
-    saturday = models.BooleanField(default=DEFAULT_WORKING_DAYS["saturday"])
-    sunday = models.BooleanField(default=DEFAULT_WORKING_DAYS["sunday"])
 
 
 def get_current_day_as_string():

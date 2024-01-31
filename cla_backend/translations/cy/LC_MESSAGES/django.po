@@ -836,7 +836,7 @@ msgstr ""
 
 #: apps/diagnosis/data/graph.graphml.tpl:92
 #, fuzzy
-#| msgid "Home owner, and the nature of the debt means they are at immediate risk of losing their home *(Includes shared ownership if the client is living in the property)*"
+#| msgid "Home owner, and the nature of the debt means they are at immediate risk of losing their home ( *Includes shared ownership if the client is living in the property* )"
 msgid "Home owner, and the nature of the debt means they are at immediate risk of losing their home ( *Includes shared ownership if the client is living in the property* )"
 msgstr "Mae perchennog y cartref a natur y ddyled yn golygu eu bod mewn perygl di-oed o golli eu cartref ( *Mae'n cynnwys cyd- berchnogaeth os yw'r cleient yn byw yn yr eiddo* ) "
 

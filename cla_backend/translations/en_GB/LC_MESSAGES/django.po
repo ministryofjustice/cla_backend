@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CLA Backend\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-31 10:21+0000\n"
+"POT-Creation-Date: 2024-01-31 11:39+0000\n"
 "PO-Revision-Date: 2015-05-20 12:59+0000\n"
 "Last-Translator: Igor U\n"
 "Language-Team: English (http://www.transifex.com/projects/p/cla-backend/language/en/)\n"
@@ -796,7 +796,7 @@ msgid ""
 msgstr ""
 
 #: apps/diagnosis/data/graph.graphml.tpl:92
-msgid "Home owner, and the nature of the debt means they are at immediate risk of losing their home * (Includes shared ownership if the client is living in the property) *"
+msgid "Home owner, and the nature of the debt means they are at immediate risk of losing their home ( *Includes shared ownership if the client is living in the property* )"
 msgstr ""
 
 #: apps/diagnosis/data/graph.graphml.tpl:95

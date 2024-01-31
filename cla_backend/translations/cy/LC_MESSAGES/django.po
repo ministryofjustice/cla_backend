@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CLA Backend\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-31 10:21+0000\n"
+"POT-Creation-Date: 2024-01-31 11:39+0000\n"
 "PO-Revision-Date: 2016-04-12 15:07+0000\n"
 "Last-Translator: Welsh Language Unit <welsh.language.unit.manager@hmcts.gsi.gov.uk>\n"
 "Language-Team: Welsh (http://www.transifex.com/ministry-of-justice/cla-backend/language/cy/)\n"
@@ -837,7 +837,7 @@ msgstr ""
 #: apps/diagnosis/data/graph.graphml.tpl:92
 #, fuzzy
 #| msgid "Home owner, and the nature of the debt means they are at immediate risk of losing their home *(Includes shared ownership if the client is living in the property)*"
-msgid "Home owner, and the nature of the debt means they are at immediate risk of losing their home * (Includes shared ownership if the client is living in the property) *"
+msgid "Home owner, and the nature of the debt means they are at immediate risk of losing their home ( *Includes shared ownership if the client is living in the property* )"
 msgstr "Mae perchennog y cartref a natur y ddyled yn golygu eu bod mewn perygl di-oed o golli eu cartref *(Mae'n cynnwys cyd- berchnogaeth os yw'r cleient yn byw yn yr eiddo)* "
 
 #: apps/diagnosis/data/graph.graphml.tpl:95

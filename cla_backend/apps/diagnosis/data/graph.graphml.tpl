@@ -89,7 +89,7 @@ Clients in temporary accommodation will be covered for in scope housing.{% endbl
       <data key="d10" xml:space="preserve">n2</data>
       </node>
     <node id="n3">
-      <data key="d3" xml:space="preserve">{% trans "Home owner, and the nature of the debt means they are at immediate risk of losing their home *(Includes shared ownership if the client is living in the property)*" %}</data>
+      <data key="d3" xml:space="preserve">{% trans "Home owner, and the nature of the debt means they are at immediate risk of losing their home * (Includes shared ownership if the client is living in the property) *" %}</data>
       <data key="d4" xml:space="preserve">Client owns a house </data>
       <data key="d7" xml:space="preserve">1</data>
       <data key="d8" xml:space="preserve">{% blocktrans %}A client's home is defined as the house, caravan, houseboat or other vehicle or structure that is their only or main residence. The references to caravan, houseboat or other vehicle include the land on which it is located or to which it is moored.
@@ -102,6 +102,7 @@ Search guidance for 'timeline' to see the home repossession timeline.
 
 *FYI: Debt matters need to arise from an issue where the client owns their own home. Problems relating to homes that are rented or leased from another person fall within Housing.*{% endblocktrans %}</data>
       <data key="d10" xml:space="preserve">n3</data>
+      <data key="d11" xml:space="preserve"/>
       </node>
     <node id="n4">
       <data key="d3" xml:space="preserve">{% trans "The mortgage lender is seeking or has sought a court order to recover the property (due to mortgage arrears)" %}</data>
@@ -4212,13 +4213,10 @@ Remember to record details of the conversation in your CHS notes.]*{% endblocktr
     <edge id="e480" source="n356" target="n180">
       </edge>
     <edge id="e481" source="n179" target="n355">
-      <data key="d16"/>
       </edge>
     <edge id="e482" source="n179" target="n357">
-      <data key="d16"/>
       </edge>
     <edge id="e483" source="n357" target="n356">
-      <data key="d16"/>
       </edge>
   </graph>
   <data key="d14">

@@ -69,6 +69,8 @@ django-braces==1.8.1
     # via
     #   -r requirements/source/requirements-base.in
     #   django-oauth-toolkit
+django-cookies-samesite==0.9.0
+    # via -r requirements/source/requirements-base.in
 django-debug-toolbar==1.2.2
     # via -r requirements/source/requirements-dev.in
 django-docopt-command==0.2.0
@@ -295,6 +297,8 @@ typing==3.10.0.0
     # via
     #   importlib-resources
     #   pathlib2
+ua-parser==0.10.0
+    # via django-cookies-samesite
 unittest-xml-reporting==2.5.1
     # via -r requirements/source/requirements-testing.in
 urllib3-secure-extra==0.1.0

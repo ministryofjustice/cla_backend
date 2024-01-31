@@ -182,6 +182,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "iia425u_J_pwntnEyqBuI1xBDqOX8nZ4uC73e
 
 MIDDLEWARE_CLASSES = (
     "django.middleware.locale.LocaleMiddleware",
+    "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -190,6 +191,7 @@ MIDDLEWARE_CLASSES = (
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "status.middleware.MaintenanceModeMiddleware",
+    "django_cookies_samesite.middleware.CookiesSameSite",
 )
 
 ROOT_URLCONF = "cla_backend.urls"
@@ -327,6 +329,17 @@ if "SENTRY_DSN" in os.environ:
 
 LOGIN_FAILURE_LIMIT = 5
 LOGIN_FAILURE_COOLOFF_TIME = 60  # in minutes
+
+# Whether to use the non-RFC standard httpOnly flag (IE, FF3+, others)
+SESSION_COOKIE_HTTPONLY = True
+CSRF_COOKIE_HTTPONLY = True
+
+# Whether the session cookie should be secure (https:// only).
+CSRF_COOKIE_SECURE = not DEBUG
+SESSION_COOKIE_SECURE = not DEBUG
+
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SESSION_COOKIE_SAMESITE = "strict"
 
 # Django rest-framework-overrides
 REST_FRAMEWORK = {

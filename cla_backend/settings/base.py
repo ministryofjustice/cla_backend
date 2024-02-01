@@ -192,6 +192,7 @@ MIDDLEWARE_CLASSES = (
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "status.middleware.MaintenanceModeMiddleware",
     "django_cookies_samesite.middleware.CookiesSameSite",
+    "csp.middleware.CSPMiddleware",
 )
 
 ROOT_URLCONF = "cla_backend.urls"
@@ -341,6 +342,27 @@ SESSION_COOKIE_SECURE = not DEBUG
 
 SECURE_CONTENT_TYPE_NOSNIFF = True
 SESSION_COOKIE_SAMESITE = "strict"
+
+CSP_DEFAULT_SRC = [
+    "'self'",
+    "o345774.ingest.sentry.io",
+    "www.googletagmanager.com",
+    "www.google.co.uk",
+    "*.analytics.google.com",
+    "ws:",
+    "wss:",
+    "stats.g.doubleclick.net",
+]
+if "localhost" in ALLOWED_HOSTS:
+    CSP_DEFAULT_SRC += "localhost:*"
+CSP_FONT_SRC = ["'self'", "data:"]
+CSP_STYLE_SRC = ["'self'", "'unsafe-inline'"]
+
+if AWS_STORAGE_BUCKET_NAME:
+    AWS_STORAGE_BUCKET_HOSTNAME = AWS_STORAGE_BUCKET_NAME + ".s3.amazonaws.com"
+    CSP_DEFAULT_SRC.append(AWS_STORAGE_BUCKET_HOSTNAME)
+    CSP_FONT_SRC.append(AWS_STORAGE_BUCKET_HOSTNAME)
+    CSP_STYLE_SRC.append(AWS_STORAGE_BUCKET_HOSTNAME)
 
 # Django rest-framework-overrides
 REST_FRAMEWORK = {

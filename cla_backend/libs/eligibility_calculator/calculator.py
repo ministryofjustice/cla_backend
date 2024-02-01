@@ -217,13 +217,6 @@ class EligibilityChecker(object):
                     return False
             return True
 
-        if case_data.facts.has_partner:
-            # If they have a partner then that may increase assets that they need to delare, so
-            # this section is not complete until we clear up if there is a partner
-            if not is_savings_data_complete(case_data.partner.savings):
-                return False
-        return is_savings_data_complete(case_data.you.savings)
-
     @staticmethod
     def _translate_section_capital(case_data, request_data):
         """

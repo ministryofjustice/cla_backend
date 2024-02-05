@@ -145,7 +145,11 @@ class EligibilityChecker(object):
     @staticmethod
     def _translate_section_gross_income(case_data, request_data):
         def is_gross_income_complete(case_data):
+            if not "you" in case_data.__dict__:
+                return False
             person = case_data.you
+            if not "income" in person.__dict__:
+                return False
             income = person.income
             income_keys_if_complete = set(income.PROPERTY_META.keys())
             # cla_public will remove the `income.child_benefits` key from CaseDict if you submit /benefits without

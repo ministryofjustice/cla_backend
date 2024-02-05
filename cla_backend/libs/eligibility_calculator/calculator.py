@@ -303,14 +303,21 @@ class EligibilityChecker(object):
     @staticmethod
     def _translate_capital_data(case_data):
         request_data = {}
-        request_data.update(translate_savings(case_data.you.savings))
-        request_data.update(translate_property(case_data.property_data))
+        if "you" in case_data.__dict__ and "savings" in case_data.you.__dict__:
+            request_data.update(translate_savings(case_data.you.savings))
 
-        disputed_savings = translate_savings(case_data.disputed_savings, subject_matter_of_dispute=True)
-        capitals = request_data["capitals"]
-        disputed_capitals = disputed_savings["capitals"]
-        for key in capitals.keys():
-            capitals[key] += disputed_capitals[key]
+        if "property_data" in case_data.__dict__:
+            request_data.update(translate_property(case_data.property_data))
+
+        if "disputed_savings" in case_data.__dict__:
+            disputed_savings = translate_savings(case_data.disputed_savings, subject_matter_of_dispute=True)
+            if "capitals" in request_data:
+                capitals = request_data["capitals"]
+                disputed_capitals = disputed_savings["capitals"]
+                for key in capitals.keys():
+                    capitals[key] += disputed_capitals[key]
+            else:
+                request_data.update(disputed_savings)
         return request_data
 
     def _translate_response(self, cfe_response):

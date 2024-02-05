@@ -178,6 +178,11 @@ class EligibilityChecker(object):
         """
 
         def is_disposable_income_complete(case_data):
+            if not "you" in case_data.__dict__:
+                return False
+            person = case_data.you
+            if not "deductions" in person.__dict__:
+                return False
             deductions = case_data.you.deductions
             for key in deductions.PROPERTY_META:
                 if not key in deductions.__dict__:

@@ -23,6 +23,7 @@ class ModelMixin(object):
                 v = property_meta_value(**v)
             setattr(self, kw, v)
 
+    # only called if the attribute is not in the class __dict__ (that is done by __get_attribute__)
     def __getattr__(self, kw):
         obj_name = self.__class__.__name__
 

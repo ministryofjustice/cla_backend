@@ -256,7 +256,8 @@ class EligibilityChecker(object):
         # how old the partner is
         partner_dob = str(submission_date - relativedelta(years=40))
         request_data = {"partner": {"date_of_birth": partner_dob}}
-        request_data.update(translate_savings(partner.savings))
+        if "savings" in partner.__dict__:
+            request_data.update(translate_savings(partner.savings))
 
         request_data.update(EligibilityChecker._translate_income_data(partner))
 

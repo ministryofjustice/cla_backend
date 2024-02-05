@@ -182,10 +182,17 @@ class EligibilityChecker(object):
         """
 
         def is_disposable_income_complete(case_data):
-            if not is_deductions_complete(case_data.you.deductions):
+            if not hasattr(case_data, "you"):
                 return False
+            person = case_data.you
+            if not hasattr(person, "deductions"):
+                return False
+            deductions = case_data.you.deductions
+            for key in deductions.PROPERTY_META:
+                if not hasattr(deductions, key):
+                    return False
 
-            if case_data.facts.has_partner and not is_deductions_complete(case_data.partner.deductions):
+            if not hasattr(case_data.facts, "has_partner"):
                 # If they have a partner then their deductions can lower the disposable income further,
                 # so this section is not complete until we know the partners' figures
                 return False

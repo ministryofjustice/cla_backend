@@ -91,6 +91,9 @@ class EligibilityChecker(object):
 
     @staticmethod
     def _is_data_complete_enough_to_call_cfe(case_data):
+        if not "facts" in case_data.__dict__:
+            # facts section is at the root of everything, so we require it call CFE
+            return False
         if EligibilityChecker._under_18_passported(case_data):
             # no more info needed
             return True
@@ -125,7 +128,6 @@ class EligibilityChecker(object):
         EligibilityChecker._translate_section_disposable_income(case_data, request_data)
         EligibilityChecker._translate_section_capital(case_data, request_data)
 
-        # Checkong __dict__ because getattr/hasattr is overridden in model, and here we want the 'actual' answer
         if "category" in case_data.__dict__:
             request_data["proceeding_types"] = translate_proceeding_types(case_data.category)
         if "facts" in case_data.__dict__:

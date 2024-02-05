@@ -265,10 +265,16 @@ class EligibilityChecker(object):
     @staticmethod
     def _translate_income_data(person):
         request_data = {}
-        regular_income = translate_income(person.income)
-        request_data.update(translate_employment(person.income, person.deductions))
-        regular_outgoings = translate_deductions(person.deductions)
-        request_data.update(EligibilityChecker._merge_regular_transaction_data(regular_income, regular_outgoings))
+        if "income" in person.__dict__:
+            regular_income = translate_income(person.income)
+            if "deductions" in person.__dict__:
+                request_data.update(translate_employment(person.income, person.deductions))
+                regular_outgoings = translate_deductions(person.deductions)
+                request_data.update(
+                    EligibilityChecker._merge_regular_transaction_data(regular_income, regular_outgoings)
+                )
+            else:
+                request_data.update(regular_income)
 
         return request_data
 

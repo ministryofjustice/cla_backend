@@ -16,7 +16,7 @@ def translate_income(income_data):
 
     for income_category in INCOME_CATEGORY_TO_REGULAR_TRANSACTION:
         amount_pence = getattr(income_data, income_category)
-        if amount_pence is not None:
+        if amount_pence:
             regular_transactions.append(
                 {
                     "category": INCOME_CATEGORY_TO_REGULAR_TRANSACTION[income_category],
@@ -25,5 +25,4 @@ def translate_income(income_data):
                     "amount": pence_to_pounds(amount_pence),
                 }
             )
-    non_zero_transactions = [x for x in regular_transactions if x["amount"] > 0]
-    return {"regular_transactions": non_zero_transactions}
+    return {"regular_transactions": regular_transactions}

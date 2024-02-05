@@ -49,13 +49,13 @@ class Income(ModelMixin, object):
     PROPERTY_META = {
         "earnings": 0,
         "self_employment_drawings": 0,
-        "benefits": None,
-        "tax_credits": None,
-        "child_benefits": None,
-        "maintenance_received": None,
-        "pension": None,
-        "other_income": None,
-        "self_employed": None,
+        "benefits": 0,
+        "tax_credits": 0,
+        "child_benefits": 0,
+        "maintenance_received": 0,
+        "pension": 0,
+        "other_income": 0,
+        "self_employed": False,
     }
 
     @property
@@ -76,11 +76,11 @@ class Deductions(ModelMixin, object):
     PROPERTY_META = {
         "income_tax": 0,
         "national_insurance": 0,
-        "maintenance": None,
-        "childcare": None,
-        "mortgage": None,
-        "rent": None,
-        "criminal_legalaid_contributions": None,
+        "maintenance": 0,
+        "childcare": 0,
+        "mortgage": 0,
+        "rent": 0,
+        "criminal_legalaid_contributions": 0,
     }
 
 

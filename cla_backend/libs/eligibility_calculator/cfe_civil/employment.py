@@ -6,7 +6,7 @@ logger = __import__("logging").getLogger(__name__)
 # fields in both CFE's employment_details and self_employment_details sections
 def _common_income_fields(gross, deductions):
     return {
-        "gross": gross,
+        "gross": pence_to_pounds(gross),
         "tax": -pence_to_pounds(deductions.income_tax),
         "frequency": "monthly",
         "prisoner_levy": 0,
@@ -16,8 +16,8 @@ def _common_income_fields(gross, deductions):
 
 
 def translate_employment(income, deductions):
-    gross = pence_to_pounds(income.earnings)
-    gross += pence_to_pounds(income.self_employment_drawings)
+    gross = income.earnings
+    gross += income.self_employment_drawings
 
     if (
         gross == 0

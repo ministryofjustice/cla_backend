@@ -47,8 +47,8 @@ class Savings(ModelMixin, object):
 
 class Income(ModelMixin, object):
     PROPERTY_META = {
-        "earnings": None,
-        "self_employment_drawings": None,
+        "earnings": 0,
+        "self_employment_drawings": 0,
         "benefits": None,
         "tax_credits": None,
         "child_benefits": None,
@@ -74,8 +74,8 @@ class Income(ModelMixin, object):
 
 class Deductions(ModelMixin, object):
     PROPERTY_META = {
-        "income_tax": None,
-        "national_insurance": None,
+        "income_tax": 0,
+        "national_insurance": 0,
         "maintenance": None,
         "childcare": None,
         "mortgage": None,

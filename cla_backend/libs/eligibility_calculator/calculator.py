@@ -190,7 +190,7 @@ class EligibilityChecker(object):
 
     @staticmethod
     def is_property_complete(case_data):
-        if not hasattr(case_data.facts, "has_partner"):
+        if not "has_partner" in case_data.facts.__dict__:
             # If they have a partner then that may increase assets that they need to delare, so
             # this section is not complete until we clear up if there is a partner
             return False

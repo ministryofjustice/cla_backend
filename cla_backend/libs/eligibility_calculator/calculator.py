@@ -151,7 +151,7 @@ class EligibilityChecker(object):
             # required for income to be considered complete
             income_keys_if_complete.remove("child_benefits")
             for key in income_keys_if_complete:
-                if getattr(income, key) is None:
+                if not key in income.__dict__:
                     return False
             return True
 

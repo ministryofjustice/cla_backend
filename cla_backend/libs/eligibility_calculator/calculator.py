@@ -144,7 +144,9 @@ class EligibilityChecker(object):
 
     @staticmethod
     def _translate_section_gross_income(case_data, request_data):
-        def is_income_complete(income):
+        def is_gross_income_complete(case_data):
+            person = case_data.you
+            income = person.income
             income_keys_if_complete = set(income.PROPERTY_META.keys())
             # cla_public will remove the `income.child_benefits` key from CaseDict if you submit /benefits without
             # checking the child benefit checkbox (which doesn't even appear if dependants_young=0). So this key is not
@@ -153,18 +155,8 @@ class EligibilityChecker(object):
             for key in income_keys_if_complete:
                 if not key in income.__dict__:
                     return False
-            return True
 
-        """
-        Determine if the questions for gross income section of the test have been completed by the user yet,
-        and put this in the CFE request.
-        """
-
-        def is_gross_income_complete(case_data):
-            if not is_income_complete(case_data.you.income):
-                return False
-
-            if case_data.facts.has_partner and not is_income_complete(case_data.partner.income):
+            if "has_partner" not in case_data.facts.__dict__:
                 # If they have a partner then their deductions can lower the disposable income further,
                 # so this section is not complete until we know the partners' figures
                 return False
@@ -182,17 +174,12 @@ class EligibilityChecker(object):
         """
 
         def is_disposable_income_complete(case_data):
-            if not hasattr(case_data, "you"):
-                return False
-            person = case_data.you
-            if not hasattr(person, "deductions"):
-                return False
             deductions = case_data.you.deductions
             for key in deductions.PROPERTY_META:
-                if not hasattr(deductions, key):
+                if not key in deductions.__dict__:
                     return False
 
-            if not hasattr(case_data.facts, "has_partner"):
+            if not "has_partner" in case_data.facts.__dict__:
                 # If they have a partner then their deductions can lower the disposable income further,
                 # so this section is not complete until we know the partners' figures
                 return False

@@ -197,18 +197,23 @@ class EligibilityChecker(object):
 
         if len(case_data.property_data) == 0:
             return True
-        for key, value in case_data.property_data[0].iteritems():
+        for key, value in case_data.property_data[0].items():
             if value is not None:
                 return True
         return False
 
     @staticmethod
     def _is_savings_complete(case_data):
-        def is_savings_data_complete(savings):
-            for key in savings.PROPERTY_META:
-                if not isinstance(getattr(savings, key), (types.IntType, types.LongType)):
-                    return False
-            return True
+        if not "has_partner" in case_data.facts.__dict__:
+            # If they have a partner then that may increase assets that they need to delare, so
+            # this section is not complete until we clear up if there is a partner
+            return False
+
+        savings = case_data.you.savings
+        for key in savings.PROPERTY_META:
+            if not isinstance(getattr(savings, key), (types.IntType, types.LongType)):
+                return False
+        return True
 
     @staticmethod
     def _translate_section_capital(case_data, request_data):

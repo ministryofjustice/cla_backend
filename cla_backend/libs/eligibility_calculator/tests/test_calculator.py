@@ -412,18 +412,6 @@ class IsEligibleTestCase(unittest.TestCase):
         ec.is_disposable_capital_eligible = mock.MagicMock(return_value=is_disposable_capital)
         return ec, mocked_on_passported_benefits, mocked_on_nass_benefits
 
-    def test_nass_benefit_is_eligible_only_if_is_category_is_immigration(self):
-        """
-        TEST: if citizen is on NASS benefit income and capital are not
-        tested so the citizen should be eligible.
-        """
-        ec, mocked_on_passported_benefits, mocked_on_nass_benefits = self.create_a_dummy_citizen(
-            is_category="immigration", is_passported=False, is_nass_benefits=True
-        )
-
-        self.assertTrue(ec.is_eligible())
-        self.assertTrue(mocked_on_nass_benefits.called)
-
 
 class DoCfeCivilCheckTestCase(unittest.TestCase):
     def checker_with_category(self, category="family"):

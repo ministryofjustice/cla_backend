@@ -94,8 +94,8 @@ class EligibilityChecker(object):
         if EligibilityChecker._under_18_passported(case_data):
             # no more info needed
             return True
-        if (case_data.facts.on_passported_benefits is None) or (
-            case_data.facts.dependants_young is None and not case_data.facts.on_passported_benefits
+        if not "dependants_young" in case_data.facts.__dict__ and not (
+            "on_passported_benefits" in case_data.facts.__dict__ and case_data.facts.on_passported_benefits
         ):
             # the gross income threshold may increase, depending on the number of child dependants,
             # so we can't do gross income section - even if we tell CFE it is incomplete, if the gross income
@@ -125,20 +125,19 @@ class EligibilityChecker(object):
         EligibilityChecker._translate_section_disposable_income(case_data, request_data)
         EligibilityChecker._translate_section_capital(case_data, request_data)
 
-        if hasattr(case_data, "category"):
+        # Checkong __dict__ because getattr/hasattr is overridden in model, and here we want the 'actual' answer
+        if "category" in case_data.__dict__:
             request_data["proceeding_types"] = translate_proceeding_types(case_data.category)
-        if hasattr(case_data, "facts"):
+        if "facts" in case_data.__dict__:
             request_data["applicant"] = EligibilityChecker._translate_applicant_data(submission_date, case_data.facts)
             request_data["assessment"].update(translate_under_18_passported(case_data.facts))
             request_data.update(translate_dependants(submission_date, case_data.facts))
-            if hasattr(case_data, "partner") and case_data.facts.should_aggregate_partner:
-                request_data["partner"] = EligibilityChecker._translate_partner_data(
-                    case_data.partner, submission_date
-                )
+            if "partner" in case_data.__dict__ and case_data.facts.should_aggregate_partner:
+                request_data["partner"] = EligibilityChecker._translate_partner_data(case_data.partner, submission_date)
 
         request_data.update(EligibilityChecker._translate_capital_data(case_data))
 
-        if hasattr(case_data, "you"):
+        if "you" in case_data.__dict__:
             request_data.update(EligibilityChecker._translate_income_data(case_data.you))
 
         return request_data

@@ -6,11 +6,6 @@ from . import exceptions
 class ModelMixin(object):
     PROPERTY_META = None
 
-    @staticmethod
-    def is_a_subclass_of_model_mixin(property_meta_value):
-        is_a_class = isinstance(property_meta_value, types.TypeType)
-        return is_a_class and issubclass(property_meta_value, ModelMixin)
-
     def __init__(self, *args, **kwargs):
         for kw, v in kwargs.items():
             if kw not in self.PROPERTY_META:
@@ -19,22 +14,28 @@ class ModelMixin(object):
                 )
 
             property_meta_value = self.PROPERTY_META.get(kw)
-            if self.is_a_subclass_of_model_mixin(property_meta_value):
+            if _is_a_subclass_of_model_mixin(property_meta_value):
                 v = property_meta_value(**v)
             setattr(self, kw, v)
 
     # only called if the attribute is not in the class __dict__ (that is done by __get_attribute__)
+    # Attribute has not been set in the constructor, so we'll return a default value
     def __getattr__(self, kw):
         obj_name = self.__class__.__name__
 
         if kw in self.PROPERTY_META:
             property_meta_value = self.PROPERTY_META[kw]
-            if self.is_a_subclass_of_model_mixin(property_meta_value):
+            if _is_a_subclass_of_model_mixin(property_meta_value):
                 return property_meta_value()
             else:
                 return property_meta_value
 
         raise AttributeError("'{obj_name}' object has no attribute '{kw}'".format(obj_name=obj_name, kw=kw))
+
+
+def _is_a_subclass_of_model_mixin(property_meta_value):
+    is_a_class = isinstance(property_meta_value, types.TypeType)
+    return is_a_class and issubclass(property_meta_value, ModelMixin)
 
 
 class Savings(ModelMixin, object):

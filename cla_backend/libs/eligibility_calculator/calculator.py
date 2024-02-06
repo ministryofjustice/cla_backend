@@ -91,6 +91,10 @@ class EligibilityChecker(object):
 
     @staticmethod
     def _is_data_complete_enough_to_call_cfe(case_data):
+        # The CFE means calculation doesn't always need all the case_data fields known. Here we check for the presence of certain fields.
+        # We can't use hasattr(case_data, "<field_name>") to know if a field has been set, because hasattr() under the hood calls getattr(),
+        # and we've overridden ModelMixin.__getattr__() to return a default value when the field is absent.
+        # So instead, we check for the key in the case_data.__dict__
         if "facts" not in case_data.__dict__:
             # facts section is at the root of everything, so we require it call CFE
             return False
@@ -208,7 +212,7 @@ class EligibilityChecker(object):
 
         if len(case_data.property_data) == 0:
             return True
-        for key, value in case_data.property_data[0].items():
+        for key, value in case_data.property_data[0].iteritems():
             if value is not None:
                 return True
         return False
@@ -222,6 +226,8 @@ class EligibilityChecker(object):
 
         savings = case_data.you.savings
         for key in savings.PROPERTY_META:
+            if key not in savings.__dict__:
+                return False
             if not isinstance(getattr(savings, key), (types.IntType, types.LongType)):
                 return False
         return True

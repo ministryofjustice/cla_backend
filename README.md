@@ -40,7 +40,7 @@ To start the containers:
 
 You can connect to the fox admin application from http://localhost:8010/admin and log in as cla_admin
 
-The run_local.sh script is reliable but slow. Usually you can quickly restart containers with just:
+The run_local.sh script is reliable but slow, because it rebuilds and restarts all the containers. Usually you can quickly restart just the stopped containers with:
 
     docker-compose run start_applications
 

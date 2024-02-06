@@ -91,13 +91,13 @@ class EligibilityChecker(object):
 
     @staticmethod
     def _is_data_complete_enough_to_call_cfe(case_data):
-        if not "facts" in case_data.__dict__:
+        if "facts" not in case_data.__dict__:
             # facts section is at the root of everything, so we require it call CFE
             return False
         if EligibilityChecker._under_18_passported(case_data):
             # no more info needed
             return True
-        if not "dependants_young" in case_data.facts.__dict__ and not (
+        if "dependants_young" not in case_data.facts.__dict__ and not (
             "on_passported_benefits" in case_data.facts.__dict__ and case_data.facts.on_passported_benefits
         ):
             # the gross income threshold may increase, depending on the number of child dependants,
@@ -147,10 +147,10 @@ class EligibilityChecker(object):
     @staticmethod
     def _translate_section_gross_income(case_data, request_data):
         def is_gross_income_complete(case_data):
-            if not "you" in case_data.__dict__:
+            if "you" not in case_data.__dict__:
                 return False
             person = case_data.you
-            if not "income" in person.__dict__:
+            if "income" not in person.__dict__:
                 return False
             income = person.income
             income_keys_if_complete = set(income.PROPERTY_META.keys())
@@ -159,7 +159,7 @@ class EligibilityChecker(object):
             # required for income to be considered complete
             income_keys_if_complete.remove("child_benefits")
             for key in income_keys_if_complete:
-                if not key in income.__dict__:
+                if key not in income.__dict__:
                     return False
 
             if "has_partner" not in case_data.facts.__dict__:
@@ -180,17 +180,17 @@ class EligibilityChecker(object):
         """
 
         def is_disposable_income_complete(case_data):
-            if not "you" in case_data.__dict__:
+            if "you" not in case_data.__dict__:
                 return False
             person = case_data.you
-            if not "deductions" in person.__dict__:
+            if "deductions" not in person.__dict__:
                 return False
             deductions = case_data.you.deductions
             for key in deductions.PROPERTY_META:
-                if not key in deductions.__dict__:
+                if key not in deductions.__dict__:
                     return False
 
-            if not "has_partner" in case_data.facts.__dict__:
+            if "has_partner" not in case_data.facts.__dict__:
                 # If they have a partner then their deductions can lower the disposable income further,
                 # so this section is not complete until we know the partners' figures
                 return False
@@ -201,7 +201,7 @@ class EligibilityChecker(object):
 
     @staticmethod
     def is_property_complete(case_data):
-        if not "has_partner" in case_data.facts.__dict__:
+        if "has_partner" not in case_data.facts.__dict__:
             # If they have a partner then that may increase assets that they need to delare, so
             # this section is not complete until we clear up if there is a partner
             return False
@@ -215,7 +215,7 @@ class EligibilityChecker(object):
 
     @staticmethod
     def _is_savings_complete(case_data):
-        if not "has_partner" in case_data.facts.__dict__:
+        if "has_partner" not in case_data.facts.__dict__:
             # If they have a partner then that may increase assets that they need to delare, so
             # this section is not complete until we clear up if there is a partner
             return False

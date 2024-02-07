@@ -845,7 +845,7 @@ class TestGetBestFitEducationProvider(TestCase):
         education = make_recipe('legalaid.category', code="education", name="Education")
 
         make_recipe('cla_provider.provider_allocation', provider=provider_1, weighted_distribution=0, category=education)
-        make_recipe('cla_provider.provider_allocation', provider=provider_2, weighted_distribution=0.5, category=education) 
+        make_recipe('cla_provider.provider_allocation', provider=provider_2, weighted_distribution=0.5, category=education)
 
         # This is a Wednesday
         with freeze_time("2024-01-03"):

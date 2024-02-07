@@ -724,3 +724,31 @@ class TestGetValidEducationProviders(TestCase):
         assert actual_output == [provider_allocation], actual_output
 
     provider_distribution = {1: 2, 2: 2}  # This is a distribution where provider 1 is assigned 50% of the total cases.
+
+
+class TestGetCasesAssignedToCode(TestCase):
+    def setUp(self):
+        self.helper = ProviderDistributionHelper()
+
+    def test_manref_today(self):
+        now = datetime.datetime.now()
+        case = make_recipe('legalaid.case', outcome_code="MANREF", modified=now)
+        assert case in self.helper.get_cases_assigned_to_code("MANREF", now.date)
+
+    def test_multiple_edff(self):
+        cases = []
+        for day in range(1, 31):
+            now = datetime.datetime.strptime("%d January, 2024" % day, "%d %B, %Y")
+            cases.append(make_recipe('legalaid.case', outcome_code="EDFF", modified=now))
+
+        assert len(cases) == len(self.helper.get_cases_assigned_to_code("EDFF", datetime.datetime.strptime("1 January, 2024", "%d %B, %Y"))) == 30
+
+    def test_multiple_outcome_codes(self):
+        outcome_codes = ["MANREF", "SPFM", "EDFF", "SPOR"]
+        cases = []
+        for day in range(1, 31):
+            now = datetime.datetime.strptime("%d January, 2024" % day, "%d %B, %Y")
+            outcome_code = outcome_codes[day % len(outcome_codes)]  # Iterate across the list of possible outcome codes
+            cases.append(make_recipe('legalaid.case', outcome_code=outcome_code, modified=now))
+
+        assert 8 == len(self.helper.get_cases_assigned_to_code("SPFM", datetime.datetime.strptime("1 January, 2024", "%d %B, %Y")))

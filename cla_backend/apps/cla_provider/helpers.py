@@ -21,6 +21,10 @@ from cla_provider.models import (
 )
 from legalaid.models import Case
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 class ProviderDistributionHelper(object):
     def __init__(self, dt=None):
@@ -78,6 +82,20 @@ class ProviderDistributionHelper(object):
             ret[pa.provider.id] = should_have_num_cases
 
         return ret
+
+    def get_cases_assigned_to_code(self, outcome_code, start_date):
+        """Gets the cases assigned to a given outcome code modified after a given start date
+
+        Args:
+            outcome_code (Str): The outcome code of the case as a string. I.e. "MANREF", "SPFM"
+            start_date (Datetime): The date cases must be modified after to be included
+
+        Returns:
+            List[Case]: A list of cases matching the conditions
+        """
+        cases = Case.objects.filter(outcome_code=outcome_code)
+        cases = cases.filter(modified__gte=start_date)
+        return cases.all()
 
 
 class ProviderAllocationHelper(object):
@@ -178,6 +196,10 @@ class ProviderAllocationHelper(object):
         return groups
 
     def _get_best_fit_provider(self, category):
+        if settings.EDUCATION_ALLOCATION_FEATURE_FLAG:
+            if category.code == "education":
+                return self.get_best_fit_education_provider(category)
+
         current_distribution = self.distribution.get_distribution(category, include_pre_allocations=True)
         total_current_cases = sum(current_distribution.values())
 
@@ -214,6 +236,70 @@ class ProviderAllocationHelper(object):
         # else everyone doesn't have any allocation so just pick randomly
         return self._get_random_provider(category)
 
+    def _get_provider_allocation_difference_vs_ideal(self, provider_allocation, distribution, total_cases):
+        """Returns the how many cases the provider should be given to hit their weighted distribution.
+        This returns a float rather than an int as it is only used to compare providers against each other.
+
+        Args:
+            provider_allocation (cla_provider.ProviderAllocation): The provider allocation
+            distribution (dict): The current distribution, a dictionary of the form {provider_id: num_cases}
+            total_cases (int): The total number of cases assigned to the category
+
+        Return:
+            num_cases (Float): The number of cases the provider needs to receive to hit their weighted distribution.
+        """
+        try:
+            num_cases_ideal = float(provider_allocation.weighted_distribution * total_cases)
+        except AttributeError:
+            logger.error("Provider allocation %s has no weighted distribution" % provider_allocation)
+
+        provider_id = provider_allocation.provider.id
+
+        if provider_id not in distribution.keys():
+            return num_cases_ideal
+
+        provider_current_num_cases = distribution[provider_id]
+        return num_cases_ideal - provider_current_num_cases
+
+    def get_best_fit_education_provider(self, education_category):
+        """ This gets the education provider furthest away from their contracted weighted distribution.
+
+        Args:
+            category (Category): The education legal aid category
+
+        Return:
+            provider (cla_provider.provider): The best fit education provider
+        """
+
+        if education_category.code != "education":
+            logger.error("Invalid category passed to get_best_fit_education_provider")
+            return None
+
+        valid_providers = self.get_valid_education_providers(education_category)
+
+        if valid_providers == [] or valid_providers is None:
+            return None
+
+        current_distribution = self.distribution.get_distribution(education_category, include_pre_allocations=True)
+
+        total_cases = sum(current_distribution.values())
+
+        last_updated_datetime = ProviderAllocation.objects.filter(category=education_category).order_by("-modified").first().modified
+
+        # The EDFF code is used to denote cases assigned to Face to Face providers, they should be included in the total cases
+        cases_with_edff_code = self.distribution.get_cases_assigned_to_code("EDFF", last_updated_datetime)
+
+        total_cases += len(cases_with_edff_code)
+
+        # Create a dict of providers vs their required number of cases to reach ideal
+        provider_cases_vs_ideal = {}
+
+        for provider_allocation in valid_providers:
+            provider_cases_vs_ideal[provider_allocation] = self._get_provider_allocation_difference_vs_ideal(provider_allocation, current_distribution, total_cases)
+
+        sorted_provider_cases_vs_ideal = sorted(provider_cases_vs_ideal, reverse=True)
+        return sorted_provider_cases_vs_ideal[0]
+
     def is_provider_under_capacity(self, provider_allocation):
         """Returns True or False depending on if the provider is under
         their allocated capacity for a given category.
@@ -232,6 +318,12 @@ class ProviderAllocationHelper(object):
         if provider_allocation.provider.id not in current_distribution.keys():
             # The provider has not yet been assigned a case for this category
             return True
+
+        if category.code == "education":
+            # The EDFF code is used to denote cases assigned to Face to Face providers, they should be included in the total cases
+            last_updated_datetime = ProviderAllocation.objects.filter(category=category).order_by("-modified").first().modified
+            cases_with_edff_code = self.distribution.get_cases_assigned_to_code("EDFF", last_updated_datetime)
+            total_current_cases += len(cases_with_edff_code)
 
         provider_current_num_cases = float(current_distribution[provider_allocation.provider.id])
         current_allocation = provider_current_num_cases / total_current_cases

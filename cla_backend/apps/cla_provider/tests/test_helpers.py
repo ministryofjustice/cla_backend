@@ -536,12 +536,14 @@ class TestIsProviderUnderCapacity(TestCase):
 
 
 class TestEducationAllocationCalled(TestCase):
+    def setUp(self):
+        self.education_category = make_recipe("legalaid.category", code="education")
+
     @mock.patch("cla_provider.helpers.ProviderAllocationHelper.get_valid_education_provider_allocations")
     def test_education_category(self, get_valid_education_provider_allocations):
         settings.EDUCATION_ALLOCATION_FEATURE_FLAG = True
         helper = ProviderAllocationHelper()
-        category = make_recipe("legalaid.category", code="education")
-        helper.get_qualifying_providers_allocation(category)
+        helper.get_qualifying_providers_allocation(self.education_category)
 
         assert get_valid_education_provider_allocations.called, "get_valid_education_provider_allocations was not called"
 
@@ -549,21 +551,20 @@ class TestEducationAllocationCalled(TestCase):
     def test_not_education_category(self, get_valid_education_provider_allocations):
         settings.EDUCATION_ALLOCATION_FEATURE_FLAG = True
         helper = ProviderAllocationHelper()
-        category = make_recipe("legalaid.category", code="Not Education")
-        helper.get_qualifying_providers_allocation(category)
+        helper.get_qualifying_providers_allocation(self.education_category)
 
         assert not get_valid_education_provider_allocations.called, "get_valid_education_provider_allocations was called"
 
 
 class TestEducationAllocationFeatureFlag(TestCase):
-    education_category = make_recipe("legalaid.category", code="education")
+    def setUp(self):
+        self.education_category = make_recipe("legalaid.category", code="education")
 
     @mock.patch("cla_provider.helpers.ProviderAllocationHelper.get_valid_education_provider_allocations")
     def test_feature_flag_enabled(self, get_valid_education_provider_allocations):
         settings.EDUCATION_ALLOCATION_FEATURE_FLAG = True
         helper = ProviderAllocationHelper()
-        category = make_recipe("legalaid.category", code="education")
-        helper.get_qualifying_providers_allocation(category)
+        helper.get_qualifying_providers_allocation(self.education_category)
 
         assert get_valid_education_provider_allocations.called, "get_valid_education_provider_allocations was not called"
 
@@ -571,8 +572,7 @@ class TestEducationAllocationFeatureFlag(TestCase):
     def test_feature_flag_disabled(self, get_valid_education_provider_allocations):
         settings.EDUCATION_ALLOCATION_FEATURE_FLAG = False
         helper = ProviderAllocationHelper()
-        category = make_recipe("legalaid.category", code="education")
-        helper.get_qualifying_providers_allocation(category)
+        helper.get_qualifying_providers_allocation(self.education_category)
 
         assert not get_valid_education_provider_allocations.called, "get_valid_education_provider_allocations was called"
 
@@ -581,8 +581,10 @@ class TestGetValidEducationProviders(TestCase):
     working_days_model = "cla_provider.working_days"
     provider_allocation_model = "cla_provider.provider_allocation"
     helper = ProviderAllocationHelper()
-    education_category = make_recipe("legalaid.category", code="education")
     provider_model = "cla_provider.provider"
+
+    def setUp(self):
+        self.education_category = make_recipe("legalaid.category", code="education")
 
     def test_no_providers(self):
         provider_allocations = self.helper.get_valid_education_provider_allocations(self.education_category)
@@ -822,9 +824,11 @@ class TestProviderAllocationDifferenceVsIdeal(TestCase):
 
 class TestGetBestFitEducationProvider(TestCase):
     helper = ProviderAllocationHelper()
-    education_category = make_recipe('legalaid.category', code="education", name="Education")
     provider_model = "cla_provider.provider"
     provider_allocation_model = "cla_provider.provider_allocation"
+
+    def setUp(self):
+        self.education_category = make_recipe("legalaid.category", code="education")
 
     provider_distribution_1 = {1: 0, 2: 10}
 

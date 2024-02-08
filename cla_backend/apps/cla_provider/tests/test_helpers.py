@@ -521,7 +521,7 @@ class TestIsProviderUnderCapacity(TestCase):
     @mock.patch("cla_provider.helpers.ProviderDistributionHelper.get_distribution", return_value=test_case_4)
     def test_blank_distribution(self, _):
         provider_allocation = make_recipe(
-            self.provider_allocation_object, weighted_distribution=0.1, provider=self.provider
+            self.provider_allocation_model, weighted_distribution=0.1, provider=self.provider
         )
         assert self.helper.is_provider_under_capacity(provider_allocation) is True
 
@@ -530,7 +530,7 @@ class TestIsProviderUnderCapacity(TestCase):
     @mock.patch("cla_provider.helpers.ProviderDistributionHelper.get_distribution", return_value=test_case_5)
     def test_larger_sample_size(self, _):
         provider_allocation = make_recipe(
-            self.provider_allocation_object, weighted_distribution=0.051, provider=self.provider
+            self.provider_allocation_model, weighted_distribution=0.051, provider=self.provider
         )
         assert self.helper.is_provider_under_capacity(provider_allocation) is True
 
@@ -538,6 +538,7 @@ class TestIsProviderUnderCapacity(TestCase):
 class TestEducationAllocationCalled(TestCase):
     def setUp(self):
         self.education_category = make_recipe("legalaid.category", code="education")
+        self.not_education_category = make_recipe("legalaid.category", code="Not education")
 
     @mock.patch("cla_provider.helpers.ProviderAllocationHelper.get_valid_education_provider_allocations")
     def test_education_category(self, get_valid_education_provider_allocations):
@@ -551,7 +552,7 @@ class TestEducationAllocationCalled(TestCase):
     def test_not_education_category(self, get_valid_education_provider_allocations):
         settings.EDUCATION_ALLOCATION_FEATURE_FLAG = True
         helper = ProviderAllocationHelper()
-        helper.get_qualifying_providers_allocation(self.education_category)
+        helper.get_qualifying_providers_allocation(self.not_education_category)
 
         assert not get_valid_education_provider_allocations.called, "get_valid_education_provider_allocations was called"
 

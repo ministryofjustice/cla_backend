@@ -562,7 +562,8 @@ class TestEducationAllocationFeatureFlag(TestCase):
     def test_feature_flag_enabled(self, get_valid_education_provider_allocations):
         settings.EDUCATION_ALLOCATION_FEATURE_FLAG = True
         helper = ProviderAllocationHelper()
-        helper.get_qualifying_providers_allocation(self.education_category)
+        category = make_recipe("legalaid.category", code="education")
+        helper.get_qualifying_providers_allocation(category)
 
         assert get_valid_education_provider_allocations.called, "get_valid_education_provider_allocations was not called"
 
@@ -570,7 +571,8 @@ class TestEducationAllocationFeatureFlag(TestCase):
     def test_feature_flag_disabled(self, get_valid_education_provider_allocations):
         settings.EDUCATION_ALLOCATION_FEATURE_FLAG = False
         helper = ProviderAllocationHelper()
-        helper.get_qualifying_providers_allocation(self.education_category)
+        category = make_recipe("legalaid.category", code="education")
+        helper.get_qualifying_providers_allocation(category)
 
         assert not get_valid_education_provider_allocations.called, "get_valid_education_provider_allocations was called"
 

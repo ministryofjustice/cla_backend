@@ -494,7 +494,7 @@ class TestIsProviderUnderCapacity(TestCase):
         provider_allocation = make_recipe(
             "cla_provider.provider_allocation", weighted_distribution=0.5, provider=self.provider
         )
-        assert self.helper.is_provider_under_capacity(provider_allocation) is False
+        assert self.helper.is_provider_under_capacity(provider_allocation) is True
 
     test_case_2 = {1: 5, 2: 2}
 

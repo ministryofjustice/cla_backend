@@ -278,7 +278,7 @@ class ProviderAllocationHelper(object):
         if valid_providers == [] or valid_providers is None:
             return None
 
-        current_distribution = self.distribution.get_distribution(education_category, include_pre_allocations=True)
+        current_distribution = dict(self.distribution.get_distribution(education_category, include_pre_allocations=True))
 
         last_updated_datetime = ProviderAllocation.objects.filter(category=education_category).order_by("-modified").first().modified
 
@@ -324,7 +324,7 @@ class ProviderAllocationHelper(object):
         provider_current_num_cases = float(current_distribution[provider_allocation.provider.id])
         current_allocation = provider_current_num_cases / total_current_cases
 
-        if current_allocation >= provider_allocation.weighted_distribution:
+        if current_allocation > provider_allocation.weighted_distribution:
             return False  # They are over their allocated capacity
 
         return True

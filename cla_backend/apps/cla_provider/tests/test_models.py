@@ -6,10 +6,12 @@ from cla_provider.models import get_current_day_as_string
 
 
 class ProviderModelTestCase(TestCase):
+    provider_model = "cla_provider.provider"
+
     def test_unique_provider_name(self):
-        make_recipe("cla_provider.provider", name="Stephensons")
+        make_recipe(self.provider_model, name="Stephensons")
         with self.assertRaises(IntegrityError):
-            make_recipe("cla_provider.provider", name="Stephensons")
+            make_recipe(self.provider_model, name="Stephensons")
 
 
 class TestGetCurrentDayAsString(TestCase):
@@ -32,10 +34,14 @@ class TestGetCurrentDayAsString(TestCase):
 
 
 class WorkingDaysTestCase(TestCase):
+    provider_model = "cla_provider.provider"
+    provider_allocation_model = "cla_provider.provider_allocation"
+    working_days_model = "cla_provider.working_days"
+
     def test_is_provider_working_today(self):
-        provider1 = make_recipe("cla_provider.provider", active=True)
-        provider_allocation_1 = make_recipe("cla_provider.provider_allocation", provider=provider1)
-        make_recipe("cla_provider.working_days", monday=False, tuesday=True, provider_allocation=provider_allocation_1)
+        provider1 = make_recipe(self.provider_model, active=True)
+        provider_allocation_1 = make_recipe(self.provider_allocation_model, provider=provider1)
+        make_recipe(self.working_days_model, monday=False, tuesday=True, provider_allocation=provider_allocation_1)
 
         with freeze_time("2024-01-08"):  # Monday the 8th of January
             assert provider_allocation_1.is_working_today() is False
@@ -44,22 +50,22 @@ class WorkingDaysTestCase(TestCase):
             assert provider_allocation_1.is_working_today() is True
 
     def test_get_provider_working_days(self):
-        provider1 = make_recipe("cla_provider.provider")
-        provider_allocation_1 = make_recipe("cla_provider.provider_allocation", provider=provider1)
-        make_recipe("cla_provider.working_days", monday=False, tuesday=True, provider_allocation=provider_allocation_1)
+        provider1 = make_recipe(self.provider_model)
+        provider_allocation_1 = make_recipe(self.provider_allocation_model, provider=provider1)
+        make_recipe(self.working_days_model, monday=False, tuesday=True, provider_allocation=provider_allocation_1)
 
         assert provider_allocation_1.working_days == ["tuesday", "wednesday", "thursday", "friday"]
 
     def test_get_default_provider_working_days(self):
-        provider1 = make_recipe("cla_provider.provider")
-        provider_allocation_1 = make_recipe("cla_provider.provider_allocation", provider=provider1)
-        make_recipe("cla_provider.working_days", provider_allocation=provider_allocation_1)
+        provider1 = make_recipe(self.provider_model)
+        provider_allocation_1 = make_recipe(self.provider_allocation_model, provider=provider1)
+        make_recipe(self.working_days_model, provider_allocation=provider_allocation_1)
 
         assert provider_allocation_1.working_days == ["monday", "tuesday", "wednesday", "thursday", "friday"]
 
     def test_no_working_days(self):
-        provider = make_recipe("cla_provider.provider")
-        provider_allocation = make_recipe("cla_provider.provider_allocation", provider=provider)
+        provider = make_recipe(self.provider_model)
+        provider_allocation = make_recipe(self.provider_allocation_model, provider=provider)
 
         with freeze_time("2024-01-08"):  # Monday the 8th of January
             assert provider_allocation.is_working_today() is True
@@ -83,8 +89,8 @@ class WorkingDaysTestCase(TestCase):
             assert provider_allocation.is_working_today() is False
 
     def test_no_working_days_list(self):
-        provider = make_recipe("cla_provider.provider")
-        provider_allocation = make_recipe("cla_provider.provider_allocation", provider=provider)
+        provider = make_recipe(self.provider_model)
+        provider_allocation = make_recipe(self.provider_allocation_model, provider=provider)
 
         working_days = ["monday", "tuesday", "wednesday", "thursday", "friday"]
         weekend_days = ["saturday", "sunday"]

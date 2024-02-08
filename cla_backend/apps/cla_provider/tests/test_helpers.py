@@ -474,6 +474,8 @@ class ProviderAllocationHelperTestCase(TestCase):
 
 
 class TestIsProviderUnderCapacity(TestCase):
+    provider_allocation_model = "cla_provider.provider_allocation"
+
     def setUp(self):
         self.helper = ProviderAllocationHelper()
         self.provider = make_recipe("cla_provider.provider", active=True, id=1)
@@ -483,7 +485,7 @@ class TestIsProviderUnderCapacity(TestCase):
     @mock.patch("cla_provider.helpers.ProviderDistributionHelper.get_distribution", return_value=test_case_0)
     def test_no_current_allocation(self, _):
         self.provider_allocation = make_recipe(
-            "cla_provider.provider_allocation", weighted_distribution=1, provider=self.provider
+            self.provider_allocation_model, weighted_distribution=1, provider=self.provider
         )
         assert self.helper.is_provider_under_capacity(self.provider_allocation) is True
 
@@ -492,7 +494,7 @@ class TestIsProviderUnderCapacity(TestCase):
     @mock.patch("cla_provider.helpers.ProviderDistributionHelper.get_distribution", return_value=test_case_1)
     def test_at_full_capacity(self, _):
         provider_allocation = make_recipe(
-            "cla_provider.provider_allocation", weighted_distribution=0.5, provider=self.provider
+            self.provider_allocation_model, weighted_distribution=0.5, provider=self.provider
         )
         assert self.helper.is_provider_under_capacity(provider_allocation) is True
 
@@ -501,7 +503,7 @@ class TestIsProviderUnderCapacity(TestCase):
     @mock.patch("cla_provider.helpers.ProviderDistributionHelper.get_distribution", return_value=test_case_2)
     def test_above_capacity(self, _):
         provider_allocation = make_recipe(
-            "cla_provider.provider_allocation", weighted_distribution=0.5, provider=self.provider
+            self.provider_allocation_model, weighted_distribution=0.5, provider=self.provider
         )
         assert self.helper.is_provider_under_capacity(provider_allocation) is False
 
@@ -510,7 +512,7 @@ class TestIsProviderUnderCapacity(TestCase):
     @mock.patch("cla_provider.helpers.ProviderDistributionHelper.get_distribution", return_value=test_case_3)
     def test_below_capacity(self, _):
         provider_allocation = make_recipe(
-            "cla_provider.provider_allocation", weighted_distribution=0.5, provider=self.provider
+            self.provider_allocation_model, weighted_distribution=0.6, provider=self.provider
         )
         assert self.helper.is_provider_under_capacity(provider_allocation) is True
 
@@ -519,7 +521,7 @@ class TestIsProviderUnderCapacity(TestCase):
     @mock.patch("cla_provider.helpers.ProviderDistributionHelper.get_distribution", return_value=test_case_4)
     def test_blank_distribution(self, _):
         provider_allocation = make_recipe(
-            "cla_provider.provider_allocation", weighted_distribution=0.1, provider=self.provider
+            self.provider_allocation_object, weighted_distribution=0.1, provider=self.provider
         )
         assert self.helper.is_provider_under_capacity(provider_allocation) is True
 
@@ -528,7 +530,7 @@ class TestIsProviderUnderCapacity(TestCase):
     @mock.patch("cla_provider.helpers.ProviderDistributionHelper.get_distribution", return_value=test_case_5)
     def test_larger_sample_size(self, _):
         provider_allocation = make_recipe(
-            "cla_provider.provider_allocation", weighted_distribution=0.051, provider=self.provider
+            self.provider_allocation_object, weighted_distribution=0.051, provider=self.provider
         )
         assert self.helper.is_provider_under_capacity(provider_allocation) is True
 
@@ -554,12 +556,13 @@ class TestEducationAllocationCalled(TestCase):
 
 
 class TestEducationAllocationFeatureFlag(TestCase):
+    education_category = make_recipe("legalaid.category", code="education")
+
     @mock.patch("cla_provider.helpers.ProviderAllocationHelper.get_valid_education_provider_allocations")
     def test_feature_flag_enabled(self, get_valid_education_provider_allocations):
         settings.EDUCATION_ALLOCATION_FEATURE_FLAG = True
         helper = ProviderAllocationHelper()
-        category = make_recipe("legalaid.category", code="education")
-        helper.get_qualifying_providers_allocation(category)
+        helper.get_qualifying_providers_allocation(self.education_category)
 
         assert get_valid_education_provider_allocations.called, "get_valid_education_provider_allocations was not called"
 
@@ -567,16 +570,17 @@ class TestEducationAllocationFeatureFlag(TestCase):
     def test_feature_flag_disabled(self, get_valid_education_provider_allocations):
         settings.EDUCATION_ALLOCATION_FEATURE_FLAG = False
         helper = ProviderAllocationHelper()
-        category = make_recipe("legalaid.category", code="education")
-        helper.get_qualifying_providers_allocation(category)
+        helper.get_qualifying_providers_allocation(self.education_category)
 
         assert not get_valid_education_provider_allocations.called, "get_valid_education_provider_allocations was called"
 
 
 class TestGetValidEducationProviders(TestCase):
-    def setUp(self):
-        self.helper = ProviderAllocationHelper()
-        self.education_category = make_recipe("legalaid.category", code="education")
+    working_days_model = "cla_provider.working_days"
+    provider_allocation_model = "cla_provider.provider_allocation"
+    helper = ProviderAllocationHelper()
+    education_category = make_recipe("legalaid.category", code="education")
+    provider_model = "cla_provider.provider"
 
     def test_no_providers(self):
         provider_allocations = self.helper.get_valid_education_provider_allocations(self.education_category)
@@ -584,9 +588,9 @@ class TestGetValidEducationProviders(TestCase):
         assert provider_allocations == []
 
     def test_one_providers(self):
-        provider = make_recipe("cla_provider.provider", active=True)
+        provider = make_recipe(self.provider_model, active=True)
         provider_allocation = make_recipe(
-            "cla_provider.provider_allocation", provider=provider, category=self.education_category
+            self.provider_allocation_model, provider=provider, category=self.education_category
         )
 
         actual_output = self.helper.get_valid_education_provider_allocations(self.education_category)
@@ -596,9 +600,9 @@ class TestGetValidEducationProviders(TestCase):
     def test_two_providers(self):
         provider_allocations = []
         for id in range(2):
-            provider = make_recipe("cla_provider.provider", active=True, id=id)
+            provider = make_recipe(self.provider_model, active=True, id=id)
             provider_allocations.append(
-                make_recipe("cla_provider.provider_allocation", provider=provider, category=self.education_category)
+                make_recipe(self.provider_allocation_model, provider=provider, category=self.education_category)
             )
 
         actual_output = self.helper.get_valid_education_provider_allocations(self.education_category)
@@ -606,13 +610,13 @@ class TestGetValidEducationProviders(TestCase):
         assert actual_output == provider_allocations, actual_output
 
     def test_provider_not_working(self):
-        provider = make_recipe("cla_provider.provider", active=True)
+        provider = make_recipe(self.provider_model, active=True)
 
         provider_allocation = make_recipe(
-            "cla_provider.provider_allocation", provider=provider, category=self.education_category
+            self.provider_allocation_model, provider=provider, category=self.education_category
         )
 
-        make_recipe("cla_provider.working_days", monday=False, provider_allocation=provider_allocation)
+        make_recipe(self.working_days_model, monday=False, provider_allocation=provider_allocation)
 
         # This is a Monday so we should expect the provider to be invalid.
         with freeze_time("2024-01-01"):
@@ -621,18 +625,18 @@ class TestGetValidEducationProviders(TestCase):
         assert actual_output == [], actual_output
 
     def test_some_providers_working(self):
-        provider_1 = make_recipe("cla_provider.provider", active=True, id=1)
-        provider_2 = make_recipe("cla_provider.provider", active=True, id=2)
+        provider_1 = make_recipe(self.provider_model, active=True, id=1)
+        provider_2 = make_recipe(self.provider_model, active=True, id=2)
 
         provider_allocation_1 = make_recipe(
-            "cla_provider.provider_allocation", provider=provider_1, category=self.education_category
+            self.provider_allocation_model, provider=provider_1, category=self.education_category
         )
         provider_allocation_2 = make_recipe(
-            "cla_provider.provider_allocation", provider=provider_2, category=self.education_category
+            self.provider_allocation_model, provider=provider_2, category=self.education_category
         )
 
-        make_recipe("cla_provider.working_days", monday=False, provider_allocation=provider_allocation_1)
-        make_recipe("cla_provider.working_days", monday=True, provider_allocation=provider_allocation_2)
+        make_recipe(self.working_days_model, monday=False, provider_allocation=provider_allocation_1)
+        make_recipe(self.working_days_model, monday=True, provider_allocation=provider_allocation_2)
 
         # This is a Monday so we should expect the provider to be invalid.
         with freeze_time("2024-01-01"):
@@ -656,10 +660,10 @@ class TestGetValidEducationProviders(TestCase):
         """ If a provider is over capacity on a Thursday then the case should go to face to face.
         In this situation, the provider is invalid and the operator will manually assign the case.
         """
-        provider = make_recipe("cla_provider.provider", active=True, id=1)
+        provider = make_recipe(self.provider_model, active=True, id=1)
 
         provider_allocation = make_recipe(
-            "cla_provider.provider_allocation",
+            self.provider_allocation_model,
             provider=provider,
             weighted_distribution=0.6,
             category=self.education_category,
@@ -681,7 +685,7 @@ class TestGetValidEducationProviders(TestCase):
         """ If a provider is over capacity on a Thursday then the case should go to face to face.
         In this situation, the provider is invalid and the operator will manually assign the case.
         """
-        provider = make_recipe("cla_provider.provider", active=True, id=1)
+        provider = make_recipe(self.provider_model, active=True, id=1)
 
         provider_allocation = make_recipe(
             "cla_provider.provider_allocation",
@@ -708,7 +712,7 @@ class TestGetValidEducationProviders(TestCase):
         provider = make_recipe("cla_provider.provider", active=True, id=1)
 
         provider_allocation = make_recipe(
-            "cla_provider.provider_allocation",
+            self.provider_allocation_model,
             provider=provider,
             weighted_distribution=0.6,
             category=self.education_category,
@@ -727,34 +731,37 @@ class TestGetValidEducationProviders(TestCase):
 
 
 class TestGetCasesAssignedToCode(TestCase):
-    def setUp(self):
-        self.helper = ProviderDistributionHelper()
+    helper = ProviderDistributionHelper()
+    case_model = "legalaid.case"
+    date_format = "%d %B, %Y"
 
     def test_manref_today(self):
         now = datetime.datetime.now()
-        case = make_recipe('legalaid.case', outcome_code="MANREF", modified=now)
+        case = make_recipe(self.case_model, outcome_code="MANREF", modified=now)
         assert case in self.helper.get_cases_assigned_to_code("MANREF", now.date)
 
     def test_multiple_edff(self):
         cases = []
         for day in range(1, 31):
-            now = datetime.datetime.strptime("%d January, 2024" % day, "%d %B, %Y")
-            cases.append(make_recipe('legalaid.case', outcome_code="EDFF", modified=now))
+            now = datetime.datetime.strptime("%d January, 2024" % day, self.date_format)
+            cases.append(make_recipe(self.case_model, outcome_code="EDFF", modified=now))
 
-        assert len(cases) == len(self.helper.get_cases_assigned_to_code("EDFF", datetime.datetime.strptime("1 January, 2024", "%d %B, %Y"))) == 30
+        assert len(cases) == len(self.helper.get_cases_assigned_to_code("EDFF", datetime.datetime.strptime("1 January, 2024", self.date_format))) == 30
 
     def test_multiple_outcome_codes(self):
         outcome_codes = ["MANREF", "SPFM", "EDFF", "SPOR"]
         cases = []
         for day in range(1, 31):
-            now = datetime.datetime.strptime("%d January, 2024" % day, "%d %B, %Y")
+            now = datetime.datetime.strptime("%d January, 2024" % day, self.date_format)
             outcome_code = outcome_codes[day % len(outcome_codes)]  # Iterate across the list of possible outcome codes
             cases.append(make_recipe('legalaid.case', outcome_code=outcome_code, modified=now))
 
-        assert 8 == len(self.helper.get_cases_assigned_to_code("SPFM", datetime.datetime.strptime("1 January, 2024", "%d %B, %Y")))
+        assert 8 == len(self.helper.get_cases_assigned_to_code("SPFM", datetime.datetime.strptime("1 January, 2024", self.date_format)))
 
 
 class TestProviderAllocationDifferenceVsIdeal(TestCase):
+    provider_model = "cla_provider.provider"
+    provider_allocation_model = "cla_provider.provider_allocation"
 
     @staticmethod
     def isFloatClose(float1, float2):
@@ -764,56 +771,58 @@ class TestProviderAllocationDifferenceVsIdeal(TestCase):
         self.helper = ProviderAllocationHelper()
 
     def test_empty_distribution(self):
-        provider_allocation = make_recipe('cla_provider.provider_allocation', weighted_distribution=0.5)
+        provider_allocation = make_recipe(self.provider_allocation_model, weighted_distribution=0.5)
         assert self.helper._get_provider_allocation_difference_vs_ideal(provider_allocation, {}) == 0
 
     def test_no_weighting(self):
-        provider = make_recipe('cla_provider.provider', id=1)
-        provider_allocation = make_recipe('cla_provider.provider_allocation', weighted_distribution=0, provider=provider)
+        provider = make_recipe(self.provider_model, id=1)
+        provider_allocation = make_recipe(self.provider_allocation_model, weighted_distribution=0, provider=provider)
         distribution = {2: 19, 3: 36}
         assert self.helper._get_provider_allocation_difference_vs_ideal(provider_allocation, distribution) == 0
 
     def test_simple_distribution(self):
-        provider = make_recipe('cla_provider.provider', id=1)
-        provider_allocation = make_recipe('cla_provider.provider_allocation', provider=provider, weighted_distribution=0.5)
+        provider = make_recipe(self.provider_model, id=1)
+        provider_allocation = make_recipe(self.provider_allocation_model, provider=provider, weighted_distribution=0.5)
         distribution = {provider.id: 4}
         assert self.helper._get_provider_allocation_difference_vs_ideal(provider_allocation, distribution) == -2
 
     def test_over_allocated_distribution(self):
-        provider = make_recipe('cla_provider.provider', id=1)
-        provider_allocation = make_recipe('cla_provider.provider_allocation', provider=provider, weighted_distribution=0.5)
+        provider = make_recipe(self.provider_model, id=1)
+        provider_allocation = make_recipe(self.provider_allocation_model, provider=provider, weighted_distribution=0.5)
         distribution = {provider.id: 10}
         assert self.helper._get_provider_allocation_difference_vs_ideal(provider_allocation, distribution) == -5
 
     def test_not_in_distribution(self):
-        provider = make_recipe('cla_provider.provider', id=1)
-        provider_2 = make_recipe('cla_provider.provider', id=2)
-        provider_allocation = make_recipe('cla_provider.provider_allocation', provider=provider, weighted_distribution=0.5)
+        provider = make_recipe(self.provider_model, id=1)
+        provider_2 = make_recipe(self.provider_model, id=2)
+        provider_allocation = make_recipe(self.provider_allocation_model, provider=provider, weighted_distribution=0.5)
         distribution = {provider_2.id: 10}
         assert self.helper._get_provider_allocation_difference_vs_ideal(provider_allocation, distribution) == 5
 
     def test_standard_distribution(self):
-        provider_1 = make_recipe('cla_provider.provider', id=1)
-        provider_2 = make_recipe('cla_provider.provider', id=2)
-        provider_allocation_1 = make_recipe('cla_provider.provider_allocation', provider=provider_1, weighted_distribution=0.6)
-        provider_allocation_2 = make_recipe('cla_provider.provider_allocation', provider=provider_2, weighted_distribution=0.2)
+        provider_1 = make_recipe(self.provider_model, id=1)
+        provider_2 = make_recipe(self.provider_model, id=2)
+        provider_allocation_1 = make_recipe(self.provider_allocation_model, provider=provider_1, weighted_distribution=0.6)
+        provider_allocation_2 = make_recipe(self.provider_allocation_model, provider=provider_2, weighted_distribution=0.2)
         distribution = {provider_1.id: 4, provider_2.id: 10}
         assert self.isFloatClose(self.helper._get_provider_allocation_difference_vs_ideal(provider_allocation_1, distribution), 4.4)
         assert self.isFloatClose(self.helper._get_provider_allocation_difference_vs_ideal(provider_allocation_2, distribution), -7.2)
 
     def test_edff_distribution(self):
-        provider_1 = make_recipe('cla_provider.provider', id=1)
-        provider_2 = make_recipe('cla_provider.provider', id=2)
-        provider_allocation_1 = make_recipe('cla_provider.provider_allocation', provider=provider_1, weighted_distribution=0.6)
-        provider_allocation_2 = make_recipe('cla_provider.provider_allocation', provider=provider_2, weighted_distribution=0.2)
+        provider_1 = make_recipe(self.provider_model, id=1)
+        provider_2 = make_recipe(self.provider_model, id=2)
+        provider_allocation_1 = make_recipe(self.provider_allocation_model, provider=provider_1, weighted_distribution=0.6)
+        provider_allocation_2 = make_recipe(self.provider_allocation_model, provider=provider_2, weighted_distribution=0.2)
         distribution = {provider_1.id: 4, provider_2.id: 10, "EDFF": 10}
         assert self.isFloatClose(self.helper._get_provider_allocation_difference_vs_ideal(provider_allocation_1, distribution), 10.4)
         assert self.isFloatClose(self.helper._get_provider_allocation_difference_vs_ideal(provider_allocation_2, distribution), -5.2)
 
 
 class TestGetBestFitEducationProvider(TestCase):
-    def setUp(self):
-        self.helper = ProviderAllocationHelper()
+    helper = ProviderAllocationHelper()
+    education_category = make_recipe('legalaid.category', code="education", name="Education")
+    provider_model = "cla_provider.provider"
+    provider_allocation_model = "cla_provider.provider_allocation"
 
     provider_distribution_1 = {1: 0, 2: 10}
 
@@ -821,17 +830,15 @@ class TestGetBestFitEducationProvider(TestCase):
         "cla_provider.helpers.ProviderDistributionHelper.get_distribution", return_value=provider_distribution_1
     )
     def test_standard_distribution(self, _):
-        education = make_recipe('legalaid.category', code="education", name="Education")
+        provider_1 = make_recipe(self.provider_model, id=1, active=True)
+        provider_2 = make_recipe(self.provider_model, id=2, active=True)
 
-        provider_1 = make_recipe('cla_provider.provider', id=1, active=True)
-        provider_2 = make_recipe('cla_provider.provider', id=2, active=True)
-
-        make_recipe('cla_provider.provider_allocation', provider=provider_1, weighted_distribution=0.5, category=education)
-        make_recipe('cla_provider.provider_allocation', provider=provider_2, weighted_distribution=0.2, category=education)
+        make_recipe(self.provider_allocation_model, provider=provider_1, weighted_distribution=0.5, category=self.education_category)
+        make_recipe(self.provider_allocation_model, provider=provider_2, weighted_distribution=0.2, category=self.education_category)
 
         # This is a Wednesday
         with freeze_time("2024-01-03"):
-            assert self.helper.get_best_fit_education_provider(education).id == provider_1.id
+            assert self.helper.get_best_fit_education_provider(self.education_category).id == provider_1.id
 
     provider_distribution_2 = {1: 4, 2: 0}
 
@@ -839,17 +846,15 @@ class TestGetBestFitEducationProvider(TestCase):
         "cla_provider.helpers.ProviderDistributionHelper.get_distribution", return_value=provider_distribution_2
     )
     def test_standard_distribution_2(self, _):
-        provider_1 = make_recipe('cla_provider.provider', id=1, active=True)
-        provider_2 = make_recipe('cla_provider.provider', id=2, active=True)
+        provider_1 = make_recipe(self.provider_model, id=1, active=True)
+        provider_2 = make_recipe(self.provider_model, id=2, active=True)
 
-        education = make_recipe('legalaid.category', code="education", name="Education")
-
-        make_recipe('cla_provider.provider_allocation', provider=provider_1, weighted_distribution=0, category=education)
-        make_recipe('cla_provider.provider_allocation', provider=provider_2, weighted_distribution=0.5, category=education)
+        make_recipe(self.provider_allocation_model, provider=provider_1, weighted_distribution=0, category=self.education_category)
+        make_recipe(self.provider_allocation_model, provider=provider_2, weighted_distribution=0.5, category=self.education_category)
 
         # This is a Wednesday
         with freeze_time("2024-01-03"):
-            assert self.helper.get_best_fit_education_provider(education).id == provider_2.id
+            assert self.helper.get_best_fit_education_provider(self.education_category).id == provider_2.id
 
     provider_distribution_3 = {1: 10, 2: 10}
 
@@ -857,33 +862,29 @@ class TestGetBestFitEducationProvider(TestCase):
         "cla_provider.helpers.ProviderDistributionHelper.get_distribution", return_value=provider_distribution_3
     )
     def test_standard_distribution_3(self, _):
-        provider_1 = make_recipe('cla_provider.provider', id=1, active=True)
-        provider_2 = make_recipe('cla_provider.provider', id=2, active=True)
+        provider_1 = make_recipe(self.provider_model, id=1, active=True)
+        provider_2 = make_recipe(self.provider_model, id=2, active=True)
 
-        education = make_recipe('legalaid.category', code="education", name="Education")
-
-        make_recipe('cla_provider.provider_allocation', provider=provider_1, weighted_distribution=0.2, category=education)
-        make_recipe('cla_provider.provider_allocation', provider=provider_2, weighted_distribution=0.6, category=education)
+        make_recipe(self.provider_allocation_model, provider=provider_1, weighted_distribution=0.2, category=self.education_category)
+        make_recipe(self.provider_allocation_model, provider=provider_2, weighted_distribution=0.6, category=self.education_category)
 
         # This is a Wednesday
         with freeze_time("2024-01-03"):
-            assert self.helper.get_best_fit_education_provider(education).id == provider_2.id
+            assert self.helper.get_best_fit_education_provider(self.education_category).id == provider_2.id
 
     @mock.patch(
         "cla_provider.helpers.ProviderDistributionHelper.get_distribution", return_value=provider_distribution_3
     )
     def test_edff_distribution(self, _):
-        provider_1 = make_recipe('cla_provider.provider', id=1, active=True)
-        provider_2 = make_recipe('cla_provider.provider', id=2, active=True)
-
-        education = make_recipe('legalaid.category', code="education", name="Education")
+        provider_1 = make_recipe(self.provider_model, id=1, active=True)
+        provider_2 = make_recipe(self.provider_model, id=2, active=True)
 
         for _ in range(99):
             make_recipe('legalaid.case', outcome_code="EDFF", modified=datetime.datetime.now())
 
-        make_recipe('cla_provider.provider_allocation', provider=provider_1, weighted_distribution=0.2, category=education)
-        make_recipe('cla_provider.provider_allocation', provider=provider_2, weighted_distribution=0.6, category=education)
+        make_recipe('cla_provider.provider_allocation', provider=provider_1, weighted_distribution=0.2, category=self.education_category)
+        make_recipe('cla_provider.provider_allocation', provider=provider_2, weighted_distribution=0.6, category=self.education_category)
 
         # This is a Wednesday
         with freeze_time("2024-01-03"):
-            assert self.helper.get_best_fit_education_provider(education).id == provider_2.id
+            assert self.helper.get_best_fit_education_provider(self.education_category).id == provider_2.id

@@ -11,7 +11,6 @@
     data-inline-model="{{ inline_admin_formset.inline_model_id }}">
     <div class="tabular inline-related {% if forloop.last and inline_admin_formset.has_add_permission %}last-related{% endif %}">
     <fieldset class="module djn-fieldset {{ inline_admin_formset.classes }}">
-        <legend>{% block legend %}Tabular Inline{% block legend %}</legend>
 
     <h2>
         {% if inline_admin_formset.opts.title %}{{ inline_admin_formset.opts.title }}{% else %}{{ inline_admin_formset.opts.verbose_name_plural|capfirst }}{% endif %}
@@ -21,7 +20,6 @@
     {{ inline_admin_formset.formset.non_form_errors }}
 
     <table class="djn-items inline-related djn-table{% ifsuit %} table table-bordered table-condensed table-striped{% else %} tabular{% endifsuit %}">
-        <caption>{% block tablecaption %}Table{% block tablecaption %}</caption>
         <thead class="djn-module djn-thead">
           <tr>
               {% if "1.10"|django_version_gte %}<th class="original"></th>{% endif %}

@@ -1,9 +1,5 @@
 {% extends "admin/cla_provider/allocations/nested_tabular_inline.html"%}
 
-{% block legend %}Provider allocations{% endblock %}
-
-{% block tablecaption %}Provider allocations{% endblock %}
-
 {% block field %}
   <div id="{{ field.field.html_name }}" onchange="show_or_hide_working_days(this)">
     {{ field.field }}

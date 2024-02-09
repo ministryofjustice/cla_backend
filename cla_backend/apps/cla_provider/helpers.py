@@ -15,7 +15,7 @@ from govuk_notify.api import NotifyEmailOrchestrator
 from cla_provider.models import (
     Provider,
     ProviderAllocation,
-    OutOfHoursRota,
+    OutOfHoursRota, 
     ProviderPreAllocation,
     get_current_day_as_string,
 )
@@ -352,12 +352,12 @@ class ProviderAllocationHelper(object):
         return provider_allocations
 
     def get_suggested_provider(self, category):
-        non_rota_hours = settings.NON_ROTA_OPENING_HOURS[getattr(category, "code")]
-        if self.as_of not in non_rota_hours:
-            return self._get_rota_provider(category)
         if settings.EDUCATION_ALLOCATION_FEATURE_FLAG:
             if category.code == "education":
                 return self.get_best_fit_education_provider(category)
+        non_rota_hours = settings.NON_ROTA_OPENING_HOURS[getattr(category, "code")]
+        if self.as_of not in non_rota_hours:
+            return self._get_rota_provider(category)
         if not os.path.isfile("/tmp/DISABLE_BEST_FIT_PROVIDER"):
             return self._get_best_fit_provider(category)
         return self._get_random_provider(category)

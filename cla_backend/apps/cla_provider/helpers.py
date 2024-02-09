@@ -15,7 +15,7 @@ from govuk_notify.api import NotifyEmailOrchestrator
 from cla_provider.models import (
     Provider,
     ProviderAllocation,
-    OutOfHoursRota, 
+    OutOfHoursRota,
     ProviderPreAllocation,
     get_current_day_as_string,
 )

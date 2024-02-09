@@ -1,0 +1,35 @@
+{% extends "admin/cla_provider/allocations/nested_tabular_inline.html"%}
+
+{% block field %}
+  <div id="{{ field.field.html_name }}" onchange="show_or_hide_working_days(this)">
+    {{ field.field }}
+  </div>
+{% endblock %}
+
+{% block script %}
+  <script>
+  function show_or_hide_working_days(parent_element) {
+    let category_id = parent_element.getElementsByTagName('Select')[0].value
+    let is_education = category_id == 7
+
+    let working_days_element_id = parent_element.id.replace('category', 'workingdays-group')
+
+    if (is_education) {
+      document.getElementById(working_days_element_id).style = "display: block"
+    } else {
+      document.getElementById(working_days_element_id).style = "display: none"
+    }
+  }
+
+  addEventListener("load", (event) => {
+    let selectors = document.getElementsByClassName('working-days')
+    for (let i = 0; i < selectors.length - 1; i++) {
+
+      let is_education = document.getElementById('id_providerallocation_set-' + i + '-category').value == '7'
+      if (is_education) {
+        selectors[i].style = "display: block"
+      }
+    }
+  });
+  </script>
+{% endblock %}

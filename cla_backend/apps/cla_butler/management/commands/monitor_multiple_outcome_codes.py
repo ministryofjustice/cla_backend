@@ -36,6 +36,7 @@ class Command(BaseCommand):
             "CPTA",
             "COSPF",
             "SPFM",
+            "EDFF",
             "SPFN",
             "DREFER",
             "COI",

@@ -227,6 +227,7 @@ body.popup .submit-row {
 
 .inline-group {
     padding: 0;
+    margin-top: 25px;
 }
 
 .inline-group .aligned label {

@@ -227,6 +227,7 @@ INSTALLED_APPS = (
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "nested_admin",
     "djorm_pgfulltext",
     "session_security",
 )
@@ -479,6 +480,8 @@ EMAIL_ORCHESTRATOR_URL = os.environ.get("EMAIL_ORCHESTRATOR_URL")
 CFE_URL = (
     os.environ.get("CFE_HOST", "https://cfe-civil-staging.cloud-platform.service.justice.gov.uk") + "/v6/assessments"
 )
+
+EDUCATION_ALLOCATION_FEATURE_FLAG = os.environ.get("EDUCATION_ALLOCATION_FEATURE_FLAG", "False") == "True"
 
 # .local.py overrides all the common settings.
 try:

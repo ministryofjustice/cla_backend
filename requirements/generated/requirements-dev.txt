@@ -89,6 +89,8 @@ django-model-utils==2.2
     # via -r requirements/source/requirements-base.in
 https://github.com/said-moj/django-moj-irat/archive/refs/tags/0.3.1.tar.gz
     # via -r requirements/source/requirements-base.in
+django-nested-admin==3.2.4
+    # via -r requirements/source/requirements-base.in
 django-oauth-toolkit==0.11.0
     # via -r requirements/source/requirements-base.in
 https://github.com/timmyomahony/django-pagedown/archive/refs/tags/v1.1.tar.gz
@@ -238,6 +240,8 @@ python-dateutil==2.2
     #   cla-common
     #   csvkit
     #   freezegun
+python-monkey-business==1.0.0
+    # via django-nested-admin
 pytz==2021.1
     # via
     #   -r requirements/source/requirements-base.in
@@ -272,6 +276,7 @@ six==1.16.0
     #   csvkit
     #   django-braces
     #   django-extensions
+    #   django-nested-admin
     #   django-oauth-toolkit
     #   freezegun
     #   model-mommy
@@ -279,6 +284,7 @@ six==1.16.0
     #   pre-commit
     #   pyopenssl
     #   python-dateutil
+    #   python-monkey-business
     #   singledispatch
     #   unittest-xml-reporting
     #   vcrpy

@@ -15,7 +15,7 @@ WITH
         LEFT JOIN cla_eventlog_log log_call_started on
                                   log_call_started.case_id = no.case_id
                                   and log_call_started.id > o.id
-                                  and log_call_started.code IN ('TERM', 'ABND', 'PCB', 'COPE', 'DUPL', 'INSUF', 'IRCB', 'NCOE', 'DESP', 'DECL', 'IRKB', 'MRCC', 'NRES', 'SAME', 'COSPF', 'SPFM', 'SPFN', 'CBSP', 'MANALC', 'MANREF', 'RDSP', 'REFSP', 'SPOR', 'WROF', 'REFDPA', 'RELBD', 'RSTR', 'NOLA')
+                                  and log_call_started.code IN ('TERM', 'ABND', 'PCB', 'COPE', 'DUPL', 'INSUF', 'IRCB', 'NCOE', 'DESP', 'DECL', 'IRKB', 'MRCC', 'NRES', 'SAME', 'COSPF', 'SPFM', 'EDFF', 'SPFN', 'CBSP', 'MANALC', 'MANREF', 'RDSP', 'REFSP', 'SPOR', 'WROF', 'REFDPA', 'RELBD', 'RSTR', 'NOLA')
         JOIN call_centre_operator AS op ON no.created_by_id = op.user_id
       order by no.id asc
   ),

@@ -17,3 +17,9 @@ class ProviderAllocationInlineFormset(forms.models.BaseInlineFormSet):
             categories.append(category)
 
         return self.cleaned_data
+
+
+class WorkingDaysInlineFormset(forms.models.BaseInlineFormSet):
+    def __init__(self, *args, **kwargs):
+        super(WorkingDaysInlineFormset, self).__init__(*args, **kwargs)
+        self.can_delete = False

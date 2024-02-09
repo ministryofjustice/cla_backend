@@ -4,6 +4,8 @@
 
 Django==1.8.19
 
+django-nested-admin==3.2.4
+
 django-model-utils==2.2
 
 psycopg2==2.7.5

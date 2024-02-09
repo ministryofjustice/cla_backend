@@ -16,6 +16,8 @@ from uuidfield import UUIDField
 from core.validators import validate_first_of_month
 from cla_common.constants import FEEDBACK_ISSUE
 from .signals import log_staff_created, log_staff_modified
+from .constants import DEFAULT_WORKING_DAYS
+from datetime import datetime
 
 
 def random_uuid_str():
@@ -44,6 +46,76 @@ class Provider(TimeStampedModel):
         return u"%s" % self.name
 
 
+class WorkingDays(models.Model):
+    """
+    This model represents the working days for Education specialist providers, to align with the changes required as part of LGA-2904.
+    """
+
+    provider_allocation = models.OneToOneField("ProviderAllocation")
+    monday = models.BooleanField(default=DEFAULT_WORKING_DAYS["monday"])
+    tuesday = models.BooleanField(default=DEFAULT_WORKING_DAYS["tuesday"])
+    wednesday = models.BooleanField(default=DEFAULT_WORKING_DAYS["wednesday"])
+    thursday = models.BooleanField(default=DEFAULT_WORKING_DAYS["thursday"])
+    friday = models.BooleanField(default=DEFAULT_WORKING_DAYS["friday"])
+    saturday = models.BooleanField(default=DEFAULT_WORKING_DAYS["saturday"])
+    sunday = models.BooleanField(default=DEFAULT_WORKING_DAYS["sunday"])
+
+    class Meta:
+        verbose_name = "Working Days"
+        verbose_name_plural = "Working Days"
+
+    def is_working_today(self):
+        """ Returns if the provider allocation is allocated to work today.s
+
+        Returns:
+            Boolean: Is the provider working today
+        """
+        current_day = get_current_day_as_string()
+
+        return self.is_working_on_day(current_day)
+
+    def is_working_on_day(self, day):
+        """ Takes in a day of the week as a string and returns if the provider works on that day
+
+        Args:
+            day (str): Day of the week as a string. E.g. "Monday"
+
+        Returns:
+            Boolean: Is the provider working on the given day, will return None if the day is invalid
+        """
+        week = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+        day = day.lower()
+        if day not in week:
+            return None
+
+        return self.__getattribute__(day)
+
+    @property
+    def working_days_list(self):
+        """Property containing a list of all the weekdays the provider allocation is working
+
+        Returns:
+            List[str]: A list of lower case weekday strings
+        """
+        week = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+
+        working_days = [day for day in week if self.is_working_on_day(day)]
+
+        return working_days
+
+    def __unicode__(self):
+        return ""
+
+
+def get_current_day_as_string():
+    """ Returns the current day of the week as a lower case string.
+    """
+    week = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+    day_index = datetime.now().weekday()
+
+    return week[day_index]
+
+
 class ProviderAllocationManager(models.Manager):
     def has_category(self, category):
         """
@@ -56,6 +128,35 @@ class ProviderAllocation(TimeStampedModel):
     provider = models.ForeignKey(Provider)
     category = models.ForeignKey("legalaid.Category")
     weighted_distribution = models.FloatField()  # see XXXXXXXXXXXX
+
+    def is_working_today(self):
+        """Returns if the provider is working today, based on the WorkingDays model
+
+        Returns:
+            Boolean: Is the provider working today
+        """
+        current_day = get_current_day_as_string()
+
+        if not hasattr(self, "workingdays"):
+            return DEFAULT_WORKING_DAYS[current_day]
+
+        return self.workingdays.is_working_today()
+
+    @property
+    def working_days(self):
+        """Property containing a list of all the weekdays the provider allocation is working
+
+        Returns:
+            List[str]: A list of lower case weekday strings
+        """
+        if not hasattr(self, "workingdays"):
+            working_day_list = []
+            for day, is_working in DEFAULT_WORKING_DAYS.iteritems():
+                if is_working:
+                    working_day_list.append(day)
+            return working_day_list
+
+        return self.workingdays.working_days_list
 
     objects = ProviderAllocationManager()
 

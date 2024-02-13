@@ -78,7 +78,7 @@
   </div>
 </div>
 <br>
-<script type="text/javascript">
+<script nonce="{{ request.csp_nonce}}" type="text/javascript">
 
 (function($) {
   $("#{{ inline_admin_formset.formset.prefix }}-group .tabular.inline-related tbody tr").tabularFormset({

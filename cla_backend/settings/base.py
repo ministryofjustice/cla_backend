@@ -345,6 +345,7 @@ SESSION_COOKIE_SECURE = not DEBUG
 SECURE_CONTENT_TYPE_NOSNIFF = True
 SESSION_COOKIE_SAMESITE = "strict"
 
+CSP_INCLUDE_NONCE_IN = ["script-src"]
 CSP_DEFAULT_SRC = ["'self'"]
 if "localhost" in ALLOWED_HOSTS:
     CSP_DEFAULT_SRC += "localhost:*"

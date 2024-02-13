@@ -192,8 +192,10 @@ MIDDLEWARE_CLASSES = (
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "status.middleware.MaintenanceModeMiddleware",
     "django_cookies_samesite.middleware.CookiesSameSite",
-    "csp.middleware.CSPMiddleware",
 )
+
+if not DEBUG:
+    MIDDLEWARE_CLASSES += ("csp.middleware.CSPMiddleware",)
 
 ROOT_URLCONF = "cla_backend.urls"
 

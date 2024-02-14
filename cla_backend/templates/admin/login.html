@@ -30,7 +30,7 @@
 {% endif %}
 
 <div id="content-main">
-<form action="{{ app_path }}" method="post" id="login-form" nonce="{{ request.csp_nonce}}">{% csrf_token %}
+<form action="{{ app_path }}" method="post" id="login-form">{% csrf_token %}
   <div class="form-row">
     {{ form.username.errors }}
     {{ form.username.label_tag }} {{ form.username | add_nonce:request }}
@@ -51,7 +51,7 @@
   </div>
 </form>
 
-<script nonce="{{ request.csp_nonce}}" type="text/javascript">document.getElementById('id_username').focus();</script>
+<script nonce="{{request.csp_nonce}}" type="text/javascript">document.getElementById('id_username').focus();</script>
 </div>
 {% endblock %}
 

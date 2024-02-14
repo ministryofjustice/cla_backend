@@ -2,7 +2,7 @@
 {% load i18n admin_static %}
 
 {% block extrahead %}{{ block.super }}
-    <script nonce="{{ request.csp_nonce}}" type="text/javascript" src="{% static "admin/js/jquery.js" %}"></script>
+    <script nonce="{{request.csp_nonce}}" type="text/javascript" src="{% static "admin/js/jquery.js" %}"></script>
     {% include 'session_security/all.html' %}
 {% endblock %}
 

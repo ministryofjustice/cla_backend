@@ -14,22 +14,22 @@
 
 {% block extrahead %}{{ block.super }}
   {% url 'admin:jsi18n' as jsi18nurl %}
-  <script nonce="{{ request.csp_nonce}}" type="text/javascript" src="{{ jsi18nurl|default:"../../../jsi18n/" }}"></script>
+  <script nonce="{{request.csp_nonce}}" type="text/javascript" src="{{ jsi18nurl|default:"../../../jsi18n/" }}"></script>
   {{ media }}
 
   {% if form %}
-    <script nonce="{{ request.csp_nonce}}">window.reportUrl = '/admin/reports/api/exports/'</script>
+    <script nonce="{{request.csp_nonce}}">window.reportUrl = '/admin/reports/api/exports/'</script>
   {% else %}
-    <script nonce="{{ request.csp_nonce}}">window.reportUrl = '/admin/reports/api/exports/scheduled/'</script>
+    <script nonce="{{request.csp_nonce}}">window.reportUrl = '/admin/reports/api/exports/scheduled/'</script>
   {% endif %}
 
-  <script nonce="{{ request.csp_nonce}}" type="text/javascript" src="{% static "admin/js/core.js" %}"></script>
-  <script nonce="{{ request.csp_nonce}}" type="text/javascript" src="{% static "admin/js/jquery.js" %}"></script>
-  <script nonce="{{ request.csp_nonce}}" type="text/javascript" src="{% static "admin/js/jquery.init.js" %}"></script>
-  <script nonce="{{ request.csp_nonce}}" type="text/javascript" src="{% static "admin/js/ReportTask.js" %}"></script>
+  <script nonce="{{request.csp_nonce}}" type="text/javascript" src="{% static "admin/js/core.js" %}"></script>
+  <script nonce="{{request.csp_nonce}}" type="text/javascript" src="{% static "admin/js/jquery.js" %}"></script>
+  <script nonce="{{request.csp_nonce}}" type="text/javascript" src="{% static "admin/js/jquery.init.js" %}"></script>
+  <script nonce="{{request.csp_nonce}}" type="text/javascript" src="{% static "admin/js/ReportTask.js" %}"></script>
   {{ form.media }}
 
-  <script nonce="{{ request.csp_nonce}}" id="reportTasks">
+  <script nonce="{{request.csp_nonce}}" id="reportTasks">
   </script>
 {% endblock %}
 

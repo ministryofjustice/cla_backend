@@ -347,7 +347,7 @@ SESSION_COOKIE_SAMESITE = "strict"
 
 CSP_INCLUDE_NONCE_IN = ["script-src"]
 CSP_DEFAULT_SRC = ["'self'"]
-CSP_SCRIPT_SRC = ["'self'"]
+CSP_SCRIPT_SRC = ["'self'", "cloud-platform-6cf3132ef8fce52bb371b1d02f40c36d.s3.amazonaws.com"]
 if "localhost" in ALLOWED_HOSTS:
     CSP_DEFAULT_SRC += "localhost:*"
 CSP_FONT_SRC = ["'self'", "data:"]

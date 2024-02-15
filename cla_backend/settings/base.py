@@ -194,7 +194,7 @@ MIDDLEWARE_CLASSES = (
     "django_cookies_samesite.middleware.CookiesSameSite",
 )
 
-if not DEBUG:
+if DEBUG:
     MIDDLEWARE_CLASSES += ("csp.middleware.CSPMiddleware",)
 
 ROOT_URLCONF = "cla_backend.urls"
@@ -347,7 +347,11 @@ SESSION_COOKIE_SAMESITE = "strict"
 
 CSP_INCLUDE_NONCE_IN = ["script-src"]
 CSP_DEFAULT_SRC = ["'self'", "cloud-platform-6cf3132ef8fce52bb371b1d02f40c36d.s3.amazonaws.com"]
-CSP_SCRIPT_SRC = ["'self'", "'unsafe-inline'"]
+CSP_SCRIPT_SRC = [
+    "'self'",
+    "'sha256-SjfMQo173oGUAkxAJmT3YNTlryI5ou9f6HkUz0QUJQs='",
+    "'sha256-YAeNgc46QF0YbTBOhlJJtwaOwJTu1UEvFVe3ljLBobg='",
+]
 if "localhost" in ALLOWED_HOSTS:
     CSP_DEFAULT_SRC += "localhost:*"
 CSP_FONT_SRC = ["'self'", "data:"]

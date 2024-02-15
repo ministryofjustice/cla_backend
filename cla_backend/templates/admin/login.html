@@ -1,6 +1,5 @@
 {% extends "admin/base_site.html" %}
 {% load i18n admin_static %}
-{% load add_nonce %}
 
 {% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/login.css" %}" />{% endblock %}
 
@@ -33,11 +32,11 @@
 <form action="{{ app_path }}" method="post" id="login-form">{% csrf_token %}
   <div class="form-row">
     {{ form.username.errors }}
-    {{ form.username.label_tag }} {{ form.username | add_nonce:request }}
+    {{ form.username.label_tag }} {{ form.username}}
   </div>
   <div class="form-row">
     {{ form.password.errors }}
-    {{ form.password.label_tag }} {{ form.password | add_nonce:request }}
+    {{ form.password.label_tag }} {{ form.password}}
     <input type="hidden" name="next" value="{{ next }}" />
   </div>
   {% url 'admin_password_reset' as password_reset_url %}

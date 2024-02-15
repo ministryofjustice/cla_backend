@@ -194,7 +194,7 @@ MIDDLEWARE_CLASSES = (
     "django_cookies_samesite.middleware.CookiesSameSite",
 )
 
-if DEBUG:
+if not DEBUG:
     MIDDLEWARE_CLASSES += ("csp.middleware.CSPMiddleware",)
 
 ROOT_URLCONF = "cla_backend.urls"

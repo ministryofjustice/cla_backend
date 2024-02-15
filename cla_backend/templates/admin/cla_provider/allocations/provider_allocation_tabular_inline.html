@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block script %}
-  <script nonce="{{ request.csp_nonce}}">
+  <script>
   function show_or_hide_working_days(parent_element) {
     let category_id = parent_element.getElementsByTagName('Select')[0].value
     let is_education = category_id == 7

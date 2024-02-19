@@ -346,7 +346,7 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 SESSION_COOKIE_SAMESITE = "strict"
 
 CSP_DEFAULT_SRC = ["'self'"]
-CSP_SCRIPT_SRC = ["'self'", "'unsafe-inline'", "cloud-platform-6cf3132ef8fce52bb371b1d02f40c36d.s3.amazonaws.com"]
+CSP_SCRIPT_SRC = ["'self'", "'unsafe-inline'"]
 if "localhost" in ALLOWED_HOSTS:
     CSP_DEFAULT_SRC += "localhost:*"
 CSP_FONT_SRC = ["'self'", "data:"]

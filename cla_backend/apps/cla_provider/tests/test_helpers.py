@@ -539,21 +539,21 @@ class TestEducationAllocationFeatureFlag(TestCase):
     def setUp(self):
         self.education_category = make_recipe("legalaid.category", code="education")
 
-    @mock.patch("cla_provider.helpers.ProviderAllocationHelper.get_suggested_provider")
-    def test_feature_flag_enabled(self, get_suggested_provider):
+    @mock.patch("cla_provider.helpers.ProviderAllocationHelper.get_best_fit_education_provider")
+    def test_feature_flag_enabled(self, get_best_fit_education_provider):
         settings.EDUCATION_ALLOCATION_FEATURE_FLAG = True
         helper = ProviderAllocationHelper()
-        helper.get_best_fit_education_provider(self.education_category)
+        helper.get_suggested_provider(self.education_category)
 
-        assert get_suggested_provider.called, "get_suggested_provider was not called"
+        assert get_best_fit_education_provider.called, "get_best_fit_education_provider was not called"
 
-    @mock.patch("cla_provider.helpers.ProviderAllocationHelper.get_suggested_provider")
-    def test_feature_flag_disabled(self, get_suggested_provider):
+    @mock.patch("cla_provider.helpers.ProviderAllocationHelper.get_best_fit_education_provider")
+    def test_feature_flag_disabled(self, get_best_fit_education_provider):
         settings.EDUCATION_ALLOCATION_FEATURE_FLAG = False
         helper = ProviderAllocationHelper()
-        helper.get_best_fit_education_provider(self.education_category)
+        helper.get_suggested_provider(self.education_category)
 
-        assert not get_suggested_provider.called, "get_suggested_provider was called"
+        assert not get_best_fit_education_provider.called, "get_best_fit_education_provider was called"
 
 
 class TestGetValidEducationProviders(TestCase):

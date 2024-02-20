@@ -105,7 +105,7 @@ django-storages==1.5.2
     # via -r requirements/source/requirements-base.in
 django-uuidfield==0.5.0
     # via -r requirements/source/requirements-base.in
-django==1.8.19
+django==3.2.23
     # via
     #   -r requirements/source/requirements-base.in
     #   django-csp
@@ -312,7 +312,7 @@ unittest-xml-reporting==2.5.1
     # via -r requirements/source/requirements-testing.in
 urllib3-secure-extra==0.1.0
     # via urllib3
-urllib3[secure]==1.26.14
+urllib3==1.26.18
     # via
     #   botocore
     #   coveralls

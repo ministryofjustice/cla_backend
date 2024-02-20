@@ -12,12 +12,6 @@ def _dependant_aged(todays_date, age, relationship):
 
 
 def translate_dependants(todays_date, facts):
-    if hasattr(facts, "dependants_young"):
-        children = [_dependant_aged(todays_date, 15, "child_relative") for _ in range(facts.dependants_young)]
-    else:
-        children = []
-    if hasattr(facts, "dependants_old"):
-        adults = [_dependant_aged(todays_date, 17, "adult_relative") for _ in range(facts.dependants_old)]
-    else:
-        adults = []
+    children = [_dependant_aged(todays_date, 15, "child_relative") for _ in range(facts.dependants_young)]
+    adults = [_dependant_aged(todays_date, 17, "adult_relative") for _ in range(facts.dependants_old)]
     return {"dependants": children + adults}

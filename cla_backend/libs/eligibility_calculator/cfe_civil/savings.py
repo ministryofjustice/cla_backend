@@ -12,22 +12,18 @@ def _savings_value(value, description, subject_matter_of_dispute):
 
 def translate_savings(savings_data, subject_matter_of_dispute=False):
     liquid_capital = []
-    if hasattr(savings_data, "bank_balance"):
-        liquid_capital.append(_savings_value(savings_data.bank_balance, "Savings", subject_matter_of_dispute))
-    if hasattr(savings_data, "investment_balance"):
-        liquid_capital.append(_savings_value(savings_data.investment_balance, "Investment", subject_matter_of_dispute))
+    liquid_capital.append(_savings_value(savings_data.bank_balance, "Savings", subject_matter_of_dispute))
+    liquid_capital.append(_savings_value(savings_data.investment_balance, "Investment", subject_matter_of_dispute))
 
     non_liquid_capital = []
-    if hasattr(savings_data, "asset_balance"):
-        non_liquid_capital.append(
-            _savings_value(
-                savings_data.asset_balance, "Valuable items worth over 500 pounds", subject_matter_of_dispute
-            )
+    non_liquid_capital.append(
+        _savings_value(
+            savings_data.asset_balance, "Valuable items worth over 500 pounds", subject_matter_of_dispute
         )
-    if hasattr(savings_data, "credit_balance"):
-        non_liquid_capital.append(
-            _savings_value(savings_data.credit_balance, "Credit balance", subject_matter_of_dispute)
-        )
+    )
+    non_liquid_capital.append(
+        _savings_value(savings_data.credit_balance, "Credit balance", subject_matter_of_dispute)
+    )
 
     return {
         "capitals": {

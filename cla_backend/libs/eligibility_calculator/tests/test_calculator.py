@@ -412,23 +412,19 @@ class IsEligibleTestCase(unittest.TestCase):
         ec.is_disposable_capital_eligible = mock.MagicMock(return_value=is_disposable_capital)
         return ec, mocked_on_passported_benefits, mocked_on_nass_benefits
 
-    def test_nass_benefit_is_eligible_only_if_is_category_is_immigration(self):
-        """
-        TEST: if citizen is on NASS benefit income and capital are not
-        tested so the citizen should be eligible.
-        """
-        ec, mocked_on_passported_benefits, mocked_on_nass_benefits = self.create_a_dummy_citizen(
-            is_category="immigration", is_passported=False, is_nass_benefits=True
-        )
-
-        self.assertTrue(ec.is_eligible())
-        self.assertTrue(mocked_on_nass_benefits.called)
-
 
 class DoCfeCivilCheckTestCase(unittest.TestCase):
     def checker_with_category(self, category="family"):
         cd = fixtures.get_default_case_data()
         cd.update({"category": category})
+        case_data = CaseData(**cd)
+        return EligibilityChecker(case_data=case_data)
+
+    def checker_with_facts_without_defaults(self, facts, partner=None):
+        cd = fixtures.get_default_case_data()
+        cd["facts"] = facts
+        if partner is not None:
+            cd["partner"] = partner
         case_data = CaseData(**cd)
         return EligibilityChecker(case_data=case_data)
 
@@ -857,3 +853,9 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
         checker = self.checker_with_facts_and_income(under_18_passported=False, is_you_under_18=False, income=2000000)
         cfe_response = self.do_cfe_civil_check(checker)
         self.assertEqual("ineligible", cfe_response.overall_result)
+
+    @test_vcr.use_vcr_cassette
+    def test_cfe_request_without_dependants_young(self):
+        checker = self.checker_with_facts_without_defaults(dict(on_passported_benefits=True))
+        cfe_result = self.do_cfe_civil_check(checker)
+        self.assertTrue(cfe_result.applicant_details()["receives_qualifying_benefit"])

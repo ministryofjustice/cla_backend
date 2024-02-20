@@ -6,7 +6,6 @@ import requests
 from dateutil.relativedelta import relativedelta
 from django.conf import settings
 
-from . import exceptions
 from .cfe_civil.age import translate_age
 from .cfe_civil.deductions import translate_deductions
 from .cfe_civil.dependants import translate_dependants
@@ -42,7 +41,12 @@ class EligibilityChecker(object):
         logger.info("Eligibility result (using CFE): %s", cfe_result)
 
         if cfe_response:
-            return cfe_result, cfe_response.is_gross_eligible, cfe_response.is_disposable_eligible, cfe_response.is_capital_eligible
+            return (
+                cfe_result,
+                cfe_response.is_gross_eligible,
+                cfe_response.is_disposable_eligible,
+                cfe_response.is_capital_eligible,
+            )
         else:
             return cfe_result, None, None, None
 
@@ -87,14 +91,18 @@ class EligibilityChecker(object):
 
     @staticmethod
     def _is_data_complete_enough_to_call_cfe(case_data):
-        if not hasattr(case_data, "facts"):
+        # The CFE means calculation doesn't always need all the case_data fields known. Here we check for the presence of certain fields.
+        # We can't use hasattr(case_data, "<field_name>") to know if a field has been set, because hasattr() under the hood calls getattr(),
+        # and we've overridden ModelMixin.__getattr__() to return a default value when the field is absent.
+        # So instead, we check for the key in the case_data.__dict__
+        if "facts" not in case_data.__dict__:
             # facts section is at the root of everything, so we require it call CFE
             return False
         if EligibilityChecker._under_18_passported(case_data):
             # no more info needed
             return True
-        if not hasattr(case_data.facts, "dependants_young") and not (
-            hasattr(case_data.facts, "on_passported_benefits") and case_data.facts.on_passported_benefits
+        if "dependants_young" not in case_data.facts.__dict__ and not (
+            "on_passported_benefits" in case_data.facts.__dict__ and case_data.facts.on_passported_benefits
         ):
             # the gross income threshold may increase, depending on the number of child dependants,
             # so we can't do gross income section - even if we tell CFE it is incomplete, if the gross income
@@ -124,47 +132,41 @@ class EligibilityChecker(object):
         EligibilityChecker._translate_section_disposable_income(case_data, request_data)
         EligibilityChecker._translate_section_capital(case_data, request_data)
 
-        if hasattr(case_data, "category"):
+        if "category" in case_data.__dict__:
             request_data["proceeding_types"] = translate_proceeding_types(case_data.category)
-        if hasattr(case_data, "facts"):
+        if "facts" in case_data.__dict__:
             request_data["applicant"] = EligibilityChecker._translate_applicant_data(submission_date, case_data.facts)
             request_data["assessment"].update(translate_under_18_passported(case_data.facts))
             request_data.update(translate_dependants(submission_date, case_data.facts))
-            if hasattr(case_data, "partner") and case_data.facts.should_aggregate_partner:
+            if "partner" in case_data.__dict__ and case_data.facts.should_aggregate_partner:
                 request_data["partner"] = EligibilityChecker._translate_partner_data(case_data.partner, submission_date)
 
         request_data.update(EligibilityChecker._translate_capital_data(case_data))
 
-        if hasattr(case_data, "you"):
+        if "you" in case_data.__dict__:
             request_data.update(EligibilityChecker._translate_income_data(case_data.you))
 
         return request_data
 
     @staticmethod
     def _translate_section_gross_income(case_data, request_data):
-        """
-        Determine if the questions for gross income section of the test have been completed by the user yet,
-        and put this in the CFE request.
-        """
-
         def is_gross_income_complete(case_data):
-            if not hasattr(case_data, "you"):
+            if "you" not in case_data.__dict__:
                 return False
             person = case_data.you
-            if not hasattr(person, "income"):
+            if "income" not in person.__dict__:
                 return False
             income = person.income
-
             income_keys_if_complete = set(income.PROPERTY_META.keys())
             # cla_public will remove the `income.child_benefits` key from CaseDict if you submit /benefits without
             # checking the child benefit checkbox (which doesn't even appear if dependants_young=0). So this key is not
             # required for income to be considered complete
             income_keys_if_complete.remove("child_benefits")
             for key in income_keys_if_complete:
-                if not hasattr(income, key):
+                if key not in income.__dict__:
                     return False
 
-            if not hasattr(case_data.facts, "has_partner"):
+            if "has_partner" not in case_data.facts.__dict__:
                 # If they have a partner then their deductions can lower the disposable income further,
                 # so this section is not complete until we know the partners' figures
                 return False
@@ -182,17 +184,17 @@ class EligibilityChecker(object):
         """
 
         def is_disposable_income_complete(case_data):
-            if not hasattr(case_data, "you"):
+            if "you" not in case_data.__dict__:
                 return False
             person = case_data.you
-            if not hasattr(person, "deductions"):
+            if "deductions" not in person.__dict__:
                 return False
             deductions = case_data.you.deductions
             for key in deductions.PROPERTY_META:
-                if not hasattr(deductions, key):
+                if key not in deductions.__dict__:
                     return False
 
-            if not hasattr(case_data.facts, "has_partner"):
+            if "has_partner" not in case_data.facts.__dict__:
                 # If they have a partner then their deductions can lower the disposable income further,
                 # so this section is not complete until we know the partners' figures
                 return False
@@ -203,7 +205,7 @@ class EligibilityChecker(object):
 
     @staticmethod
     def is_property_complete(case_data):
-        if not hasattr(case_data.facts, "has_partner"):
+        if "has_partner" not in case_data.facts.__dict__:
             # If they have a partner then that may increase assets that they need to delare, so
             # this section is not complete until we clear up if there is a partner
             return False
@@ -216,19 +218,18 @@ class EligibilityChecker(object):
         return False
 
     @staticmethod
-    def is_savings_complete(case_data):
-        if not hasattr(case_data.facts, "has_partner"):
+    def _is_savings_complete(case_data):
+        if "has_partner" not in case_data.facts.__dict__:
             # If they have a partner then that may increase assets that they need to delare, so
             # this section is not complete until we clear up if there is a partner
             return False
 
-        try:
-            savings = case_data.you.savings
-            for key in savings.PROPERTY_META:
-                if not isinstance(getattr(savings, key), (types.IntType, types.LongType)):
-                    return False
-        except exceptions.PropertyExpectedException:
-            return False
+        savings = case_data.you.savings
+        for key in savings.PROPERTY_META:
+            if key not in savings.__dict__:
+                return False
+            if not isinstance(getattr(savings, key), (types.IntType, types.LongType)):
+                return False
         return True
 
     @staticmethod
@@ -239,7 +240,7 @@ class EligibilityChecker(object):
         """
         has_completed_capital_questions = EligibilityChecker.is_property_complete(
             case_data
-        ) and EligibilityChecker.is_savings_complete(case_data)
+        ) and EligibilityChecker._is_savings_complete(case_data)
 
         # This capital logic is a bit complicated, and dependent on how cla_backend's clients set the CaseData.
         # If we wanted to simplify this logic, here are the concerns:
@@ -263,7 +264,7 @@ class EligibilityChecker(object):
         # how old the partner is
         partner_dob = str(submission_date - relativedelta(years=40))
         request_data = {"partner": {"date_of_birth": partner_dob}}
-        if hasattr(partner, "savings"):
+        if "savings" in partner.__dict__:
             request_data.update(translate_savings(partner.savings))
 
         request_data.update(EligibilityChecker._translate_income_data(partner))
@@ -273,9 +274,9 @@ class EligibilityChecker(object):
     @staticmethod
     def _translate_income_data(person):
         request_data = {}
-        if hasattr(person, "income"):
+        if "income" in person.__dict__:
             regular_income = translate_income(person.income)
-            if hasattr(person, "deductions"):
+            if "deductions" in person.__dict__:
                 request_data.update(translate_employment(person.income, person.deductions))
                 regular_outgoings = translate_deductions(person.deductions)
                 request_data.update(
@@ -310,13 +311,13 @@ class EligibilityChecker(object):
     @staticmethod
     def _translate_capital_data(case_data):
         request_data = {}
-        if hasattr(case_data, "you") and hasattr(case_data.you, "savings"):
+        if "you" in case_data.__dict__ and "savings" in case_data.you.__dict__:
             request_data.update(translate_savings(case_data.you.savings))
 
-        if hasattr(case_data, "property_data"):
+        if "property_data" in case_data.__dict__:
             request_data.update(translate_property(case_data.property_data))
 
-        if hasattr(case_data, "disputed_savings"):
+        if "disputed_savings" in case_data.__dict__:
             disputed_savings = translate_savings(case_data.disputed_savings, subject_matter_of_dispute=True)
             if "capitals" in request_data:
                 capitals = request_data["capitals"]

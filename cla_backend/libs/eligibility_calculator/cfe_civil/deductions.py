@@ -16,16 +16,15 @@ def translate_deductions(deductions):
     regular_transactions = []
 
     for outgoing_category, cfe_category in _OUTGOING_CATEGORY_TO_REGULAR_TRANSACTION.items():
-        if hasattr(deductions, outgoing_category):
-            amount_pence = getattr(deductions, outgoing_category)
-            if amount_pence:
-                regular_transactions.append(
-                    {
-                        "category": cfe_category,
-                        "operation": "debit",
-                        "frequency": "monthly",
-                        "amount": pence_to_pounds(amount_pence),
-                    }
-                )
+        amount_pence = getattr(deductions, outgoing_category)
+        if amount_pence:
+            regular_transactions.append(
+                {
+                    "category": cfe_category,
+                    "operation": "debit",
+                    "frequency": "monthly",
+                    "amount": pence_to_pounds(amount_pence),
+                }
+            )
 
     return {"regular_transactions": regular_transactions}

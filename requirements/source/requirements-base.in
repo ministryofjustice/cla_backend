@@ -64,4 +64,3 @@ django-session-security==2.2.3
 notifications-python-client==6.0.0
 
 django-cookies-samesite==0.9.0
-django-csp==3.7

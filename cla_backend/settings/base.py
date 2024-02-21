@@ -192,6 +192,7 @@ MIDDLEWARE_CLASSES = (
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "status.middleware.MaintenanceModeMiddleware",
     "django_cookies_samesite.middleware.CookiesSameSite",
+    "csp.middleware.CSPMiddleware",
 )
 
 if not DEBUG:
@@ -357,6 +358,7 @@ if AWS_STORAGE_BUCKET_NAME:
     CSP_DEFAULT_SRC.append(AWS_STORAGE_BUCKET_HOSTNAME)
     CSP_FONT_SRC.append(AWS_STORAGE_BUCKET_HOSTNAME)
     CSP_STYLE_SRC.append(AWS_STORAGE_BUCKET_HOSTNAME)
+    CSP_SCRIPT_SRC.append(AWS_STORAGE_BUCKET_HOSTNAME)
 
 # Django rest-framework-overrides
 REST_FRAMEWORK = {

@@ -41,7 +41,7 @@
         method: 'DELETE',
         url: '/admin/reports/api/exports/' + id + '/',
         headers: {
-          'X-CSRFTOKEN': readCookie('csrftoken')
+          'X-CSRFTOKEN': csrfToken
         },
         data: {
           id: id

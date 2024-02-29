@@ -34,6 +34,7 @@ from .forms import (
     ReasonsForContactingReport,
     ReasonsForContactingDisaggregated,
     CaseDemographicsReport,
+    CaseDemographicsReportCreationDate
 )
 
 from reports.models import Export
@@ -261,6 +262,12 @@ def download_file(request, file_name="", *args, **kwargs):
 @permission_required("legalaid.run_reports")
 def case_demographic_report(request):
     return report_view(request, CaseDemographicsReport, "Case Demographic Report")
+
+
+@staff_member_required
+@permission_required("legalaid.run_reports")
+def case_demographic_report_creation_date(request):
+    return report_view(request, CaseDemographicsReportCreationDate, "Case Demographic Report filtered by creation date")
 
 
 def delete_record(user_id, file_name):

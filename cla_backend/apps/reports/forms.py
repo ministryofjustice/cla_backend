@@ -476,6 +476,13 @@ class CaseDemographicsReport(SQLFileDateRangeReport):
         return self.execute_query(sql, sql_args)
 
 
+class CaseDemographicsReportCreationDate(SQLFileDateRangeReport):
+    QUERY_FILE = "CaseDemographicsReportFilteredByCreation.sql"
+
+    def get_headers(self):
+        return ["LAA_Reference", "Reference", "Category", "Created", "Full_name", "DOB", "Postcode"]
+
+
 class MIFeedbackExtract(SQLFileDateRangeReport):
     QUERY_FILE = "MIExtractByFeedback.sql"
 

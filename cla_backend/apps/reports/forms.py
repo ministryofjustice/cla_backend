@@ -972,6 +972,35 @@ class AllKnowledgeBaseArticles(ReportForm):
         ]
 
 
+class MITellUsMoreAboutYourProblem(SQLFileDateRangeReport):
+    QUERY_FILE = "MIExtractByOutcomeTellUsAboutYourProblem.sql"
+
+    def get_sql_params(self):
+        from_date, to_date = self.date_range
+        return {"from_date": from_date, "to_date": to_date}
+
+    def get_headers(self):
+        return [
+            "Personal Details Id",
+            "Case Id",
+            "Diagnosis Notes",
+            "Operator Notes",
+            "Provider Notes",
+            "Adjustments BSL Webcam",
+            "Adjustments Callback Preference",
+            "Adjustments Language",
+            "Adjustments Not required",
+            "Adjustments Minicom",
+            "Adjustments Text Relay",
+            "Adjustment Skype",
+            "Diagnosis Category",
+            "Legalaid Category Code",
+            "Legalaid Category Name",
+            "Legalaid Category Description",
+            "Outcome Code",
+        ]
+
+
 def get_from_nth(items, n, attribute):
     try:
         item = items[n - 1]

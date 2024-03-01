@@ -480,7 +480,41 @@ class CaseDemographicsReportCreationDate(SQLFileDateRangeReport):
     QUERY_FILE = "CaseDemographicsReportFilteredByCreation.sql"
 
     def get_headers(self):
-        return ["LAA_Reference", "Reference", "Category", "Created", "Full_name", "DOB", "Postcode"]
+        return ["LAA_Reference", "Hash_ID", "Case_ID", "Provider_ID", "Category_Name", "Date_Case_Created", "Matter_Type_1", "Matter_Type_2",
+                "Scope_Status", "Eligibility_Status", "Adjustments_BSL", "Adjustments_LLI", "Adjustments_MIN", "Adjustments_TYP", "Adjustments_CallbackPreferred",
+                "Adjustments_Skype", "Gender", "Ethnicity", "Age(Range)", "Religion", "Sexual_Orientation", "Disability", "Media_Code", "Contact_Type", "Referral_Agencies",
+                "Exempt_Client", "Welsh", "Language", "Outcome code", "Outcome_Created_At", "Has_Third_Party", "Organisation", "Notes", "Provider Notes",
+                "Adaptation Notes", "Vulnerable User", "Geographical_region", "Post code", "Procurement area code"]
+
+    def get_rows(self):
+        for row in self.get_queryset():
+            full_row = list(row)
+            diversity_json = full_row.pop() or {}
+
+            def insert_value(key, val):
+                index = self.get_headers().index(key)
+                full_row.insert(index, val)
+
+            insert_value("Gender", diversity_json.get("gender"))
+            insert_value("Ethnicity", diversity_json.get("ethnicity"))
+            insert_value("Religion", diversity_json.get("religion"))
+            insert_value("Sexual_Orientation", diversity_json.get("sexual_orientation"))
+            insert_value("Disability", diversity_json.get("disability"))
+            yield full_row
+
+    def get_queryset(self):
+        passphrase = self.cleaned_data.get("passphrase")
+
+        if passphrase:
+            diversity_expression = "pgp_pub_decrypt(pd.diversity, dearmor('{key}'), %s)::json".format(
+                key=diversity.get_private_key()
+            )
+        else:
+            diversity_expression = "%s as placeholder, '{}'::json"
+
+        sql = self.query.format(diversity_expression=diversity_expression)
+        sql_args = [passphrase] + list(self.date_range)
+        return self.execute_query(sql, sql_args)
 
 
 class MIFeedbackExtract(SQLFileDateRangeReport):

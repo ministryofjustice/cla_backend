@@ -479,12 +479,16 @@ class CaseDemographicsReport(SQLFileDateRangeReport):
 class CaseDemographicsReportCreationDate(SQLFileDateRangeReport):
     QUERY_FILE = "CaseDemographicsReportFilteredByCreation.sql"
 
+    passphrase = forms.CharField(
+        required=False, help_text="Optional. If not provided, the report will not include diversity data"
+    )
+
     def get_headers(self):
-        return ["LAA_Reference", "Hash_ID", "Case_ID", "Provider_ID", "Category_Name", "Date_Case_Created", "Matter_Type_1", "Matter_Type_2",
-                "Scope_Status", "Eligibility_Status", "Adjustments_BSL", "Adjustments_LLI", "Adjustments_MIN", "Adjustments_TYP", "Adjustments_CallbackPreferred",
-                "Adjustments_Skype", "Gender", "Ethnicity", "Age(Range)", "Religion", "Sexual_Orientation", "Disability", "Media_Code", "Contact_Type", "Referral_Agencies",
-                "Exempt_Client", "Welsh", "Language", "Outcome code", "Outcome_Created_At", "Has_Third_Party", "Organisation", "Notes", "Provider Notes",
-                "Adaptation Notes", "Vulnerable User", "Geographical_region", "Post code", "Procurement area code"]
+        return ["LAA Reference", "Hash ID", "Case ID", "Provider ID", "Category Name", "Date Case Created", "Matter Type 1", "Matter Type 2",
+                "Scope Status", "Eligibility Status", "Adjustments_BSL", "Adjustments LLI", "Adjustments MIN", "Adjustments TYP", "Adjustments Callback Preferred",
+                "Adjustments Skype", "Gender", "Ethnicity", "Age(Range)", "Religion", "Sexual_Orientation", "Disability", "Media Code", "Contact Type", "Referral Agencies",
+                "Exempt Client", "Welsh", "Language", "Outcome code", "Outcome Created At", "Has Third Party", "Organisation", "Notes", "Provider Notes",
+                "Adaptation Notes", "Vulnerable User", "Geographical Region", "Postcode", "Procurement area code"]
 
     def get_rows(self):
         for row in self.get_queryset():

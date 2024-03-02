@@ -52,14 +52,14 @@ WITH latest_outcome AS (
 
 )
 SELECT
-    legalaid_case.laa_reference,
-    md5(lower(regexp_replace((personal_details.full_name||personal_details.postcode)::text, '\s', '', 'ig'))) AS "Hash_ID",
-    legalaid_case.reference,
-    legalaid_provider.name,
-    category.code AS "Category_Name",
-    legalaid_case.created AS "Date_Case_Created",
-    matter_type_1.code AS "Matter_Type_1",
-    matter_type_2.code AS "Matter_Type_2",
+    legalaid_case.laa_reference AS "LAA Reference",
+    md5(lower(regexp_replace((personal_details.full_name||personal_details.postcode)::text, '\s', '', 'ig'))) AS "Hash ID",
+    legalaid_case.reference AS "Case ID",
+    legalaid_provider.name AS "Provider ID",
+    category.code AS "Category Name",
+    legalaid_case.created AS "Date Case Created",
+    matter_type_1.code AS "Matter Type 1",
+    matter_type_2.code AS "Matter Type 2",
     CASE diagnosis.state
       when 'INSCOPE' THEN 'PASS'
       when 'OUTOFSCOPE' THEN 'FAIL'
@@ -70,17 +70,17 @@ SELECT
       when 'no' then 'FAIL'
       else 'UNKNOWN'
     END as "Eligibility_Status",
-    COALESCE(adaptations.bsl_webcam, false)::bool as "Adjustments_BSL",
+    COALESCE(adaptations.bsl_webcam, false)::bool as "Adjustments BSL",
     CASE upper(COALESCE(adaptations.language, ''))
       WHEN upper('English') THEN false
       WHEN upper('Welsh') THEN false
       WHEN '' THEN false
       ELSE true
     END as "Adjustments_LLI",
-    COALESCE(adaptations.minicom, false)::bool as "Adjustments_MIN",
-    COALESCE(adaptations.text_relay, false)::bool as "Adjustments_TYP",
-    COALESCE(adaptations.callback_preference, false)::bool as "Adjustments_CallbackPreferred",
-    COALESCE(adaptations.skype_webcam, false)::bool as "Adjustments_Skype",
+    COALESCE(adaptations.minicom, false)::bool as "Adjustments MIN",
+    COALESCE(adaptations.text_relay, false)::bool as "Adjustments TYP",
+    COALESCE(adaptations.callback_preference, false)::bool as "Adjustments CallbackPreferred",
+    COALESCE(adaptations.skype_webcam, false)::bool as "Adjustments Skype",
     CASE
       WHEN EXTRACT(YEAR from age(now(), personal_details.date_of_birth)) <  18 THEN 'A'
       WHEN EXTRACT(YEAR from age(now(), personal_details.date_of_birth)) <= 24 THEN 'B'
@@ -93,10 +93,10 @@ SELECT
       WHEN personal_details.date_of_birth IS NULL THEN 'U'
       ELSE 'Null'
     END as "Age(Range)",
-    media_code.code as "Media_Code",
-    legalaid_case.source as "Contact_Type",
+    media_code.code as "Media Code",
+    legalaid_case.source as "Contact Type",
     null as "Referral_Agencies",
-    legalaid_case.exempt_user_reason as "Exempt_Client",
+    legalaid_case.exempt_user_reason as "Exempt Client",
     CASE upper(adaptations.language) 
       WHEN upper('Welsh') THEN true 
       ELSE false 
@@ -108,8 +108,8 @@ SELECT
       ELSE 'Non-English'
     END as "Language",
     legalaid_case.outcome_code as "Outcome code",
-    provider_first_assign as "Outcome_Created_At",
-    legalaid_case.thirdparty_details_id::bool as "Has_Third_Party",
+    provider_first_assign as "Outcome Created At",
+    legalaid_case.thirdparty_details_id::bool as "Has Third Party",
     call_centre_organisation.name as "Organisation",
     legalaid_case.notes as "Notes",
     legalaid_case.provider_notes as "Provider Notes",
@@ -127,9 +127,9 @@ SELECT
       WHEN TRIM('123456789' FROM SUBSTRING(personal_details.postcode, 1, 2)) IN ('CF', 'LD', 'LL', 'NP', 'SA', 'SY') THEN 'Wales'
       WHEN TRIM('123456789' FROM SUBSTRING(personal_details.postcode, 1, 2)) IN ('B', 'CV', 'DY', 'HR', 'NN', 'ST', 'TF', 'WR', 'WS', 'WV') THEN 'West Midlands'
       ELSE 'NA'
-    END as "Geographical_region",
+    END as "Geographical Region",
     personal_details.postcode as "Postcode",
-    null as "Procurement area code",
+    personal_details.postcode as "Procurement area code",
   -- diversity fields --
     {diversity_expression} as diversity_json
 FROM legalaid_case AS legalaid_case

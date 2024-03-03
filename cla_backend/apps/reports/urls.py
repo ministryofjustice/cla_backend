@@ -48,5 +48,5 @@ urlpatterns = patterns(
         views.reasons_for_contacting_disaggregated,
         name="reasons_for_contacting_disaggregated",
     ),
-    url(r"^case-demographic-report/$", views.case_demographic_report, name="case_demographic_report")
+    url(r"^case-demographic-report/$", views.case_demographic_report, name="case_demographic_report"),
 )

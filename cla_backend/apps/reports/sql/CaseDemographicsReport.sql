@@ -76,7 +76,7 @@ SELECT
       ELSE 'NA'
     END as "Geographical Region",
     personal_details.postcode as "Postcode",
-    personal_details.postcode as "Procurement area code",
+    personal_details.postcode as "Procurement area code", -- TODO
     -- diversity fields --
     {diversity_expression} as diversity_json
 FROM legalaid_case AS legalaid_case

@@ -33,7 +33,7 @@ from .forms import (
     AllKnowledgeBaseArticles,
     ReasonsForContactingReport,
     ReasonsForContactingDisaggregated,
-    CaseDemographicsReport
+    CaseDemographicsReport,
 )
 
 from reports.models import Export

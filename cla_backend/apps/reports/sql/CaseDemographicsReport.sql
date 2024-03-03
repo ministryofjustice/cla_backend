@@ -19,7 +19,7 @@ SELECT
     END as "Eligibility Status",
     COALESCE(adaptations.bsl_webcam, false)::bool as "Adjustments BSL",
     CASE upper(COALESCE(adaptations.language, ''))
-      WHEN upper('English') THEN falsetest_reports
+      WHEN upper('English') THEN false
       WHEN upper('Welsh') THEN false
       WHEN '' THEN false
       ELSE true

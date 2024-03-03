@@ -1,56 +1,3 @@
-WITH latest_outcome AS (
-    select
-      e.*
-      ,row_number() over (PARTITION BY e.case_id order by e.id desc) as rn
-    FROM legalaid_case c
-      join cla_eventlog_log e on e.case_id = c.id
-    where
-      e.type = 'outcome'
-
-),
-    operator_first_access as (
-      SELECT e.*
-        ,row_number() over (PARTITION BY e.case_id order by e.id asc) as rn
-      FROM
-        cla_eventlog_log as e
-        JOIN auth_user as u on e.created_by_id = u.id
-        JOIN call_centre_operator as op on u.id = op.user_id
-      WHERE
-        e.code != 'CASE_CREATED'
-
-  ),
-    operator_first_action as (
-      SELECT e.*
-        ,row_number() over (PARTITION BY e.case_id order by e.id asc) as rn
-      FROM
-        cla_eventlog_log as e
-        JOIN auth_user as u on e.created_by_id = u.id
-        JOIN call_centre_operator as op on u.id = op.user_id
-      WHERE
-        e.code != 'CASE_CREATED'
-        and e.level >= 29
-  ),
-    provider_first_view as (
-      SELECT
-        e.*
-        ,row_number() over (PARTITION BY e.case_id order by e.id asc) as rn
-      FROM
-        cla_eventlog_log AS e
-        JOIN auth_user AS u ON e.created_by_id = u.id
-        JOIN cla_provider_staff AS staff ON u.id = staff.user_id
-      WHERE
-        e.code != 'CASE_CREATED'
-
-  ), provider_first_assign as (
-    SELECT
-      e.*
-      ,row_number() over (PARTITION BY e.case_id order by e.id asc) as rn
-    FROM
-      cla_eventlog_log AS e
-    WHERE
-      e.code  in ('REFSP', 'MANALC', 'MANREF', 'SPOR')
-
-)
 SELECT
     legalaid_case.laa_reference AS "LAA Reference",
     md5(lower(regexp_replace((personal_details.full_name||personal_details.postcode)::text, '\s', '', 'ig'))) AS "Hash ID",
@@ -108,7 +55,7 @@ SELECT
       ELSE 'Non-English'
     END as "Language",
     legalaid_case.outcome_code as "Outcome code",
-    provider_first_assign as "Outcome Created At",
+    outcome_log_event.created as "Outcome Created At",
     legalaid_case.thirdparty_details_id::bool as "Has Third Party",
     call_centre_organisation.name as "Organisation",
     legalaid_case.notes as "Notes",
@@ -142,11 +89,7 @@ FROM legalaid_case AS legalaid_case
     LEFT OUTER JOIN legalaid_eligibilitycheck as eligibility_check ON eligibility_check.id = legalaid_case.eligibility_check_id
     LEFT OUTER JOIN legalaid_adaptationdetails AS adaptations ON adaptations.id = legalaid_case.adaptation_details_id
     LEFT OUTER JOIN call_centre_organisation AS call_centre_organisation ON call_centre_organisation.id = legalaid_case.organisation_id
-    LEFT OUTER JOIN latest_outcome on latest_outcome.case_id = legalaid_case.id and latest_outcome.rn = 1
-    LEFT OUTER JOIN operator_first_action on operator_first_action.case_id = legalaid_case.id and operator_first_action.rn = 1
-    LEFT OUTER JOIN operator_first_access on operator_first_access.case_id = legalaid_case.id and operator_first_access.rn = 1
-    LEFT OUTER JOIN provider_first_view on provider_first_view.case_id = legalaid_case.id and provider_first_view.rn = 1
-    LEFT OUTER JOIN provider_first_assign on provider_first_assign.case_id = legalaid_case.id and provider_first_assign.rn = 1
+    LEFT OUTER JOIN cla_eventlog_log AS outcome_log_event ON outcome_log_event.case_id = legalaid_case.id AND outcome_log_event.type = 'outcome'
     JOIN legalaid_personaldetails AS personal_details ON personal_details.id = legalaid_case.personal_details_id
 WHERE
     legalaid_case.created >= %s AND legalaid_case.created < %s

@@ -42,7 +42,7 @@ SELECT
     END as "Age(Range)",
     media_code.code as "Media Code",
     legalaid_case.source as "Contact Type",
-    null as "Referral_Agencies",  -- TODO
+    media_code.name as "Referral Agencies",
     legalaid_case.exempt_user_reason as "Exempt Client",
     CASE upper(adaptations.language) 
       WHEN upper('Welsh') THEN true 

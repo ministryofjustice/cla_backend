@@ -71,12 +71,16 @@ jobs:
                   echo "Created tags $TARGET_TAGS"
                   echo "export BUILD_TAGS=$TARGET_TAGS" >> $BASH_ENV
                   echo "export IMAGE_TAG=$IMAGE_TAG" >> $BASH_ENV
-            - aws-ecr/build-image:
+            - aws-ecr/build_and_push_image:
+		auth:
+		  - aws-cli/setup:
+	            role_arn: $ECR_ROLE_TO_ASSUME # this will use the env var
+          	    region: $ECR_REGION # this will use the env var
                 push-image: true
                 tag: $BUILD_TAGS
                 region: $ECR_REGION # this will use the env var
                 repo: $ECR_REPOSITORY # this will use the env var
-                extra-build-args: |
+                extra_build_args: |
                   --build-arg target=production
             # Validate the python version as 2.7
             - run:

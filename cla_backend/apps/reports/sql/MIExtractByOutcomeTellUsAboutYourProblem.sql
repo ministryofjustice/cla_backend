@@ -7,6 +7,9 @@ WITH log_changed_category as (
 SELECT
   c.personal_details_id as "Personal Details Id"
   ,c.reference as "Case Id"
+  ,c.source as "Source"
+  ,to_char(c.created, 'YYYY-MM-DD') as "Created"
+  ,to_char(c.modified, 'YYYY-MM-DD') as "Modified"
   ,ec.notes as "Diagnosis Notes"
   ,c.notes as "Operator Notes"
   ,c.provider_notes as "Provider Notes"
@@ -32,5 +35,5 @@ LEFT OUTER JOIN legalaid_eligibilitycheck as ec on c.eligibility_check_id = ec.i
 LEFT OUTER JOIN legalaid_category as category on ec.category_id = category.id
 LEFT OUTER JOIN legalaid_adaptationdetails as adapt on c.adaptation_details_id = adapt.id
 LEFT OUTER JOIN log_changed_category ON log_changed_category.case_id = c.id
-WHERE c.created >= %(from_date)s AND c.created < %(to_date)s
-ORDER BY c.created DESC
+WHERE c.modified >= %(from_date)s AND c.modified < %(to_date)s
+ORDER BY c.modified DESC

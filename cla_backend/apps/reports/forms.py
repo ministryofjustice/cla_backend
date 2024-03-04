@@ -983,6 +983,9 @@ class MITellUsMoreAboutYourProblem(SQLFileDateRangeReport):
         return [
             "Personal Details Id",
             "Case Id",
+            "Source",
+            "Created",
+            "Modified",
             "Diagnosis Notes",
             "Operator Notes",
             "Provider Notes",

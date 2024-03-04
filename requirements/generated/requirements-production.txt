@@ -18,7 +18,7 @@ botocore==1.20.112
     # via
     #   boto3
     #   s3transfer
-celery[sqs]==4.0.2
+celery==4.4.0rc5
     # via -r requirements/source/requirements-base.in
 certifi==2021.10.8
     # via

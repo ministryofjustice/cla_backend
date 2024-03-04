@@ -172,3 +172,28 @@ class ReasonForContactingCategory(models.Model):
             return REASONS_FOR_CONTACTING.CHOICES_DICT[self.category]
         except KeyError:
             return self.category
+
+
+class CallbackTimeSlot(models.Model):
+    """
+    Represents a time slot a user can request a call back from the call centre.
+    If the slot exists then it will limit the number of the call backs that can be scheduled from the time slot.
+    If the slot does not exist then an unlimited number of callbacks can be scheduled for that time slot.
+
+    The callback slots are set via a CSV Upload in the form:
+    date, start_time, capacity
+
+    Args:
+        date (date): The date of the callback
+        time (TextField)
+    """
+
+    # These are all the possible start times for a callback slot,
+    # a slot has a duration of 30 minutes.
+    CALLBACK_SLOTS = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
+                      "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
+                      "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
+                      "18:00", "18:30", "19:00", "19:30"]
+    time = models.TextField(choices=CALLBACK_SLOTS)
+    date = models.DateField()
+    capacity = models.IntegerField()

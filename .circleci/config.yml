@@ -73,6 +73,7 @@ jobs:
                   echo "export IMAGE_TAG=$IMAGE_TAG" >> $BASH_ENV
             - aws-ecr/build_image:
                 push_image: true
+                account_id: $AWS_ECR_REGISTRY_ID
                 tag: $BUILD_TAGS
                 region: $ECR_REGION # this will use the env var
                 repo: $ECR_REPOSITORY # this will use the env var
@@ -90,6 +91,7 @@ jobs:
           steps:
             - aws-ecr/build_image:
                 push_image: true
+                account_id: $AWS_ECR_REGISTRY_ID
                 path: bin/database-migration
                 build_path: bin/database-migration
                 tag: database-migration

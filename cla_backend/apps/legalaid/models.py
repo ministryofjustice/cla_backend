@@ -128,6 +128,8 @@ class ContactResearchMethod(CloneModelMixin, TimeStampedModel):
 
 
 class PersonalDetails(CloneModelMixin, TimeStampedModel):
+    class Meta:
+        restrict_analytics = True
     title = models.CharField(max_length=20, blank=True, null=True)
     full_name = models.CharField(max_length=400, blank=True, null=True)
     postcode = models.CharField(max_length=12, blank=True, null=True)

@@ -22,7 +22,7 @@ from legalaid.serializers import (
 
 from legalaid.models import Case, EligibilityCheck
 
-from checker.models import ReasonForContacting, ReasonForContactingCategory
+from checker.models import ReasonForContacting, ReasonForContactingCategory, CallbackTimeSlot
 from core.serializers import ClaModelSerializer
 
 checker_graph = SimpleLazyObject(lambda: get_graph(file_name=settings.CHECKER_DIAGNOSIS_FILE_NAME))
@@ -156,7 +156,7 @@ class PersonalDetailsSerializer(PersonalDetailsSerializerBase):
             "email",
             "safe_to_contact",
             "safe_to_email",
-            "announce_call"
+            "announce_call",
         )
 
 
@@ -214,3 +214,9 @@ class ReasonForContactingSerializer(ClaModelSerializer):
         model = ReasonForContacting
         fields = ("reference", "reasons", "other_reasons", "case", "referrer", "user_agent")
         writable_nested_fields = ["reasons"]
+
+
+class CallbackTimeSlotSerializer(ClaModelSerializer):
+    class Meta(object):
+        model = CallbackTimeSlot
+        fields = ("date", "time", "capacity")

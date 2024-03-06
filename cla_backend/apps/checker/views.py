@@ -21,6 +21,7 @@ from .serializers import (
     CaseSerializer,
     CheckerDiagnosisSerializer,
     ReasonForContactingSerializer,
+    CallbackTimeSlotSerializer,
 )
 from .forms import WebCallMeBackForm
 
@@ -148,3 +149,8 @@ class ReasonForContactingViewSet(
         if "reasons" in serializer.validated_data:
             serializer.instance.reasons.all().delete()
         super(ReasonForContactingViewSet, self).perform_update(serializer)
+
+
+class CallbackTimeSlotViewSet(PublicAPIViewSetMixin, mixins.ListModelMixin, CompatGenericViewSet):
+    queryset = CallbackTimeSlotSerializer.Meta.model.objects.all()
+    serializer_class = CallbackTimeSlotSerializer

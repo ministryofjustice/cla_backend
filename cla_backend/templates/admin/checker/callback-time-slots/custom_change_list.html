@@ -1,0 +1,7 @@
+{% extends "admin/change_list.html" %} {% load i18n %}
+{% block object-tools-items %}
+    {{ block.super }}
+    <li>
+        <a class="import-callback-time-slots" href="{% url 'admin:callback_time_slots_import_csv' %}">Import callback time slots</a>
+    </li>
+{% endblock %}

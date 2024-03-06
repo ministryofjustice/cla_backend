@@ -225,4 +225,4 @@ class CallbackTimeSlotSerializer(ClaModelSerializer):
 
     class Meta(object):
         model = CallbackTimeSlot
-        fields = ("date", "time", "time_display", "capacity")
+        fields = ("date", "time", "time_display", "capacity", "remaining_capacity")

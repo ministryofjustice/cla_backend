@@ -1,3 +1,4 @@
+import datetime
 from django.db import models
 from django.db.models import Count
 from model_utils.models import TimeStampedModel
@@ -221,3 +222,20 @@ class CallbackTimeSlot(TimeStampedModel):
     time = models.TextField(choices=CALLBACK_TIME_SLOTS.CHOICES)
     date = models.DateField()
     capacity = models.IntegerField()
+
+    def callback_start_datetime(self):
+        hour = int(self.time[0:2])
+        minutes = int(self.time[2:])
+        return datetime.datetime.combine(self.date, datetime.time(hour=hour, minute=minutes))
+
+    def callback_end_datetime(self):
+        return self.callback_start_datetime() + datetime.timedelta(minutes=30)
+
+    @property
+    def remaining_capacity(self):
+        from legalaid.models import Case
+
+        count = Case.objects.filter(
+            requires_action_at__range=(self.callback_start_datetime(), self.callback_end_datetime())
+        ).count()
+        return self.capacity - count

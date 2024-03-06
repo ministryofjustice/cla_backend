@@ -16,7 +16,7 @@ class ReasonForContactingAdmin(admin.ModelAdmin):
 
 class CallbackTimeSlotAdmin(admin.ModelAdmin):
     change_list_template = "admin/checker/callback-time-slots/custom_change_list.html"
-    list_display = ("created", "date", "time", "capacity")
+    list_display = ("date", "time", "capacity", "remaining_capacity")
     date_hierarchy = "date"
 
     def get_urls(self):

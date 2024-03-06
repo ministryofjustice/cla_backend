@@ -76,10 +76,10 @@ SELECT
       ELSE 'NA'
     END as "Geographical Region",
     personal_details.postcode as "Postcode",
-    personal_details.postcode as "Procurement area code", -- TODO
     -- diversity fields --
     {diversity_expression} as diversity_json
 FROM legalaid_case AS legalaid_case
+    LEFT OUTER JOIN cla_eventlog_log AS outcome_log_event ON outcome_log_event.case_id = legalaid_case.id AND outcome_log_event.type = 'outcome'
     LEFT OUTER JOIN diagnosis_diagnosistraversal AS diagnosis ON legalaid_case.diagnosis_id = diagnosis.id
     LEFT OUTER JOIN legalaid_category AS category ON diagnosis.category_id = category.id
     LEFT OUTER JOIN legalaid_mattertype AS matter_type_1 ON matter_type_1.id = legalaid_case.matter_type1_id
@@ -89,7 +89,7 @@ FROM legalaid_case AS legalaid_case
     LEFT OUTER JOIN legalaid_eligibilitycheck as eligibility_check ON eligibility_check.id = legalaid_case.eligibility_check_id
     LEFT OUTER JOIN legalaid_adaptationdetails AS adaptations ON adaptations.id = legalaid_case.adaptation_details_id
     LEFT OUTER JOIN call_centre_organisation AS call_centre_organisation ON call_centre_organisation.id = legalaid_case.organisation_id
-    LEFT OUTER JOIN cla_eventlog_log AS outcome_log_event ON outcome_log_event.case_id = legalaid_case.id AND outcome_log_event.type = 'outcome'
-    JOIN legalaid_personaldetails AS personal_details ON personal_details.id = legalaid_case.personal_details_id
+    LEFT OUTER JOIN legalaid_personaldetails AS personal_details ON personal_details.id = legalaid_case.personal_details_id
 WHERE
-    legalaid_case.created >= %s AND legalaid_case.created < %s
+    -- If a case does not have an outcome log event then it should not be part of this dataset.
+    outcome_log_event.created >= %s AND outcome_log_event.created < %s

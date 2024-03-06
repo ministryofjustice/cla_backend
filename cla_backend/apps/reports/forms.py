@@ -443,8 +443,7 @@ class CaseDemographicsReport(SQLFileDateRangeReport):
                 "Adaptation Notes",
                 "Vulnerable User",
                 "Geographical Region",
-                "Postcode",
-                "Procurement area code"]
+                "Postcode"]
 
     def get_rows(self):
         for row in self.get_queryset():
@@ -466,7 +465,7 @@ class CaseDemographicsReport(SQLFileDateRangeReport):
         passphrase = self.cleaned_data.get("passphrase")
 
         if passphrase:
-            diversity_expression = "pgp_pub_decrypt(pd.diversity, dearmor('{key}'), %s)::json".format(
+            diversity_expression = "pgp_pub_decrypt(personal_details.diversity, dearmor('{key}'), %s)::json".format(
                 key=diversity.get_private_key()
             )
         else:

@@ -406,44 +406,44 @@ class CaseDemographicsReport(SQLFileDateRangeReport):
     )
 
     def get_headers(self):
-        return [
-            "LAA_Reference",
-            "Hash_ID",
-            "Case_ID",
-            "Provider_ID",
-            "Category_Name",
-            "Date_Case_Created",
-            "Matter_Type_1",
-            "Matter_Type_2",
-            "Scope_Status",
-            "Eligibility_Status",
-            "Adjustments_BSL",
-            "Adjustments_LLI",
-            "Adjustments_MIN",
-            "Adjustments_TYP",
-            "Adjustments_CallbackPreferred",
-            "Adjustments_Skype",
-            "Gender",
-            "Ethnicity",
-            "Age(Range)",
-            "Religion",
-            "Sexual_Orientation",
-            "Disability",
-            "Media_Code",
-            "Contact_Type",
-            "Referral_Agencies",
-            "Exempt_Client",
-            "Welsh",
-            "Language",
-            "Outcome_Created_At",
-            "Has_Third_Party",
-            "Organisation",
-            "Notes",
-            "Provider Notes",
-            "Adaptation Notes",
-            "Vulnerable User",
-            "Geographical_region",
-        ]
+        return ["LAA Reference",
+                "Hash ID",
+                "Case ID",
+                "Provider ID",
+                "Category Name",
+                "Date Case Created",
+                "Matter Type 1",
+                "Matter Type 2",
+                "Scope Status",
+                "Eligibility Status",
+                "Adjustments BSL",
+                "Adjustments LLI",
+                "Adjustments MIN",
+                "Adjustments TYP",
+                "Adjustments Callback Preferred",
+                "Adjustments Skype",
+                "Gender",
+                "Ethnicity",
+                "Age(Range)",
+                "Religion",
+                "Sexual_Orientation",
+                "Disability",
+                "Media Code",
+                "Contact Type",
+                "Referral Agencies",
+                "Exempt Client",
+                "Welsh",
+                "Language",
+                "Outcome code",
+                "Outcome Created At",
+                "Has Third Party",
+                "Organisation",
+                "Notes",
+                "Provider Notes",
+                "Adaptation Notes",
+                "Vulnerable User",
+                "Geographical Region",
+                "Postcode"]
 
     def get_rows(self):
         for row in self.get_queryset():
@@ -465,7 +465,7 @@ class CaseDemographicsReport(SQLFileDateRangeReport):
         passphrase = self.cleaned_data.get("passphrase")
 
         if passphrase:
-            diversity_expression = "pgp_pub_decrypt(pd.diversity, dearmor('{key}'), %s)::json".format(
+            diversity_expression = "pgp_pub_decrypt(personal_details.diversity, dearmor('{key}'), %s)::json".format(
                 key=diversity.get_private_key()
             )
         else:

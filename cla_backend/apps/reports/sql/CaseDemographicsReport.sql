@@ -35,8 +35,8 @@ SELECT
       WHEN EXTRACT(YEAR from age(now(), personal_details.date_of_birth)) <= 39 THEN 'D'
       WHEN EXTRACT(YEAR from age(now(), personal_details.date_of_birth)) <= 49 THEN 'E'
       WHEN EXTRACT(YEAR from age(now(), personal_details.date_of_birth)) <= 59 THEN 'F'
-      WHEN EXTRACT(YEAR from age(now(), personal_details.date_of_birth)) >= 79 THEN 'G'
-      WHEN EXTRACT(YEAR from age(now(), personal_details.date_of_birth)) >  79 THEN 'H'
+      WHEN EXTRACT(YEAR from age(now(), personal_details.date_of_birth)) <= 79 THEN 'G'
+      WHEN EXTRACT(YEAR from age(now(), personal_details.date_of_birth)) >= 80 THEN 'H'
       WHEN personal_details.date_of_birth IS NULL THEN 'U'
       ELSE 'Null'
     END as "Age(Range)",

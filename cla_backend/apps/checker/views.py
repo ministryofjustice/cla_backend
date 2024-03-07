@@ -1,5 +1,6 @@
-from django.http import Http404
+from django.http import Http404, JsonResponse
 from rest_framework import mixins
+from rest_framework.views import APIView
 from rest_framework.decorators import detail_route
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response as DRFResponse
@@ -14,6 +15,7 @@ from knowledgebase.views import BaseArticleViewSet, ArticleCategoryFilter
 from legalaid.models import Case
 from legalaid.views import BaseCategoryViewSet, BaseEligibilityCheckViewSet, BaseCaseLogMixin
 from cla_common.constants import CASE_SOURCE
+from checker.call_centre_availability import get_available_slots
 
 from .models import ReasonForContacting
 from .serializers import (
@@ -21,7 +23,6 @@ from .serializers import (
     CaseSerializer,
     CheckerDiagnosisSerializer,
     ReasonForContactingSerializer,
-    CallbackTimeSlotSerializer,
 )
 from .forms import WebCallMeBackForm
 
@@ -151,6 +152,7 @@ class ReasonForContactingViewSet(
         super(ReasonForContactingViewSet, self).perform_update(serializer)
 
 
-class CallbackTimeSlotViewSet(PublicAPIViewSetMixin, mixins.ListModelMixin, CompatGenericViewSet):
-    queryset = CallbackTimeSlotSerializer.Meta.model.objects.all()
-    serializer_class = CallbackTimeSlotSerializer
+class CallbackTimeSlotViewSet(PublicAPIViewSetMixin, APIView):
+    def get(self, request, *args, **kwargs):
+        slots = get_available_slots(6)
+        return JsonResponse(slots)

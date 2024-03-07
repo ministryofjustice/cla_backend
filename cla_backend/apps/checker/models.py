@@ -1,11 +1,12 @@
 import datetime
 from django.db import models
 from django.db.models import Count
+from extended_choices import Choices
 from model_utils.models import TimeStampedModel
 from uuidfield import UUIDField
 
 from cla_common.constants import REASONS_FOR_CONTACTING
-from extended_choices import Choices
+from cla_common.call_centre_availability import SLOT_INTERVAL_MINS
 
 
 # These are all the possible start times for a callback slot,
@@ -223,14 +224,6 @@ class CallbackTimeSlot(TimeStampedModel):
     date = models.DateField()
     capacity = models.IntegerField()
 
-    def callback_start_datetime(self):
-        hour = int(self.time[0:2])
-        minutes = int(self.time[2:])
-        return datetime.datetime.combine(self.date, datetime.time(hour=hour, minute=minutes))
-
-    def callback_end_datetime(self):
-        return self.callback_start_datetime() + datetime.timedelta(minutes=30)
-
     @property
     def remaining_capacity(self):
         from legalaid.models import Case
@@ -239,3 +232,11 @@ class CallbackTimeSlot(TimeStampedModel):
             requires_action_at__range=(self.callback_start_datetime(), self.callback_end_datetime())
         ).count()
         return self.capacity - count
+
+    def callback_start_datetime(self):
+        hour = int(self.time[0:2])
+        minutes = int(self.time[2:])
+        return datetime.datetime.combine(self.date, datetime.time(hour=hour, minute=minutes))
+
+    def callback_end_datetime(self):
+        return self.callback_start_datetime() + datetime.timedelta(minutes=SLOT_INTERVAL_MINS)

@@ -7,14 +7,20 @@ from django.apps import apps
 
 def get_all_non_restricted_models(models):
     non_restricted_models = []
-
     # Get all models from all installed apps
     for model in models:
-        # Construct SQL command to revoke permissions
-        if hasattr(model._meta, 'restrict_analytics'):
-            if not model._meta.restrict_analytics:
-                non_restricted_models.append(model)
-    print(non_restricted_models)
+    # Get all columns for each table
+        if hasattr(model, '_restrict_analytics'):
+            if model._restrict_analytics == False:
+                for column in model._meta.get_fields():
+                    if not column.is_relation:
+                        non_restricted_models.append([model._meta.db_table,column.name])
+    # Remove restricted fields from allowed columns
+        if hasattr(model, '_restricted_fields'):
+            if len(model._restricted_fields) > 0:
+                for column in model._restricted_fields:
+                    non_restricted_models.remove([model._meta.db_table,column])
+
     return non_restricted_models
 
 class Migration(migrations.Migration):
@@ -23,6 +29,6 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RunSQL(
-            ["GRANT ALL PRIVILEGES ON TABLE {model} FROM analytics".format(model=model) for model in get_all_non_restricted_models(apps.get_models())]
+            ["GRANT SELECT({column}) ON {table} TO analytics".format(column=column,table=table) for inner_list in get_all_non_restricted_models(apps.get_models()) for table, column in [inner_list]]
             )
     ]

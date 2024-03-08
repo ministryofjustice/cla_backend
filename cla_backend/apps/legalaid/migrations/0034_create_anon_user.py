@@ -10,9 +10,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RunSQL([
-            "CREATE ROLE analytics WITH LOGIN",
+            "CREATE ROLE analytics WITH LOGIN PASSWORD 'password'",
             "GRANT CONNECT ON DATABASE cla_backend TO analytics",
-            "CREATE USER metabase WITH PASSWORD 'password'",
-            "GRANT analytics TO metabase",
         ])
     ]

@@ -131,7 +131,19 @@ class ContactResearchMethod(CloneModelMixin, TimeStampedModel):
 
 class PersonalDetails(CloneModelMixin, TimeStampedModel):
     _restrict_analytics = False
-    _restricted_fields = ['date_of_birth','diversity','email','full_name','home_phone','id','mobile_phone','postcode','search_field','street','title']
+    _restricted_fields = [
+        "date_of_birth",
+        "diversity",
+        "email",
+        "full_name",
+        "home_phone",
+        "id",
+        "mobile_phone",
+        "postcode",
+        "search_field",
+        "street",
+        "title",
+    ]
     title = models.CharField(max_length=20, blank=True, null=True)
     full_name = models.CharField(max_length=400, blank=True, null=True)
     postcode = models.CharField(max_length=12, blank=True, null=True)
@@ -220,7 +232,7 @@ class PersonalDetails(CloneModelMixin, TimeStampedModel):
 
 class ThirdPartyDetails(CloneModelMixin, TimeStampedModel):
     _restrict_analytics = False
-    _restricted_fields = ['personal_relationship_note']
+    _restricted_fields = ["personal_relationship_note"]
     personal_details = models.ForeignKey(PersonalDetails)
     pass_phrase = models.CharField(max_length=255, blank=True, null=True)
     reason = models.CharField(max_length=30, choices=THIRDPARTY_REASON, null=True, blank=True, default="")
@@ -243,7 +255,7 @@ class ThirdPartyDetails(CloneModelMixin, TimeStampedModel):
 
 class AdaptationDetails(CloneModelMixin, TimeStampedModel):
     _restrict_analytics = False
-    _restricted_fields = ['notes']
+    _restricted_fields = ["notes"]
     bsl_webcam = models.BooleanField(default=False)
     minicom = models.BooleanField(default=False)
     text_relay = models.BooleanField(default=False)
@@ -266,7 +278,7 @@ class EODDetailsManager(models.Manager):
 
 class EODDetails(TimeStampedModel):
     _restrict_analytics = False
-    _restricted_fields = ['notes']
+    _restricted_fields = ["notes"]
     case = models.OneToOneField("Case", related_name="eod_details")
     notes = models.TextField(blank=True)
     reference = UUIDField(auto=True, unique=True)
@@ -436,10 +448,12 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin):
         """
         case_data = self.to_case_data()
         case_data_dict, case_data_dict_missing = case_data.to_dict()
-        logger.debug('CaseData %s' % json.dumps(case_data_dict, indent=4, sort_keys=True))
-        logger.debug('CaseData is missing: %s' % json.dumps(case_data_dict_missing, indent=4, sort_keys=True))
+        logger.debug("CaseData %s" % json.dumps(case_data_dict, indent=4, sort_keys=True))
+        logger.debug("CaseData is missing: %s" % json.dumps(case_data_dict_missing, indent=4, sort_keys=True))
         ec = EligibilityChecker(case_data)
-        eligibility_state, is_gross_income_eligible, is_disposable_income_eligible, is_disposable_capital_eligible = ec.is_eligible_with_reasons()
+        eligibility_state, is_gross_income_eligible, is_disposable_income_eligible, is_disposable_capital_eligible = (
+            ec.is_eligible_with_reasons()
+        )
 
         reasons = []
         if eligibility_state == ELIGIBILITY_STATES.NO:
@@ -649,7 +663,7 @@ class MediaCode(TimeStampedModel):
 
 class Case(TimeStampedModel):
     _restrict_analytics = False
-    _restricted_field = ['notes','provider_notes','source']
+    _restricted_field = ["notes", "provider_notes", "source"]
     reference = models.CharField(max_length=128, unique=True, editable=False)
     eligibility_check = models.OneToOneField(EligibilityCheck, null=True, blank=True)
     diagnosis = models.OneToOneField("diagnosis.DiagnosisTraversal", null=True, blank=True, on_delete=SET_NULL)

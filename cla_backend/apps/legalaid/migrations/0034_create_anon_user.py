@@ -9,8 +9,10 @@ class Migration(migrations.Migration):
     dependencies = [("legalaid", "0033_personaldetails_announce_call")]
 
     operations = [
-        migrations.RunSQL([
-            "CREATE ROLE analytics WITH LOGIN PASSWORD 'password'",
-            "GRANT CONNECT ON DATABASE cla_backend TO analytics",
-        ])
+        migrations.RunSQL(
+            [
+                "CREATE ROLE analytics WITH LOGIN PASSWORD 'password'",
+                "GRANT CONNECT ON DATABASE cla_backend TO analytics",
+            ]
+        )
     ]

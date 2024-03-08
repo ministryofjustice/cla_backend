@@ -44,8 +44,7 @@ def get_available_slots(num_days=6):
 
 def time_choice(time):
     end = time + datetime.timedelta(minutes=SLOT_INTERVAL_MINS)
-    display_string = format_time(time) + " - " + format_time(end)
-    return time.strftime("%H%M"), display_string
+    return time.strftime("%H%M"), {"start": time, "end": end}
 
 
 def format_time(dt):

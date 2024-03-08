@@ -1,17 +1,43 @@
 import datetime
 from collections import OrderedDict
 from cla_common.constants import OPERATOR_HOURS
-from cla_common.call_centre_availability import SLOT_INTERVAL_MINS, OpeningHours
+from cla_common.call_centre_availability import SLOT_INTERVAL_MINS, OpeningHours, current_datetime
 from checker.models import CallbackTimeSlot
 
 
-CALL_CENTER_HOURS = OpeningHours(**OPERATOR_HOURS)
+class CheckerOpeningHours(OpeningHours):
+    def time_slots(self, day=None):
+        capacity = self.get_callback_with_capacity(day)
+        slots = super(CheckerOpeningHours, self).time_slots(day)
+
+        def has_capacity(slot):
+            key = "%s %s" % (day.strftime(DATE_KEY_FORMAT), slot.strftime("%H%M"))
+            if key not in capacity:
+                return True
+            return capacity[key] > 0
+
+        slots = filter(has_capacity, slots)
+        return slots
+
+    def get_callback_with_capacity(self, day):
+        callback_slots = CallbackTimeSlot.objects.filter(date=day).all()
+        capacity = {}
+        for callback_slot in callback_slots:
+            key = "%s %s" % (day.strftime(DATE_KEY_FORMAT), callback_slot.time)
+            capacity[key] = callback_slot.remaining_capacity
+        return capacity
+
+
+DATE_KEY_FORMAT = "%Y%m%d"
+CALL_CENTER_HOURS = CheckerOpeningHours(**OPERATOR_HOURS)
 
 
 def get_available_slots(num_days=6):
 
     """Generate time slots options for call on another day select options"""
     days = CALL_CENTER_HOURS.available_days(num_days)
+    # Add today to list of available days
+    days.insert(0, current_datetime())
     slots = dict(map(time_slots, days))
     return slots
 
@@ -33,22 +59,8 @@ def format_time(dt):
 
 
 def time_slots_for_day(day):
-    callback_slots = CallbackTimeSlot.objects.filter(date=day).all()
-    capacity = {}
-    for callback_slot in callback_slots:
-        key = "%s %s" % (day.strftime("%Y%m%d"), callback_slot.time)
-        capacity[key] = callback_slot.remaining_capacity
-
     slots = CALL_CENTER_HOURS.time_slots(day)
     slots = filter(CALL_CENTER_HOURS.can_schedule_callback, slots)
-
-    def has_capacity(slot):
-        key = "%s %s" % (day.strftime("%Y%m%d"), slot.strftime("%H%M"))
-        if key not in capacity:
-            return True
-        return capacity[key] > 0
-
-    slots = filter(has_capacity, slots)
     return map(time_choice, slots)
 
 

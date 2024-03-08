@@ -1,6 +1,7 @@
 import datetime
 from django.db import models
 from django.db.models import Count
+from django.utils import timezone
 from extended_choices import Choices
 from model_utils.models import TimeStampedModel
 from uuidfield import UUIDField
@@ -236,7 +237,8 @@ class CallbackTimeSlot(TimeStampedModel):
     def callback_start_datetime(self):
         hour = int(self.time[0:2])
         minutes = int(self.time[2:])
-        return datetime.datetime.combine(self.date, datetime.time(hour=hour, minute=minutes))
+        dt = datetime.datetime.combine(self.date, datetime.time(hour=hour, minute=minutes))
+        return timezone.make_aware(dt)
 
     def callback_end_datetime(self):
         return self.callback_start_datetime() + datetime.timedelta(minutes=SLOT_INTERVAL_MINS)

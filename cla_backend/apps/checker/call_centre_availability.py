@@ -71,5 +71,8 @@ def time_slots(day):
 
 def format_day(value):
     if isinstance(value, (datetime.date, datetime.datetime)):
+        value = value.date() if isinstance(value, datetime.datetime) else value
+        if value == datetime.date.today():
+            return "today"
         return "{:%Y%m%d}".format(value)
     return value

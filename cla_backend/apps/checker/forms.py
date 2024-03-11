@@ -13,7 +13,7 @@ class WebCallMeBackForm(BaseCallMeBackForm):
 
 
 class CallbackTimeSlotCSVUploadForm(forms.Form):
-    csv_file = forms.FileField(required=True)
+    csv_file = forms.FileField(required=True, widget=forms.FileInput(attrs={'accept': ".csv"}))
 
     def __init__(self, *args, **kwargs):
         super(CallbackTimeSlotCSVUploadForm, self).__init__(*args, **kwargs)

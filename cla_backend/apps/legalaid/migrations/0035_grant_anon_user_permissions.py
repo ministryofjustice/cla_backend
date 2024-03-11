@@ -32,7 +32,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.RunSQL(
             [
-                "GRANT SELECT({column}) ON {table} TO analytics".format(column=column, table=table)
+                "GRANT SELECT('{column}') ON {table} TO analytics".format(column=column, table=table)
                 for inner_list in get_all_non_restricted_models(apps.get_models())
                 for table, column in [inner_list]
             ]

@@ -68,6 +68,7 @@ def _check_reference_unique(reference):
 
 
 class Category(TimeStampedModel):
+    _restrict_analytics = False
     name = models.CharField(max_length=500)
     code = models.CharField(max_length=50, unique=True)
     raw_description = models.TextField(blank=True)

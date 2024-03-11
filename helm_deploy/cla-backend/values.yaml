@@ -106,6 +106,10 @@ envVars:
     secret:
       name: database-14
       key: host
+  ANALYTICS_DB_PASSWORD:
+    secret:
+      name: analytics-db-password
+      key: password
   DB_PORT:
     secret:
       name: database-14

@@ -22,6 +22,7 @@ def get_all_non_restricted_models(models):
                 for column in model._restricted_fields:
                     non_restricted_models.remove([model._meta.db_table, column])
 
+    # Returns all allowed columns for user
     return non_restricted_models
 
 

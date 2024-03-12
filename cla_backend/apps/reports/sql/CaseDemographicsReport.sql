@@ -1,3 +1,12 @@
+with latest_outcome as (
+    select
+      e.*
+      ,row_number() over (PARTITION BY e.case_id order by e.id desc) as rn
+    FROM legalaid_case c
+      join cla_eventlog_log e on e.case_id = c.id
+    where
+      e.type = 'outcome'
+)
 SELECT
     legalaid_case.laa_reference AS "LAA Reference",
     md5(lower(regexp_replace((personal_details.full_name||personal_details.postcode)::text, '\s', '', 'ig'))) AS "Hash ID",
@@ -79,7 +88,6 @@ SELECT
     -- diversity fields --
     {diversity_expression} as diversity_json
 FROM legalaid_case AS legalaid_case
-    LEFT OUTER JOIN cla_eventlog_log AS outcome_log_event ON outcome_log_event.case_id = legalaid_case.id AND outcome_log_event.type = 'outcome'
     LEFT OUTER JOIN diagnosis_diagnosistraversal AS diagnosis ON legalaid_case.diagnosis_id = diagnosis.id
     LEFT OUTER JOIN legalaid_category AS category ON diagnosis.category_id = category.id
     LEFT OUTER JOIN legalaid_mattertype AS matter_type_1 ON matter_type_1.id = legalaid_case.matter_type1_id
@@ -92,4 +100,4 @@ FROM legalaid_case AS legalaid_case
     LEFT OUTER JOIN legalaid_personaldetails AS personal_details ON personal_details.id = legalaid_case.personal_details_id
 WHERE
     -- If a case does not have an outcome log event then it should not be part of this dataset.
-    outcome_log_event.created >= %s AND outcome_log_event.created < %s
+    latest_outcome.created >= %s AND latest_outcome.created < %s

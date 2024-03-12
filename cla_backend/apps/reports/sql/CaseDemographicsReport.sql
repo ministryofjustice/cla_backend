@@ -88,6 +88,7 @@ SELECT
     -- diversity fields --
     {diversity_expression} as diversity_json
 FROM legalaid_case AS legalaid_case
+    LEFT OUTER JOIN latest_outcome on latest_outcome.case_id = lc.id and latest_outcome.rn = 1
     LEFT OUTER JOIN diagnosis_diagnosistraversal AS diagnosis ON legalaid_case.diagnosis_id = diagnosis.id
     LEFT OUTER JOIN legalaid_category AS category ON diagnosis.category_id = category.id
     LEFT OUTER JOIN legalaid_mattertype AS matter_type_1 ON matter_type_1.id = legalaid_case.matter_type1_id

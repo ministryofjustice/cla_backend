@@ -266,7 +266,7 @@ def case_demographic_report(request):
 
 @staff_member_required
 @permission_required("legalaid.run_reports")
-def tell_us_more_about_your_problem(request):
+def problem_categorisation(request):
     return report_view(request, MITellUsMoreAboutYourProblem, "Tell us more about your problem")
 
 

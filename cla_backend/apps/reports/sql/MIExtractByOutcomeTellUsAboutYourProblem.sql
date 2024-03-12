@@ -7,7 +7,6 @@ WITH log_changed_category as (
 SELECT
   c.personal_details_id as "Personal Details Id"
   ,c.reference as "Case Id"
-  ,c.source as "Source"
   ,to_char(c.created, 'YYYY-MM-DD') as "Created"
   ,to_char(c.modified, 'YYYY-MM-DD') as "Modified"
   ,ec.notes as "Diagnosis Notes"
@@ -28,7 +27,6 @@ SELECT
   ,COALESCE(log_changed_category.diagnosis_category, category.code) as "Diagnosis Category"
   ,category.code as "Legalaid Category Code"
   ,category.name as "Legalaid Category Name"
-  ,category.description as "Legalaid Category Description"
   ,c.outcome_code as "Outcome Code"
 FROM legalaid_case as c
 LEFT OUTER JOIN legalaid_eligibilitycheck as ec on c.eligibility_check_id = ec.id

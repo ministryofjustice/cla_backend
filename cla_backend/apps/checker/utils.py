@@ -20,10 +20,10 @@ class CallbackTimeSlotCSVImporter(object):
                 cls.validate_row(row)
                 rows.append(cls.get_callback_time_slot_from_row(row))
             except ValidationError as e:
-                for field, message in e.message_dict.items():
-                    errors.append("row %s: %s: %s" % (index + 1, field, message))
+                for _, message in e.message_dict.items():
+                    errors.append("Row %s: %s" % (index + 1, message))
             except Exception as e:
-                errors.append("row %s: %s" % (index + 1, str(e)))
+                errors.append("Row %s: %s" % (index + 1, str(e)))
         return [rows, errors]
 
     @classmethod
@@ -38,16 +38,16 @@ class CallbackTimeSlotCSVImporter(object):
             row[CSV_COL_DATE] = datetime.datetime.strptime(row[CSV_COL_DATE], "%d/%m/%Y")
         except Exception as error:
             raise ValidationError(
-                message=dict(date="%s does not match format day/month/year i.e 21/01/2024" % row[CSV_COL_DATE])
+                message=dict(date="Write the date in this format: dd/mm/yyyy")
             )
         if row[CSV_COL_TIME] not in CALLBACK_TIME_SLOTS:
-            raise ValidationError(message=dict(time="%s not a valid time" % row[CSV_COL_TIME]))
+            raise ValidationError(message=dict(time="Check the time is correct, for example, 1500 (for the 1500 to 1530 slot)"))
         try:
             assert int(row[CSV_COL_CAPACITY]) >= 0
         except ValueError as error:
-            raise ValidationError(message=dict(capacity="capacity must be a number"))
+            raise ValidationError(message=dict(capacity="Write capacity as a number, for example: 1, 2, 10"))
         except AssertionError as error:
-            raise ValidationError(message=dict(capacity="capacity must be zero or more"))
+            raise ValidationError(message=dict(capacity="The capacity must be 0 or more"))
         except Exception as error:
             raise ValidationError(message=dict(capacity=error))
 

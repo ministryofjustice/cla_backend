@@ -30,7 +30,7 @@ class ComplaintManager(models.Manager):
 
 
 class Complaint(TimeStampedModel):
-    _restrict_analytics = False
+    _allow_analytics = True
     eod = models.ForeignKey("legalaid.EODDetails")
 
     description = models.TextField(null=True, blank=True)

@@ -3,7 +3,7 @@ from model_utils.models import TimeStampedModel
 
 
 class Article(TimeStampedModel):
-    _restrict_analytics = False
+    _allow_analytics = True
     organisation = models.CharField(max_length=255, null=True, blank=True)
     service_name = models.CharField(max_length=255, null=True, blank=True)
     service_tag = models.CharField(max_length=50, null=True, blank=True)

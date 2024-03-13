@@ -7,7 +7,7 @@ from cla_common.constants import REASONS_FOR_CONTACTING
 
 
 class ReasonForContacting(TimeStampedModel):
-    _restrict_analytics = False
+    _allow_analytics = True
     reference = UUIDField(auto=True, unique=True)
     other_reasons = models.TextField(blank=True)
     referrer = models.CharField(max_length=255, blank=True)
@@ -161,7 +161,7 @@ class ReasonForContacting(TimeStampedModel):
 
 
 class ReasonForContactingCategory(models.Model):
-    _restrict_analytics = False
+    _allow_analytics = True
     reason_for_contacting = models.ForeignKey(ReasonForContacting, related_name="reasons", on_delete=models.CASCADE)
     category = models.CharField(max_length=20, choices=REASONS_FOR_CONTACTING.CHOICES)
 

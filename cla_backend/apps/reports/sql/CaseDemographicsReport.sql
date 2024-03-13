@@ -64,7 +64,7 @@ SELECT
       ELSE 'Non-English'
     END as "Language",
     legalaid_case.outcome_code as "Outcome code",
-    outcome_log_event.created as "Outcome Created At",
+    latest_outcome.created as "Outcome Created At",
     legalaid_case.thirdparty_details_id::bool as "Has Third Party",
     call_centre_organisation.name as "Organisation",
     legalaid_case.notes as "Notes",

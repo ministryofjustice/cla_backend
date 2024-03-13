@@ -67,9 +67,6 @@ SELECT
     latest_outcome.created as "Outcome Created At",
     legalaid_case.thirdparty_details_id::bool as "Has Third Party",
     call_centre_organisation.name as "Organisation",
-    legalaid_case.notes as "Notes",
-    legalaid_case.provider_notes as "Provider Notes",
-    adaptations.notes as "Adaptation Notes",
     personal_details.vulnerable_user as "Vulnerable User",
     CASE 
       WHEN TRIM('123456789' FROM SUBSTRING(personal_details.postcode, 1, 2)) IN ('DE', 'LE', 'LN', 'NG') THEN 'East Midlands'

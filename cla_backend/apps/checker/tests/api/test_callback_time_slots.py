@@ -24,7 +24,7 @@ class CallbackTimeSlotsTestCase(SimpleResourceAPIMixin, CLACheckerAuthBaseApiTes
         make_recipe("checker.callback_time_slot", capacity=1, date=tomorrow, time="1000")
         # This callback has no capacity so it should not be bookable
         make_recipe("checker.callback_time_slot", capacity=0, date=tomorrow, time="1100")
-        slots = get_available_slots(1)
+        slots = get_available_slots(num_days=2)
         slot = slots[tomorrow.strftime(DATE_KEY_FORMAT)]
         self.assertTrue("0900" in slot)
         self.assertTrue("1000" in slot)
@@ -33,7 +33,7 @@ class CallbackTimeSlotsTestCase(SimpleResourceAPIMixin, CLACheckerAuthBaseApiTes
         # Book a callback for 10am tomorrow. 10am slot only has a capacity of 1, after this it should not be available
         requires_action_at = datetime.datetime.combine(tomorrow, datetime.time(hour=10, minute=0))
         make_recipe("legalaid.case", requires_action_at=requires_action_at)
-        slots = get_available_slots(1)
+        slots = get_available_slots(num_days=2)
         slot = slots[tomorrow.strftime(DATE_KEY_FORMAT)]
         self.assertTrue("0900" in slot)
         self.assertFalse("1000" in slot)

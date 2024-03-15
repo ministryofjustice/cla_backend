@@ -13,6 +13,7 @@ class CheckerOpeningHours(OpeningHours):
         def has_capacity(slot):
             key = "%s %s" % (day.strftime(DATE_KEY_FORMAT), slot.strftime("%H%M"))
             if key not in capacity:
+                # TODO: Add rules re taking last weeks capacity here.
                 return True
             return capacity[key] > 0
 

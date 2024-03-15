@@ -6,7 +6,7 @@ from checker.models import CallbackTimeSlot
 
 
 class CheckerOpeningHours(OpeningHours):
-    def time_slots(self, day=None):
+    def time_slots(self, day=None, is_third_party_callback=False):
         capacity = self.get_callback_with_capacity(day)
         slots = super(CheckerOpeningHours, self).time_slots(day)
 
@@ -15,6 +15,9 @@ class CheckerOpeningHours(OpeningHours):
             if key not in capacity:
                 return True
             return capacity[key] > 0
+
+        if is_third_party_callback:  # Third party callbacks always have capacity.
+            return slots
 
         slots = filter(has_capacity, slots)
         return slots
@@ -32,14 +35,14 @@ DATE_KEY_FORMAT = "%Y%m%d"
 CALL_CENTER_HOURS = CheckerOpeningHours(**OPERATOR_HOURS)
 
 
-def get_available_slots(num_days=6):
+def get_available_slots(num_days=7, is_third_party_callback=False):
 
-    """Generate time slots options for call on another day select options"""
-    days = CALL_CENTER_HOURS.available_days(num_days)
+    # Generate time slots options for call on another day select options
+    days = CALL_CENTER_HOURS.available_days(num_days - 1)
     # Add today to list of available days
     days.insert(0, current_datetime())
-    slots = dict(map(time_slots, days))
-    return slots
+    slots = map(lambda day: time_slots(day, is_third_party_callback), days)
+    return dict(slots)
 
 
 def time_choice(time):
@@ -57,14 +60,14 @@ def format_time(dt):
     return display_string
 
 
-def time_slots_for_day(day):
-    slots = CALL_CENTER_HOURS.time_slots(day)
+def time_slots_for_day(day, is_third_party_callback=False):
+    slots = CALL_CENTER_HOURS.time_slots(day, is_third_party_callback)
     slots = filter(CALL_CENTER_HOURS.can_schedule_callback, slots)
     return map(time_choice, slots)
 
 
-def time_slots(day):
-    slots = OrderedDict(time_slots_for_day(day.date()))
+def time_slots(day, is_third_party_callback=False):
+    slots = OrderedDict(time_slots_for_day(day.date(), is_third_party_callback))
     return (format_day(day), slots)
 
 

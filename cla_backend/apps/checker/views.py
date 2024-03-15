@@ -154,5 +154,29 @@ class ReasonForContactingViewSet(
 
 class CallbackTimeSlotViewSet(PublicAPIViewSetMixin, APIView):
     def get(self, request, *args, **kwargs):
-        slots = get_available_slots(6)
+        """Get router for the callback timeslot API.
+
+        Args:
+            string: QueryParameter - num_days: How many days of callback times are requested, defaults to 7- has a hard limit of between 1 and 31.
+            string: QueryParameter - third_party_callback: If the callback is for a third party no capacity rules apply, defaults to True.
+
+        Returns:
+            json: Json object containing a list of valid callback datetimes.
+        """
+
+        num_days = 7
+        try:
+            requested_num_days = int(request.GET.getlist('num_days'))
+            requested_num_days = max(min(requested_num_days, 31), 1)
+            num_days = requested_num_days
+        except TypeError:
+            num_days = 7
+
+        third_party_callback = False
+        try:
+            third_party_callback = bool(request.GET.getlist('third_party_callback'))
+        except TypeError:
+            third_party_callback = False
+
+        slots = get_available_slots(num_days, third_party_callback)
         return JsonResponse(slots)

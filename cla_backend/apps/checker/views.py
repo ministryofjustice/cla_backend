@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.decorators import detail_route
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response as DRFResponse
+from rest_framework.exceptions import ParseError
 
 from core.models import get_web_user
 from core.drf.mixins import ClaCreateModelMixin, ClaUpdateModelMixin
@@ -164,19 +165,16 @@ class CallbackTimeSlotViewSet(PublicAPIViewSetMixin, APIView):
             json: Json object containing a list of valid callback datetimes.
         """
 
-        num_days = 7
         try:
-            requested_num_days = int(request.GET.getlist('num_days'))
-            requested_num_days = max(min(requested_num_days, 31), 1)
-            num_days = requested_num_days
-        except TypeError:
-            num_days = 7
+            requested_num_days = int(request.GET.get('num_days', default=7))
+            num_days = max(min(requested_num_days, 31), 1)
+        except ValueError:
+            raise ParseError(detail="Invalid value for num_days sent to callback_timeslots endpoint")
 
-        third_party_callback = False
         try:
-            third_party_callback = bool(request.GET.getlist('third_party_callback'))
-        except TypeError:
-            third_party_callback = False
+            third_party_callback = bool(request.GET.get('third_party_callback', default=False))
+        except ValueError:
+            raise ParseError(detail="Invalid value for third_party_callback sent to callback_timeslots endpoint")
 
         slots = get_available_slots(num_days, third_party_callback)
         return JsonResponse(slots)

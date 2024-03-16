@@ -39,7 +39,7 @@ CALL_CENTER_HOURS = CheckerOpeningHours(**OPERATOR_HOURS)
 def get_available_slots(num_days=7, is_third_party_callback=False):
 
     # Generate time slots options for call on another day select options
-    days = CALL_CENTER_HOURS.available_days(num_days - 1)
+    days = CALL_CENTER_HOURS.available_days(num_days - 1) if num_days > 1 else []
     # Add today to list of available days
     days.insert(0, current_datetime())
     slots = map(lambda day: time_slots(day, is_third_party_callback), days)

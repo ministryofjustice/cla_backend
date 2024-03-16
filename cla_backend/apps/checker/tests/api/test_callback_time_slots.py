@@ -79,3 +79,20 @@ class CallbackTimeSlotsTestCase(SimpleResourceAPIMixin, CLACheckerAuthBaseApiTes
         slot = slots[tomorrow.strftime(DATE_KEY_FORMAT)]
         self.assertIn("0900", slot)
         self.assertIn("1000", slot)
+
+    @mock.patch("cla_common.call_centre_availability.OpeningHours.available", return_value=True)
+    def test_get_callback_slots_num_days(self, _):
+        # Generate 31 days of datetimes
+        today = datetime.datetime.today()
+        days = [today + datetime.timedelta(days=i) for i in range(31)]
+
+        # Turn the datetimes into the string format returned from get_available_slots
+        days = list(map(lambda day: day.strftime(DATE_KEY_FORMAT) if day.date() != today.date() else 'today', days))
+
+        for i in range(len(days)):
+            # Iterate across the week and assert that the days start appearing as expected
+            slots = get_available_slots(num_days=i)
+            for day in days[:i]:
+                assert day in slots.keys()
+            for day in days[i + 1:]:
+                assert day not in slots.keys()

@@ -36,7 +36,7 @@ class CallbackTimeSlotCSVImporter(object):
     def validate_row(cls, row):
         try:
             row[CSV_COL_DATE] = datetime.datetime.strptime(row[CSV_COL_DATE], "%d/%m/%Y")
-        except Exception as error:
+        except Exception:
             raise ValidationError(
                 message=dict(date="Write the date in this format: dd/mm/yyyy")
             )
@@ -44,12 +44,12 @@ class CallbackTimeSlotCSVImporter(object):
             raise ValidationError(message=dict(time="Check the time is correct, for example, 1500 (for the 1500 to 1530 slot)"))
         try:
             assert int(row[CSV_COL_CAPACITY]) >= 0
-        except ValueError as error:
+        except ValueError:
             raise ValidationError(message=dict(capacity="Write capacity as a number, for example: 1, 2, 10"))
-        except AssertionError as error:
+        except AssertionError:
             raise ValidationError(message=dict(capacity="The capacity must be 0 or more"))
-        except Exception as error:
-            raise ValidationError(message=dict(capacity=error))
+        except Exception:
+            raise ValidationError(message=dict(capacity="Write capacity as a number, for example: 1, 2, 10"))
 
     @classmethod
     def get_callback_time_slot_from_row(self, row):

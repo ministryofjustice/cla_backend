@@ -173,10 +173,11 @@ class CallbackTimeSlotViewSet(PublicAPIViewSetMixin, APIView):
             raise ParseError(detail="Invalid value for num_days sent to callback_timeslots endpoint")
 
         try:
-            third_party_callback = bool(request.GET.get('third_party_callback', default=False))
+            third_party_callback = request.GET.get('third_party_callback', default=False) == "True"
         except ValueError:
             raise ParseError(detail="Invalid value for third_party_callback sent to callback_timeslots endpoint")
 
+        print(third_party_callback)
         slots = get_available_slots(num_days, third_party_callback)
         response = {"slot_duration_minutes": SLOT_INTERVAL_MINS,
                     "slots": slots}

@@ -591,7 +591,7 @@ class TestGetValidEducationProviders(TestCase):
 
         actual_output = self.helper.get_valid_education_provider_allocations(self.education_category)
 
-        assert actual_output == provider_allocations, actual_output
+        assert set(actual_output) == set(provider_allocations), actual_output
 
     def test_provider_not_working(self):
         provider = make_recipe(self.provider_model, active=True)

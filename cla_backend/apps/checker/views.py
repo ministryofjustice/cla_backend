@@ -17,6 +17,7 @@ from legalaid.models import Case
 from legalaid.views import BaseCategoryViewSet, BaseEligibilityCheckViewSet, BaseCaseLogMixin
 from cla_common.constants import CASE_SOURCE
 from checker.call_centre_availability import get_available_slots
+from cla_common.call_centre_availability import SLOT_INTERVAL_MINS
 
 from .models import ReasonForContacting
 from .serializers import (
@@ -177,4 +178,6 @@ class CallbackTimeSlotViewSet(PublicAPIViewSetMixin, APIView):
             raise ParseError(detail="Invalid value for third_party_callback sent to callback_timeslots endpoint")
 
         slots = get_available_slots(num_days, third_party_callback)
-        return JsonResponse(slots)
+        response = {"slot_duration_minutes": SLOT_INTERVAL_MINS,
+                    "slots": slots}
+        return JsonResponse(response)

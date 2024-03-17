@@ -27,4 +27,3 @@ cla_backend/apps/diagnosis/data/graph.graphml.tpl
 # Modified Django templates
 cla_backend/templates/admin/cla_provider/allocations/nested_tabular_inline.html
 cla_backend/templates/admin/cla_provider/allocations/tabular_inline.html
-cla_backend/templates/admin/checker/callback-time-slots/custom_change_list.html

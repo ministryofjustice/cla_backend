@@ -62,7 +62,7 @@ class CallbackTimeSlotCSVImporter(object):
             raise ValidationError(message=dict(capacity="Write capacity as a number, for example: 1, 2, 10"))
 
     @classmethod
-    def get_callback_time_slot_from_row(self, row):
+    def get_callback_time_slot_from_row(cls, row):
         data = dict(date=row[CSV_COL_DATE], time=row[CSV_COL_TIME])
         try:
             model = CallbackTimeSlot.objects.get(**data)

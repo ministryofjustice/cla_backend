@@ -1,6 +1,9 @@
 from unittest import TestCase
 from ..utils import CallbackTimeSlotCSVImporter
+from core.tests.mommy_utils import make_recipe
 from django.core.exceptions import ValidationError
+from checker.models import CallbackTimeSlot
+import datetime as dt
 
 
 class TestValidateRow(TestCase):
@@ -51,3 +54,29 @@ class TestValidateRow(TestCase):
 
         negative_csv_capacity = ['01/01/2000', '0900', '-5']
         self.assertRaisesRegexp(ValidationError, "The capacity must be 0 or more", self.csv_importer.validate_row, negative_csv_capacity)
+
+
+class TestGetCallbackTimeslotFromRow(TestCase):
+    CALLBACK_TIME_SLOT = "checker.callback_time_slot"
+
+    def setUp(self):
+        self.csv_importer = CallbackTimeSlotCSVImporter()
+
+    def test_new_row(self):
+        row = ['12/08/2024', '1330', '2']
+        self.csv_importer.validate_row(row)
+        timeslot = self.csv_importer.get_callback_time_slot_from_row(row)
+        assert isinstance(timeslot, CallbackTimeSlot)
+        assert timeslot.date == dt.date(2024, 8, 12)
+        assert timeslot.time == '1330'
+        assert timeslot.capacity == 2
+
+    def test_existing_row(self):
+        row = ['13/08/2024', '1330', '5']
+        make_recipe(self.CALLBACK_TIME_SLOT, capacity=3, date=dt.date(2024, 8, 13), time="1330")
+        self.csv_importer.validate_row(row)
+        timeslot = self.csv_importer.get_callback_time_slot_from_row(row)
+        assert isinstance(timeslot, CallbackTimeSlot)
+        assert timeslot.date == dt.date(2024, 8, 13)
+        assert timeslot.time == '1330'
+        assert timeslot.capacity == 5

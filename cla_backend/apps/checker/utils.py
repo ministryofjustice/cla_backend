@@ -20,6 +20,7 @@ class CallbackTimeSlotCSVImporter(object):
                 cls.validate_row(row)
                 rows.append(cls.get_callback_time_slot_from_row(row))
             except ValidationError as e:
+                print(e)
                 for _, message in e:
                     errors.append("Row %s: %s" % (index + 1, message[0]))
             except Exception as e:
@@ -34,8 +35,16 @@ class CallbackTimeSlotCSVImporter(object):
 
     @classmethod
     def validate_row(cls, row):
+        """Validates a row in the callback CSV, transforming the data types to those appropriate for the CallbackTimeslot Model.
+
+        Args:
+            row (List): List of strings in the format [dd/mm/yyyy, HHMM, int]
+
+        Raises:
+            ValidationError: When the data is unable to be transformed into those required for a valid callback this exception will be raised.
+        """
         try:
-            row[CSV_COL_DATE] = datetime.datetime.strptime(row[CSV_COL_DATE], "%d/%m/%Y")
+            row[CSV_COL_DATE] = datetime.datetime.strptime(row[CSV_COL_DATE], "%d/%m/%Y").date()
         except Exception:
             raise ValidationError(
                 message=dict(date="Write the date in this format: dd/mm/yyyy")
@@ -44,6 +53,7 @@ class CallbackTimeSlotCSVImporter(object):
             raise ValidationError(message=dict(time="Check the time is correct, for example, 1500 (for the 1500 to 1530 slot)"))
         try:
             assert int(row[CSV_COL_CAPACITY]) >= 0
+            row[CSV_COL_CAPACITY] = int(row[CSV_COL_CAPACITY])
         except ValueError:
             raise ValidationError(message=dict(capacity="Write capacity as a number, for example: 1, 2, 10"))
         except AssertionError:

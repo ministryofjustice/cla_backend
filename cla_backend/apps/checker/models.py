@@ -221,7 +221,7 @@ class CallbackTimeSlot(TimeStampedModel):
         time (TextField)
     """
 
-    time = models.TextField(choices=CALLBACK_TIME_SLOTS.CHOICES)
+    time = models.CharField(max_length=4, choices=CALLBACK_TIME_SLOTS.CHOICES)
     date = models.DateField()
     capacity = models.IntegerField()
 

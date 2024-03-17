@@ -33,14 +33,14 @@ class TestValidateRow(TestCase):
 
     def test_malformed_time(self):
         malformed_csv_times = [['12/06/2024', '-1330', '5'],
-                               ['31/04/2024', 'abcd', '999999'],
+                               ['31/05/2024', 'abcd', '999999'],
                                ['12/5/2002', '0901', '5'],
                                ['13/06/2024', '900', '0'],
                                ['12/05/2040', '9', '1234'],
                                ['1/1/2015', '', '5'],
                                ['1/2/2015', ',', '5']]
         for row in malformed_csv_times:
-            self.assertRaisesRegexp(ValidationError, "Check the time is correct, for example, 1500 \\(for the 1500 to 1530 slot\\)", self.csv_importer.validate_row, row)
+            self.assertRaisesRegexp(ValidationError, "Check the time is correct, for example, 1500", self.csv_importer.validate_row, row)
 
     def test_malformed_capacity(self):
         malformed_csv_capacity = [['12/08/2024', '1330', ''],

@@ -11,5 +11,5 @@ def get_timeslot_of_datetime(slot_start_datetime):
         models.CallbackTimeSlot | None: Timeslot or None, if none are found
     """
     slot_start_time = slot_start_datetime.strftime("%H%M")
-    timeslots = CallbackTimeSlot.objects.filter(date=slot_start_datetime.date(), time=slot_start_time).all()    
+    timeslots = CallbackTimeSlot.objects.filter(date=slot_start_datetime.date(), time=slot_start_time).all()
     return None if len(timeslots) == 0 else timeslots[0]

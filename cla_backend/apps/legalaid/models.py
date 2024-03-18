@@ -68,7 +68,7 @@ def _check_reference_unique(reference):
 
 
 class Category(TimeStampedModel):
-    _allow_analytics = True
+
     name = models.CharField(max_length=500)
     code = models.CharField(max_length=50, unique=True)
     raw_description = models.TextField(blank=True)
@@ -80,6 +80,7 @@ class Category(TimeStampedModel):
     class Meta(object):
         ordering = ["order"]
         verbose_name_plural = "categories"
+        _allow_analytics = True
 
     def __unicode__(self):
         return u"%s" % self.name
@@ -121,7 +122,9 @@ class Deductions(CloneModelMixin, TimeStampedModel):
 
 
 class ContactResearchMethod(CloneModelMixin, TimeStampedModel):
-    _allow_analytics = True
+    class Meta:
+        _allow_analytics = True
+
     method = models.CharField(max_length=10)
     reference = UUIDField(auto=True, unique=True)
 
@@ -130,20 +133,7 @@ class ContactResearchMethod(CloneModelMixin, TimeStampedModel):
 
 
 class PersonalDetails(CloneModelMixin, TimeStampedModel):
-    _allow_analytics = True
-    _restricted_fields = [
-        "date_of_birth",
-        "diversity",
-        "email",
-        "full_name",
-        "home_phone",
-        "id",
-        "mobile_phone",
-        "postcode",
-        "search_field",
-        "street",
-        "title",
-    ]
+
     title = models.CharField(max_length=20, blank=True, null=True)
     full_name = models.CharField(max_length=400, blank=True, null=True)
     postcode = models.CharField(max_length=12, blank=True, null=True)
@@ -180,6 +170,20 @@ class PersonalDetails(CloneModelMixin, TimeStampedModel):
 
     class Meta(object):
         verbose_name_plural = "personal details"
+        _allow_analytics = True
+        _restricted_fields = [
+            "date_of_birth",
+            "diversity",
+            "email",
+            "full_name",
+            "home_phone",
+            "id",
+            "mobile_phone",
+            "postcode",
+            "search_field",
+            "street",
+            "title",
+        ]
 
     def __unicode__(self):
         return u"%s" % self.full_name
@@ -231,8 +235,7 @@ class PersonalDetails(CloneModelMixin, TimeStampedModel):
 
 
 class ThirdPartyDetails(CloneModelMixin, TimeStampedModel):
-    _allow_analytics = True
-    _restricted_fields = ["personal_relationship_note"]
+
     personal_details = models.ForeignKey(PersonalDetails)
     pass_phrase = models.CharField(max_length=255, blank=True, null=True)
     reason = models.CharField(max_length=30, choices=THIRDPARTY_REASON, null=True, blank=True, default="")
@@ -248,14 +251,18 @@ class ThirdPartyDetails(CloneModelMixin, TimeStampedModel):
 
     class Meta(object):
         verbose_name_plural = "third party details"
+        _allow_analytics = True
+        _restricted_fields = ["personal_relationship_note"]
 
     def __unicode__(self):
         return u"%s" % self.personal_details.full_name
 
 
 class AdaptationDetails(CloneModelMixin, TimeStampedModel):
-    _allow_analytics = True
-    _restricted_fields = ["notes"]
+    class Meta:
+        _allow_analytics = True
+        _restricted_fields = ["notes"]
+
     bsl_webcam = models.BooleanField(default=False)
     minicom = models.BooleanField(default=False)
     text_relay = models.BooleanField(default=False)
@@ -277,8 +284,7 @@ class EODDetailsManager(models.Manager):
 
 
 class EODDetails(TimeStampedModel):
-    _allow_analytics = True
-    _restricted_fields = ["notes"]
+
     case = models.OneToOneField("Case", related_name="eod_details")
     notes = models.TextField(blank=True)
     reference = UUIDField(auto=True, unique=True)
@@ -289,6 +295,8 @@ class EODDetails(TimeStampedModel):
         ordering = ("-created",)
         verbose_name = "EOD details"
         verbose_name_plural = "EOD details"
+        _allow_analytics = True
+        _restricted_fields = ["notes"]
 
     def __unicode__(self):
         return u"EOD on case %s" % self.case
@@ -318,7 +326,7 @@ class EODDetails(TimeStampedModel):
 
 
 class EODDetailsCategory(models.Model):
-    _allow_analytics = True
+
     eod_details = models.ForeignKey(EODDetails, related_name="categories")
     category = models.CharField(max_length=30, choices=EXPRESSIONS_OF_DISSATISFACTION, blank=True, null=True)
     is_major = models.BooleanField(default=False)
@@ -326,6 +334,7 @@ class EODDetailsCategory(models.Model):
     class Meta(object):
         verbose_name = "EOD category"
         verbose_name_plural = "EOD categories"
+        _allow_analytics = True
 
     def __unicode__(self):
         return EXPRESSIONS_OF_DISSATISFACTION.CHOICES_DICT.get(self.category)
@@ -395,7 +404,7 @@ class ValidateModelMixin(models.Model):
 
 
 class EligibilityCheck(TimeStampedModel, ValidateModelMixin):
-    _allow_analytics = True
+
     reference = UUIDField(auto=True, unique=True)
 
     category = models.ForeignKey(Category, blank=True, null=True)
@@ -429,6 +438,7 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin):
 
     class Meta(object):
         ordering = ("-created",)
+        _allow_analytics = True
 
     def __unicode__(self):
         return u"EligibilityCheck(%s)" % self.reference
@@ -633,7 +643,7 @@ class Property(TimeStampedModel):
 
 
 class MatterType(TimeStampedModel):
-    _allow_analytics = True
+
     category = models.ForeignKey(Category)
     code = models.CharField(max_length=4)
     description = models.CharField(max_length=255)
@@ -646,6 +656,7 @@ class MatterType(TimeStampedModel):
 
     class Meta(object):
         unique_together = (("code", "level"),)
+        _allow_analytics = True
 
 
 class MediaCodeGroup(models.Model):
@@ -662,8 +673,7 @@ class MediaCode(TimeStampedModel):
 
 
 class Case(TimeStampedModel):
-    _allow_analytics = True
-    _restricted_field = ["notes", "provider_notes", "source"]
+
     reference = models.CharField(max_length=128, unique=True, editable=False)
     eligibility_check = models.OneToOneField(EligibilityCheck, null=True, blank=True)
     diagnosis = models.OneToOneField("diagnosis.DiagnosisTraversal", null=True, blank=True, on_delete=SET_NULL)
@@ -752,6 +762,8 @@ class Case(TimeStampedModel):
             ("run_obiee_reports", u"Can run OBIEE reports"),
             ("run_complaints_report", u"Can run complaints report"),
         )
+        _allow_analytics = True
+        _restricted_field = ["notes", "provider_notes", "source"]
 
     def __unicode__(self):
         return self.reference
@@ -1017,7 +1029,9 @@ class CaseNotesHistory(TimeStampedModel):
 
 
 class CaseKnowledgebaseAssignment(TimeStampedModel):
-    _allow_analytics = True
+    class Meta:
+        _allow_analytics = True
+
     case = models.ForeignKey(Case)
     alternative_help_article = models.ForeignKey("knowledgebase.Article")
     assigned_by = models.ForeignKey("auth.User", blank=True, null=True)

@@ -30,7 +30,7 @@ class ComplaintManager(models.Manager):
 
 
 class Complaint(TimeStampedModel):
-    _allow_analytics = True
+
     eod = models.ForeignKey("legalaid.EODDetails")
 
     description = models.TextField(null=True, blank=True)
@@ -65,6 +65,7 @@ class Complaint(TimeStampedModel):
 
     class Meta(object):
         ordering = ("-created",)
+        _allow_analytics = True
 
     def __init__(self, *args, **kwargs):
         self._closed = NotImplemented

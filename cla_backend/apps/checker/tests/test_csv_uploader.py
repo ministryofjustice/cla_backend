@@ -80,3 +80,46 @@ class TestGetCallbackTimeslotFromRow(TestCase):
         assert timeslot.date == dt.date(2024, 8, 13)
         assert timeslot.time == '1330'
         assert timeslot.capacity == 5
+
+
+class TestParseFromFile(TestCase):
+    CSV_FILE = "test_csv.csv"
+
+    def setUp(self):
+        self.csv_importer = CallbackTimeSlotCSVImporter()
+
+    def test_parse_from_valid_file(self):
+        lines = "01/01/2024,0900,1\n01/01/2024,0930,2\n01/01/2024,1000,3"
+        with open(self.CSV_FILE, "w") as csv_file:
+            csv_file.write(lines)
+        with open(self.CSV_FILE, "r") as csv_file:
+            output = self.csv_importer.parse(csv_file)
+        result, errors = output[0], output[1]
+        assert len(errors) == 0
+        assert len(result) == 3
+        assert result[0].capacity == 1
+        assert result[1].capacity == 2
+        assert result[2].capacity == 3
+
+    def test_parse_from_empty_file(self):
+        lines = ""
+        with open(self.CSV_FILE, "w") as csv_file:
+            csv_file.write(lines)
+        with open(self.CSV_FILE, "r") as csv_file:
+            output = self.csv_importer.parse(csv_file)
+        result, errors = output[0], output[1]
+        assert result == []
+        assert errors == []
+
+    def test_parse_from_invalid_file(self):
+        lines = "a/b/c,0900,1\n1/2/2024,a,1\n1/2/2024,0930,a\n1/2/2024,0930,-1"
+        with open(self.CSV_FILE, "w") as csv_file:
+            csv_file.write(lines)
+        with open(self.CSV_FILE, "r") as csv_file:
+            output = self.csv_importer.parse(csv_file)
+        result, errors = output[0], output[1]
+        assert result == []
+        assert "Row 1: Write the date in this format: dd/mm/yyyy" in errors
+        assert "Row 2: Check the time is correct, for example, 1500 (for the 1500 to 1530 slot)" in errors
+        assert "Row 3: Write capacity as a number, for example: 1, 2, 10" in errors
+        assert "Row 4: The capacity must be 0 or more" in errors

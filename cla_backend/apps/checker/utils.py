@@ -20,7 +20,6 @@ class CallbackTimeSlotCSVImporter(object):
                 cls.validate_row(row)
                 rows.append(cls.get_callback_time_slot_from_row(row))
             except ValidationError as e:
-                print(e)
                 for _, message in e:
                     errors.append("Row %s: %s" % (index + 1, message[0]))
             except Exception as e:

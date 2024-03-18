@@ -16,7 +16,8 @@ class TestValidateRow(TestCase):
                           ['12/5/1999', '1330', '5'],
                           ['12/06/2024', '1000', '0'],
                           ['12/05/2040', '1330', '1234'],
-                          ['1/1/2015', '1330', '5']]
+                          ['1/1/2015', '1330', '5'],
+                          ['31/12/2018', ' 1400', ' 6']]
         for row in valid_csv_rows:
             # If an exception is raised this test will fail.
             self.csv_importer.validate_row(row)
@@ -81,6 +82,15 @@ class TestGetCallbackTimeslotFromRow(TestCase):
         assert timeslot.time == '1330'
         assert timeslot.capacity == 5
 
+    def test_row_with_leading_whitespace(self):
+        row = ['13/09/2024', ' 1330', ' 2']
+        self.csv_importer.validate_row(row)
+        timeslot = self.csv_importer.get_callback_time_slot_from_row(row)
+        assert isinstance(timeslot, CallbackTimeSlot)
+        assert timeslot.date == dt.date(2024, 9, 13)
+        assert timeslot.time == '1330'
+        assert timeslot.capacity == 2
+
 
 class TestParseFromFile(TestCase):
     CSV_FILE = "test_csv.csv"
@@ -90,6 +100,19 @@ class TestParseFromFile(TestCase):
 
     def test_parse_from_valid_file(self):
         lines = "01/01/2024,0900,1\n01/01/2024,0930,2\n01/01/2024,1000,3"
+        with open(self.CSV_FILE, "w") as csv_file:
+            csv_file.write(lines)
+        with open(self.CSV_FILE, "r") as csv_file:
+            output = self.csv_importer.parse(csv_file)
+        result, errors = output[0], output[1]
+        assert len(errors) == 0
+        assert len(result) == 3
+        assert result[0].capacity == 1
+        assert result[1].capacity == 2
+        assert result[2].capacity == 3
+
+    def test_parse_from_valid_file_leading_spaces(self):
+        lines = "02/01/2024, 0900, 1\n02/01/2024, 0930, 2\n02/01/2024, 1000, 3"
         with open(self.CSV_FILE, "w") as csv_file:
             csv_file.write(lines)
         with open(self.CSV_FILE, "r") as csv_file:

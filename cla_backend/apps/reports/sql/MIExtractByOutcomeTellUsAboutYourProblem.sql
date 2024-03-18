@@ -7,6 +7,7 @@ WITH log_changed_category as (
 SELECT
   c.personal_details_id as "Personal Details Id"
   ,c.reference as "Case Id"
+  ,c.source as "Source"
   ,to_char(c.created, 'YYYY-MM-DD') as "Created"
   ,to_char(c.modified, 'YYYY-MM-DD') as "Modified"
   ,ec.notes as "Diagnosis Notes"

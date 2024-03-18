@@ -478,6 +478,81 @@ class CaseDemographicsReport(SQLFileDateRangeReport):
         return self.execute_query(sql, sql_args)
 
 
+class MinimalCaseDemographicsReport(SQLFileDateRangeReport):
+    QUERY_FILE = "MinimalCaseDemographicsReport.sql"
+
+    passphrase = forms.CharField(
+        required=False, help_text="Optional. If not provided, the report will not include diversity data"
+    )
+
+    def get_headers(self):
+        return ["LAA Reference",
+                "Hash ID",
+                "Case ID",
+                "Provider ID",
+                "Category Name",
+                "Date Case Created",
+                "Matter Type 1",
+                "Matter Type 2",
+                "Scope Status",
+                "Eligibility Status",
+                "Adjustments BSL",
+                "Adjustments LLI",
+                "Adjustments MIN",
+                "Adjustments TYP",
+                "Adjustments Callback Preferred",
+                "Adjustments Skype",
+                "Gender",
+                "Ethnicity",
+                "Age(Range)",
+                "Religion",
+                "Sexual_Orientation",
+                "Disability",
+                "Media Code",
+                "Contact Type",
+                "Referral Agencies",
+                "Exempt Client",
+                "Welsh",
+                "Language",
+                "Outcome code",
+                "Outcome Created At",
+                "Has Third Party",
+                "Organisation",
+                "Vulnerable User",
+                "Geographical Region",
+                "Postcode"]
+
+    def get_rows(self):
+        for row in self.get_queryset():
+            full_row = list(row)
+            diversity_json = full_row.pop() or {}
+
+            def insert_value(key, val):
+                index = self.get_headers().index(key)
+                full_row.insert(index, val)
+
+            insert_value("Gender", diversity_json.get("gender"))
+            insert_value("Ethnicity", diversity_json.get("ethnicity"))
+            insert_value("Religion", diversity_json.get("religion"))
+            insert_value("Sexual_Orientation", diversity_json.get("sexual_orientation"))
+            insert_value("Disability", diversity_json.get("disability"))
+            yield full_row
+
+    def get_queryset(self):
+        passphrase = self.cleaned_data.get("passphrase")
+
+        if passphrase:
+            diversity_expression = "pgp_pub_decrypt(personal_details.diversity, dearmor('{key}'), %s)::json".format(
+                key=diversity.get_private_key()
+            )
+        else:
+            diversity_expression = "%s as placeholder, '{}'::json"
+
+        sql = self.query.format(diversity_expression=diversity_expression)
+        sql_args = [passphrase] + list(self.date_range)
+        return self.execute_query(sql, sql_args)
+
+
 class MIFeedbackExtract(SQLFileDateRangeReport):
     QUERY_FILE = "MIExtractByFeedback.sql"
 

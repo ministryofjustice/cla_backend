@@ -48,8 +48,12 @@ class CallbackTimeSlotCSVImporter(object):
             raise ValidationError(
                 message=dict(date="Write the date in this format: dd/mm/yyyy")
             )
-        if row[CSV_COL_TIME] not in CALLBACK_TIME_SLOTS:
+        try:
+            assert row[CSV_COL_TIME].strip() in CALLBACK_TIME_SLOTS
+            row[CSV_COL_TIME] = row[CSV_COL_TIME].strip()
+        except Exception:
             raise ValidationError(message=dict(time="Check the time is correct, for example, 1500 (for the 1500 to 1530 slot)"))
+
         try:
             assert int(row[CSV_COL_CAPACITY]) >= 0
             row[CSV_COL_CAPACITY] = int(row[CSV_COL_CAPACITY])

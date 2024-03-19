@@ -7,6 +7,8 @@ from cla_common.constants import REASONS_FOR_CONTACTING
 
 
 class ReasonForContacting(TimeStampedModel):
+    class analytics:
+        _allow_analytics = True
 
     reference = UUIDField(auto=True, unique=True)
     other_reasons = models.TextField(blank=True)
@@ -18,7 +20,6 @@ class ReasonForContacting(TimeStampedModel):
     class Meta(object):
         verbose_name_plural = "reasons for contacting"
         ordering = ("-created",)
-        _allow_analytics = True
 
     @classmethod
     def get_category_stats(cls):
@@ -162,6 +163,8 @@ class ReasonForContacting(TimeStampedModel):
 
 
 class ReasonForContactingCategory(models.Model):
+    class analytics:
+        _allow_analytics = True
 
     reason_for_contacting = models.ForeignKey(ReasonForContacting, related_name="reasons", on_delete=models.CASCADE)
     category = models.CharField(max_length=20, choices=REASONS_FOR_CONTACTING.CHOICES)
@@ -169,7 +172,6 @@ class ReasonForContactingCategory(models.Model):
     class Meta(object):
         verbose_name = "category"
         verbose_name_plural = "categories"
-        _allow_analytics = True
 
     def __unicode__(self):
         try:

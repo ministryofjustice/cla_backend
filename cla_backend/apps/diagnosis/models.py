@@ -16,7 +16,7 @@ class DiagnosisTraversalManager(models.Manager):
 
 
 class DiagnosisTraversal(TimeStampedModel):
-    class Meta:
+    class analytics:
         _allow_analytics = True
 
     reference = UUIDField(auto=True, unique=True)

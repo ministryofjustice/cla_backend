@@ -11,19 +11,16 @@ def get_all_non_restricted_models(models):
     # Get all models from all installed apps
     for model in models:
         # Get all columns for each table
-        if hasattr(model._meta, "_allow_analytics"):
-            print(model._meta._test)
-            if model._meta._allow_analytics is True:
+        if hasattr(model, "analytics") and hasattr(model.analytics, "_allow_analytics"):
+            if model.analytics._allow_analytics:
                 for column in model._meta.get_fields():
                     if not column.is_relation:
                         non_restricted_models.append([model._meta.db_table, column.name])
         # Remove restricted fields from allowed columns
-        if hasattr(model._meta, "_restricted_fields"):
-            if len(model._meta._restricted_fields) > 0:
-                for column in model._meta._restricted_fields:
-                    print(column)
+        if hasattr(model, "analytics") and hasattr(model.analytics, "_restricted_fields"):
+            if len(model.analytics._restricted_fields) > 0:
+                for column in model.analytics._restricted_fields:
                     non_restricted_models.remove([model._meta.db_table, column])
-
     # Returns all allowed columns for user
     return non_restricted_models
 

@@ -68,7 +68,7 @@ def _check_reference_unique(reference):
 
 
 class Category(TimeStampedModel):
-    class analytics:
+    class Analytics:
         _allow_analytics = True
 
     name = models.CharField(max_length=500)
@@ -123,7 +123,7 @@ class Deductions(CloneModelMixin, TimeStampedModel):
 
 
 class ContactResearchMethod(CloneModelMixin, TimeStampedModel):
-    class analytics:
+    class Analytics:
         _allow_analytics = True
 
     method = models.CharField(max_length=10)
@@ -134,7 +134,7 @@ class ContactResearchMethod(CloneModelMixin, TimeStampedModel):
 
 
 class PersonalDetails(CloneModelMixin, TimeStampedModel):
-    class analytics:
+    class Analytics:
         _allow_analytics = True
         _restricted_fields = [
             "date_of_birth",
@@ -237,7 +237,7 @@ class PersonalDetails(CloneModelMixin, TimeStampedModel):
 
 
 class ThirdPartyDetails(CloneModelMixin, TimeStampedModel):
-    class analytics:
+    class Analytics:
         _allow_analytics = True
         _restricted_fields = ["personal_relationship_note"]
 
@@ -262,7 +262,7 @@ class ThirdPartyDetails(CloneModelMixin, TimeStampedModel):
 
 
 class AdaptationDetails(CloneModelMixin, TimeStampedModel):
-    class analytics:
+    class Analytics:
         _allow_analytics = True
         _restricted_fields = ["notes"]
 
@@ -287,7 +287,7 @@ class EODDetailsManager(models.Manager):
 
 
 class EODDetails(TimeStampedModel):
-    class analytics:
+    class Analytics:
         _allow_analytics = True
         _restricted_fields = ["notes"]
 
@@ -330,7 +330,7 @@ class EODDetails(TimeStampedModel):
 
 
 class EODDetailsCategory(models.Model):
-    class analytics:
+    class Analytics:
         _allow_analytics = True
 
     eod_details = models.ForeignKey(EODDetails, related_name="categories")
@@ -409,7 +409,7 @@ class ValidateModelMixin(models.Model):
 
 
 class EligibilityCheck(TimeStampedModel, ValidateModelMixin):
-    class analytics:
+    class Analytics:
         _allow_analytics = True
 
     reference = UUIDField(auto=True, unique=True)
@@ -649,7 +649,7 @@ class Property(TimeStampedModel):
 
 
 class MatterType(TimeStampedModel):
-    class analytics:
+    class Analytics:
         _allow_analytics = True
 
     category = models.ForeignKey(Category)
@@ -680,7 +680,7 @@ class MediaCode(TimeStampedModel):
 
 
 class Case(TimeStampedModel):
-    class analytics:
+    class Analytics:
         _allow_analytics = True
         _restricted_field = ["notes", "provider_notes", "source"]
 
@@ -1037,7 +1037,7 @@ class CaseNotesHistory(TimeStampedModel):
 
 
 class CaseKnowledgebaseAssignment(TimeStampedModel):
-    class analytics:
+    class Analytics:
         _allow_analytics = True
 
     case = models.ForeignKey(Case)

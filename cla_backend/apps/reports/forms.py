@@ -15,7 +15,7 @@ from cla_eventlog import event_registry
 from complaints.constants import SLA_DAYS
 from knowledgebase.models import Article
 from reports.widgets import MonthYearWidget
-from checker.models import ReasonForContacting
+from checker.models import ReasonForContacting, CallbackTimeSlot
 
 from . import sql
 from .utils import get_reports_cursor, set_local_time_for_query
@@ -486,41 +486,43 @@ class MinimalCaseDemographicsReport(SQLFileDateRangeReport):
     )
 
     def get_headers(self):
-        return ["LAA Reference",
-                "Hash ID",
-                "Case ID",
-                "Provider ID",
-                "Category Name",
-                "Date Case Created",
-                "Matter Type 1",
-                "Matter Type 2",
-                "Scope Status",
-                "Eligibility Status",
-                "Adjustments BSL",
-                "Adjustments LLI",
-                "Adjustments MIN",
-                "Adjustments TYP",
-                "Adjustments Callback Preferred",
-                "Adjustments Skype",
-                "Gender",
-                "Ethnicity",
-                "Age(Range)",
-                "Religion",
-                "Sexual_Orientation",
-                "Disability",
-                "Media Code",
-                "Contact Type",
-                "Referral Agencies",
-                "Exempt Client",
-                "Welsh",
-                "Language",
-                "Outcome code",
-                "Outcome Created At",
-                "Has Third Party",
-                "Organisation",
-                "Vulnerable User",
-                "Geographical Region",
-                "Postcode"]
+        return [
+            "LAA Reference",
+            "Hash ID",
+            "Case ID",
+            "Provider ID",
+            "Category Name",
+            "Date Case Created",
+            "Matter Type 1",
+            "Matter Type 2",
+            "Scope Status",
+            "Eligibility Status",
+            "Adjustments BSL",
+            "Adjustments LLI",
+            "Adjustments MIN",
+            "Adjustments TYP",
+            "Adjustments Callback Preferred",
+            "Adjustments Skype",
+            "Gender",
+            "Ethnicity",
+            "Age(Range)",
+            "Religion",
+            "Sexual_Orientation",
+            "Disability",
+            "Media Code",
+            "Contact Type",
+            "Referral Agencies",
+            "Exempt Client",
+            "Welsh",
+            "Language",
+            "Outcome code",
+            "Outcome Created At",
+            "Has Third Party",
+            "Organisation",
+            "Vulnerable User",
+            "Geographical Region",
+            "Postcode",
+        ]
 
     def get_rows(self):
         for row in self.get_queryset():
@@ -1078,6 +1080,23 @@ class MITellUsMoreAboutYourProblem(SQLFileDateRangeReport):
             "Legalaid Category Name",
             "Outcome Code",
         ]
+
+
+class CallbackTimeSlotReport(DateRangeReportForm):
+    def get_queryset(self):
+        from_date, to_date = self.date_range
+        return CallbackTimeSlot.objects.all(recordDate__gte=from_date, recordDate__lte=to_date)
+
+    def get_rows(self):
+        for slot in self.get_queryset():
+            remaining = slot.remaining_capacity
+            used = slot.capacity - remaining
+            remaining_percent = (remaining / slot) * 100
+
+            yield [slot.date, slot.time, slot.capacity, used, remaining, remaining_percent]
+
+    def get_headers(self):
+        return ["Date", "Interval", "Total capacity", "Used capacity", "Remaining capacity", "% Remaining capacity"]
 
 
 def get_from_nth(items, n, attribute):

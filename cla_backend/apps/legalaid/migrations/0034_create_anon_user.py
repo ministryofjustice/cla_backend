@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.RunSQL(
             sql=[
-                "CREATE ROLE analytics WITH LOGIN PASSWORD 'password'",
+                "CREATE ROLE analytics WITH LOGIN PASSWORD '{db_password}'",
                 "GRANT CONNECT ON DATABASE cla_backend TO analytics",
             ],
             reverse_sql=["REVOKE CONNECT ON DATABASE cla_backend FROM analytics", "DROP ROLE analytics"],

@@ -1085,13 +1085,13 @@ class MITellUsMoreAboutYourProblem(SQLFileDateRangeReport):
 class CallbackTimeSlotReport(DateRangeReportForm):
     def get_queryset(self):
         from_date, to_date = self.date_range
-        return CallbackTimeSlot.objects.all(recordDate__gte=from_date, recordDate__lte=to_date)
+        return CallbackTimeSlot.objects.filter(date__gte=from_date, date__lte=to_date)
 
     def get_rows(self):
         for slot in self.get_queryset():
             remaining = slot.remaining_capacity
             used = slot.capacity - remaining
-            remaining_percent = (remaining / slot) * 100
+            remaining_percent = (remaining / slot.capacity) * 100
 
             yield [slot.date, slot.time, slot.capacity, used, remaining, remaining_percent]
 

@@ -492,13 +492,23 @@ class TestCallbackTimeSlotReport(TestCase):
                 "Remaining capacity": 0,
                 "% Remaining capacity": "0",
             },
+            "1300": {
+                "Date": dt,
+                "Interval": u"1300",
+                "Total capacity": 1,
+                "Used capacity": 0,
+                "Remaining capacity": 1,
+                "% Remaining capacity": "100",
+            },
         }
         for interval, callback in callbacks.iteritems():
+            # Create callback time slots
             make_recipe(self.CALLBACK_TIME_SLOT, capacity=callback["Total capacity"], date=tomorrow, time=interval)
-            if callback["Total capacity"] > 0:
+            if callback["Used capacity"] > 0:
                 hour = int(interval[0:2])
                 minutes = int(interval[2:])
                 requires_action_at = datetime.datetime.combine(tomorrow, datetime.time(hour=hour, minute=minutes))
+                # Create callbacks
                 make_recipe(
                     self.LEGALAID_CASE,
                     requires_action_at=requires_action_at,

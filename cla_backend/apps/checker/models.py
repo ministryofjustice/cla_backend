@@ -7,7 +7,7 @@ from cla_common.constants import REASONS_FOR_CONTACTING
 
 
 class ReasonForContacting(TimeStampedModel):
-    class analytics:
+    class Analytics:
         _allow_analytics = True
 
     reference = UUIDField(auto=True, unique=True)
@@ -163,7 +163,7 @@ class ReasonForContacting(TimeStampedModel):
 
 
 class ReasonForContactingCategory(models.Model):
-    class analytics:
+    class Analytics:
         _allow_analytics = True
 
     reason_for_contacting = models.ForeignKey(ReasonForContacting, related_name="reasons", on_delete=models.CASCADE)

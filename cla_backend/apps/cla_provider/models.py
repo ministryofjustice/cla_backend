@@ -293,7 +293,7 @@ class OutOfHoursRota(TimeStampedModel):
 
 
 class Feedback(TimeStampedModel):
-    class analytics:
+    class Analytics:
         _allow_analytics = True
 
     reference = UUIDField(auto=True, unique=True)

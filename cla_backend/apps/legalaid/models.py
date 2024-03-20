@@ -88,6 +88,9 @@ class Category(TimeStampedModel):
 
 
 class Savings(CloneModelMixin, TimeStampedModel):
+    class Analytics:
+        _PII = ["bank_balance", "investment_balance", "asset_balance", "credit_balance"]
+
     bank_balance = MoneyField(default=None, null=True, blank=True)
     investment_balance = MoneyField(default=None, null=True, blank=True)
     asset_balance = MoneyField(default=None, null=True, blank=True)
@@ -97,6 +100,19 @@ class Savings(CloneModelMixin, TimeStampedModel):
 
 
 class Income(CloneModelMixin, TimeStampedModel):
+    class Analytics:
+        _PII = [
+            "earnings",
+            "self_employment_drawings",
+            "benefits",
+            "tax_credits",
+            "child_benefits",
+            "maintenance_received",
+            "pension",
+            "other_income",
+            "self_employed",
+        ]
+
     earnings = MoneyIntervalField(default=None, null=True, blank=True)
     self_employment_drawings = MoneyIntervalField(default=None, null=True, blank=True)
     benefits = MoneyIntervalField(default=None, null=True, blank=True)
@@ -111,6 +127,17 @@ class Income(CloneModelMixin, TimeStampedModel):
 
 
 class Deductions(CloneModelMixin, TimeStampedModel):
+    class Analytics:
+        _PII = [
+            "income_tax",
+            "national_insurance",
+            "maintenance",
+            "childcare",
+            "mortgage",
+            "rent",
+            "criminal_legalaid_contributions",
+        ]
+
     income_tax = MoneyIntervalField(default=None, null=True, blank=True)
     national_insurance = MoneyIntervalField(default=None, null=True, blank=True)
     maintenance = MoneyIntervalField(default=None, null=True, blank=True)
@@ -148,6 +175,20 @@ class PersonalDetails(CloneModelMixin, TimeStampedModel):
             "search_field",
             "street",
             "title",
+        ]
+        _PII = [
+            "date_of_birth",
+            "diversity",
+            "email",
+            "full_name",
+            "home_phone",
+            "id",
+            "mobile_phone",
+            "postcode",
+            "search_field",
+            "street",
+            "title",
+            "vulnerable_user",
         ]
 
     title = models.CharField(max_length=20, blank=True, null=True)
@@ -240,6 +281,7 @@ class ThirdPartyDetails(CloneModelMixin, TimeStampedModel):
     class Analytics:
         _allow_analytics = True
         _restricted_fields = ["personal_relationship_note"]
+        _PII = ["personal_relationship_note"]
 
     personal_details = models.ForeignKey(PersonalDetails)
     pass_phrase = models.CharField(max_length=255, blank=True, null=True)
@@ -265,6 +307,7 @@ class AdaptationDetails(CloneModelMixin, TimeStampedModel):
     class Analytics:
         _allow_analytics = True
         _restricted_fields = ["notes"]
+        _PII = ["notes"]
 
     bsl_webcam = models.BooleanField(default=False)
     minicom = models.BooleanField(default=False)
@@ -290,6 +333,7 @@ class EODDetails(TimeStampedModel):
     class Analytics:
         _allow_analytics = True
         _restricted_fields = ["notes"]
+        _PII = ["notes"]
 
     case = models.OneToOneField("Case", related_name="eod_details")
     notes = models.TextField(blank=True)
@@ -346,6 +390,9 @@ class EODDetailsCategory(models.Model):
 
 
 class Person(CloneModelMixin, TimeStampedModel):
+    class Analytics:
+        _PII = ["income", "savings", "deductions"]
+
     income = models.ForeignKey(Income, blank=True, null=True)
     savings = models.ForeignKey(Savings, blank=True, null=True)
     deductions = models.ForeignKey(Deductions, blank=True, null=True)
@@ -636,6 +683,9 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin):
 
 
 class Property(TimeStampedModel):
+    class Analytics:
+        _PII = ["value", "mortgage_left", "share", "eligibility_check", "disputed", "main"]
+
     value = MoneyField(default=None, null=True, blank=True)
     mortgage_left = MoneyField(default=None, null=True, blank=True)
     share = models.PositiveIntegerField(default=None, validators=[MaxValueValidator(100)], null=True, blank=True)
@@ -683,6 +733,7 @@ class Case(TimeStampedModel):
     class Analytics:
         _allow_analytics = True
         _restricted_field = ["notes", "provider_notes", "source"]
+        _PII = ["notes", "provider_notes", "source"]
 
     reference = models.CharField(max_length=128, unique=True, editable=False)
     eligibility_check = models.OneToOneField(EligibilityCheck, null=True, blank=True)
@@ -1017,6 +1068,9 @@ class Case(TimeStampedModel):
 
 
 class CaseNotesHistory(TimeStampedModel):
+    class Analytics:
+        _PII = ["operator_notes", "provider_notes"]
+
     case = models.ForeignKey(Case, db_index=True)
     operator_notes = models.TextField(null=True, blank=True)
     provider_notes = models.TextField(null=True, blank=True)

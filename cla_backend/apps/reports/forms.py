@@ -1091,9 +1091,13 @@ class CallbackTimeSlotReport(DateRangeReportForm):
         for slot in self.get_queryset():
             remaining = slot.remaining_capacity
             used = slot.capacity - remaining
-            remaining_percent = (remaining / slot.capacity) * 100
+            remaining_percent = (remaining / float(slot.capacity)) * 100 if slot.capacity > 0 else 0
+            # 2 decimal places without rounding
+            remaining_percent = int(remaining_percent * 100) / 100.0
+            # Strip trailing zeros
+            remaining_percent = "%g" % remaining_percent
 
-            yield [slot.date, slot.time, slot.capacity, used, remaining, remaining_percent]
+            yield [slot.date.strftime("%d/%m/%Y"), slot.time, slot.capacity, used, remaining, remaining_percent]
 
     def get_headers(self):
         return ["Date", "Interval", "Total capacity", "Used capacity", "Remaining capacity", "% Remaining capacity"]

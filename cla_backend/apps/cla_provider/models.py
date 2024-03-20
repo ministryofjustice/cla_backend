@@ -293,6 +293,9 @@ class OutOfHoursRota(TimeStampedModel):
 
 
 class Feedback(TimeStampedModel):
+    class Analytics:
+        _allow_analytics = True
+
     reference = UUIDField(auto=True, unique=True)
     case = models.ForeignKey("legalaid.Case", related_name="provider_feedback")
 

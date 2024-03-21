@@ -5,6 +5,7 @@ from core.tests.mommy_utils import make_recipe
 from core.tests.test_base import SimpleResourceAPIMixin
 from legalaid.tests.views.test_base import CLACheckerAuthBaseApiTestMixin
 from checker.call_centre_availability import get_available_slots
+from cla_common.constants import CALLBACK_TYPES
 
 
 class CallbackTimeSlotsTestCase(SimpleResourceAPIMixin, CLACheckerAuthBaseApiTestMixin, APITestCase):
@@ -32,7 +33,9 @@ class CallbackTimeSlotsTestCase(SimpleResourceAPIMixin, CLACheckerAuthBaseApiTes
 
         # Book a callback for 10am tomorrow. 10am slot only has a capacity of 1, after this it should not be available
         requires_action_at = dt.datetime.combine(tomorrow, dt.time(hour=10, minute=0))
-        make_recipe(self.LEGALAID_CASE, requires_action_at=requires_action_at)
+        make_recipe(
+            self.LEGALAID_CASE, requires_action_at=requires_action_at, callback_type=CALLBACK_TYPES.CHECKER_SELF
+        )
         slots = get_available_slots(num_days=2)
         self.assertIn(dt.datetime.combine(tomorrow, dt.time(hour=9, minute=0)), slots)
         self.assertNotIn(dt.datetime.combine(tomorrow, dt.time(hour=10, minute=0)), slots)
@@ -51,7 +54,9 @@ class CallbackTimeSlotsTestCase(SimpleResourceAPIMixin, CLACheckerAuthBaseApiTes
         # Book two callbacks for 10am tomorrow, this should make the capacity negative
         requires_action_at = dt.datetime.combine(tomorrow, dt.time(hour=10, minute=0))
         for _ in range(2):
-            make_recipe(self.LEGALAID_CASE, requires_action_at=requires_action_at)
+            make_recipe(
+                self.LEGALAID_CASE, requires_action_at=requires_action_at, callback_type=CALLBACK_TYPES.CHECKER_SELF
+            )
         slots = get_available_slots(num_days=2)
         self.assertIn(dt.datetime.combine(tomorrow, dt.time(9, 0)), slots)
         self.assertNotIn(dt.datetime.combine(tomorrow, dt.time(10, 0)), slots)
@@ -69,7 +74,9 @@ class CallbackTimeSlotsTestCase(SimpleResourceAPIMixin, CLACheckerAuthBaseApiTes
 
         # Book a callback for 10am tomorrow
         requires_action_at = dt.datetime.combine(tomorrow, dt.time(hour=10, minute=0))
-        make_recipe(self.LEGALAID_CASE, requires_action_at=requires_action_at)
+        make_recipe(
+            self.LEGALAID_CASE, requires_action_at=requires_action_at, callback_type=CALLBACK_TYPES.CHECKER_SELF
+        )
 
         slots = get_available_slots(num_days=2, is_third_party_callback=True)
         self.assertIn(dt.datetime.combine(tomorrow, dt.time(9, 0)), slots)
@@ -86,5 +93,5 @@ class CallbackTimeSlotsTestCase(SimpleResourceAPIMixin, CLACheckerAuthBaseApiTes
             slots = get_available_slots(num_days=i + 1)  # Plus 1 because we start checking from tomorrow.
             for day in days[:i]:
                 assert day in slots
-            for day in days[i + 1:]:
+            for day in days[i + 1 :]:
                 assert day not in slots

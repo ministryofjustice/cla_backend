@@ -837,6 +837,7 @@ class Case(TimeStampedModel):
                     "modified",
                     "outcome_code_id",
                     "requires_action_at",
+                    "callback_type",
                     "callback_attempt",
                     "search_field",
                     "provider_assigned_at",

@@ -6,7 +6,7 @@ from extended_choices import Choices
 from model_utils.models import TimeStampedModel
 from uuidfield import UUIDField
 
-from cla_common.constants import REASONS_FOR_CONTACTING
+from cla_common.constants import REASONS_FOR_CONTACTING, CALLBACK_TYPES
 from cla_common.call_centre_availability import SLOT_INTERVAL_MINS
 
 
@@ -230,7 +230,8 @@ class CallbackTimeSlot(TimeStampedModel):
         from legalaid.models import Case
 
         count = Case.objects.filter(
-            requires_action_at__range=(self.callback_start_datetime(), self.callback_end_datetime())
+            requires_action_at__range=(self.callback_start_datetime(), self.callback_end_datetime()),
+            callback_type=CALLBACK_TYPES.CHECKER_SELF,
         ).count()
         return self.capacity - count
 

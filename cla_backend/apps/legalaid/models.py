@@ -42,6 +42,7 @@ from cla_common.constants import (
     EXPRESSIONS_OF_DISSATISFACTION,
     RESEARCH_CONTACT_VIA,
     CALLBACK_WINDOW_TYPES,
+    CALLBACK_TYPES,
 )
 
 from legalaid.fields import MoneyField
@@ -424,10 +425,12 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin):
         """
         case_data = self.to_case_data()
         case_data_dict, case_data_dict_missing = case_data.to_dict()
-        logger.debug('CaseData %s' % json.dumps(case_data_dict, indent=4, sort_keys=True))
-        logger.debug('CaseData is missing: %s' % json.dumps(case_data_dict_missing, indent=4, sort_keys=True))
+        logger.debug("CaseData %s" % json.dumps(case_data_dict, indent=4, sort_keys=True))
+        logger.debug("CaseData is missing: %s" % json.dumps(case_data_dict_missing, indent=4, sort_keys=True))
         ec = EligibilityChecker(case_data)
-        eligibility_state, is_gross_income_eligible, is_disposable_income_eligible, is_disposable_capital_eligible = ec.is_eligible_with_reasons()
+        eligibility_state, is_gross_income_eligible, is_disposable_income_eligible, is_disposable_capital_eligible = (
+            ec.is_eligible_with_reasons()
+        )
 
         reasons = []
         if eligibility_state == ELIGIBILITY_STATES.NO:
@@ -653,6 +656,9 @@ class Case(TimeStampedModel):
     )
 
     requires_action_at = models.DateTimeField(auto_now=False, blank=True, null=True)
+
+    callback_type = models.CharField(max_length=20, choices=CALLBACK_TYPES.CHOICES, blank=True, null=True)
+
     callback_window_type = models.CharField(
         max_length=50,
         choices=CALLBACK_WINDOW_TYPES.CHOICES,

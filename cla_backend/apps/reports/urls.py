@@ -40,6 +40,7 @@ urlpatterns = patterns(
     url(r"^mi-eod-extract/$", views.mi_eod_extract, name="mi_eod_extract"),
     url(r"^mi-comlpaints/$", views.mi_complaints, name="mi_complaints"),
     url(r"^mi-obiee-extract/$", views.mi_obiee_extract, name="mi_obiee_extract"),
+    url(r"^mi-problem-categorisation/$", views.problem_categorisation, name="mi_problem_categorisation"),
     url(r"^metrics-report/$", views.metrics_report, name="metrics_report"),
     url(r"^all-knowledgebase-articles/$", views.all_knowledgebase_articles, name="all_knowledgebase_articles"),
     url(r"^reasons-for-contacting/$", views.reasons_for_contacting, name="reasons_for_contacting"),

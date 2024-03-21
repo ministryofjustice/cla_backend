@@ -406,44 +406,46 @@ class CaseDemographicsReport(SQLFileDateRangeReport):
     )
 
     def get_headers(self):
-        return ["LAA Reference",
-                "Hash ID",
-                "Case ID",
-                "Provider ID",
-                "Category Name",
-                "Date Case Created",
-                "Matter Type 1",
-                "Matter Type 2",
-                "Scope Status",
-                "Eligibility Status",
-                "Adjustments BSL",
-                "Adjustments LLI",
-                "Adjustments MIN",
-                "Adjustments TYP",
-                "Adjustments Callback Preferred",
-                "Adjustments Skype",
-                "Gender",
-                "Ethnicity",
-                "Age(Range)",
-                "Religion",
-                "Sexual_Orientation",
-                "Disability",
-                "Media Code",
-                "Contact Type",
-                "Referral Agencies",
-                "Exempt Client",
-                "Welsh",
-                "Language",
-                "Outcome code",
-                "Outcome Created At",
-                "Has Third Party",
-                "Organisation",
-                "Notes",
-                "Provider Notes",
-                "Adaptation Notes",
-                "Vulnerable User",
-                "Geographical Region",
-                "Postcode"]
+        return [
+            "LAA Reference",
+            "Hash ID",
+            "Case ID",
+            "Provider ID",
+            "Category Name",
+            "Date Case Created",
+            "Matter Type 1",
+            "Matter Type 2",
+            "Scope Status",
+            "Eligibility Status",
+            "Adjustments BSL",
+            "Adjustments LLI",
+            "Adjustments MIN",
+            "Adjustments TYP",
+            "Adjustments Callback Preferred",
+            "Adjustments Skype",
+            "Gender",
+            "Ethnicity",
+            "Age(Range)",
+            "Religion",
+            "Sexual_Orientation",
+            "Disability",
+            "Media Code",
+            "Contact Type",
+            "Referral Agencies",
+            "Exempt Client",
+            "Welsh",
+            "Language",
+            "Outcome code",
+            "Outcome Created At",
+            "Has Third Party",
+            "Organisation",
+            "Notes",
+            "Provider Notes",
+            "Adaptation Notes",
+            "Vulnerable User",
+            "Geographical Region",
+            "Postcode",
+        ]
 
     def get_rows(self):
         for row in self.get_queryset():
@@ -1044,6 +1046,37 @@ class AllKnowledgeBaseArticles(ReportForm):
             "Preferred signpost for category 5",
             "Category 6",
             "Preferred signpost for category 6",
+        ]
+
+
+class MITellUsMoreAboutYourProblem(SQLFileDateRangeReport):
+    QUERY_FILE = "MIExtractByOutcomeTellUsAboutYourProblem.sql"
+
+    def get_sql_params(self):
+        from_date, to_date = self.date_range
+        return {"from_date": from_date, "to_date": to_date}
+
+    def get_headers(self):
+        return [
+            "Personal Details Id",
+            "Case Id",
+            "Source",
+            "Created",
+            "Modified",
+            "Diagnosis Notes",
+            "Operator Notes",
+            "Provider Notes",
+            "Adjustments BSL Webcam",
+            "Adjustments Callback Preference",
+            "Adjustments Language",
+            "Adjustments Not required",
+            "Adjustments Minicom",
+            "Adjustments Text Relay",
+            "Adjustment Skype",
+            "Diagnosis Category",
+            "Legalaid Category Code",
+            "Legalaid Category Name",
+            "Outcome Code",
         ]
 
 

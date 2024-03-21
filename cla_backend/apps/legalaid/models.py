@@ -641,8 +641,6 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin):
 
 
 class Property(TimeStampedModel):
-    class Analytics:
-        _PII = ["value", "mortgage_left", "share", "eligibility_check", "disputed", "main"]
 
     value = MoneyField(default=None, null=True, blank=True)
     mortgage_left = MoneyField(default=None, null=True, blank=True)

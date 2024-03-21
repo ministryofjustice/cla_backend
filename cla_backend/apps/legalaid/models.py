@@ -88,8 +88,6 @@ class Category(TimeStampedModel):
 
 
 class Savings(CloneModelMixin, TimeStampedModel):
-    class Analytics:
-        _PII = ["bank_balance", "investment_balance", "asset_balance", "credit_balance"]
 
     bank_balance = MoneyField(default=None, null=True, blank=True)
     investment_balance = MoneyField(default=None, null=True, blank=True)
@@ -100,18 +98,6 @@ class Savings(CloneModelMixin, TimeStampedModel):
 
 
 class Income(CloneModelMixin, TimeStampedModel):
-    class Analytics:
-        _PII = [
-            "earnings",
-            "self_employment_drawings",
-            "benefits",
-            "tax_credits",
-            "child_benefits",
-            "maintenance_received",
-            "pension",
-            "other_income",
-            "self_employed",
-        ]
 
     earnings = MoneyIntervalField(default=None, null=True, blank=True)
     self_employment_drawings = MoneyIntervalField(default=None, null=True, blank=True)
@@ -127,16 +113,6 @@ class Income(CloneModelMixin, TimeStampedModel):
 
 
 class Deductions(CloneModelMixin, TimeStampedModel):
-    class Analytics:
-        _PII = [
-            "income_tax",
-            "national_insurance",
-            "maintenance",
-            "childcare",
-            "mortgage",
-            "rent",
-            "criminal_legalaid_contributions",
-        ]
 
     income_tax = MoneyIntervalField(default=None, null=True, blank=True)
     national_insurance = MoneyIntervalField(default=None, null=True, blank=True)
@@ -374,8 +350,6 @@ class EODDetailsCategory(models.Model):
 
 
 class Person(CloneModelMixin, TimeStampedModel):
-    class Analytics:
-        _PII = ["income", "savings", "deductions"]
 
     income = models.ForeignKey(Income, blank=True, null=True)
     savings = models.ForeignKey(Savings, blank=True, null=True)

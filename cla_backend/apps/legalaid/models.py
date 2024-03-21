@@ -163,19 +163,6 @@ class ContactResearchMethod(CloneModelMixin, TimeStampedModel):
 class PersonalDetails(CloneModelMixin, TimeStampedModel):
     class Analytics:
         _allow_analytics = True
-        _restricted_fields = [
-            "date_of_birth",
-            "diversity",
-            "email",
-            "full_name",
-            "home_phone",
-            "id",
-            "mobile_phone",
-            "postcode",
-            "search_field",
-            "street",
-            "title",
-        ]
         _PII = [
             "date_of_birth",
             "diversity",
@@ -280,7 +267,6 @@ class PersonalDetails(CloneModelMixin, TimeStampedModel):
 class ThirdPartyDetails(CloneModelMixin, TimeStampedModel):
     class Analytics:
         _allow_analytics = True
-        _restricted_fields = ["personal_relationship_note"]
         _PII = ["personal_relationship_note"]
 
     personal_details = models.ForeignKey(PersonalDetails)
@@ -306,7 +292,6 @@ class ThirdPartyDetails(CloneModelMixin, TimeStampedModel):
 class AdaptationDetails(CloneModelMixin, TimeStampedModel):
     class Analytics:
         _allow_analytics = True
-        _restricted_fields = ["notes"]
         _PII = ["notes"]
 
     bsl_webcam = models.BooleanField(default=False)
@@ -332,7 +317,6 @@ class EODDetailsManager(models.Manager):
 class EODDetails(TimeStampedModel):
     class Analytics:
         _allow_analytics = True
-        _restricted_fields = ["notes"]
         _PII = ["notes"]
 
     case = models.OneToOneField("Case", related_name="eod_details")
@@ -732,7 +716,6 @@ class MediaCode(TimeStampedModel):
 class Case(TimeStampedModel):
     class Analytics:
         _allow_analytics = True
-        _restricted_field = ["notes", "provider_notes", "source"]
         _PII = ["notes", "provider_notes", "source"]
 
     reference = models.CharField(max_length=128, unique=True, editable=False)

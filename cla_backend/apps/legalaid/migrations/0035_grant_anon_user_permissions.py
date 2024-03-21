@@ -17,9 +17,13 @@ def get_all_non_restricted_models(models):
                     if not column.is_relation:
                         non_restricted_models.append([model._meta.db_table, column.name])
         # Remove restricted fields from allowed columns
-        if hasattr(model, "Analytics") and hasattr(model.Analytics, "_restricted_fields"):
-            if len(model.Analytics._restricted_fields) > 0:
-                for column in model.Analytics._restricted_fields:
+        if (
+            hasattr(model, "Analytics")
+            and hasattr(model.Analytics, "_allow_analytics")
+            and hasattr(model.Analytics, "_PII")
+        ):
+            if len(model.Analytics._PII) > 0:
+                for column in model.Analytics._PII:
                     non_restricted_models.remove([model._meta.db_table, column])
     # Returns all allowed columns for user
     return non_restricted_models

@@ -1,5 +1,6 @@
 import csv
 import datetime
+import codecs
 from django.db import transaction
 from django.core.exceptions import ValidationError
 from checker.models import CallbackTimeSlot, CALLBACK_TIME_SLOTS
@@ -14,7 +15,7 @@ class CallbackTimeSlotCSVImporter(object):
     def parse(cls, csv_file_handler):
         rows = []
         errors = []
-        reader = csv.reader(csv_file_handler, delimiter=",")
+        reader = csv.reader(codecs.iterdecode(csv_file_handler, "utf-8-sig"), delimiter=",")
         for index, row in enumerate(reader):
             try:
                 cls.validate_row(row)
@@ -45,14 +46,14 @@ class CallbackTimeSlotCSVImporter(object):
         try:
             row[CSV_COL_DATE] = datetime.datetime.strptime(row[CSV_COL_DATE], "%d/%m/%Y").date()
         except Exception:
-            raise ValidationError(
-                message=dict(date="Write the date in this format: dd/mm/yyyy")
-            )
+            raise ValidationError(message=dict(date="Write the date in this format: dd/mm/yyyy"))
         try:
             assert row[CSV_COL_TIME].strip() in CALLBACK_TIME_SLOTS
             row[CSV_COL_TIME] = row[CSV_COL_TIME].strip()
         except Exception:
-            raise ValidationError(message=dict(time="Check the time is correct, for example, 1500 (for the 1500 to 1530 slot)"))
+            raise ValidationError(
+                message=dict(time="Check the time is correct, for example, 1500 (for the 1500 to 1530 slot)")
+            )
 
         try:
             assert int(row[CSV_COL_CAPACITY]) >= 0

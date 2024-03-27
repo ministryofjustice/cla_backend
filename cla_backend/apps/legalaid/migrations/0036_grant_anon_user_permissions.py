@@ -34,7 +34,7 @@ def get_all_non_restricted_models(models):
 
 class Migration(migrations.Migration):
 
-    dependencies = [("legalaid", "0034_create_anon_user")]
+    dependencies = [("legalaid", "0035_create_anon_user")]
 
     operations = [
         migrations.RunSQL(

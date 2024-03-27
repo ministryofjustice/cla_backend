@@ -457,11 +457,12 @@ class TestCallbackTimeSlotReport(TestCase):
     @mock.patch("cla_common.call_centre_availability.OpeningHours.available", return_value=True)
     def test_callback_time_slots(self, _):
         tomorrow = datetime.datetime.today() + datetime.timedelta(days=1)
+        overmorrow = datetime.datetime.today() + datetime.timedelta(days=2)
+        date_format = "%d/%m/%Y"
         # Create callback time slots with capacity
-        dt = tomorrow.strftime("%d/%m/%Y")
         callbacks = {
             "0900": {
-                "Date": dt,
+                "Date": tomorrow.strftime(date_format),
                 "Interval": u"0900",
                 "Total capacity": 4,
                 "Used capacity": 1,
@@ -469,7 +470,7 @@ class TestCallbackTimeSlotReport(TestCase):
                 "% Remaining capacity": "75",
             },
             "1000": {
-                "Date": dt,
+                "Date": tomorrow.strftime(date_format),
                 "Interval": u"1000",
                 "Total capacity": 9,
                 "Used capacity": 3,
@@ -477,7 +478,7 @@ class TestCallbackTimeSlotReport(TestCase):
                 "% Remaining capacity": "66.66",
             },
             "1100": {
-                "Date": dt,
+                "Date": tomorrow.strftime(date_format),
                 "Interval": u"1100",
                 "Total capacity": 0,
                 "Used capacity": 0,
@@ -485,7 +486,7 @@ class TestCallbackTimeSlotReport(TestCase):
                 "% Remaining capacity": "0",
             },
             "1200": {
-                "Date": dt,
+                "Date": tomorrow.strftime(date_format),
                 "Interval": u"1200",
                 "Total capacity": 1,
                 "Used capacity": 1,
@@ -493,8 +494,16 @@ class TestCallbackTimeSlotReport(TestCase):
                 "% Remaining capacity": "0",
             },
             "1300": {
-                "Date": dt,
+                "Date": tomorrow.strftime(date_format),
                 "Interval": u"1300",
+                "Total capacity": 1,
+                "Used capacity": 0,
+                "Remaining capacity": 1,
+                "% Remaining capacity": "100",
+            },
+            "1400": {
+                "Date": overmorrow.strftime(date_format),
+                "Interval": u"1400",
                 "Total capacity": 1,
                 "Used capacity": 0,
                 "Remaining capacity": 1,
@@ -503,11 +512,12 @@ class TestCallbackTimeSlotReport(TestCase):
         }
         for interval, callback in callbacks.iteritems():
             # Create callback time slots
-            make_recipe(self.CALLBACK_TIME_SLOT, capacity=callback["Total capacity"], date=tomorrow, time=interval)
+            dt = datetime.datetime.strptime(callback["Date"], date_format)
+            make_recipe(self.CALLBACK_TIME_SLOT, capacity=callback["Total capacity"], date=dt, time=interval)
             if callback["Used capacity"] > 0:
                 hour = int(interval[0:2])
                 minutes = int(interval[2:])
-                requires_action_at = datetime.datetime.combine(tomorrow, datetime.time(hour=hour, minute=minutes))
+                requires_action_at = datetime.datetime.combine(dt, datetime.time(hour=hour, minute=minutes))
                 # Create callbacks
                 make_recipe(
                     self.LEGALAID_CASE,
@@ -521,4 +531,5 @@ class TestCallbackTimeSlotReport(TestCase):
         report = self.get_report(date_range)
         for row in report:
             row_dict = dict(row)
+            self.assertEqual(row_dict["Date"], tomorrow.strftime(date_format))
             self.assertDictEqual(row_dict, callbacks[row_dict["Interval"]])

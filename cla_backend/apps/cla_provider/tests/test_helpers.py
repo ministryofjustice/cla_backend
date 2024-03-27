@@ -575,6 +575,7 @@ class TestGetValidEducationProviders(TestCase):
         provider_allocation = make_recipe(
             self.provider_allocation_model, provider=provider, category=self.education_category
         )
+        make_recipe(self.working_days_model, saturday=True, sunday=True, provider_allocation=provider_allocation)
 
         actual_output = self.helper.get_valid_education_provider_allocations(self.education_category)
 
@@ -584,13 +585,13 @@ class TestGetValidEducationProviders(TestCase):
         provider_allocations = []
         for id in range(2):
             provider = make_recipe(self.provider_model, active=True, id=id)
-            provider_allocations.append(
-                make_recipe(self.provider_allocation_model, provider=provider, category=self.education_category)
-            )
+            provider_allocation = make_recipe(self.provider_allocation_model, provider=provider, category=self.education_category)
+            make_recipe(self.working_days_model, saturday=True, sunday=True, provider_allocation=provider_allocation)
+            provider_allocations.append(provider_allocation)
 
         actual_output = self.helper.get_valid_education_provider_allocations(self.education_category)
 
-        assert actual_output == provider_allocations, actual_output
+        assert set(actual_output) == set(provider_allocations), actual_output
 
     def test_provider_not_working(self):
         provider = make_recipe(self.provider_model, active=True)

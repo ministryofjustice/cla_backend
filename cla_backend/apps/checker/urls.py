@@ -11,4 +11,8 @@ router.register(r"organisation", views.ArticleViewSet)
 router.register(r"eligibility_check", views.EligibilityCheckViewSet, base_name="eligibility_check")
 router.register(r"reasons_for_contacting", views.ReasonForContactingViewSet, base_name="reasons_for_contacting")
 
-urlpatterns = patterns("", url(r"^", include(router.urls)))
+urlpatterns = patterns(
+    "",
+    url(r"^", include(router.urls)),
+    url(r"^callback_time_slots/$", views.CallbackTimeSlotViewSet.as_view(), name="provider-callback_time_slots"),
+)

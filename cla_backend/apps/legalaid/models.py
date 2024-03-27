@@ -42,6 +42,7 @@ from cla_common.constants import (
     EXPRESSIONS_OF_DISSATISFACTION,
     RESEARCH_CONTACT_VIA,
     CALLBACK_WINDOW_TYPES,
+    CALLBACK_TYPES,
 )
 
 from legalaid.fields import MoneyField
@@ -708,6 +709,9 @@ class Case(TimeStampedModel):
     )
 
     requires_action_at = models.DateTimeField(auto_now=False, blank=True, null=True)
+
+    callback_type = models.CharField(max_length=20, choices=CALLBACK_TYPES.CHOICES, blank=True, null=True)
+
     callback_window_type = models.CharField(
         max_length=50,
         choices=CALLBACK_WINDOW_TYPES.CHOICES,
@@ -886,6 +890,7 @@ class Case(TimeStampedModel):
                     "modified",
                     "outcome_code_id",
                     "requires_action_at",
+                    "callback_type",
                     "callback_attempt",
                     "search_field",
                     "provider_assigned_at",

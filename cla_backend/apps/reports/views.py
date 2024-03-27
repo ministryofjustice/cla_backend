@@ -35,7 +35,8 @@ from .forms import (
     ReasonsForContactingDisaggregated,
     CaseDemographicsReport,
     MITellUsMoreAboutYourProblem,
-    MinimalCaseDemographicsReport
+    MinimalCaseDemographicsReport,
+    CallbackTimeSlotReport,
 )
 
 from reports.models import Export
@@ -275,6 +276,11 @@ def minimal_case_demographic_report(request):
 @permission_required("legalaid.run_reports")
 def problem_categorisation(request):
     return report_view(request, MITellUsMoreAboutYourProblem, "Tell us more about your problem")
+
+@staff_member_required
+@permission_required("legalaid.run_reports")
+def callback_time_slot_report(request):
+    return report_view(request, CallbackTimeSlotReport, "Callback Time Slot Report")
 
 
 def delete_record(user_id, file_name):

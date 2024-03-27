@@ -39,6 +39,7 @@ class BaseCaseTestCase(
                 "personal_details",
                 "reference",
                 "requires_action_at",
+                "callback_type",
                 "callback_window_type",
                 "adaptation_details",
                 "thirdparty_details",

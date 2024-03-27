@@ -6,7 +6,7 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [("legalaid", "0033_personaldetails_announce_call")]
+    dependencies = [("legalaid", "0035_grant_anon_user_permissions")]
 
     operations = [
         migrations.AddField(

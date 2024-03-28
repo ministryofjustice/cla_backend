@@ -2,6 +2,7 @@ import datetime
 from django.db import models
 from django.db.models import Count
 from django.utils import timezone
+from django.conf import settings
 from extended_choices import Choices
 from model_utils.models import TimeStampedModel
 from uuidfield import UUIDField
@@ -240,6 +241,10 @@ class CallbackTimeSlot(TimeStampedModel):
             callback_type=CALLBACK_TYPES.CHECKER_SELF,
         ).count()
         return self.capacity - count
+
+    @property
+    def has_breached_threshold(self):
+        return self.remaining_capacity <= settings.CALLBACK_CAPPING_THRESHOLD
 
     def callback_start_datetime(self):
         hour = int(self.time[0:2])

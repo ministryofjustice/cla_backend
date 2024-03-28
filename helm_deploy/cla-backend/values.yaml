@@ -200,6 +200,11 @@ envVars:
       name: education-allocation
       key: enabled
       optional: true
+  CALLBACK_CAPPING_THRESHOLD:
+    configmap:
+      name: callback-capping
+      threshold: enabled
+      optional: true
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

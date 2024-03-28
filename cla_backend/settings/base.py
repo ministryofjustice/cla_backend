@@ -500,6 +500,9 @@ CFE_URL = (
 
 EDUCATION_ALLOCATION_FEATURE_FLAG = os.environ.get("EDUCATION_ALLOCATION_FEATURE_FLAG", "False") == "True"
 
+# A notification will be sent for callback time slot if its remaining capacity drops below this threshold
+CALLBACK_CAPPING_THRESHOLD = os.environ.get("CALLBACK_CAPPING_THRESHOLD", 0)
+
 # .local.py overrides all the common settings.
 try:
     from .local import *

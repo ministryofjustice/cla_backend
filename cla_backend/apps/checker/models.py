@@ -233,21 +233,50 @@ class CallbackTimeSlot(TimeStampedModel):
 
     @property
     def remaining_capacity(self):
+        return self.get_remaining_capacity_by_range(
+            self.capacity, self.callback_start_datetime(), self.callback_end_datetime()
+        )
+
+    @staticmethod
+    def get_model(dt, fallback_to_previous_week=True):
+        assert isinstance(dt, datetime.datetime)
+        is_fallback = False
+        if timezone.is_naive(dt):
+            dt = timezone.make_aware(dt)
+        model = CallbackTimeSlot.objects.filter(date=dt.date(), time=dt.strftime("%H%M")).first()
+
+        if not model and fallback_to_previous_week:
+            previous_week = dt - datetime.timedelta(weeks=1)
+            model = CallbackTimeSlot.objects.filter(
+                date=previous_week.date(), time=previous_week.strftime("%H%M")
+            ).first()
+            is_fallback = True
+
+        return is_fallback, model
+
+    @staticmethod
+    def get_time_from_interval_string(interval):
+        hour = int(interval[0:2])
+        minutes = int(interval[2:])
+        return datetime.time(hour=hour, minute=minutes)
+
+    @staticmethod
+    def get_remaining_capacity_by_dt(capacity, dt):
+        start = dt
+        end = dt + datetime.timedelta(minutes=SLOT_INTERVAL_MINS)
+        return CallbackTimeSlot.get_remaining_capacity_by_range(capacity, start, end)
+
+    @staticmethod
+    def get_remaining_capacity_by_range(capacity, start_dt, end_dt):
         from legalaid.models import Case
 
         count = Case.objects.filter(
-            requires_action_at__range=(
-                self.callback_start_datetime(),
-                self.callback_end_datetime() - datetime.timedelta(seconds=1),
-            ),
-            callback_type=CALLBACK_TYPES.CHECKER_SELF,
+            requires_action_at__range=(start_dt, end_dt), callback_type=CALLBACK_TYPES.CHECKER_SELF
         ).count()
-        return self.capacity - count
+        return capacity - count
 
     def callback_start_datetime(self):
-        hour = int(self.time[0:2])
-        minutes = int(self.time[2:])
-        dt = datetime.datetime.combine(self.date, datetime.time(hour=hour, minute=minutes))
+        dt = datetime.datetime.combine(self.date, self.get_time_from_interval_string(self.time))
         return timezone.make_aware(dt)
 
     def callback_end_datetime(self):

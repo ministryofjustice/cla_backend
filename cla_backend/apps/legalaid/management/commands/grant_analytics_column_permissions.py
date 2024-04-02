@@ -60,7 +60,6 @@ def get_all_non_restricted_columns(model):
 
 
 def does_pg_user_exist(username):
-    print(username)
     with connection.cursor() as cursor:
         cursor.execute("select * from pg_catalog.pg_roles where rolname=%s", [username])
         roles = cursor.fetchall()

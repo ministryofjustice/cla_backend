@@ -1,7 +1,10 @@
 import datetime
+import logging
 from django.conf import settings
 from govuk_notify.api import NotifyEmailOrchestrator
 from checker.models import CallbackTimeSlot, CALLBACK_TIME_SLOTS
+
+logger = logging.getLogger(__name__)
 
 
 def get_timeslot_of_datetime(slot_start_datetime):
@@ -24,7 +27,7 @@ def callback_capacity_get_slots_for_date(date, fallback_to_previous_week=True):
         dt = datetime.datetime.combine(date, CallbackTimeSlot.get_time_from_interval_string(slot)).replace(
             tzinfo=date.tzinfo
         )
-        _, slot = CallbackTimeSlot.get_model(dt, fallback_to_previous_week)
+        _, slot = CallbackTimeSlot.get_model_from_datetime(dt, fallback_to_previous_week)
         if slot:
             slots.append({"date": dt, "capacity": slot.capacity})
     return slots
@@ -44,11 +47,14 @@ def callback_capacity_threshold_breached(date):
     return True
 
 
-def callback_capacity_threshold_breach_send_notification(self, dt):
+def callback_capacity_threshold_breach_send_notification(dt):
+    dt_str = dt.strftime("%d %B %Y")
+    logger.info("Sending email for capacity threshold breach for date {}".format(dt_str))
     if not settings.CALLBACK_CAPPING_THRESHOLD_NOTIFICATION:
+        logger.info("Could not send email due to missing CALLBACK_CAPPING_THRESHOLD_NOTIFICATION setting")
         return
 
-    personalisation = {"date": dt.strftime("%d %B %Y")}
+    personalisation = {"date": dt_str}
     email = NotifyEmailOrchestrator()
     email_addresses = settings.CALLBACK_CAPPING_THRESHOLD_NOTIFICATION.split(",")
     for email_address in email_addresses:

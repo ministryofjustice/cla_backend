@@ -71,7 +71,7 @@ class TestGetTimeslotOfDate(TestCase):
         self.assertFalse(callback_capacity_threshold_breached(dt))
 
     def test_no_callback_capacity(self):
-        dt = datetime.datetime(2024, 4, 5, 15, 59, 0, 0).replace(tzinfo=timezone.utc)
+        dt = datetime.datetime(2024, 4, 2, 15, 59, 0, 0).replace(tzinfo=timezone.utc)
         self._create_callback(dt.replace(hour=18, minute=0))
         self.assertFalse(callback_capacity_threshold_breached(dt))
 

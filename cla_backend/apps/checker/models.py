@@ -238,7 +238,7 @@ class CallbackTimeSlot(TimeStampedModel):
         )
 
     @staticmethod
-    def get_model(dt, fallback_to_previous_week=True):
+    def get_model_from_datetime(dt, fallback_to_previous_week=True):
         assert isinstance(dt, datetime.datetime)
         is_fallback = False
         if timezone.is_naive(dt):
@@ -270,6 +270,8 @@ class CallbackTimeSlot(TimeStampedModel):
     def get_remaining_capacity_by_range(capacity, start_dt, end_dt):
         from legalaid.models import Case
 
+        # otherwise this will match cases that have a requires_action_at of the end date(don't want it to be inclusive)
+        end_dt = end_dt - datetime.timedelta(seconds=1)
         count = Case.objects.filter(
             requires_action_at__range=(start_dt, end_dt), callback_type=CALLBACK_TYPES.CHECKER_SELF
         ).count()

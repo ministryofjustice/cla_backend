@@ -66,7 +66,7 @@ def does_pg_user_exist(username):
         return len(roles) != 0
 
 
-def create_pg_user_exist(username, password):
+def create_pg_user(username, password):
     with connection.cursor() as cursor:
         cursor.execute("CREATE ROLE %s WITH LOGIN PASSWORD %s", [AsIs(username), password])
         cursor.execute("GRANT CONNECT ON DATABASE cla_backend TO %s", [AsIs(username)])
@@ -78,7 +78,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         if not does_pg_user_exist(PG_USER_NAME):
-            create_pg_user_exist(PG_USER_PASSWORD, PG_USER_PASSWORD)
+            create_pg_user(PG_USER_NAME, PG_USER_PASSWORD)
 
         sql_commands = [
             'GRANT SELECT("{column}") ON {table} TO {username}'.format(

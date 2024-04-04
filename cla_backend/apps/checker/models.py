@@ -236,7 +236,10 @@ class CallbackTimeSlot(TimeStampedModel):
         from legalaid.models import Case
 
         count = Case.objects.filter(
-            requires_action_at__range=(self.callback_start_datetime(), self.callback_end_datetime()),
+            requires_action_at__range=(
+                self.callback_start_datetime(),
+                self.callback_end_datetime() - datetime.timedelta(seconds=1),
+            ),
             callback_type=CALLBACK_TYPES.CHECKER_SELF,
         ).count()
         return self.capacity - count

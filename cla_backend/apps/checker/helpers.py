@@ -46,7 +46,6 @@ def callback_capacity_threshold_breached(date):
 
 
 def callback_capacity_threshold_breach_send_notification(dt):
-    settings.CALLBACK_CAPPING_THRESHOLD_NOTIFICATION = "kyle.o'brien@digital.justice.gov.uk"
     dt_str = dt.strftime("%d %B %Y")
     logger.info("Sending email for capacity threshold breach for date {}".format(dt_str))
     if not settings.CALLBACK_CAPPING_THRESHOLD_NOTIFICATION:

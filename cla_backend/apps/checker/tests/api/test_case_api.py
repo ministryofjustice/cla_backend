@@ -283,7 +283,7 @@ class CallMeBackCaseTestCase(BaseCaseTestCase, MockGovNotifyMailBox):
     def test_create_with_callmeback(self):
         self.assertEquals(len(self.mailbox), 0)
         check = make_recipe("legalaid.eligibility_check")
-        self.create_callback_capacity_slot()
+        self.create_callback_no_capacity_slot()
 
         data = {
             "eligibility_check": unicode(check.reference),
@@ -360,6 +360,31 @@ class CallMeBackCaseTestCase(BaseCaseTestCase, MockGovNotifyMailBox):
         case = Case.objects.first()
         self.assertNotEqual(case.outcome_code, "TEST")
 
-    def create_callback_capacity_slot(self):
+    def create_callback_no_capacity_slot(self):
         dt = self._default_dt
-        make_recipe("checker.callback_time_slot", date=dt.date(), time=dt.strftime("%H%M"), capacity=1)
+        slots = [
+            {"date": dt.date(), "capacity": 0, "time": "0900"},
+            {"date": dt.date(), "capacity": 0, "time": "0930"},
+            {"date": dt.date(), "capacity": 1, "time": "1000"},
+            {"date": dt.date(), "capacity": 0, "time": "1030"},
+            {"date": dt.date(), "capacity": 0, "time": "1100"},
+            {"date": dt.date(), "capacity": 0, "time": "1130"},
+            {"date": dt.date(), "capacity": 0, "time": "1200"},
+            {"date": dt.date(), "capacity": 0, "time": "1230"},
+            {"date": dt.date(), "capacity": 0, "time": "1300"},
+            {"date": dt.date(), "capacity": 0, "time": "1330"},
+            {"date": dt.date(), "capacity": 0, "time": "1400"},
+            {"date": dt.date(), "capacity": 0, "time": "1430"},
+            {"date": dt.date(), "capacity": 0, "time": "1500"},
+            {"date": dt.date(), "capacity": 0, "time": "1530"},
+            {"date": dt.date(), "capacity": 0, "time": "1600"},
+            {"date": dt.date(), "capacity": 0, "time": "1630"},
+            {"date": dt.date(), "capacity": 0, "time": "1700"},
+            {"date": dt.date(), "capacity": 0, "time": "1730"},
+            {"date": dt.date(), "capacity": 0, "time": "1800"},
+            {"date": dt.date(), "capacity": 0, "time": "1830"},
+            {"date": dt.date(), "capacity": 0, "time": "1900"},
+            {"date": dt.date(), "capacity": 0, "time": "1930"},
+        ]
+        for slot in slots:
+            make_recipe("checker.callback_time_slot", date=slot["date"], time=slot["time"], capacity=slot["capacity"])

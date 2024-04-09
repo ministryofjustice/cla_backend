@@ -267,6 +267,18 @@ class CallbackTimeSlot(TimeStampedModel):
         return CallbackTimeSlot.get_remaining_capacity_by_range(capacity, start, end)
 
     @staticmethod
+    def get_remaining_capacity_by_date(dt):
+        remaining_capacity = 0
+        for slot_time in CALLBACK_TIME_SLOTS.CHOICES:
+            time = datetime.datetime.strptime(slot_time[0], "%H%M")
+            slot_dt = datetime.datetime.combine(dt.date(), time.time())
+            slot = CallbackTimeSlot.get_model_from_datetime(slot_dt)
+            if slot[1] is None:
+                return 99999
+            remaining_capacity += slot[1].remaining_capacity
+        return remaining_capacity
+
+    @staticmethod
     def get_remaining_capacity_by_range(capacity, start_dt, end_dt):
         from legalaid.models import Case
 

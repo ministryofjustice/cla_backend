@@ -40,14 +40,13 @@ def callback_capacity_threshold_breached(date):
         return False
 
     # All slots need to exceed the capacity for it to be a breach
-    for slot in slots:
-        remaining_capacity = CallbackTimeSlot.get_remaining_capacity_by_dt(slot["capacity"], slot["date"])
-        if remaining_capacity > settings.CALLBACK_CAPPING_THRESHOLD:
-            return False
-    return True
+    if CallbackTimeSlot.get_remaining_capacity_by_date(date) <= 0:
+        return True
+    return False
 
 
 def callback_capacity_threshold_breach_send_notification(dt):
+    settings.CALLBACK_CAPPING_THRESHOLD_NOTIFICATION = "kyle.o'brien@digital.justice.gov.uk"
     dt_str = dt.strftime("%d %B %Y")
     logger.info("Sending email for capacity threshold breach for date {}".format(dt_str))
     if not settings.CALLBACK_CAPPING_THRESHOLD_NOTIFICATION:

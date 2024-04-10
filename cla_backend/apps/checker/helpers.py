@@ -20,7 +20,6 @@ def get_timeslot_of_datetime(slot_start_datetime):
     timeslots = CallbackTimeSlot.objects.filter(date=slot_start_datetime.date(), time=slot_start_time).all()
     return None if len(timeslots) == 0 else timeslots[0]
 
-
 def callback_capacity_get_slots_for_date(date, fallback_to_previous_week=True):
     slots = []
     for slot, _ in CALLBACK_TIME_SLOTS.CHOICES:

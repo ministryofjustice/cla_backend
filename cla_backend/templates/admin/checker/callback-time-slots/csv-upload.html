@@ -1,0 +1,18 @@
+{% extends "admin/base_site.html" %}
+{% block object-tools %}
+{{ block.super }}
+<form action="" method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <div class="form-row" style="background: #F8F8F8; border-style: solid; border-color: #bfc1c3; border-width: 1px 0; padding:10px">
+    <h4>Correct format for the CSV file</h4>
+    <p><b>Examples</b></p>
+    <p>To create 5 callback slots from 09:30am to 10:00am on 1 Feb 2024, write:</p>
+    <p style='font-family: monospace;'>01/02/2024,0930,5</p>
+    <br>
+    <p>To create 12 callback slots from 13:30pm to 14:00pm on 12 May 2024, write:</p>
+    <p style='font-family: monospace;'>12/05/2024,1330,12</p>
+  </div>
+  {{ form.as_p}}
+  <button type="submit" value="import">Import</button>
+</form>
+{% endblock %}

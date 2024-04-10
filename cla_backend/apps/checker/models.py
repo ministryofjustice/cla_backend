@@ -1,9 +1,42 @@
+import datetime
 from django.db import models
 from django.db.models import Count
+from django.utils import timezone
+from extended_choices import Choices
 from model_utils.models import TimeStampedModel
 from uuidfield import UUIDField
 
-from cla_common.constants import REASONS_FOR_CONTACTING
+from cla_common.constants import REASONS_FOR_CONTACTING, CALLBACK_TYPES
+from cla_common.call_centre_availability import SLOT_INTERVAL_MINS
+
+
+# These are all the possible start times for a callback slot,
+# a slot has a duration of 30 minutes.
+CALLBACK_TIME_SLOTS = Choices(
+    # constant, db_id, friendly string
+    ("NINE_AM", "0900", "09:00-09:30"),
+    ("HALF_NINE_AM", "0930", "09:30-10:00"),
+    ("TEN_AM", "1000", "10:00-10:30"),
+    ("HALF_TEN_AM", "1030", "10:30-11:00"),
+    ("ELEVEN_AM", "1100", "11:00-11:30"),
+    ("HALF_ELEVEN_AM", "1130", "11:30-12:00"),
+    ("TWELVE_AM", "1200", "12:00-12:30"),
+    ("HALF_TWELVE_AM", "1230", "12:30-13:00"),
+    ("ONE_PM", "1300", "13:00-13:30"),
+    ("HALF_ONE_PM", "1330", "13:30-14:00"),
+    ("TWO_PM", "1400", "14:00-14:30"),
+    ("HALF_TWO_PM", "1430", "14:30-15:00"),
+    ("THREE_PM", "1500", "15:00-15:30"),
+    ("HALF_THREE_PM", "1530", "15:30-16:00"),
+    ("FOUR_PM", "1600", "16:00-16:30"),
+    ("HALF_FOUR_PM", "1630", "16:30-17:00"),
+    ("FIVE_PM", "1700", "17:00-17:30"),
+    ("HALF_FIVE_PM", "1730", "17:30-18:00"),
+    ("SIX_PM", "1800", "18:00-18:30"),
+    ("HALF_SIX_PM", "1830", "18:30-19:00"),
+    ("SEVEN_PM", "1900", "19:00-19:30"),
+    ("HALF_SEVEN_PM", "1930", "19:30-20:00"),
+)
 
 
 class ReasonForContacting(TimeStampedModel):
@@ -178,3 +211,44 @@ class ReasonForContactingCategory(models.Model):
             return REASONS_FOR_CONTACTING.CHOICES_DICT[self.category]
         except KeyError:
             return self.category
+
+
+class CallbackTimeSlot(TimeStampedModel):
+    """
+    Represents a time slot a user can request a call back from the call centre.
+    If the slot exists then it will limit the number of the call backs that can be scheduled from the time slot.
+    If the slot does not exist then an unlimited number of callbacks can be scheduled for that time slot.
+
+    The callback slots are set via a CSV Upload in the form:
+    date, start_time, capacity
+
+    Args:
+        date (date): The date of the callback
+        time (TextField)
+    """
+
+    time = models.CharField(max_length=4, choices=CALLBACK_TIME_SLOTS.CHOICES)
+    date = models.DateField()
+    capacity = models.IntegerField()
+
+    @property
+    def remaining_capacity(self):
+        from legalaid.models import Case
+
+        count = Case.objects.filter(
+            requires_action_at__range=(
+                self.callback_start_datetime(),
+                self.callback_end_datetime() - datetime.timedelta(seconds=1),
+            ),
+            callback_type=CALLBACK_TYPES.CHECKER_SELF,
+        ).count()
+        return self.capacity - count
+
+    def callback_start_datetime(self):
+        hour = int(self.time[0:2])
+        minutes = int(self.time[2:])
+        dt = datetime.datetime.combine(self.date, datetime.time(hour=hour, minute=minutes))
+        return timezone.make_aware(dt)
+
+    def callback_end_datetime(self):
+        return self.callback_start_datetime() + datetime.timedelta(minutes=SLOT_INTERVAL_MINS)

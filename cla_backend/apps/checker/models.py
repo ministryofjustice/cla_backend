@@ -256,9 +256,8 @@ class CallbackTimeSlot(TimeStampedModel):
 
     @staticmethod
     def get_time_from_interval_string(interval):
-        hour = int(interval[0:2])
-        minutes = int(interval[2:])
-        return datetime.time(hour=hour, minute=minutes)
+        dt = datetime.datetime.strptime(interval, "%H%M")
+        return dt.time()
 
     @staticmethod
     def get_remaining_capacity_by_date(dt):

@@ -9,7 +9,8 @@ from checker.utils import get_timeslot_of_datetime, callback_capacity_threshold_
 class TestGetTimeslotOfDate(TestCase):
     CALLBACK_TIME_SLOT = "checker.callback_time_slot"
 
-    def get_no_capacity_slots(self, dt):
+    @staticmethod
+    def get_no_capacity_slots(dt):
         return [
             {"date": dt.date(), "capacity": 0, "time": "0900"},
             {"date": dt.date(), "capacity": 0, "time": "0930"},
@@ -51,7 +52,7 @@ class TestGetTimeslotOfDate(TestCase):
         slots = self.get_no_capacity_slots(dt)
         for slot in slots:
             if slot["time"] == "1800":
-                slot["capacity"] += 1
+                slot["capacity"] = 1
         self._create_callback_capacity_slots(slots)
         self._create_callback(dt.replace(hour=18, minute=0))
         self.assertTrue(callback_capacity_threshold_breached(dt))

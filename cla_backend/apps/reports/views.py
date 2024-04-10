@@ -277,6 +277,7 @@ def minimal_case_demographic_report(request):
 def problem_categorisation(request):
     return report_view(request, MITellUsMoreAboutYourProblem, "Tell us more about your problem")
 
+
 @staff_member_required
 @permission_required("legalaid.run_reports")
 def callback_time_slot_report(request):

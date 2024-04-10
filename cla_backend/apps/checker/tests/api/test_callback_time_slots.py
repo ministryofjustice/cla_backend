@@ -95,3 +95,26 @@ class CallbackTimeSlotsTestCase(SimpleResourceAPIMixin, CLACheckerAuthBaseApiTes
                 assert day in slots
             for day in days[i + 1 :]:
                 assert day not in slots
+
+    @mock.patch("cla_common.call_centre_availability.OpeningHours.available", return_value=True)
+    def test_booking_between_slots(self, _):
+        # Create callback time slots with capacity
+        tomorrow = dt.datetime.today() + dt.timedelta(days=1)
+        make_recipe(self.CALLBACK_TIME_SLOT, capacity=1, date=tomorrow, time="1400")
+        make_recipe(self.CALLBACK_TIME_SLOT, capacity=1, date=tomorrow, time="1430")
+        make_recipe(self.CALLBACK_TIME_SLOT, capacity=1, date=tomorrow, time="1500")
+
+        slots = get_available_slots(num_days=2)
+        self.assertIn(dt.datetime.combine(tomorrow, dt.time(hour=14, minute=0)), slots)
+        self.assertIn(dt.datetime.combine(tomorrow, dt.time(hour=14, minute=30)), slots)
+        self.assertIn(dt.datetime.combine(tomorrow, dt.time(hour=15, minute=0)), slots)
+
+        # Book a callback for 14:30 tomorrow.
+        requires_action_at = dt.datetime.combine(tomorrow, dt.time(hour=14, minute=30))
+        make_recipe(
+            self.LEGALAID_CASE, requires_action_at=requires_action_at, callback_type=CALLBACK_TYPES.CHECKER_SELF
+        )
+        slots = get_available_slots(num_days=2)
+        self.assertIn(dt.datetime.combine(tomorrow, dt.time(hour=14, minute=0)), slots)
+        self.assertNotIn(dt.datetime.combine(tomorrow, dt.time(hour=14, minute=30)), slots)
+        self.assertIn(dt.datetime.combine(tomorrow, dt.time(hour=15, minute=0)), slots)

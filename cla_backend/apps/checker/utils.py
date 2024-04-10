@@ -135,6 +135,6 @@ def callback_capacity_threshold_breach_send_notification(dt):
     for email_address in email_addresses:
         email.send_email(
             email_address=email_address,
-            template_id=settings.GOVUK_NOTIFY_TEMPLATES["CALLBACK_CAPACITY_THRESHOLD"],
+            template_id=settings.GOVUK_NOTIFY_TEMPLATES["CALLBACK_NO_CAPACITY_ALERT"],
             personalisation=personalisation,
         )

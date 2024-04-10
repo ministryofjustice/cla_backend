@@ -273,6 +273,33 @@ class AdaptationCaseTestCase(BaseCaseTestCase):
 
 
 class CallMeBackCaseTestCase(BaseCaseTestCase, MockGovNotifyMailBox):
+
+    DEFAULT_DT = datetime.date(2024, 1, 1)
+    NO_CAPACITY_SLOTS = [
+        {"date": DEFAULT_DT, "capacity": 0, "time": "0900"},
+        {"date": DEFAULT_DT, "capacity": 0, "time": "0930"},
+        {"date": DEFAULT_DT, "capacity": 0, "time": "1000"},
+        {"date": DEFAULT_DT, "capacity": 0, "time": "1030"},
+        {"date": DEFAULT_DT, "capacity": 0, "time": "1130"},
+        {"date": DEFAULT_DT, "capacity": 0, "time": "1200"},
+        {"date": DEFAULT_DT, "capacity": 0, "time": "1100"},
+        {"date": DEFAULT_DT, "capacity": 0, "time": "1230"},
+        {"date": DEFAULT_DT, "capacity": 0, "time": "1300"},
+        {"date": DEFAULT_DT, "capacity": 0, "time": "1330"},
+        {"date": DEFAULT_DT, "capacity": 0, "time": "1400"},
+        {"date": DEFAULT_DT, "capacity": 0, "time": "1430"},
+        {"date": DEFAULT_DT, "capacity": 0, "time": "1500"},
+        {"date": DEFAULT_DT, "capacity": 0, "time": "1530"},
+        {"date": DEFAULT_DT, "capacity": 0, "time": "1600"},
+        {"date": DEFAULT_DT, "capacity": 0, "time": "1630"},
+        {"date": DEFAULT_DT, "capacity": 0, "time": "1700"},
+        {"date": DEFAULT_DT, "capacity": 0, "time": "1730"},
+        {"date": DEFAULT_DT, "capacity": 0, "time": "1800"},
+        {"date": DEFAULT_DT, "capacity": 0, "time": "1830"},
+        {"date": DEFAULT_DT, "capacity": 0, "time": "1900"},
+        {"date": DEFAULT_DT, "capacity": 0, "time": "1930"},
+    ]
+
     @property
     def _default_dt(self):
         if not hasattr(self, "__default_dt"):
@@ -361,30 +388,7 @@ class CallMeBackCaseTestCase(BaseCaseTestCase, MockGovNotifyMailBox):
         self.assertNotEqual(case.outcome_code, "TEST")
 
     def create_callback_no_capacity_slot(self):
-        dt = self._default_dt
-        slots = [
-            {"date": dt.date(), "capacity": 0, "time": "0900"},
-            {"date": dt.date(), "capacity": 0, "time": "0930"},
-            {"date": dt.date(), "capacity": 1, "time": "1000"},
-            {"date": dt.date(), "capacity": 0, "time": "1030"},
-            {"date": dt.date(), "capacity": 0, "time": "1100"},
-            {"date": dt.date(), "capacity": 0, "time": "1130"},
-            {"date": dt.date(), "capacity": 0, "time": "1200"},
-            {"date": dt.date(), "capacity": 0, "time": "1230"},
-            {"date": dt.date(), "capacity": 0, "time": "1300"},
-            {"date": dt.date(), "capacity": 0, "time": "1330"},
-            {"date": dt.date(), "capacity": 0, "time": "1400"},
-            {"date": dt.date(), "capacity": 0, "time": "1430"},
-            {"date": dt.date(), "capacity": 0, "time": "1500"},
-            {"date": dt.date(), "capacity": 0, "time": "1530"},
-            {"date": dt.date(), "capacity": 0, "time": "1600"},
-            {"date": dt.date(), "capacity": 0, "time": "1630"},
-            {"date": dt.date(), "capacity": 0, "time": "1700"},
-            {"date": dt.date(), "capacity": 0, "time": "1730"},
-            {"date": dt.date(), "capacity": 0, "time": "1800"},
-            {"date": dt.date(), "capacity": 0, "time": "1830"},
-            {"date": dt.date(), "capacity": 0, "time": "1900"},
-            {"date": dt.date(), "capacity": 0, "time": "1930"},
-        ]
+        slots = self.NO_CAPACITY_SLOTS
+        slots[2]["capacity"] = 1
         for slot in slots:
             make_recipe("checker.callback_time_slot", date=slot["date"], time=slot["time"], capacity=slot["capacity"])

@@ -261,21 +261,23 @@ class CallbackTimeSlot(TimeStampedModel):
         return datetime.time(hour=hour, minute=minutes)
 
     @staticmethod
-    def get_remaining_capacity_by_dt(capacity, dt):
-        start = dt
-        end = dt + datetime.timedelta(minutes=SLOT_INTERVAL_MINS)
-        return CallbackTimeSlot.get_remaining_capacity_by_range(capacity, start, end)
-
-    @staticmethod
     def get_remaining_capacity_by_date(dt):
+        """
+        This function returns the remaining capacity for the specified date
+        if capacity has been allocated to all slots
+
+        If a callback slot has not been defined, it will default the capacity to
+        99999 to prevent alerting emails being sent every time someone books on a day
+        with unlimited capacity as per business requirement
+        """
         remaining_capacity = 0
         for slot_time in CALLBACK_TIME_SLOTS.CHOICES:
-            time = datetime.datetime.strptime(slot_time[0], "%H%M")
-            slot_dt = datetime.datetime.combine(dt.date(), time.time())
-            slot = CallbackTimeSlot.get_model_from_datetime(slot_dt)
-            if slot[1] is None:
+            time = CallbackTimeSlot.get_time_from_interval_string(slot_time[0])
+            slot_dt = datetime.datetime.combine(dt.date(), time)
+            _, slot = CallbackTimeSlot.get_model_from_datetime(slot_dt)
+            if slot is None:
                 return 99999
-            remaining_capacity += slot[1].remaining_capacity
+            remaining_capacity += slot.remaining_capacity
         return remaining_capacity
 
     @staticmethod

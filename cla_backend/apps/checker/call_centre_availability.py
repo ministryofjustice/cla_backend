@@ -1,7 +1,7 @@
 from cla_common.constants import OPERATOR_HOURS
 from cla_common.call_centre_availability import OpeningHours, current_datetime, SLOT_INTERVAL_MINS
 from checker.models import CallbackTimeSlot
-from checker.helpers import get_timeslot_of_datetime
+from checker.utils import get_timeslot_of_datetime
 from legalaid.models import Case
 import datetime
 

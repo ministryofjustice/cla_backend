@@ -3,7 +3,7 @@ from django.utils import timezone
 from cla_common.constants import CALLBACK_TYPES
 from core.tests.mommy_utils import make_recipe
 import datetime
-from checker.helpers import get_timeslot_of_datetime, callback_capacity_threshold_breached
+from checker.utils import get_timeslot_of_datetime, callback_capacity_threshold_breached
 
 
 class TestGetTimeslotOfDate(TestCase):

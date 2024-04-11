@@ -233,21 +233,65 @@ class CallbackTimeSlot(TimeStampedModel):
 
     @property
     def remaining_capacity(self):
+        return self.get_remaining_capacity_by_range(
+            self.capacity, self.callback_start_datetime(), self.callback_end_datetime()
+        )
+
+    @staticmethod
+    def get_model_from_datetime(dt, fallback_to_previous_week=True):
+        assert isinstance(dt, datetime.datetime)
+        is_fallback = False
+        if timezone.is_naive(dt):
+            dt = timezone.make_aware(dt)
+        model = CallbackTimeSlot.objects.filter(date=dt.date(), time=dt.strftime("%H%M")).first()
+
+        if not model and fallback_to_previous_week:
+            previous_week = dt - datetime.timedelta(weeks=1)
+            model = CallbackTimeSlot.objects.filter(
+                date=previous_week.date(), time=previous_week.strftime("%H%M")
+            ).first()
+            is_fallback = True
+
+        return is_fallback, model
+
+    @staticmethod
+    def get_time_from_interval_string(interval):
+        dt = datetime.datetime.strptime(interval, "%H%M")
+        return dt.time()
+
+    @staticmethod
+    def get_remaining_capacity_by_date(dt):
+        """
+        This function returns the remaining capacity for the specified date
+        if capacity has been allocated to all slots
+
+        If a callback slot has not been defined, it will default the capacity to
+        99999 to prevent alerting emails being sent every time someone books on a day
+        with unlimited capacity as per business requirement
+        """
+        remaining_capacity = 0
+        for slot_time in CALLBACK_TIME_SLOTS.CHOICES:
+            time = CallbackTimeSlot.get_time_from_interval_string(slot_time[0])
+            slot_dt = datetime.datetime.combine(dt.date(), time)
+            _, slot = CallbackTimeSlot.get_model_from_datetime(slot_dt)
+            if slot is None:
+                return 99999
+            remaining_capacity += slot.remaining_capacity
+        return remaining_capacity
+
+    @staticmethod
+    def get_remaining_capacity_by_range(capacity, start_dt, end_dt):
         from legalaid.models import Case
 
+        # otherwise this will match cases that have a requires_action_at of the end date(don't want it to be inclusive)
+        end_dt = end_dt - datetime.timedelta(seconds=1)
         count = Case.objects.filter(
-            requires_action_at__range=(
-                self.callback_start_datetime(),
-                self.callback_end_datetime() - datetime.timedelta(seconds=1),
-            ),
-            callback_type=CALLBACK_TYPES.CHECKER_SELF,
+            requires_action_at__range=(start_dt, end_dt), callback_type=CALLBACK_TYPES.CHECKER_SELF
         ).count()
-        return self.capacity - count
+        return capacity - count
 
     def callback_start_datetime(self):
-        hour = int(self.time[0:2])
-        minutes = int(self.time[2:])
-        dt = datetime.datetime.combine(self.date, datetime.time(hour=hour, minute=minutes))
+        dt = datetime.datetime.combine(self.date, self.get_time_from_interval_string(self.time))
         return timezone.make_aware(dt)
 
     def callback_end_datetime(self):

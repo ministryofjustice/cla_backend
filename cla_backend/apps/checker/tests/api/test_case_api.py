@@ -3,10 +3,11 @@ import uuid
 
 import mock
 from django.utils import timezone
+from django.test import override_settings
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from cla_common.constants import CASE_SOURCE
+from cla_common.constants import CASE_SOURCE, CALLBACK_TYPES
 from cla_eventlog.models import Log
 from checker.serializers import CaseSerializer
 from core.tests.mommy_utils import make_recipe
@@ -86,6 +87,9 @@ class BaseCaseTestCase(
             "personal_details": {"full_name": "Jo Bloggs", "mobile_phone": "02081234567", "safe_to_contact": "SAFE"},
             "personal_relationship": "FAMILY_FRIEND",
         }
+
+
+CALLBACK_CAPPING_THRESHOLD_NOTIFICATION = "test@digital.justice.gov.uk"
 
 
 class CaseTestCase(BaseCaseTestCase):
@@ -268,22 +272,24 @@ class AdaptationCaseTestCase(BaseCaseTestCase):
         self.test_adaptations_language()
 
 
-class CallMeBackCaseTestCase(BaseCaseTestCase):
+class CallMeBackCaseTestCase(BaseCaseTestCase, MockGovNotifyMailBox):
     @property
     def _default_dt(self):
         if not hasattr(self, "__default_dt"):
             self.__default_dt = datetime.datetime(2015, 3, 30, 10, 0, 0, 0).replace(tzinfo=timezone.utc)
         return self.__default_dt
 
+    @override_settings(CALLBACK_CAPPING_THRESHOLD_NOTIFICATION=CALLBACK_CAPPING_THRESHOLD_NOTIFICATION)
     def test_create_with_callmeback(self):
         self.assertEquals(len(self.mailbox), 0)
-
         check = make_recipe("legalaid.eligibility_check")
+        self.create_callback_no_capacity_slot()
 
         data = {
             "eligibility_check": unicode(check.reference),
             "personal_details": self.get_personal_details_default_post_data(),
             "requires_action_at": self._default_dt.isoformat(),
+            "callback_type": CALLBACK_TYPES.CHECKER_SELF,
         }
         with mock.patch(
             "cla_common.call_centre_availability.current_datetime",
@@ -326,7 +332,8 @@ class CallMeBackCaseTestCase(BaseCaseTestCase):
             },
         )
         # checking email
-        self.assertEquals(len(self.mailbox), 0)
+        self.assertEquals(len(self.mailbox), 1)
+        self.assertEquals(self.mailbox[0]["to"], CALLBACK_CAPPING_THRESHOLD_NOTIFICATION)
 
         # Check that logs are created in order
         first = Log.objects.order_by("-created").first()
@@ -352,3 +359,32 @@ class CallMeBackCaseTestCase(BaseCaseTestCase):
 
         case = Case.objects.first()
         self.assertNotEqual(case.outcome_code, "TEST")
+
+    def create_callback_no_capacity_slot(self):
+        dt = self._default_dt
+        slots = [
+            {"date": dt.date(), "capacity": 0, "time": "0900"},
+            {"date": dt.date(), "capacity": 0, "time": "0930"},
+            {"date": dt.date(), "capacity": 1, "time": "1000"},
+            {"date": dt.date(), "capacity": 0, "time": "1030"},
+            {"date": dt.date(), "capacity": 0, "time": "1100"},
+            {"date": dt.date(), "capacity": 0, "time": "1130"},
+            {"date": dt.date(), "capacity": 0, "time": "1200"},
+            {"date": dt.date(), "capacity": 0, "time": "1230"},
+            {"date": dt.date(), "capacity": 0, "time": "1300"},
+            {"date": dt.date(), "capacity": 0, "time": "1330"},
+            {"date": dt.date(), "capacity": 0, "time": "1400"},
+            {"date": dt.date(), "capacity": 0, "time": "1430"},
+            {"date": dt.date(), "capacity": 0, "time": "1500"},
+            {"date": dt.date(), "capacity": 0, "time": "1530"},
+            {"date": dt.date(), "capacity": 0, "time": "1600"},
+            {"date": dt.date(), "capacity": 0, "time": "1630"},
+            {"date": dt.date(), "capacity": 0, "time": "1700"},
+            {"date": dt.date(), "capacity": 0, "time": "1730"},
+            {"date": dt.date(), "capacity": 0, "time": "1800"},
+            {"date": dt.date(), "capacity": 0, "time": "1830"},
+            {"date": dt.date(), "capacity": 0, "time": "1900"},
+            {"date": dt.date(), "capacity": 0, "time": "1930"},
+        ]
+        for slot in slots:
+            make_recipe("checker.callback_time_slot", date=slot["date"], time=slot["time"], capacity=slot["capacity"])

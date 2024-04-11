@@ -8,7 +8,7 @@ from itertools import cycle
 from django.test import TestCase
 from psycopg2 import InternalError
 
-from cla_common.constants import CONTACT_SAFETY, REASONS_FOR_CONTACTING
+from cla_common.constants import CONTACT_SAFETY, REASONS_FOR_CONTACTING, CALLBACK_TYPES
 from legalaid.utils.diversity import save_diversity_data
 import reports.forms
 from reports.utils import OBIEEExporter
@@ -456,8 +456,8 @@ class TestCallbackTimeSlotReport(TestCase):
 
     @mock.patch("cla_common.call_centre_availability.OpeningHours.available", return_value=True)
     def test_callback_time_slots(self, _):
-        tomorrow = datetime.datetime.today() + datetime.timedelta(days=1)
-        overmorrow = datetime.datetime.today() + datetime.timedelta(days=2)
+        tomorrow = datetime.datetime(2024, 1, 2)
+        overmorrow = tomorrow + datetime.timedelta(days=1)
         date_format = "%d/%m/%Y"
         # Create callback time slots with capacity
         callbacks = {
@@ -524,11 +524,13 @@ class TestCallbackTimeSlotReport(TestCase):
                     requires_action_at=requires_action_at,
                     _quantity=callback["Used capacity"],
                     eligibility_check=None,
+                    callback_type=CALLBACK_TYPES.CHECKER_SELF,
                     notes=interval,
                 )
 
         date_range = (tomorrow, tomorrow)
         report = self.get_report(date_range)
+
         for row in report:
             row_dict = dict(row)
             self.assertEqual(row_dict["Date"], tomorrow.strftime(date_format))

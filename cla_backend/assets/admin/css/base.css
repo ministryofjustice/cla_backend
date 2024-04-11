@@ -814,11 +814,12 @@ table#change-history tbody th {
 #header h1 {
     color: #fff;
     font-size: 19px;
-    padding: 11px 10px 9px 48px;
+    padding: 11px 9px 9px 48px;
     font-size: 19px;
     margin: 0;
     font-weight: 700;
-    background: url(../../images/gov.uk_logotype_crown.png) 10px 11px no-repeat;
+    background: url(../../images/gov.uk_logotype_crown.png) 2px 2px no-repeat;
+    background-size: 45px;
 }
 
 #header a:link, #header a:visited {

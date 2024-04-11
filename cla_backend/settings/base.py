@@ -64,6 +64,9 @@ GOVUK_NOTIFY_TEMPLATES = {
     "CALLBACK_CREATED_THIRD_PARTY": os.environ.get(
         "GOVUK_NOTIFY_TEMPLATE_CALLBACK_CREATED", "d07bb321-bd1d-4fc1-8b23-80eb0f1e59a1"
     ),
+    "CALLBACK_NO_CAPACITY_ALERT": os.environ.get(
+        "GOVUK_NOTIFY_TEMPLATE_NO_CAPACITY_ALERT", "867845e8-9052-492e-b891-2dea72fe1220"
+    ),
 }
 
 
@@ -499,6 +502,10 @@ CFE_URL = (
 )
 
 EDUCATION_ALLOCATION_FEATURE_FLAG = os.environ.get("EDUCATION_ALLOCATION_FEATURE_FLAG", "False") == "True"
+
+# A notification will be sent for callback time slot if its remaining capacity drops below this threshold
+CALLBACK_CAPPING_THRESHOLD = os.environ.get("CALLBACK_CAPPING_THRESHOLD", 0)
+CALLBACK_CAPPING_THRESHOLD_NOTIFICATION = os.environ.get("CALLBACK_CAPPING_THRESHOLD_NOTIFICATION", None)
 
 # .local.py overrides all the common settings.
 try:

@@ -24,7 +24,7 @@
 
 4. Install into pyenv the python version this repo uses (which is defined in `.python-version`):
 
-    pyenv install 2.7.18 --skip-existing
+        pyenv install 2.7.18 --skip-existing
 
 ## Install
 
@@ -35,10 +35,11 @@ git clone git@github.com:ministryofjustice/cla_backend.git
 
 Ensure you have the right Python version on the path:
 ```
-cd cla_frontend
+cd cla_backend
+pyenv local 2.7.18
 python --version
 ```
-Ensure it reports `Python 2.7.18`. (This should match the version `.python-version`. If it's not correct, check your pyenv shell setup.)
+Ensure it reports `Python 2.7.18`. (If you get an error, check your pyenv shell setup.)
 
 Update 'pip' and install 'virtualenv' (in pyenv's python 2.7.18 environment):
 ```
@@ -62,6 +63,12 @@ env\scripts\activate
 
 Install python dependencies:
 ```
+pip install -r requirements/generated/requirements-dev.txt
+```
+
+If you get an error about missing `pg_config`, then you need to install postgres:
+```
+brew install postgresql
 pip install -r requirements/generated/requirements-dev.txt
 ```
 

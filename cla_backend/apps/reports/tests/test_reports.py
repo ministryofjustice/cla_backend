@@ -8,8 +8,7 @@ from itertools import cycle
 from django.test import TestCase
 from psycopg2 import InternalError
 
-from cla_common.constants import CONTACT_SAFETY, REASONS_FOR_CONTACTING
-from core.tests.mommy_utils import make_recipe
+from cla_common.constants import CONTACT_SAFETY, REASONS_FOR_CONTACTING, CALLBACK_TYPES
 from legalaid.utils.diversity import save_diversity_data
 import reports.forms
 from reports.utils import OBIEEExporter
@@ -18,6 +17,9 @@ from freezegun import freeze_time
 
 from cla_auditlog.models import AuditLog
 from checker.models import ReasonForContacting
+
+import mock
+from core.tests.mommy_utils import make_recipe
 
 
 class ReportsSQLColumnsMatchHeadersTestCase(TestCase):
@@ -37,7 +39,12 @@ class ReportsSQLColumnsMatchHeadersTestCase(TestCase):
                 inst.get_queryset()
                 len_desc = len(inst.description)
                 len_headers = len(inst.get_headers())
-                if inst.__class__.__name__ in ["MICaseExtract", "MICaseExtractExtended", "CaseDemographicsReport", "MinimalCaseDemographicsReport"]:
+                if inst.__class__.__name__ in [
+                    "MICaseExtract",
+                    "MICaseExtractExtended",
+                    "CaseDemographicsReport",
+                    "MinimalCaseDemographicsReport",
+                ]:
                     # this is due to getting multiple fields as 1 json field in sql
                     len_headers = len_headers - 3
                 self.assertEqual(
@@ -430,3 +437,101 @@ class ReasonForContactingReportTestCase(TestCase):
         self.assertEqual(stats["total_count"], 3)
         self.assertEqual(cant_answer_stats["with_cases"], 2)
         self.assertEqual(cant_answer_stats["without_cases"], 1)
+
+
+class TestCallbackTimeSlotReport(TestCase):
+    CALLBACK_TIME_SLOT = "checker.callback_time_slot"
+    LEGALAID_CASE = "legalaid.case"
+
+    def get_report(self, date_range):
+        with mock.patch("reports.forms.CallbackTimeSlotReport.date_range", date_range):
+            report = reports.forms.CallbackTimeSlotReport()
+            rows = report.get_rows()
+            headers = report.get_headers()
+            data = []
+            for row in rows:
+                data.append(zip(headers, row))
+
+        return data
+
+    @mock.patch("cla_common.call_centre_availability.OpeningHours.available", return_value=True)
+    def test_callback_time_slots(self, _):
+        tomorrow = datetime.datetime(2024, 1, 2)
+        overmorrow = tomorrow + datetime.timedelta(days=1)
+        date_format = "%d/%m/%Y"
+        # Create callback time slots with capacity
+        callbacks = {
+            "0900": {
+                "Date": tomorrow.strftime(date_format),
+                "Interval": u"0900",
+                "Total capacity": 4,
+                "Used capacity": 1,
+                "Remaining capacity": 3,
+                "% Remaining capacity": "75",
+            },
+            "1000": {
+                "Date": tomorrow.strftime(date_format),
+                "Interval": u"1000",
+                "Total capacity": 9,
+                "Used capacity": 3,
+                "Remaining capacity": 6,
+                "% Remaining capacity": "66.66",
+            },
+            "1100": {
+                "Date": tomorrow.strftime(date_format),
+                "Interval": u"1100",
+                "Total capacity": 0,
+                "Used capacity": 0,
+                "Remaining capacity": 0,
+                "% Remaining capacity": "0",
+            },
+            "1200": {
+                "Date": tomorrow.strftime(date_format),
+                "Interval": u"1200",
+                "Total capacity": 1,
+                "Used capacity": 1,
+                "Remaining capacity": 0,
+                "% Remaining capacity": "0",
+            },
+            "1300": {
+                "Date": tomorrow.strftime(date_format),
+                "Interval": u"1300",
+                "Total capacity": 1,
+                "Used capacity": 0,
+                "Remaining capacity": 1,
+                "% Remaining capacity": "100",
+            },
+            "1400": {
+                "Date": overmorrow.strftime(date_format),
+                "Interval": u"1400",
+                "Total capacity": 1,
+                "Used capacity": 0,
+                "Remaining capacity": 1,
+                "% Remaining capacity": "100",
+            },
+        }
+        for interval, callback in callbacks.iteritems():
+            # Create callback time slots
+            dt = datetime.datetime.strptime(callback["Date"], date_format)
+            make_recipe(self.CALLBACK_TIME_SLOT, capacity=callback["Total capacity"], date=dt, time=interval)
+            if callback["Used capacity"] > 0:
+                hour = int(interval[0:2])
+                minutes = int(interval[2:])
+                requires_action_at = datetime.datetime.combine(dt, datetime.time(hour=hour, minute=minutes))
+                # Create callbacks
+                make_recipe(
+                    self.LEGALAID_CASE,
+                    requires_action_at=requires_action_at,
+                    _quantity=callback["Used capacity"],
+                    eligibility_check=None,
+                    callback_type=CALLBACK_TYPES.CHECKER_SELF,
+                    notes=interval,
+                )
+
+        date_range = (tomorrow, tomorrow)
+        report = self.get_report(date_range)
+
+        for row in report:
+            row_dict = dict(row)
+            self.assertEqual(row_dict["Date"], tomorrow.strftime(date_format))
+            self.assertDictEqual(row_dict, callbacks[row_dict["Interval"]])

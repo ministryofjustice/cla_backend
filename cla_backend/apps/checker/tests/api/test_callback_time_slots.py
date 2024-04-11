@@ -97,7 +97,7 @@ class CallbackTimeSlotsTestCase(SimpleResourceAPIMixin, CLACheckerAuthBaseApiTes
                 assert day not in slots
 
     @mock.patch("cla_common.call_centre_availability.OpeningHours.available", return_value=True)
-    def test_book_between_slots(self, _):
+    def test_booking_between_slots(self, _):
         # Create callback time slots with capacity
         tomorrow = dt.datetime.today() + dt.timedelta(days=1)
         make_recipe(self.CALLBACK_TIME_SLOT, capacity=1, date=tomorrow, time="1400")

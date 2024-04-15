@@ -4,8 +4,10 @@ from rest_framework.test import APITestCase
 from core.tests.mommy_utils import make_recipe
 from core.tests.test_base import SimpleResourceAPIMixin
 from legalaid.tests.views.test_base import CLACheckerAuthBaseApiTestMixin
-from checker.call_centre_availability import get_available_slots
+from checker.call_centre_availability import get_available_slots, get_list_callback_times, count_callbacks_in_range
 from cla_common.constants import CALLBACK_TYPES
+import unittest
+from django.utils import timezone
 
 
 class CallbackTimeSlotsTestCase(SimpleResourceAPIMixin, CLACheckerAuthBaseApiTestMixin, APITestCase):
@@ -118,3 +120,56 @@ class CallbackTimeSlotsTestCase(SimpleResourceAPIMixin, CLACheckerAuthBaseApiTes
         self.assertIn(dt.datetime.combine(tomorrow, dt.time(hour=14, minute=0)), slots)
         self.assertNotIn(dt.datetime.combine(tomorrow, dt.time(hour=14, minute=30)), slots)
         self.assertIn(dt.datetime.combine(tomorrow, dt.time(hour=15, minute=0)), slots)
+
+
+class TestGetListCallbackTimes(unittest.TestCase):
+    LEGALAID_CASE = "legalaid.case"
+
+    def test_get_list_of_callback_times(self):
+        start_dt = dt.datetime.now()
+        timeslots = [start_dt + dt.timedelta(hours=i) for i in range(1, 12)]
+        for timeslot in timeslots:
+            make_recipe(self.LEGALAID_CASE, requires_action_at=timeslot, callback_type=CALLBACK_TYPES.CHECKER_SELF)
+        actual_result = get_list_callback_times(start_dt, start_dt + dt.timedelta(days=1))
+        assert len(actual_result) == len(timeslots)
+        for timeslot in timeslots:
+            assert timezone.make_aware(timeslot) in actual_result
+
+    def test_duplicate_callback_times(self):
+        start_dt = dt.datetime.now() + dt.timedelta(days=2)
+        timeslots = [start_dt, start_dt, start_dt, start_dt + dt.timedelta(hours=1)]
+        for timeslot in timeslots:
+            make_recipe(self.LEGALAID_CASE, requires_action_at=timeslot, callback_type=CALLBACK_TYPES.CHECKER_SELF)
+        actual_result = get_list_callback_times(start_dt, start_dt + dt.timedelta(days=1))
+        count = 0
+        for slot in actual_result:
+            if timezone.make_aware(start_dt) == slot:
+                count += 1
+        assert count == 3
+
+    def test_out_of_range(self):
+        timeslots = [dt.datetime(2024, 1, 1), dt.datetime(2024, 1, 3), dt.datetime(2024, 1, 5)]
+        for timeslot in timeslots:
+            make_recipe(self.LEGALAID_CASE, requires_action_at=timeslot, callback_type=CALLBACK_TYPES.CHECKER_SELF)
+        actual_result = get_list_callback_times(dt.datetime(2024, 1, 2), dt.datetime(2024, 1, 4))
+        assert len(actual_result) == 1
+
+
+class TestCountCallbacksInRange(unittest.TestCase):
+    def test_one_in_range(self):
+        list_callbacks = [dt.datetime(2024, 1, 1, 15, 0), dt.datetime(2024, 1, 3, 16, 0)]
+        assert count_callbacks_in_range(list_callbacks, dt.datetime(2024, 1, 1), dt.datetime(2024, 1, 2)) == 1
+
+    def test_none_in_range(self):
+        list_callbacks = [dt.datetime(2024, 1, 4, 15, 0), dt.datetime(2024, 1, 3, 16, 0)]
+        assert count_callbacks_in_range(list_callbacks, dt.datetime(2024, 1, 1), dt.datetime(2024, 1, 2)) == 0
+
+    def test_month_in_range(self):
+        list_callbacks = [dt.datetime(2024, 1, day) for day in range(1, 31)]
+        assert count_callbacks_in_range(list_callbacks, dt.datetime(2024, 1, 15), dt.datetime(2024, 1, 22)) == 7
+
+    def test_times(self):
+        list_callbacks = [dt.datetime(2024, 1, 1, hour) for hour in range(0, 23)]
+        assert (
+            count_callbacks_in_range(list_callbacks, dt.datetime(2024, 1, 1, 0, 0), dt.datetime(2024, 1, 1, 12)) == 12
+        )

@@ -1,4 +1,6 @@
 from django.http import Http404, JsonResponse
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from rest_framework import mixins
 from rest_framework.views import APIView
 from rest_framework.decorators import detail_route
@@ -155,6 +157,7 @@ class ReasonForContactingViewSet(
 
 
 class CallbackTimeSlotViewSet(PublicAPIViewSetMixin, APIView):
+    @method_decorator(cache_page(10))  # This is an expensive call
     def get(self, request, *args, **kwargs):
         """Get router for the callback timeslot API.
 
@@ -167,17 +170,16 @@ class CallbackTimeSlotViewSet(PublicAPIViewSetMixin, APIView):
         """
 
         try:
-            requested_num_days = int(request.GET.get('num_days', default=7))
+            requested_num_days = int(request.GET.get("num_days", default=7))
             num_days = max(min(requested_num_days, 31), 1)
         except ValueError:
             raise ParseError(detail="Invalid value for num_days sent to callback_timeslots endpoint")
 
         try:
-            third_party_callback = request.GET.get('third_party_callback', default=False) == "True"
+            third_party_callback = request.GET.get("third_party_callback", default=False) == "True"
         except ValueError:
             raise ParseError(detail="Invalid value for third_party_callback sent to callback_timeslots endpoint")
 
         slots = get_available_slots(num_days, third_party_callback)
-        response = {"slot_duration_minutes": SLOT_INTERVAL_MINS,
-                    "slots": slots}
+        response = {"slot_duration_minutes": SLOT_INTERVAL_MINS, "slots": slots}
         return JsonResponse(response)

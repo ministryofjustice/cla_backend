@@ -121,7 +121,7 @@ def get_available_slots(num_days=7, is_third_party_callback=False):
         Dict: Dictionary of callback slots in the form: {"YYYYMMDD":  {"HHMM": {"start": datetime, "end": datetime}}}
     """
     start_dt = current_datetime()
-    end_dt = start_dt + datetime.timedelta(days=7)
+    end_dt = start_dt + datetime.timedelta(days=num_days)
     days = [start_dt]
     # Generate time slots options for call on another day select options
     if num_days > 1:

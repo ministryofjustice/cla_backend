@@ -87,10 +87,10 @@ def get_list_callback_times(start_dt, end_dt):
     Returns:
         list[datetime.datetime]: List of requested callback times.
     """
-    valid_cases = Case.objects.filter(
+    callback_times = Case.objects.filter(
         requires_action_at__range=(start_dt, end_dt), callback_type=CALLBACK_TYPES.CHECKER_SELF
     ).values_list("requires_action_at", flat=True)
-    return valid_cases
+    return callback_times
 
 
 def count_callbacks_in_range(callback_times, start_dt, end_dt):

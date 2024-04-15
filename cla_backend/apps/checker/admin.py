@@ -45,8 +45,8 @@ class CallbackTimeSlotAdmin(admin.ModelAdmin):
         return render(request, "admin/checker/callback-time-slots/csv-upload.html", {"form": form})
 
     def get_queryset(self, request):
-        """If there are no query arguments then only return a weeks worth of slots.
-            This decreases the initial page load time by showing the most relevant data first
+        """ If there are no query arguments then only return a weeks worth of slots.
+            This decreases the initial page load time by initially only loading the most relevant data
 
         Args:
             request (django.request)

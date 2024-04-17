@@ -275,7 +275,6 @@ class CallbackTimeSlot(TimeStampedModel):
             time = CallbackTimeSlot.get_time_from_interval_string(slot_time[0])
             slot_dt = datetime.datetime.combine(dt.date(), time)
             _, slot = CallbackTimeSlot.get_model_from_datetime(slot_dt)
-
             if slot is None:
                 return 99999
             if slot_dt >= (datetime.datetime.now() + timedelta(hours=2)):

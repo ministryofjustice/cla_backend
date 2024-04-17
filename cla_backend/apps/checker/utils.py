@@ -117,9 +117,7 @@ def callback_capacity_threshold_breached(date):
         return False
 
     # All slots need to exceed the capacity for it to be a breach
-    if CallbackTimeSlot.get_remaining_capacity_by_date(date) == 0:
-        return True
-    return False
+    return CallbackTimeSlot.is_threshold_breached_on_date(date)
 
 
 def callback_capacity_threshold_breach_send_notification(dt):

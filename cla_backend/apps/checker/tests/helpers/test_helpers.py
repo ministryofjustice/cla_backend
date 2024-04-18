@@ -48,16 +48,16 @@ class TestGetTimeslotOfDate(TestCase):
         tomorrow = datetime.datetime.today() + datetime.timedelta(days=1)
         self.assertIsNone(get_timeslot_of_datetime(datetime.datetime.combine(tomorrow, datetime.time(10, 0))))
 
-    @freeze_time("2024-04-04")
     def test_date_breached_threshold(self):
-        dt = datetime.datetime(2024, 4, 4, 15, 59, 0, 0).replace(tzinfo=timezone.utc)
+        dt = datetime.datetime(2024, 4, 3, 9, 0, 0, 0).replace(tzinfo=timezone.utc)
         slots = self.get_no_capacity_slots(dt)
         for slot in slots:
             if slot["time"] == "1800":
                 slot["capacity"] = 1
+                slot["date"] = dt.date()
         self._create_callback_capacity_slots(slots)
         self._create_callback(dt.replace(hour=18, minute=0))
-        self.assertFalse(callback_capacity_threshold_breached(dt))
+        self.assertTrue(callback_capacity_threshold_breached(dt))
 
     @freeze_time("2024-03-27")
     def test_date_breached_threshold_from_previous_week(self):

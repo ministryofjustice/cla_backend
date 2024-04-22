@@ -6,6 +6,7 @@ from django.contrib import admin, messages
 from django.http.response import HttpResponseRedirect
 from checker.models import ReasonForContacting, CallbackTimeSlot
 from checker.forms import CallbackTimeSlotCSVUploadForm
+
 import datetime
 
 
@@ -20,6 +21,7 @@ class CallbackTimeSlotAdmin(admin.ModelAdmin):
     list_display = ("date", "time", "capacity", "remaining_capacity")
     date_hierarchy = "date"
     ordering = ("-date", "time")
+
 
     def get_urls(self):
         urls = super(CallbackTimeSlotAdmin, self).get_urls()

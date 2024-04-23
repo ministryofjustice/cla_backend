@@ -20,8 +20,7 @@ class CallbackTimeSlotAdmin(admin.ModelAdmin):
     change_list_template = "admin/checker/callback-time-slots/custom_change_list.html"
     list_display = ("date", "time", "capacity", "remaining_capacity")
     date_hierarchy = "date"
-    ordering = ("-date", "time")
-
+    ordering = ("date", "time")
 
     def get_urls(self):
         urls = super(CallbackTimeSlotAdmin, self).get_urls()

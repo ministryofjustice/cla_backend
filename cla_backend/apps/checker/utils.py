@@ -55,6 +55,7 @@ class CallbackTimeSlotCSVImporter(object):
         try:
             time = row[CSV_COL_TIME].strip()
             # Excel will sometimes remove the leading zero from values it interprets as numbers.
+            # If the first number isn't a 0, 1 or 2 it will add a leading 0
             if not time[0] in ["0", "1", "2"]:
                 time = "0{time}".format(time=time)
             assert time in CALLBACK_TIME_SLOTS

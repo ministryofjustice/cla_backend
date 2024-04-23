@@ -6,7 +6,8 @@ from django.contrib import admin, messages
 from django.http.response import HttpResponseRedirect
 from checker.models import ReasonForContacting, CallbackTimeSlot
 from checker.forms import CallbackTimeSlotCSVUploadForm
-import datetime as dt
+
+import datetime
 
 
 class ReasonForContactingAdmin(admin.ModelAdmin):
@@ -55,8 +56,8 @@ class CallbackTimeSlotAdmin(admin.ModelAdmin):
             QuerySet: QuerySet of relevant callback time slots
         """
         if len(request.GET.items()) == 0:
-            today = dt.date.today()
-            week_range = (today, today + dt.timedelta(days=7))
+            today = datetime.date.today()
+            week_range = (today, today + datetime.timedelta(days=7))
             qs = CallbackTimeSlot.objects.filter(date__range=week_range)
             return qs
         qs = super(CallbackTimeSlotAdmin, self).get_queryset(request)

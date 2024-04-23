@@ -53,8 +53,13 @@ class CallbackTimeSlotCSVImporter(object):
         except Exception:
             raise ValidationError(message=dict(date="Write the date in this format: dd/mm/yyyy"))
         try:
-            assert row[CSV_COL_TIME].strip() in CALLBACK_TIME_SLOTS
-            row[CSV_COL_TIME] = row[CSV_COL_TIME].strip()
+            time = row[CSV_COL_TIME].strip()
+            # Excel will sometimes remove the leading zero from values it interprets as numbers.
+            # If the first number isn't a 0, 1 or 2 it will add a leading 0
+            if not time[0] in ["0", "1", "2"]:
+                time = "0{time}".format(time=time)
+            assert time in CALLBACK_TIME_SLOTS
+            row[CSV_COL_TIME] = time
         except Exception:
             raise ValidationError(
                 message=dict(time="Check the time is correct, for example, 1500 (for the 1500 to 1530 slot)")

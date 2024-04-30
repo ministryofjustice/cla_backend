@@ -32,7 +32,7 @@ WITH F2F as (
       LEFT OUTER JOIN diagnosis_diagnosistraversal as diagnosis on c.diagnosis_id = diagnosis.id
       LEFT OUTER JOIN legalaid_category as category on diagnosis.category_id = category.id
     WHERE
-      log.code in ('COSPF', 'SPFN', 'SPFM')
+      log.code in ('COSPF', 'SPFN', 'SPFM', 'EDFF')
 ), ALLREF as (
 
   SELECT f2f.*, kb.id as kb_id from F2F

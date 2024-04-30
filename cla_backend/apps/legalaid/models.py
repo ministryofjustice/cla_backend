@@ -1,3 +1,4 @@
+import json
 import logging
 import datetime
 import re
@@ -21,7 +22,6 @@ from core.cloning import clone_model, CloneModelMixin
 
 from eligibility_calculator.models import CaseData
 from eligibility_calculator.calculator import EligibilityChecker
-from eligibility_calculator.exceptions import PropertyExpectedException
 
 from diagnosis.models import DiagnosisTraversal
 
@@ -42,6 +42,7 @@ from cla_common.constants import (
     EXPRESSIONS_OF_DISSATISFACTION,
     RESEARCH_CONTACT_VIA,
     CALLBACK_WINDOW_TYPES,
+    CALLBACK_TYPES,
 )
 
 from legalaid.fields import MoneyField
@@ -68,6 +69,9 @@ def _check_reference_unique(reference):
 
 
 class Category(TimeStampedModel):
+    class Analytics:
+        _allow_analytics = True
+
     name = models.CharField(max_length=500)
     code = models.CharField(max_length=50, unique=True)
     raw_description = models.TextField(blank=True)
@@ -85,6 +89,7 @@ class Category(TimeStampedModel):
 
 
 class Savings(CloneModelMixin, TimeStampedModel):
+
     bank_balance = MoneyField(default=None, null=True, blank=True)
     investment_balance = MoneyField(default=None, null=True, blank=True)
     asset_balance = MoneyField(default=None, null=True, blank=True)
@@ -94,6 +99,7 @@ class Savings(CloneModelMixin, TimeStampedModel):
 
 
 class Income(CloneModelMixin, TimeStampedModel):
+
     earnings = MoneyIntervalField(default=None, null=True, blank=True)
     self_employment_drawings = MoneyIntervalField(default=None, null=True, blank=True)
     benefits = MoneyIntervalField(default=None, null=True, blank=True)
@@ -108,6 +114,7 @@ class Income(CloneModelMixin, TimeStampedModel):
 
 
 class Deductions(CloneModelMixin, TimeStampedModel):
+
     income_tax = MoneyIntervalField(default=None, null=True, blank=True)
     national_insurance = MoneyIntervalField(default=None, null=True, blank=True)
     maintenance = MoneyIntervalField(default=None, null=True, blank=True)
@@ -120,6 +127,9 @@ class Deductions(CloneModelMixin, TimeStampedModel):
 
 
 class ContactResearchMethod(CloneModelMixin, TimeStampedModel):
+    class Analytics:
+        _allow_analytics = True
+
     method = models.CharField(max_length=10)
     reference = UUIDField(auto=True, unique=True)
 
@@ -128,6 +138,23 @@ class ContactResearchMethod(CloneModelMixin, TimeStampedModel):
 
 
 class PersonalDetails(CloneModelMixin, TimeStampedModel):
+    class Analytics:
+        _allow_analytics = True
+        _PII = [
+            "date_of_birth",
+            "diversity",
+            "email",
+            "full_name",
+            "home_phone",
+            "id",
+            "mobile_phone",
+            "postcode",
+            "search_field",
+            "street",
+            "title",
+            "vulnerable_user",
+        ]
+
     title = models.CharField(max_length=20, blank=True, null=True)
     full_name = models.CharField(max_length=400, blank=True, null=True)
     postcode = models.CharField(max_length=12, blank=True, null=True)
@@ -157,6 +184,8 @@ class PersonalDetails(CloneModelMixin, TimeStampedModel):
 
     # only normalised version of post code for now
     search_field = models.TextField(null=True, blank=True, db_index=True)
+
+    announce_call = models.NullBooleanField()
 
     cloning_config = {"excludes": ["reference", "created", "modified", "case_count", "search_field"]}
 
@@ -213,6 +242,10 @@ class PersonalDetails(CloneModelMixin, TimeStampedModel):
 
 
 class ThirdPartyDetails(CloneModelMixin, TimeStampedModel):
+    class Analytics:
+        _allow_analytics = True
+        _PII = ["personal_relationship_note"]
+
     personal_details = models.ForeignKey(PersonalDetails)
     pass_phrase = models.CharField(max_length=255, blank=True, null=True)
     reason = models.CharField(max_length=30, choices=THIRDPARTY_REASON, null=True, blank=True, default="")
@@ -234,6 +267,10 @@ class ThirdPartyDetails(CloneModelMixin, TimeStampedModel):
 
 
 class AdaptationDetails(CloneModelMixin, TimeStampedModel):
+    class Analytics:
+        _allow_analytics = True
+        _PII = ["notes"]
+
     bsl_webcam = models.BooleanField(default=False)
     minicom = models.BooleanField(default=False)
     text_relay = models.BooleanField(default=False)
@@ -255,6 +292,10 @@ class EODDetailsManager(models.Manager):
 
 
 class EODDetails(TimeStampedModel):
+    class Analytics:
+        _allow_analytics = True
+        _PII = ["notes"]
+
     case = models.OneToOneField("Case", related_name="eod_details")
     notes = models.TextField(blank=True)
     reference = UUIDField(auto=True, unique=True)
@@ -294,6 +335,9 @@ class EODDetails(TimeStampedModel):
 
 
 class EODDetailsCategory(models.Model):
+    class Analytics:
+        _allow_analytics = True
+
     eod_details = models.ForeignKey(EODDetails, related_name="categories")
     category = models.CharField(max_length=30, choices=EXPRESSIONS_OF_DISSATISFACTION, blank=True, null=True)
     is_major = models.BooleanField(default=False)
@@ -307,6 +351,7 @@ class EODDetailsCategory(models.Model):
 
 
 class Person(CloneModelMixin, TimeStampedModel):
+
     income = models.ForeignKey(Income, blank=True, null=True)
     savings = models.ForeignKey(Savings, blank=True, null=True)
     deductions = models.ForeignKey(Deductions, blank=True, null=True)
@@ -370,6 +415,9 @@ class ValidateModelMixin(models.Model):
 
 
 class EligibilityCheck(TimeStampedModel, ValidateModelMixin):
+    class Analytics:
+        _allow_analytics = True
+
     reference = UUIDField(auto=True, unique=True)
 
     category = models.ForeignKey(Category, blank=True, null=True)
@@ -418,36 +466,26 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin):
     def get_eligibility_state(self):
         """
         Returns one of the ELIGIBILITY_STATES values depending on if the model
-        is eligible or not. If PropertyExpectedException is raised, it means
-        that we don't have enough data to determine the state so we set the
-        `state` property to UNKNOWN.
+        is eligible or not, or UNKNOWN if there isn't enough data (yet) to determine.
         """
-        ec = EligibilityChecker(self.to_case_data())
+        case_data = self.to_case_data()
+        case_data_dict, case_data_dict_missing = case_data.to_dict()
+        logger.debug("CaseData %s" % json.dumps(case_data_dict, indent=4, sort_keys=True))
+        logger.debug("CaseData is missing: %s" % json.dumps(case_data_dict_missing, indent=4, sort_keys=True))
+        ec = EligibilityChecker(case_data)
+        eligibility_state, is_gross_income_eligible, is_disposable_income_eligible, is_disposable_capital_eligible = (
+            ec.is_eligible_with_reasons()
+        )
 
-        try:
-            if ec.is_eligible():
-                return ELIGIBILITY_STATES.YES, ec, []
-            else:
-                return ELIGIBILITY_STATES.NO, ec, self.get_ineligible_reason(ec)
-        except PropertyExpectedException:
-            return ELIGIBILITY_STATES.UNKNOWN, ec, []
-
-    def get_ineligible_reason(self, ec=None):
-        ec = ec or EligibilityChecker(self.to_case_data())
         reasons = []
-
-        def add_reason(meth, reason):
-            try:
-                if not meth():
-                    reasons.append(reason)
-            except PropertyExpectedException:
-                pass
-
-        add_reason(ec.is_disposable_capital_eligible, ELIGIBILITY_REASONS.DISPOSABLE_CAPITAL)
-        add_reason(ec.is_gross_income_eligible, ELIGIBILITY_REASONS.GROSS_INCOME)
-        add_reason(ec.is_disposable_income_eligible, ELIGIBILITY_REASONS.DISPOSABLE_INCOME)
-
-        return reasons
+        if eligibility_state == ELIGIBILITY_STATES.NO:
+            if is_disposable_capital_eligible is False:
+                reasons.append(ELIGIBILITY_REASONS.DISPOSABLE_CAPITAL)
+            if is_gross_income_eligible is False:
+                reasons.append(ELIGIBILITY_REASONS.GROSS_INCOME)
+            if is_disposable_income_eligible is False:
+                reasons.append(ELIGIBILITY_REASONS.DISPOSABLE_INCOME)
+        return eligibility_state, ec, reasons
 
     def update_state(self):
         self.state, checker, reasons = self.get_eligibility_state()
@@ -604,6 +642,7 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin):
 
 
 class Property(TimeStampedModel):
+
     value = MoneyField(default=None, null=True, blank=True)
     mortgage_left = MoneyField(default=None, null=True, blank=True)
     share = models.PositiveIntegerField(default=None, validators=[MaxValueValidator(100)], null=True, blank=True)
@@ -617,6 +656,9 @@ class Property(TimeStampedModel):
 
 
 class MatterType(TimeStampedModel):
+    class Analytics:
+        _allow_analytics = True
+
     category = models.ForeignKey(Category)
     code = models.CharField(max_length=4)
     description = models.CharField(max_length=255)
@@ -645,6 +687,10 @@ class MediaCode(TimeStampedModel):
 
 
 class Case(TimeStampedModel):
+    class Analytics:
+        _allow_analytics = True
+        _PII = ["notes", "provider_notes", "source"]
+
     reference = models.CharField(max_length=128, unique=True, editable=False)
     eligibility_check = models.OneToOneField(EligibilityCheck, null=True, blank=True)
     diagnosis = models.OneToOneField("diagnosis.DiagnosisTraversal", null=True, blank=True, on_delete=SET_NULL)
@@ -663,6 +709,9 @@ class Case(TimeStampedModel):
     )
 
     requires_action_at = models.DateTimeField(auto_now=False, blank=True, null=True)
+
+    callback_type = models.CharField(max_length=20, choices=CALLBACK_TYPES.CHOICES, blank=True, null=True)
+
     callback_window_type = models.CharField(
         max_length=50,
         choices=CALLBACK_WINDOW_TYPES.CHOICES,
@@ -841,6 +890,7 @@ class Case(TimeStampedModel):
                     "modified",
                     "outcome_code_id",
                     "requires_action_at",
+                    "callback_type",
                     "callback_attempt",
                     "search_field",
                     "provider_assigned_at",
@@ -978,6 +1028,9 @@ class Case(TimeStampedModel):
 
 
 class CaseNotesHistory(TimeStampedModel):
+    class Analytics:
+        _PII = ["operator_notes", "provider_notes"]
+
     case = models.ForeignKey(Case, db_index=True)
     operator_notes = models.TextField(null=True, blank=True)
     provider_notes = models.TextField(null=True, blank=True)
@@ -998,6 +1051,9 @@ class CaseNotesHistory(TimeStampedModel):
 
 
 class CaseKnowledgebaseAssignment(TimeStampedModel):
+    class Analytics:
+        _allow_analytics = True
+
     case = models.ForeignKey(Case)
     alternative_help_article = models.ForeignKey("knowledgebase.Article")
     assigned_by = models.ForeignKey("auth.User", blank=True, null=True)

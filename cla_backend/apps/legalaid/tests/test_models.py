@@ -7,7 +7,6 @@ from django.test import SimpleTestCase, TestCase
 from django.utils import timezone
 
 from eligibility_calculator.models import CaseData, ModelMixin
-from eligibility_calculator.exceptions import PropertyExpectedException
 
 from cla_common.constants import (
     ELIGIBILITY_STATES,
@@ -634,20 +633,20 @@ class EligibilityCheckTestCase(TestCase):
     @mock.patch("legalaid.models.EligibilityChecker")
     def test_update_state(self, MockedEligibilityChecker):
         """
-        calling .is_eligible() sequencially will:
+        calling .is_eligible_with_reasons() sequentially will:
 
-        1. through PropertyExpectedException
-        2. return True
-        3. return False
-        4. through PropertyExpectedException again
+        1. return "unknown"
+        2. return "yes"
+        3. return "no"
+        4. return "unknown" again
         """
         mocked_checker = MockedEligibilityChecker()
         mocked_checker.calcs = {}
-        mocked_checker.is_eligible.side_effect = [
-            PropertyExpectedException(),
-            True,
-            False,
-            PropertyExpectedException(),
+        mocked_checker.is_eligible_with_reasons.side_effect = [
+            ("unknown", False, False, False),
+            ("yes", True, True, True),
+            ("no", False, True, True),
+            ("unknown", False, True, True),
         ]
 
         # 1. PropertyExpectedException => UNKNOWN
@@ -1140,6 +1139,7 @@ class CloneModelsTestCase(CloneModelsTestCaseMixin, TestCase):
                 vulnerable_user=True,
                 safe_to_contact=CONTACT_SAFETY.SAFE,
                 case_count=2,
+                announce_call=False,
             ),
             non_equal_fields=["id", "created", "modified", "reference", "case_count"],
             equal_fields=[
@@ -1160,6 +1160,7 @@ class CloneModelsTestCase(CloneModelsTestCaseMixin, TestCase):
                 "diversity_modified",
                 "search_field",
                 "contact_for_research_via",
+                "announce_call",
             ],
         )
 
@@ -1417,6 +1418,7 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
             "complaint_flag",
             "organisation",
             "callback_window_type",
+            "callback_type",
         ]
 
         if internal:
@@ -1449,6 +1451,7 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
             "outcome_code_id": None,
             "level": None,
             "requires_action_at": None,
+            "callback_type": None,
             "callback_attempt": 0,
             "is_urgent": False,
             # it should keep these values from the original case

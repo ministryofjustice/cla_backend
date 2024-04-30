@@ -29,13 +29,14 @@ cffi==1.15.1
     # via cryptography
 chardet==4.0.0
     # via requests
-https://github.com/ministryofjustice/cla_common/archive/refs/tags/0.3.20.tar.gz
+https://github.com/ministryofjustice/cla_common/archive/refs/tags/0.3.23.tar.gz
     # via -r requirements/source/requirements-base.in
 configparser==4.0.2
     # via importlib-metadata
 contextlib2==0.6.0.post1
     # via
     #   importlib-metadata
+    #   vcrpy
     #   zipp
 coverage==4.5.4
     # via
@@ -59,6 +60,10 @@ django-braces==1.8.1
     # via
     #   -r requirements/source/requirements-base.in
     #   django-oauth-toolkit
+django-cookies-samesite==0.9.0
+    # via -r requirements/source/requirements-base.in
+django-csp==3.7
+    # via -r requirements/source/requirements-base.in
 django-docopt-command==0.2.0
     # via -r requirements/source/requirements-base.in
 django-extended-choices==0.3.0
@@ -72,6 +77,8 @@ django-ipware==0.1.0
 django-model-utils==2.2
     # via -r requirements/source/requirements-base.in
 https://github.com/said-moj/django-moj-irat/archive/refs/tags/0.3.1.tar.gz
+    # via -r requirements/source/requirements-base.in
+django-nested-admin==3.2.4
     # via -r requirements/source/requirements-base.in
 django-oauth-toolkit==0.11.0
     # via -r requirements/source/requirements-base.in
@@ -88,6 +95,7 @@ django-uuidfield==0.5.0
 django==1.8.19
     # via
     #   -r requirements/source/requirements-base.in
+    #   django-csp
     #   django-model-utils
     #   django-moj-irat
     #   django-oauth-toolkit
@@ -155,7 +163,9 @@ lxml==4.9.1
 markdown==2.5.2
     # via -r requirements/source/requirements-base.in
 mock==1.0.1
-    # via -r requirements/source/requirements-testing.in
+    # via
+    #   -r requirements/source/requirements-testing.in
+    #   vcrpy
 model-mommy==1.2.4
     # via -r requirements/source/requirements-testing.in
 monotonic==1.6
@@ -195,13 +205,17 @@ python-dateutil==2.2
     #   cla-common
     #   csvkit
     #   freezegun
+python-monkey-business==1.0.0
+    # via django-nested-admin
 pytz==2021.1
     # via
     #   -r requirements/source/requirements-base.in
     #   celery
     #   cla-common
 pyyaml==5.4
-    # via -r requirements/source/requirements-base.in
+    # via
+    #   -r requirements/source/requirements-base.in
+    #   vcrpy
 requests==2.27.1
     # via
     #   -r requirements/source/requirements-base.in
@@ -221,13 +235,16 @@ six==1.16.0
     #   cryptography
     #   csvkit
     #   django-braces
+    #   django-nested-admin
     #   django-oauth-toolkit
     #   freezegun
     #   model-mommy
     #   pathlib2
     #   pyopenssl
     #   python-dateutil
+    #   python-monkey-business
     #   unittest-xml-reporting
+    #   vcrpy
 speaklater==1.3
     # via cla-common
 sqlalchemy==1.4.46
@@ -236,6 +253,8 @@ transifex-client==0.11b3
     # via -r requirements/source/requirements-base.in
 typing==3.10.0.0
     # via pathlib2
+ua-parser==0.10.0
+    # via django-cookies-samesite
 unittest-xml-reporting==2.5.1
     # via -r requirements/source/requirements-testing.in
 urllib3-secure-extra==0.1.0
@@ -248,10 +267,14 @@ urllib3[secure]==1.26.14
     #   sentry-sdk
 uwsgi==2.0.18
     # via -r requirements/source/requirements-base.in
+vcrpy==3.0.0
+    # via -r requirements/source/requirements-testing.in
 vine==1.3.0
     # via amqp
 webencodings==0.5.1
     # via bleach
+wrapt==1.15.0
+    # via vcrpy
 xlrd==2.0.1
     # via csvkit
 zipp==1.2.0

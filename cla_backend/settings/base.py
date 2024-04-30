@@ -64,6 +64,9 @@ GOVUK_NOTIFY_TEMPLATES = {
     "CALLBACK_CREATED_THIRD_PARTY": os.environ.get(
         "GOVUK_NOTIFY_TEMPLATE_CALLBACK_CREATED", "d07bb321-bd1d-4fc1-8b23-80eb0f1e59a1"
     ),
+    "CALLBACK_NO_CAPACITY_ALERT": os.environ.get(
+        "GOVUK_NOTIFY_TEMPLATE_NO_CAPACITY_ALERT", "867845e8-9052-492e-b891-2dea72fe1220"
+    ),
 }
 
 
@@ -182,6 +185,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "iia425u_J_pwntnEyqBuI1xBDqOX8nZ4uC73e
 
 MIDDLEWARE_CLASSES = (
     "django.middleware.locale.LocaleMiddleware",
+    "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -190,7 +194,11 @@ MIDDLEWARE_CLASSES = (
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "status.middleware.MaintenanceModeMiddleware",
+    "django_cookies_samesite.middleware.CookiesSameSite",
 )
+
+if not DEBUG:
+    MIDDLEWARE_CLASSES += ("csp.middleware.CSPMiddleware",)
 
 ROOT_URLCONF = "cla_backend.urls"
 
@@ -225,6 +233,7 @@ INSTALLED_APPS = (
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "nested_admin",
     "djorm_pgfulltext",
     "session_security",
 )
@@ -327,6 +336,31 @@ if "SENTRY_DSN" in os.environ:
 
 LOGIN_FAILURE_LIMIT = 5
 LOGIN_FAILURE_COOLOFF_TIME = 60  # in minutes
+
+# Whether to use the non-RFC standard httpOnly flag (IE, FF3+, others)
+SESSION_COOKIE_HTTPONLY = True
+CSRF_COOKIE_HTTPONLY = True
+
+# Whether the session cookie should be secure (https:// only).
+CSRF_COOKIE_SECURE = not DEBUG
+SESSION_COOKIE_SECURE = not DEBUG
+
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SESSION_COOKIE_SAMESITE = "strict"
+
+CSP_DEFAULT_SRC = ["'self'"]
+CSP_SCRIPT_SRC = ["'self'", "'unsafe-inline'"]
+if "localhost" in ALLOWED_HOSTS:
+    CSP_DEFAULT_SRC += "localhost:*"
+CSP_FONT_SRC = ["'self'", "data:"]
+CSP_STYLE_SRC = ["'self'", "'unsafe-inline'"]
+
+if AWS_STORAGE_BUCKET_NAME:
+    AWS_STORAGE_BUCKET_HOSTNAME = AWS_STORAGE_BUCKET_NAME + ".s3.amazonaws.com"
+    CSP_DEFAULT_SRC.append(AWS_STORAGE_BUCKET_HOSTNAME)
+    CSP_FONT_SRC.append(AWS_STORAGE_BUCKET_HOSTNAME)
+    CSP_STYLE_SRC.append(AWS_STORAGE_BUCKET_HOSTNAME)
+    CSP_SCRIPT_SRC.append(AWS_STORAGE_BUCKET_HOSTNAME)
 
 # Django rest-framework-overrides
 REST_FRAMEWORK = {
@@ -462,6 +496,16 @@ PASSIVE_URL_REGEX_LIST = [r"^(?!\/admin\/).*", r"^(\/admin\/).*\/exports/$"]
 SESSION_SECURITY_PASSIVE_URLS = []
 
 EMAIL_ORCHESTRATOR_URL = os.environ.get("EMAIL_ORCHESTRATOR_URL")
+
+CFE_URL = (
+    os.environ.get("CFE_HOST", "https://cfe-civil-staging.cloud-platform.service.justice.gov.uk") + "/v6/assessments"
+)
+
+EDUCATION_ALLOCATION_FEATURE_FLAG = os.environ.get("EDUCATION_ALLOCATION_FEATURE_FLAG", "False") == "True"
+
+# A notification will be sent for callback time slot if its remaining capacity drops below this threshold
+CALLBACK_CAPPING_THRESHOLD = os.environ.get("CALLBACK_CAPPING_THRESHOLD", 0)
+CALLBACK_CAPPING_THRESHOLD_NOTIFICATION = os.environ.get("CALLBACK_CAPPING_THRESHOLD_NOTIFICATION", None)
 
 # .local.py overrides all the common settings.
 try:

@@ -15,7 +15,7 @@ from cla_eventlog import event_registry
 from complaints.constants import SLA_DAYS
 from knowledgebase.models import Article
 from reports.widgets import MonthYearWidget
-from checker.models import ReasonForContacting
+from checker.models import ReasonForContacting, CallbackTimeSlot
 
 from . import sql
 from .utils import get_reports_cursor, set_local_time_for_query
@@ -407,42 +407,44 @@ class CaseDemographicsReport(SQLFileDateRangeReport):
 
     def get_headers(self):
         return [
-            "LAA_Reference",
-            "Hash_ID",
-            "Case_ID",
-            "Provider_ID",
-            "Category_Name",
-            "Date_Case_Created",
-            "Matter_Type_1",
-            "Matter_Type_2",
-            "Scope_Status",
-            "Eligibility_Status",
-            "Adjustments_BSL",
-            "Adjustments_LLI",
-            "Adjustments_MIN",
-            "Adjustments_TYP",
-            "Adjustments_CallbackPreferred",
-            "Adjustments_Skype",
+            "LAA Reference",
+            "Hash ID",
+            "Case ID",
+            "Provider ID",
+            "Category Name",
+            "Date Case Created",
+            "Matter Type 1",
+            "Matter Type 2",
+            "Scope Status",
+            "Eligibility Status",
+            "Adjustments BSL",
+            "Adjustments LLI",
+            "Adjustments MIN",
+            "Adjustments TYP",
+            "Adjustments Callback Preferred",
+            "Adjustments Skype",
             "Gender",
             "Ethnicity",
             "Age(Range)",
             "Religion",
             "Sexual_Orientation",
             "Disability",
-            "Media_Code",
-            "Contact_Type",
-            "Referral_Agencies",
-            "Exempt_Client",
+            "Media Code",
+            "Contact Type",
+            "Referral Agencies",
+            "Exempt Client",
             "Welsh",
             "Language",
-            "Outcome_Created_At",
-            "Has_Third_Party",
+            "Outcome code",
+            "Outcome Created At",
+            "Has Third Party",
             "Organisation",
             "Notes",
             "Provider Notes",
             "Adaptation Notes",
             "Vulnerable User",
-            "Geographical_region",
+            "Geographical Region",
+            "Postcode",
         ]
 
     def get_rows(self):
@@ -465,7 +467,84 @@ class CaseDemographicsReport(SQLFileDateRangeReport):
         passphrase = self.cleaned_data.get("passphrase")
 
         if passphrase:
-            diversity_expression = "pgp_pub_decrypt(pd.diversity, dearmor('{key}'), %s)::json".format(
+            diversity_expression = "pgp_pub_decrypt(personal_details.diversity, dearmor('{key}'), %s)::json".format(
+                key=diversity.get_private_key()
+            )
+        else:
+            diversity_expression = "%s as placeholder, '{}'::json"
+
+        sql = self.query.format(diversity_expression=diversity_expression)
+        sql_args = [passphrase] + list(self.date_range)
+        return self.execute_query(sql, sql_args)
+
+
+class MinimalCaseDemographicsReport(SQLFileDateRangeReport):
+    QUERY_FILE = "MinimalCaseDemographicsReport.sql"
+
+    passphrase = forms.CharField(
+        required=False, help_text="Optional. If not provided, the report will not include diversity data"
+    )
+
+    def get_headers(self):
+        return [
+            "LAA Reference",
+            "Hash ID",
+            "Case ID",
+            "Provider ID",
+            "Category Name",
+            "Date Case Created",
+            "Matter Type 1",
+            "Matter Type 2",
+            "Scope Status",
+            "Eligibility Status",
+            "Adjustments BSL",
+            "Adjustments LLI",
+            "Adjustments MIN",
+            "Adjustments TYP",
+            "Adjustments Callback Preferred",
+            "Adjustments Skype",
+            "Gender",
+            "Ethnicity",
+            "Age(Range)",
+            "Religion",
+            "Sexual_Orientation",
+            "Disability",
+            "Media Code",
+            "Contact Type",
+            "Referral Agencies",
+            "Exempt Client",
+            "Welsh",
+            "Language",
+            "Outcome code",
+            "Outcome Created At",
+            "Has Third Party",
+            "Organisation",
+            "Vulnerable User",
+            "Geographical Region",
+            "Postcode",
+        ]
+
+    def get_rows(self):
+        for row in self.get_queryset():
+            full_row = list(row)
+            diversity_json = full_row.pop() or {}
+
+            def insert_value(key, val):
+                index = self.get_headers().index(key)
+                full_row.insert(index, val)
+
+            insert_value("Gender", diversity_json.get("gender"))
+            insert_value("Ethnicity", diversity_json.get("ethnicity"))
+            insert_value("Religion", diversity_json.get("religion"))
+            insert_value("Sexual_Orientation", diversity_json.get("sexual_orientation"))
+            insert_value("Disability", diversity_json.get("disability"))
+            yield full_row
+
+    def get_queryset(self):
+        passphrase = self.cleaned_data.get("passphrase")
+
+        if passphrase:
+            diversity_expression = "pgp_pub_decrypt(personal_details.diversity, dearmor('{key}'), %s)::json".format(
                 key=diversity.get_private_key()
             )
         else:
@@ -970,6 +1049,58 @@ class AllKnowledgeBaseArticles(ReportForm):
             "Category 6",
             "Preferred signpost for category 6",
         ]
+
+
+class MITellUsMoreAboutYourProblem(SQLFileDateRangeReport):
+    QUERY_FILE = "MIExtractByOutcomeTellUsAboutYourProblem.sql"
+
+    def get_sql_params(self):
+        from_date, to_date = self.date_range
+        return {"from_date": from_date, "to_date": to_date}
+
+    def get_headers(self):
+        return [
+            "Personal Details Id",
+            "Case Id",
+            "Source",
+            "Created",
+            "Modified",
+            "Diagnosis Notes",
+            "Operator Notes",
+            "Provider Notes",
+            "Adjustments BSL Webcam",
+            "Adjustments Callback Preference",
+            "Adjustments Language",
+            "Adjustments Not required",
+            "Adjustments Minicom",
+            "Adjustments Text Relay",
+            "Adjustment Skype",
+            "Diagnosis Category",
+            "Legalaid Category Code",
+            "Legalaid Category Name",
+            "Outcome Code",
+        ]
+
+
+class CallbackTimeSlotReport(DateRangeReportForm):
+    def get_queryset(self):
+        from_date, to_date = self.date_range
+        return CallbackTimeSlot.objects.filter(date__gte=from_date, date__lte=to_date)
+
+    def get_rows(self):
+        for slot in self.get_queryset():
+            remaining = slot.remaining_capacity
+            used = slot.capacity - remaining
+            remaining_percent = (remaining / float(slot.capacity)) * 100 if slot.capacity > 0 else 0
+            # 2 decimal places without rounding
+            remaining_percent = int(remaining_percent * 100) / 100.0
+            # Strip trailing zeros
+            remaining_percent = "%g" % remaining_percent
+
+            yield [slot.date.strftime("%d/%m/%Y"), slot.time, slot.capacity, used, remaining, remaining_percent]
+
+    def get_headers(self):
+        return ["Date", "Interval", "Total capacity", "Used capacity", "Remaining capacity", "% Remaining capacity"]
 
 
 def get_from_nth(items, n, attribute):

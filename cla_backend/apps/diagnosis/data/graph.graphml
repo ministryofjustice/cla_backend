@@ -116,7 +116,7 @@ Clients in temporary accommodation will be covered for in scope housing.]]></dat
       </data>
     </node>
     <node id="n3">
-      <data key="d3" xml:space="preserve"><![CDATA[Home owner, and the nature of the debt means they are at immediate risk of losing their home *(Includes shared ownership if the client is living in the property)*]]></data>
+      <data key="d3" xml:space="preserve"><![CDATA[Home owner, and the nature of the debt means they are at immediate risk of losing their home (Includes shared ownership if the client is living in the property)]]></data>
       <data key="d4" xml:space="preserve"><![CDATA[Client owns a house ]]></data>
       <data key="d7" xml:space="preserve">1</data>
       <data key="d8" xml:space="preserve"><![CDATA[A client's home is defined as the house, caravan, houseboat or other vehicle or structure that is their only or main residence. The references to caravan, houseboat or other vehicle include the land on which it is located or to which it is moored.
@@ -129,6 +129,7 @@ Search guidance for 'timeline' to see the home repossession timeline.
 
 *FYI: Debt matters need to arise from an issue where the client owns their own home. Problems relating to homes that are rented or leased from another person fall within Housing.*]]></data>
       <data key="d10" xml:space="preserve"><![CDATA[n3]]></data>
+      <data key="d11" xml:space="preserve"/>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="7344.320634920635" y="250.0"/>
@@ -12248,7 +12249,6 @@ Remember to record details of the conversation in your CHS notes.]*]]></data>
       </data>
     </edge>
     <edge id="e481" source="n179" target="n355">
-      <data key="d16"/>
       <data key="d17">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -12259,7 +12259,6 @@ Remember to record details of the conversation in your CHS notes.]*]]></data>
       </data>
     </edge>
     <edge id="e482" source="n179" target="n357">
-      <data key="d16"/>
       <data key="d17">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -12270,7 +12269,6 @@ Remember to record details of the conversation in your CHS notes.]*]]></data>
       </data>
     </edge>
     <edge id="e483" source="n357" target="n356">
-      <data key="d16"/>
       <data key="d17">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>

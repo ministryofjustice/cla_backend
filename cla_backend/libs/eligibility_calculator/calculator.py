@@ -1,196 +1,25 @@
+import datetime
+import json
+import types
+
+import requests
+from dateutil.relativedelta import relativedelta
 from django.conf import settings
-from django.utils import timezone
 
-from . import constants
-from . import exceptions
+from .cfe_civil.age import translate_age
+from .cfe_civil.deductions import translate_deductions
+from .cfe_civil.dependants import translate_dependants
+from .cfe_civil.savings import translate_savings
+from .cfe_civil.employment import translate_employment
+from .cfe_civil.cfe_response import CfeResponse
+from .cfe_civil.property import translate_property
+from .cfe_civil.income import translate_income
+from .cfe_civil.applicant import translate_applicant
+from .cfe_civil.under_18_passported import translate_under_18_passported
+from .cfe_civil.proceeding_types import translate_proceeding_types, DEFAULT_PROCEEDING_TYPE
+from cla_common.constants import ELIGIBILITY_STATES
 
-
-class cached_calcs_property(object):
-    def __init__(self, func):
-        self.func = func
-
-    def _do_get(self, instance, type=None):
-        if instance is None:
-            return self
-        res = instance.__dict__[self.func.__name__] = self.func(instance)
-        return res
-
-    def __get__(self, instance, type=None):
-        res = self._do_get(instance, type)
-        if "calcs" not in instance.__dict__:
-            instance.__dict__["calcs"] = {}
-        instance.__dict__["calcs"][self.func.__name__] = res
-        return res
-
-
-class CapitalCalculator(object):
-    def __init__(self, properties=[], non_disputed_liquid_capital=0, disputed_liquid_capital=0, calcs={}):
-        self.properties = self._parse_props(properties)
-        self.non_disputed_liquid_capital = non_disputed_liquid_capital
-        self.disputed_liquid_capital = disputed_liquid_capital
-        self.calcs = calcs
-
-    def _parse_props(self, props):
-        result = []
-        for p in props or []:
-            # check property
-            invalid_props, is_empty = self._is_property_invalid(p)
-            if invalid_props:
-                if not is_empty:
-                    raise exceptions.PropertyExpectedException(
-                        "'Property' requires attribute '{kw}' and was not given at __init__".format(kw=invalid_props)
-                    )
-                continue
-
-            parsed_prop = p.copy()
-            parsed_prop["equity"] = 0
-            result.append(parsed_prop)
-        return result
-
-    @property
-    def main_property(self):
-        if not hasattr(self, "_main_property"):
-            self._main_property = None
-            if self.properties:
-                for prop in self.properties:
-                    if prop["main"]:
-                        self._main_property = prop
-                        break
-        return self._main_property
-
-    @property
-    def other_properties(self):
-        if not hasattr(self, "_other_properties"):
-            self._other_properties = []
-            if self.properties:
-                self._other_properties = [prop for prop in self.properties if not prop["main"]]
-        return self._other_properties
-
-    def _is_property_invalid(self, prop):
-        """
-        Returns tuple (<is-invalid>, <is-empty>) where:
-            is-invalid: is a list of invalid (none-values) keys
-            is-empty: True if all the values are None
-        """
-        if not prop:
-            return (True, True)
-
-        none_values = [k for k, v in prop.items() if v is None]
-        return none_values, len(none_values) == len(prop)
-
-    @staticmethod
-    def is_post_mortgage_cap_removal():
-        if not hasattr(settings, "MORTGAGE_CAP_REMOVAL_DATE"):
-            return False
-
-        dt = timezone.make_aware(settings.MORTGAGE_CAP_REMOVAL_DATE, timezone.get_current_timezone())
-        return timezone.now() >= dt
-
-    # for each other property
-    def _calculate_property_equity(self, prop):
-        if not prop:
-            return
-
-        def pre_mortgage_cap_removal():
-            mortgage_disregard = min(prop["mortgage_left"], self.mortgage_disregard_available)
-
-            property_equity = prop["value"] - mortgage_disregard
-            # if prop.in_joint_names:
-            property_equity = (
-                property_equity * prop["share"] / 100
-            )  # assuming that you filled in share with the right figure (that is, in_joint_names not required)
-
-            remaining_mortgage_disregard = self.mortgage_disregard_available - mortgage_disregard
-
-            prop["equity"] = max(property_equity, 0)
-            self.mortgage_disregard_available = remaining_mortgage_disregard
-
-        def post_mortgage_cap_removal():
-            mortgage_disregard = prop["mortgage_left"]
-
-            property_equity = prop["value"] - mortgage_disregard
-            # if prop.in_joint_names:
-            property_equity = (
-                property_equity * prop["share"] / 100
-            )  # assuming that you filled in share with the right figure (that is, in_joint_names not required)
-
-            prop["equity"] = max(property_equity, 0)
-
-        if self.is_post_mortgage_cap_removal():
-            post_mortgage_cap_removal()
-        else:
-            pre_mortgage_cap_removal()
-
-    def _apply_SMOD_disregard(self, prop):
-        if not prop or not prop["disputed"]:
-            return
-
-        SMOD_disregard = min(prop["equity"], self.SMOD_disregard_available)
-
-        prop["equity"] = max(prop["equity"] - SMOD_disregard, 0)
-        remaining_SMOD_disregard = self.SMOD_disregard_available - SMOD_disregard
-
-        self.SMOD_disregard_available = remaining_SMOD_disregard
-
-    def _apply_equity_disregard(self, prop):
-        if not prop:
-            return
-        # if not prop.disputed:
-        #     return
-
-        prop["equity"] = max(prop["equity"] - self.equity_disregard_available, 0)
-
-    def _reset_state(self):
-        self.mortgage_disregard_available = constants.MORTGAGE_DISREGARD
-        self.SMOD_disregard_available = constants.SMOD_DISREGARD
-        self.equity_disregard_available = constants.EQUITY_DISREGARD
-
-        for prop in self.properties:
-            prop["equity"] = 0
-
-    @cached_calcs_property
-    def property_capital(self):
-        if not self.properties:
-            return 0
-
-        # calculating equities
-        for other_property in self.other_properties:
-            self._calculate_property_equity(other_property)
-
-        self._calculate_property_equity(self.main_property)
-
-        # applying SMOD disregard
-        self._apply_SMOD_disregard(self.main_property)
-
-        for other_property in self.other_properties:
-            self._apply_SMOD_disregard(other_property)
-
-        # applying equity disregard (to main home only)
-        self._apply_equity_disregard(self.main_property)
-
-        property_capital = 0
-        for prop in self.properties:
-            property_capital += prop["equity"]
-        return property_capital
-
-    @cached_calcs_property
-    def liquid_capital(self):
-        SMOD_disregard = min(self.disputed_liquid_capital, self.SMOD_disregard_available)
-
-        capital = max(self.disputed_liquid_capital - SMOD_disregard, 0)
-
-        capital += self.non_disputed_liquid_capital
-
-        return capital
-
-    def calculate_capital(self):
-        self._reset_state()
-
-        res = self.property_capital + self.liquid_capital
-
-        self.calcs["property_equities"] = [prop.get("equity", 0) for prop in self.properties]
-
-        return res
+logger = __import__("logging").getLogger(__name__)
 
 
 class EligibilityChecker(object):
@@ -199,156 +28,333 @@ class EligibilityChecker(object):
         self.case_data = case_data
         self.calcs = calcs or {}
 
-    @cached_calcs_property
-    def gross_income(self):
-        return self.case_data.total_income
-
-    @cached_calcs_property
-    def partner_allowance(self):
-        if self.case_data.facts.has_partner:
-            return constants.PARTNER_ALLOWANCE
-        return 0
-
-    @cached_calcs_property
-    def employment_allowance(self):
-        if self.case_data.you.income.has_employment_earnings and not self.case_data.you.income.self_employed:
-            return constants.EMPLOYMENT_COSTS_ALLOWANCE
-        return 0
-
-    @cached_calcs_property
-    def partner_employment_allowance(self):
-        if self.case_data.facts.has_partner and self.case_data.facts.should_aggregate_partner:
-            if (
-                self.case_data.partner.income.has_employment_earnings
-                and not self.case_data.partner.income.self_employed
-            ):
-                return constants.EMPLOYMENT_COSTS_ALLOWANCE
-            return 0
-        return 0
-
-    @cached_calcs_property
-    def dependants_allowance(self):
-        return self.case_data.facts.dependant_children * constants.CHILD_ALLOWANCE
-
-    @cached_calcs_property
-    def pensioner_disregard(self):
-        if self.case_data.facts.is_you_or_your_partner_over_60:
-            return constants.PENSIONER_DISREGARD_LIMIT_LEVELS.get(max(self.disposable_income, 0), 0)
-        return 0
-
-    @cached_calcs_property
-    def disposable_income(self):
-        if not hasattr(self, "_disposable_income"):
-            gross_income = self.gross_income
-
-            gross_income -= self.partner_allowance
-
-            # children
-            gross_income -= self.dependants_allowance
-
-            # Tax + NI
-            income_tax_and_ni = (
-                self.case_data.you.deductions.income_tax + self.case_data.you.deductions.national_insurance
-            )
-            gross_income -= income_tax_and_ni
-            if self.case_data.facts.should_aggregate_partner:
-                income_tax_and_ni = (
-                    self.case_data.partner.deductions.income_tax + self.case_data.partner.deductions.national_insurance
-                )
-                gross_income -= income_tax_and_ni
-
-            # maintenance 6.3
-            gross_income -= self.case_data.you.deductions.maintenance
-            if self.case_data.facts.should_aggregate_partner:
-                gross_income -= self.case_data.partner.deductions.maintenance
-
-            # housing
-            mortgage_or_rent = self.case_data.you.deductions.mortgage  # excl housing benefit
-            mortgage_or_rent += self.case_data.you.deductions.rent
-            if self.case_data.facts.should_aggregate_partner:
-                mortgage_or_rent += self.case_data.partner.deductions.mortgage
-                mortgage_or_rent += self.case_data.partner.deductions.rent
-
-            if not self.case_data.facts.dependant_children and not self.case_data.facts.has_partner:
-                mortgage_or_rent = min(mortgage_or_rent, constants.CHILDLESS_HOUSING_CAP)
-            gross_income -= mortgage_or_rent
-
-            # employment allowance
-            gross_income -= self.employment_allowance
-            gross_income -= self.partner_employment_allowance
-
-            # criminal
-            gross_income -= self.case_data.you.deductions.criminal_legalaid_contributions  # not for now
-            if self.case_data.facts.should_aggregate_partner:
-                gross_income -= self.case_data.partner.deductions.criminal_legalaid_contributions
-
-            # childcare 6.5.2
-            gross_income -= self.case_data.you.deductions.childcare
-            if self.case_data.facts.should_aggregate_partner:
-                gross_income -= self.case_data.partner.deductions.childcare
-
-            self._disposable_income = gross_income
-
-        return self._disposable_income
-
-    @cached_calcs_property
-    def disposable_capital_assets(self):
-        if not hasattr(self, "_disposable_capital_assets"):
-            # NOTE: problem in case of disputed partner (and joined savings/assets)
-
-            capital_calc = CapitalCalculator(
-                properties=self.case_data.property_data,
-                non_disputed_liquid_capital=self.case_data.non_disputed_liquid_capital,
-                disputed_liquid_capital=self.case_data.disputed_liquid_capital,
-                calcs=self.calcs,
-            )
-            disposable_capital = capital_calc.calculate_capital()
-
-            disposable_capital -= self.pensioner_disregard
-
-            disposable_capital = max(disposable_capital, 0)
-
-            self._disposable_capital_assets = disposable_capital
-
-        return self._disposable_capital_assets
-
-    def is_gross_income_eligible(self):
-        if self.case_data.facts.on_passported_benefits:
-            return True
-
-        limit = constants.get_gross_income_limit(self.case_data.facts.dependant_children)
-        return self.gross_income <= limit
-
-    def is_disposable_income_eligible(self):
-        if self.case_data.facts.on_passported_benefits:
-            return True
-
-        return self.disposable_income <= constants.LIMIT
-
-    def is_disposable_capital_eligible(self):
-        limit = constants.get_disposable_capital_limit(self.case_data.category)
-        return self.disposable_capital_assets <= limit
-
     def is_eligible(self):
+        is_eligible, _, _, _ = self.is_eligible_with_reasons()
+        return is_eligible
+
+    def is_eligible_with_reasons(self):
+        cfe_result, cfe_calcs, cfe_response = self._do_cfe_civil_check()
+
+        # Calcs updated from CFE's result
+        self.calcs = cfe_calcs
+
+        logger.info("Eligibility result (using CFE): %s", cfe_result)
+
+        if cfe_response:
+            return (
+                cfe_result,
+                cfe_response.is_gross_eligible,
+                cfe_response.is_disposable_eligible,
+                cfe_response.is_capital_eligible,
+            )
+        else:
+            return cfe_result, None, None, None
+
+    @staticmethod
+    def _pounds_to_pence(value):
+        # deal with rounding error by adding a small amount before truncating
+        return int(value * 100 + 0.1)
+
+    @staticmethod
+    def _under_18_passported(case_data):
+        return (hasattr(case_data.facts, "under_18_passported") and case_data.facts.under_18_passported) and (
+            hasattr(case_data.facts, "is_you_under_18") and case_data.facts.is_you_under_18
+        )
+
+    @staticmethod
+    def _is_non_means_tested(case_data):
+        return case_data.facts.on_nass_benefits and case_data.category == "immigration"
+
+    def _do_cfe_civil_check(self):
+        # This property is not used by clients, but we support it while it's in the API.
+        # CFE doesn't know how to handle this scenario, so just code it here.
         if self.case_data.facts.has_passported_proceedings_letter:
-            return True
+            return ELIGIBILITY_STATES.YES, None, None
 
-        if self.case_data.facts.under_18_passported:
-            return True
+        if not EligibilityChecker._is_data_complete_enough_to_call_cfe(self.case_data):
+            # data is so incomplete that we can't even call CFE sensibly
+            result = ELIGIBILITY_STATES.UNKNOWN
+            logger.info("Eligibility result (CFE): %s %s" % (result, "couldn't call CFE"))
+            return result, None, None
 
-        if self.case_data.facts.on_nass_benefits and self.should_passport_nass():
-            return True
+        cfe_request_dict = self._translate_case(self.case_data)
 
-        if not self.is_disposable_capital_eligible():
+        user_agent = "cla_backend/1 (%s)" % settings.CLA_ENV
+        cfe_raw_response = requests.post(settings.CFE_URL, json=cfe_request_dict, headers={"User-Agent": user_agent})
+        logger.debug("Eligibility request (CFE): %s" % json.dumps(cfe_request_dict, indent=4, sort_keys=True))
+
+        cfe_response = CfeResponse(cfe_raw_response.json())
+        result, calcs = self._translate_response(cfe_response)
+        logger.debug("Eligibility result (CFE): %s" % (json.dumps(cfe_response._cfe_data, indent=4, sort_keys=True)))
+
+        return result, calcs, cfe_response
+
+    @staticmethod
+    def _is_data_complete_enough_to_call_cfe(case_data):
+        # The CFE means calculation doesn't always need all the case_data fields known. Here we check for the presence of certain fields.
+        # We can't use hasattr(case_data, "<field_name>") to know if a field has been set, because hasattr() under the hood calls getattr(),
+        # and we've overridden ModelMixin.__getattr__() to return a default value when the field is absent.
+        # So instead, we check for the key in the case_data.__dict__
+        if "facts" not in case_data.__dict__:
+            # facts section is at the root of everything, so we require it call CFE
             return False
-
-        if not self.is_gross_income_eligible():
+        if EligibilityChecker._under_18_passported(case_data):
+            # no more info needed
+            return True
+        if "dependants_young" not in case_data.facts.__dict__ and not (
+            "on_passported_benefits" in case_data.facts.__dict__ and case_data.facts.on_passported_benefits
+        ):
+            # the gross income threshold may increase, depending on the number of child dependants,
+            # so we can't do gross income section - even if we tell CFE it is incomplete, if the gross income
+            # is over the threshold it will give 'ineligible'.
+            # Therefore to run CFE, we need to know dependants_young, or if they are passported (because the
+            # gross income check doesn't come into play)
+            logger.info(
+                "Eligibility check: CFE can't be called because dependants_young not known (and not passported)"
+            )
             return False
-
-        if not self.is_disposable_income_eligible():
-            return False
-
         return True
+
+    @staticmethod
+    def _translate_case(case_data, submission_date=None):
+        """Translates CLA's CaseData to CFE-Civil request JSON"""
+        if not submission_date:
+            submission_date = datetime.date.today()
+        request_data = {
+            "assessment": {
+                "submission_date": str(submission_date),
+                "level_of_help": "controlled",  # CLA is for 'advice' only, so always controlled
+            },
+            "proceeding_types": [DEFAULT_PROCEEDING_TYPE],
+        }
+
+        EligibilityChecker._translate_section_gross_income(case_data, request_data)
+        EligibilityChecker._translate_section_disposable_income(case_data, request_data)
+        EligibilityChecker._translate_section_capital(case_data, request_data)
+
+        if "category" in case_data.__dict__:
+            request_data["proceeding_types"] = translate_proceeding_types(case_data.category)
+        if "facts" in case_data.__dict__:
+            request_data["applicant"] = EligibilityChecker._translate_applicant_data(submission_date, case_data.facts)
+            request_data["assessment"].update(translate_under_18_passported(case_data.facts))
+            request_data.update(translate_dependants(submission_date, case_data.facts))
+            if "partner" in case_data.__dict__ and case_data.facts.should_aggregate_partner:
+                request_data["partner"] = EligibilityChecker._translate_partner_data(case_data.partner, submission_date)
+
+        request_data.update(EligibilityChecker._translate_capital_data(case_data))
+
+        if "you" in case_data.__dict__:
+            request_data.update(EligibilityChecker._translate_income_data(case_data.you))
+
+        return request_data
+
+    @staticmethod
+    def _translate_section_gross_income(case_data, request_data):
+        def is_gross_income_complete(case_data):
+            if "you" not in case_data.__dict__:
+                return False
+            person = case_data.you
+            if "income" not in person.__dict__:
+                return False
+            income = person.income
+            income_keys_if_complete = set(income.PROPERTY_META.keys())
+            # cla_public will remove the `income.child_benefits` key from CaseDict if you submit /benefits without
+            # checking the child benefit checkbox (which doesn't even appear if dependants_young=0). So this key is not
+            # required for income to be considered complete
+            income_keys_if_complete.remove("child_benefits")
+            for key in income_keys_if_complete:
+                if key not in income.__dict__:
+                    return False
+
+            if "has_partner" not in case_data.facts.__dict__:
+                # If they have a partner then their deductions can lower the disposable income further,
+                # so this section is not complete until we know the partners' figures
+                return False
+
+            return True
+
+        if not is_gross_income_complete(case_data):
+            request_data["assessment"]["section_gross_income"] = "incomplete"
+
+    @staticmethod
+    def _translate_section_disposable_income(case_data, request_data):
+        """
+        Determine if the questions for disposable income section of the test have been completed by the user yet,
+        and put this in the CFE request.
+        """
+
+        def is_disposable_income_complete(case_data):
+            if "you" not in case_data.__dict__:
+                return False
+            person = case_data.you
+            if "deductions" not in person.__dict__:
+                return False
+            deductions = case_data.you.deductions
+            for key in deductions.PROPERTY_META:
+                if key not in deductions.__dict__:
+                    return False
+
+            if "has_partner" not in case_data.facts.__dict__:
+                # If they have a partner then their deductions can lower the disposable income further,
+                # so this section is not complete until we know the partners' figures
+                return False
+            return True
+
+        if not is_disposable_income_complete(case_data):
+            request_data["assessment"]["section_disposable_income"] = "incomplete"
+
+    @staticmethod
+    def is_property_complete(case_data):
+        if "has_partner" not in case_data.facts.__dict__:
+            # If they have a partner then that may increase assets that they need to delare, so
+            # this section is not complete until we clear up if there is a partner
+            return False
+
+        if len(case_data.property_data) == 0:
+            return True
+        for key, value in case_data.property_data[0].iteritems():
+            if value is not None:
+                return True
+        return False
+
+    @staticmethod
+    def _is_savings_complete(case_data):
+        if "has_partner" not in case_data.facts.__dict__:
+            # If they have a partner then that may increase assets that they need to delare, so
+            # this section is not complete until we clear up if there is a partner
+            return False
+
+        savings = case_data.you.savings
+        for key in savings.PROPERTY_META:
+            if key not in savings.__dict__:
+                return False
+            if not isinstance(getattr(savings, key), (types.IntType, types.LongType)):
+                return False
+        return True
+
+    @staticmethod
+    def _translate_section_capital(case_data, request_data):
+        """
+        Determine if the questions for capital section of the test have been completed by the user yet,
+        and put this in the CFE request.
+        """
+        has_completed_capital_questions = EligibilityChecker.is_property_complete(
+            case_data
+        ) and EligibilityChecker._is_savings_complete(case_data)
+
+        # This capital logic is a bit complicated, and dependent on how cla_backend's clients set the CaseData.
+        # If we wanted to simplify this logic, here are the concerns:
+        # 1. At the start of the flow, `section_capital` can be anything, because we rely on the fact that
+        #    `section_disposable_income = incomplete` to force CFE to give `overall_result: not_yet_known`
+        # 2. At the end of the capital section of the form, if the total capital is over the threshold, we need CFE
+        #    to give `overall_result: ineligible`, causing the front-end to skip to the end of the questions. This
+        #    happens whether we tell CFE that `section_capital` is complete or not, so again it doesn't matter.
+        # 3. At the time the forms are complete - all the relevant questions have been asked - then we need
+        #    `section_capital = complete`, otherwise CFE will give `overall_result: not_yet_known` instead of
+        #    `eligible`.
+        # So the really simple way to do this is to always set `section_capital = complete`, but that might confuse
+        # a dev who looks at the CFE requests before the capital section is in reality complete.
+        if not has_completed_capital_questions:
+            request_data["assessment"]["section_capital"] = "incomplete"
+
+    @staticmethod
+    def _translate_partner_data(partner, submission_date):
+        # default DOB to 'nothing special' 40 years old rules-wise
+        # as all we have is you/partner over 60 - so we don't know or care
+        # how old the partner is
+        partner_dob = str(submission_date - relativedelta(years=40))
+        request_data = {"partner": {"date_of_birth": partner_dob}}
+        if "savings" in partner.__dict__:
+            request_data.update(translate_savings(partner.savings))
+
+        request_data.update(EligibilityChecker._translate_income_data(partner))
+
+        return request_data
+
+    @staticmethod
+    def _translate_income_data(person):
+        request_data = {}
+        if "income" in person.__dict__:
+            regular_income = translate_income(person.income)
+            if "deductions" in person.__dict__:
+                request_data.update(translate_employment(person.income, person.deductions))
+                regular_outgoings = translate_deductions(person.deductions)
+                request_data.update(
+                    EligibilityChecker._merge_regular_transaction_data(regular_income, regular_outgoings)
+                )
+            else:
+                request_data.update(regular_income)
+
+        return request_data
+
+    @staticmethod
+    def _merge_regular_transaction_data(regular_income, regular_outgoings):
+        if "regular_transactions" in regular_outgoings:
+            if "regular_transactions" in regular_income:
+                return dict(
+                    regular_transactions=regular_income["regular_transactions"]
+                    + regular_outgoings["regular_transactions"]
+                )
+            else:
+                return regular_outgoings
+        else:
+            return regular_income
+
+    @staticmethod
+    def _translate_applicant_data(submission_date, facts):
+        request_data = {}
+        request_data.update(translate_age(submission_date, facts))
+        request_data.update(translate_applicant(facts))
+
+        return request_data
+
+    @staticmethod
+    def _translate_capital_data(case_data):
+        request_data = {}
+        if "you" in case_data.__dict__ and "savings" in case_data.you.__dict__:
+            request_data.update(translate_savings(case_data.you.savings))
+
+        if "property_data" in case_data.__dict__:
+            request_data.update(translate_property(case_data.property_data))
+
+        if "disputed_savings" in case_data.__dict__:
+            disputed_savings = translate_savings(case_data.disputed_savings, subject_matter_of_dispute=True)
+            if "capitals" in request_data:
+                capitals = request_data["capitals"]
+                disputed_capitals = disputed_savings["capitals"]
+                for key in capitals.keys():
+                    capitals[key] += disputed_capitals[key]
+            else:
+                request_data.update(disputed_savings)
+        return request_data
+
+    def _translate_response(self, cfe_response):
+        """Translates CFE-Civil's response to ELIGIBILITY_STATES and calcs"""
+        if cfe_response.overall_result in ("eligible", "contribution_required"):
+            result = ELIGIBILITY_STATES.YES
+        elif cfe_response.overall_result == "ineligible":
+            result = ELIGIBILITY_STATES.NO
+        elif cfe_response.overall_result == "not_yet_known":
+            result = ELIGIBILITY_STATES.UNKNOWN
+        else:
+            logger.error("cfe_response.overall_result not recognised: %s" % cfe_response.overall_result)
+
+        calcs = {
+            "pensioner_disregard": self._pounds_to_pence(cfe_response.pensioner_disregard),
+            "disposable_capital_assets": self._pounds_to_pence(cfe_response.disposable_capital_assets),
+            "property_equities": [self._pounds_to_pence(x) for x in cfe_response.property_equities],
+            "property_capital": self._pounds_to_pence(cfe_response.property_capital),
+            "non_property_capital": self._pounds_to_pence(
+                cfe_response.liquid_capital + cfe_response.non_liquid_capital + cfe_response.vehicle_capital
+            ),
+            "gross_income": self._pounds_to_pence(cfe_response.gross_income),
+            "partner_allowance": self._pounds_to_pence(cfe_response.partner_allowance),
+            "disposable_income": self._pounds_to_pence(cfe_response.disposable_income),
+            "dependants_allowance": self._pounds_to_pence(cfe_response.dependants_allowance),
+            "employment_allowance": self._pounds_to_pence(cfe_response.employment_allowance),
+            "partner_employment_allowance": 0,
+        }
+        return result, calcs
 
     def should_passport_nass(self):
         return self.case_data.category and self.case_data.category == "immigration"

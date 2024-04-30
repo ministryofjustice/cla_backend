@@ -8,8 +8,7 @@ from itertools import cycle
 from django.test import TestCase
 from psycopg2 import InternalError
 
-from cla_common.constants import CONTACT_SAFETY, REASONS_FOR_CONTACTING
-from core.tests.mommy_utils import make_recipe
+from cla_common.constants import CONTACT_SAFETY, REASONS_FOR_CONTACTING, CALLBACK_TYPES
 from legalaid.utils.diversity import save_diversity_data
 import reports.forms
 from reports.utils import OBIEEExporter
@@ -18,6 +17,9 @@ from freezegun import freeze_time
 
 from cla_auditlog.models import AuditLog
 from checker.models import ReasonForContacting
+
+import mock
+from core.tests.mommy_utils import make_recipe
 
 
 class ReportsSQLColumnsMatchHeadersTestCase(TestCase):
@@ -37,7 +39,12 @@ class ReportsSQLColumnsMatchHeadersTestCase(TestCase):
                 inst.get_queryset()
                 len_desc = len(inst.description)
                 len_headers = len(inst.get_headers())
-                if inst.__class__.__name__ in ["MICaseExtract", "MICaseExtractExtended", "CaseDemographicsReport"]:
+                if inst.__class__.__name__ in [
+                    "MICaseExtract",
+                    "MICaseExtractExtended",
+                    "CaseDemographicsReport",
+                    "MinimalCaseDemographicsReport",
+                ]:
                     # this is due to getting multiple fields as 1 json field in sql
                     len_headers = len_headers - 3
                 self.assertEqual(
@@ -313,8 +320,8 @@ class TestKnowledgeBaseArticlesExport(TestCase):
 
 
 class ReasonForContactingReportTestCase(TestCase):
-    def test_rfc(self):
-        referrers = [
+    def setUp(self):
+        self.referrers = [
             "Unknown",
             "https://localhost/scope/diagnosis",
             "https://localhost/scope/diagnosis/n131",
@@ -322,6 +329,7 @@ class ReasonForContactingReportTestCase(TestCase):
             "https://localhost/scope/diagnosis",
         ]
 
+    def test_rfc(self):
         categories = [
             REASONS_FOR_CONTACTING.MISSING_PAPERWORK,
             REASONS_FOR_CONTACTING.MISSING_PAPERWORK,
@@ -332,7 +340,7 @@ class ReasonForContactingReportTestCase(TestCase):
 
         cases = [make_recipe("legalaid.case"), make_recipe("legalaid.case"), make_recipe("legalaid.case"), None, None]
         resources = make_recipe(
-            "checker.reasonforcontacting", referrer=cycle(referrers), case=cycle(cases), _quantity=5
+            "checker.reasonforcontacting", referrer=cycle(self.referrers), case=cycle(cases), _quantity=5
         )
 
         make_recipe(
@@ -351,7 +359,7 @@ class ReasonForContactingReportTestCase(TestCase):
         freezer = freeze_time("2023-10-01 11:00")
         freezer.start()
         day_ago_resources = make_recipe(
-            "checker.reasonforcontacting", referrer=cycle(referrers), case=cycle(cases), _quantity=5
+            "checker.reasonforcontacting", referrer=cycle(self.referrers), case=cycle(cases), _quantity=5
         )
         make_recipe(
             "checker.reasonforcontacting_category",
@@ -376,3 +384,154 @@ class ReasonForContactingReportTestCase(TestCase):
             expected = expected_stats[stat["key"]] if stat["key"] in expected_stats else expected_others
             actual = {"count": stat["count"], "with_cases": stat["with_cases"], "without_cases": stat["without_cases"]}
             self.assertDictEqual(expected, actual)
+
+    def test_report_stats_cases_referrer(self):
+        # Make a few reason for contacting records that were created in the distant paste
+        freezer = freeze_time("2023-10-01 10:00")
+        freezer.start()
+        categories = [
+            REASONS_FOR_CONTACTING.PNS,
+            REASONS_FOR_CONTACTING.AREA_NOT_COVERED,
+            REASONS_FOR_CONTACTING.HOW_SERVICE_HELPS,
+            REASONS_FOR_CONTACTING.DIFFICULTY_ONLINE,
+            REASONS_FOR_CONTACTING.PREFER_SPEAKING,
+        ]
+        # Create reason for contacting records that we don't care about, for noise purpose
+        resources = make_recipe("checker.reasonforcontacting", referrer=cycle(self.referrers), _quantity=5)
+        make_recipe(
+            "checker.reasonforcontacting_category",
+            reason_for_contacting=cycle(resources),
+            category=cycle(categories),
+            _quantity=5,
+        )
+
+        # Create records with our test referrer that we are interested in
+        test_referrer = "https://i.am.referrer"
+        categories = [
+            REASONS_FOR_CONTACTING.CANT_ANSWER,
+            REASONS_FOR_CONTACTING.CANT_ANSWER,
+            REASONS_FOR_CONTACTING.CANT_ANSWER,
+        ]
+        cases = [make_recipe("legalaid.case"), make_recipe("legalaid.case"), None]
+        resources = make_recipe("checker.reasonforcontacting", case=cycle(cases), referrer=test_referrer, _quantity=3)
+        make_recipe(
+            "checker.reasonforcontacting_category",
+            reason_for_contacting=cycle(resources),
+            category=cycle(categories),
+            _quantity=3,
+        )
+        date_from = datetime.datetime.now() - datetime.timedelta(hours=1)
+        date_to = date_from + datetime.timedelta(hours=2)
+        freezer.stop()
+
+        stats = ReasonForContacting.get_report_category_stats(
+            start_date=date_from, end_date=date_to, referrer=test_referrer
+        )
+        cant_answer_stats = {}
+        for stat in stats["categories"]:
+            if stat["key"] == REASONS_FOR_CONTACTING.CANT_ANSWER:
+                cant_answer_stats = stat
+                break
+
+        self.assertTrue(cant_answer_stats, "Could not find expected category")
+        self.assertEqual(stats["total_count"], 3)
+        self.assertEqual(cant_answer_stats["with_cases"], 2)
+        self.assertEqual(cant_answer_stats["without_cases"], 1)
+
+
+class TestCallbackTimeSlotReport(TestCase):
+    CALLBACK_TIME_SLOT = "checker.callback_time_slot"
+    LEGALAID_CASE = "legalaid.case"
+
+    def get_report(self, date_range):
+        with mock.patch("reports.forms.CallbackTimeSlotReport.date_range", date_range):
+            report = reports.forms.CallbackTimeSlotReport()
+            rows = report.get_rows()
+            headers = report.get_headers()
+            data = []
+            for row in rows:
+                data.append(zip(headers, row))
+
+        return data
+
+    @mock.patch("cla_common.call_centre_availability.OpeningHours.available", return_value=True)
+    def test_callback_time_slots(self, _):
+        tomorrow = datetime.datetime(2024, 1, 2)
+        overmorrow = tomorrow + datetime.timedelta(days=1)
+        date_format = "%d/%m/%Y"
+        # Create callback time slots with capacity
+        callbacks = {
+            "0900": {
+                "Date": tomorrow.strftime(date_format),
+                "Interval": u"0900",
+                "Total capacity": 4,
+                "Used capacity": 1,
+                "Remaining capacity": 3,
+                "% Remaining capacity": "75",
+            },
+            "1000": {
+                "Date": tomorrow.strftime(date_format),
+                "Interval": u"1000",
+                "Total capacity": 9,
+                "Used capacity": 3,
+                "Remaining capacity": 6,
+                "% Remaining capacity": "66.66",
+            },
+            "1100": {
+                "Date": tomorrow.strftime(date_format),
+                "Interval": u"1100",
+                "Total capacity": 0,
+                "Used capacity": 0,
+                "Remaining capacity": 0,
+                "% Remaining capacity": "0",
+            },
+            "1200": {
+                "Date": tomorrow.strftime(date_format),
+                "Interval": u"1200",
+                "Total capacity": 1,
+                "Used capacity": 1,
+                "Remaining capacity": 0,
+                "% Remaining capacity": "0",
+            },
+            "1300": {
+                "Date": tomorrow.strftime(date_format),
+                "Interval": u"1300",
+                "Total capacity": 1,
+                "Used capacity": 0,
+                "Remaining capacity": 1,
+                "% Remaining capacity": "100",
+            },
+            "1400": {
+                "Date": overmorrow.strftime(date_format),
+                "Interval": u"1400",
+                "Total capacity": 1,
+                "Used capacity": 0,
+                "Remaining capacity": 1,
+                "% Remaining capacity": "100",
+            },
+        }
+        for interval, callback in callbacks.iteritems():
+            # Create callback time slots
+            dt = datetime.datetime.strptime(callback["Date"], date_format)
+            make_recipe(self.CALLBACK_TIME_SLOT, capacity=callback["Total capacity"], date=dt, time=interval)
+            if callback["Used capacity"] > 0:
+                hour = int(interval[0:2])
+                minutes = int(interval[2:])
+                requires_action_at = datetime.datetime.combine(dt, datetime.time(hour=hour, minute=minutes))
+                # Create callbacks
+                make_recipe(
+                    self.LEGALAID_CASE,
+                    requires_action_at=requires_action_at,
+                    _quantity=callback["Used capacity"],
+                    eligibility_check=None,
+                    callback_type=CALLBACK_TYPES.CHECKER_SELF,
+                    notes=interval,
+                )
+
+        date_range = (tomorrow, tomorrow)
+        report = self.get_report(date_range)
+
+        for row in report:
+            row_dict = dict(row)
+            self.assertEqual(row_dict["Date"], tomorrow.strftime(date_format))
+            self.assertDictEqual(row_dict, callbacks[row_dict["Interval"]])

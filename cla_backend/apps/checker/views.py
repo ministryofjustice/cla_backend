@@ -1,8 +1,12 @@
-from django.http import Http404
+from django.http import Http404, JsonResponse
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from rest_framework import mixins
+from rest_framework.views import APIView
 from rest_framework.decorators import detail_route
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response as DRFResponse
+from rest_framework.exceptions import ParseError
 
 from core.models import get_web_user
 from core.drf.mixins import ClaCreateModelMixin, ClaUpdateModelMixin
@@ -14,6 +18,8 @@ from knowledgebase.views import BaseArticleViewSet, ArticleCategoryFilter
 from legalaid.models import Case
 from legalaid.views import BaseCategoryViewSet, BaseEligibilityCheckViewSet, BaseCaseLogMixin
 from cla_common.constants import CASE_SOURCE
+from checker.call_centre_availability import get_available_slots
+from cla_common.call_centre_availability import SLOT_INTERVAL_MINS
 
 from .models import ReasonForContacting
 from .serializers import (
@@ -23,6 +29,8 @@ from .serializers import (
     ReasonForContactingSerializer,
 )
 from .forms import WebCallMeBackForm
+
+logger = __import__("logging").getLogger(__name__)
 
 
 class PublicAPIViewSetMixin(object):
@@ -63,6 +71,7 @@ class EligibilityCheckViewSet(
     def is_eligible(self, request, *args, **kwargs):
         obj = self.get_object()
 
+        logger.info("Eligibility check - load form")
         response, ec, reasons = obj.get_eligibility_state()
         return DRFResponse({"is_eligible": response, "reasons": reasons})
 
@@ -145,3 +154,32 @@ class ReasonForContactingViewSet(
         if "reasons" in serializer.validated_data:
             serializer.instance.reasons.all().delete()
         super(ReasonForContactingViewSet, self).perform_update(serializer)
+
+
+class CallbackTimeSlotViewSet(PublicAPIViewSetMixin, APIView):
+    @method_decorator(cache_page(10))  # This is an expensive call
+    def get(self, request, *args, **kwargs):
+        """Get router for the callback timeslot API.
+
+        Args:
+            string: QueryParameter - num_days: How many days of callback times are requested, defaults to 7- has a hard limit of between 1 and 31.
+            string: QueryParameter - third_party_callback: If the callback is for a third party no capacity rules apply, defaults to True.
+
+        Returns:
+            json: Json object containing a list of valid callback datetimes.
+        """
+
+        try:
+            requested_num_days = int(request.GET.get("num_days", default=7))
+            num_days = max(min(requested_num_days, 31), 1)
+        except ValueError:
+            raise ParseError(detail="Invalid value for num_days sent to callback_timeslots endpoint")
+
+        try:
+            third_party_callback = request.GET.get("third_party_callback", default=False) == "True"
+        except ValueError:
+            raise ParseError(detail="Invalid value for third_party_callback sent to callback_timeslots endpoint")
+
+        slots = get_available_slots(num_days, third_party_callback)
+        response = {"slot_duration_minutes": SLOT_INTERVAL_MINS, "slots": slots}
+        return JsonResponse(response)

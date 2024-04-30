@@ -30,7 +30,7 @@ certifi==2021.10.8
     #   sentry-sdk
 chardet==4.0.0
     # via requests
-https://github.com/ministryofjustice/cla_common/archive/refs/tags/0.3.20.tar.gz
+https://github.com/ministryofjustice/cla_common/archive/refs/tags/0.3.23.tar.gz
     # via -r requirements/source/requirements-base.in
 configparser==4.0.2
     # via importlib-metadata
@@ -50,6 +50,10 @@ django-braces==1.8.1
     # via
     #   -r requirements/source/requirements-base.in
     #   django-oauth-toolkit
+django-cookies-samesite==0.9.0
+    # via -r requirements/source/requirements-base.in
+django-csp==3.7
+    # via -r requirements/source/requirements-base.in
 django-docopt-command==0.2.0
     # via -r requirements/source/requirements-base.in
 django-extended-choices==0.3.0
@@ -63,6 +67,8 @@ django-ipware==0.1.0
 django-model-utils==2.2
     # via -r requirements/source/requirements-base.in
 https://github.com/said-moj/django-moj-irat/archive/refs/tags/0.3.1.tar.gz
+    # via -r requirements/source/requirements-base.in
+django-nested-admin==3.2.4
     # via -r requirements/source/requirements-base.in
 django-oauth-toolkit==0.11.0
     # via -r requirements/source/requirements-base.in
@@ -79,6 +85,7 @@ django-uuidfield==0.5.0
 django==1.8.19
     # via
     #   -r requirements/source/requirements-base.in
+    #   django-csp
     #   django-model-utils
     #   django-moj-irat
     #   django-oauth-toolkit
@@ -179,6 +186,8 @@ python-dateutil==2.2
     #   botocore
     #   cla-common
     #   csvkit
+python-monkey-business==1.0.0
+    # via django-nested-admin
 pytz==2021.1
     # via
     #   -r requirements/source/requirements-base.in
@@ -205,9 +214,11 @@ six==1.16.0
     #   bleach
     #   csvkit
     #   django-braces
+    #   django-nested-admin
     #   django-oauth-toolkit
     #   pathlib2
     #   python-dateutil
+    #   python-monkey-business
     #   sphinx
 snowballstemmer==2.2.0
     # via sphinx
@@ -227,6 +238,8 @@ typing==3.10.0.0
     # via
     #   pathlib2
     #   sphinx
+ua-parser==0.10.0
+    # via django-cookies-samesite
 urllib3==1.26.14
     # via
     #   botocore

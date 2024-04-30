@@ -38,6 +38,14 @@ class AlternativeHelpEvent(BaseEvent):
             "stops_timer": True,
             "set_requires_action_by": None_if_owned_by_op_or_op_manager,
         },
+        "EDFF": {
+            "type": LOG_TYPES.OUTCOME,
+            "level": LOG_LEVELS.HIGH,
+            "selectable_by": [LOG_ROLES.OPERATOR, LOG_ROLES.SPECIALIST],
+            "description": "Assigned to F2F provider (Education specialist providers not available)",
+            "stops_timer": True,
+            "set_requires_action_by": None_if_owned_by_op_or_op_manager,
+        },
     }
 
 

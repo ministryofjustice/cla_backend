@@ -4,6 +4,8 @@
 
 Django==1.8.19
 
+django-nested-admin==3.2.4
+
 django-model-utils==2.2
 
 psycopg2==2.7.5
@@ -20,7 +22,7 @@ bleach==3.3.0
 
 django-oauth-toolkit==0.11.0
 django-braces==1.8.1
-https://github.com/ministryofjustice/cla_common/archive/refs/tags/0.3.20.tar.gz
+https://github.com/ministryofjustice/cla_common/archive/refs/tags/0.3.23.tar.gz
 django-extended-choices==0.3.0
 django-filter==0.9.2
 jsonpatch==1.9
@@ -60,3 +62,6 @@ django-session-security==2.2.3
 
 # Govuk Notify Service
 notifications-python-client==6.0.0
+
+django-cookies-samesite==0.9.0
+django-csp==3.7

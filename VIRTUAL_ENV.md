@@ -1,27 +1,91 @@
-## Installation in a virtual environment
+# Installation in a virtual environment
 
-NB Old Macbooks no longer have python 2.7 installed. 
-If you want to install a 2.7 virtualenv then use pyenv-virtualenv
-https://github.com/pyenv/pyenv-virtualenv
+| :warning: WARNING                                                    |
+|:---------------------------------------------------------------------|
+| This is not maintained. Use the method in the README.md instead      |
+
+## Pre-requisites
+
+### Pyenv, python2
+
+"pyenv" is used to provide python2. (Recent MacOS versions no longer include python2, and Homebrew no longer provides it.)
+
+1. Install pyenv with brew:
+
+        brew install pyenv
+
+2. Set up your shell for pyenv. Make the changes to `~/.zshrc` described here: [Set up your shell for pyenv](https://github.com/pyenv/pyenv#set-up-your-shell-environment-for-pyenv) (This is so that pyenv's python binary can be found in your path)
+
+3. To make the shell changes take effect:
+
+        exec "$SHELL"
+
+    (or alternatively, restart your shell)
+
+4. Install into pyenv the python version this repo uses (which is defined in `.python-version`):
+
+        pyenv install 2.7.18 --skip-existing
+
+## Install
 
 Clone the repository:
+```
+git clone git@github.com:ministryofjustice/cla_backend.git
+```
 
-    git clone git@github.com:ministryofjustice/cla_backend.git
+Ensure you have the right Python version on the path:
+```
+cd cla_backend
+pyenv local 2.7.18
+python --version
+```
+Ensure it reports `Python 2.7.18`. (If you get an error, check your pyenv shell setup.)
 
-Next, create the environment and start it up:
+Update 'pip' and install 'virtualenv' (in pyenv's python 2.7.18 environment):
+```
+pip install -U pip
+pip install virtualenv
+```
 
-    cd cla_backend
-    virtualenv -p python2.7 env --prompt=\(cla_be\)
+Create the python environment:
+```
+virtualenv -p python2.7 env --prompt=cla_be
+```
 
-    source env/bin/activate
-
-Update pip to the latest version:
-
-    pip install -U pip
+Activate the python environment - Linux and Mac:
+```
+source env/bin/activate
+```
+or on Windows:
+```
+env\scripts\activate
+```
 
 Install python dependencies:
+```
+pip install -r requirements/generated/requirements-dev.txt
+```
 
-    pip install -r requirements/dev.txt
+If you get an error about missing `pg_config`, then you need to install postgres:
+```
+brew install postgresql
+pip install -r requirements/generated/requirements-dev.txt
+```
+
+If you get an error with cython building `pyyaml`, then you need to fix cython to <3.0:
+```
+echo 'Cython < 3.0' > /tmp/constraint.txt
+PIP_CONSTRAINT=/tmp/constraint.txt pip install 'PyYAML==5.4'
+pip install -r requirements/generated/requirements-dev.txt
+```
+
+If you get an error building cryptography then it's likely you need openssl, rust, and some magic:
+```
+# ERROR: Could not build wheels for cryptography which use PEP 517 and cannot be installed directly
+brew install openssl@3 rust
+env CRYPTOGRAPHY_SUPPRESS_LINK_FLAGS=1 LDFLAGS="$(brew --prefix openssl@1.1)/lib/libssl.a $(brew --prefix openssl@1.1)/lib/libcrypto.a" CFLAGS="-I$(brew --prefix openssl@1.1)/include" pip install cryptography==3.3.2
+pip install -r requirements/generated/requirements-dev.txt
+```
 
 Create the database inside postgres. Make sure the postgres service is started. Type `psql -d template1` to enter postgres, then enter:
 
@@ -61,9 +125,6 @@ Load initial data:
 
 Start the server:
 
-    ./manage.py runserver 8000
-
-See [Troubleshooting](#troubleshooting) if this fails because the DEBUG environment variable was not set:
+    DEBUG=True ./manage.py runserver 0.0.0.0:8000
 
 See the list of users in `/admin/auth/user/`. Passwords are the same as the usernames.
-

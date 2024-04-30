@@ -1,5 +1,5 @@
 from model_mommy.recipe import Recipe, seq, foreign_key
-from ..models import Provider, ProviderAllocation, OutOfHoursRota, Staff, Feedback, CSVUpload
+from ..models import Provider, ProviderAllocation, OutOfHoursRota, Staff, Feedback, CSVUpload, WorkingDays
 
 
 provider = Recipe(Provider, name=seq("Name"))
@@ -9,6 +9,8 @@ staff = Recipe(Staff)
 outofhoursrota = Recipe(OutOfHoursRota)
 
 provider_allocation = Recipe(ProviderAllocation)
+
+working_days = Recipe(WorkingDays)
 
 feedback = Recipe(Feedback, created_by=foreign_key(staff))
 

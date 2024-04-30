@@ -22,7 +22,7 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
       - name: metabase
-        image: metabase/metabase:v0.47.8
+        image: metabase/metabase:v0.47.9
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
           - containerPort: 3000

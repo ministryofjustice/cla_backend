@@ -7,7 +7,7 @@ import logging
 
 logger = logging.getLogger()
 
-PG_USER_NAME = "Analytics"
+PG_USER_NAME = "analytics"
 PG_USER_PASSWORD = os.environ.get("ANALYTICS_DB_PASSWORD")
 
 
@@ -20,11 +20,11 @@ def get_all_non_restricted_models(models):
     Return:
         List[List[db_table_name, db_column_name]]
     """
-    non_restricted_models = []
+    non_restricted_models = {}
     for model in models:
         non_restricted_columns = get_all_non_restricted_columns(model)
-        for column in non_restricted_columns:
-            non_restricted_models.append([model._meta.db_table, column.name])
+        if len(non_restricted_columns) != 0:
+            non_restricted_models[model._meta.db_table] = non_restricted_columns
 
     return non_restricted_models
 
@@ -54,7 +54,7 @@ def get_all_non_restricted_columns(model):
 
     for column in model._meta.get_fields():
         if column not in pii_columns and not column.is_relation:
-            non_restricted_columns.append(column)
+            non_restricted_columns.append(column.name)
 
     return non_restricted_columns
 
@@ -67,26 +67,60 @@ def does_pg_user_exist(username):
 
 
 def create_pg_user(username, password):
+    if password is None or password == "":
+        raise ValueError("ANALYTICS_DB_PASSWORD must be set.")
     with connection.cursor() as cursor:
         cursor.execute("CREATE ROLE %s WITH LOGIN PASSWORD %s", [AsIs(username), password])
         cursor.execute("GRANT CONNECT ON DATABASE cla_backend TO %s", [AsIs(username)])
     logger.info("Created pg user: {username}".format(username=username))
 
 
+def does_view_exist(view_name):
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "select * from pg_catalog.pg_views pv where schemaname='public' and viewname='{view_name}'".format(
+                view_name=view_name
+            )
+        )
+        views = cursor.fetchall()
+        return len(views) != 0
+
+
+def delete_view(view_name):
+    with connection.cursor() as cursor:
+        cursor.execute("DROP VIEW {view_name}".format(view_name=view_name))
+    logger.info("Dropped view {view_name}".format(view_name=view_name))
+
+
 class Command(BaseCommand):
     help = "Grants the analytics postgres user permissions read permissions for columns not containing sensitive personal data as defined by the Analytics model class."
 
     def handle(self, *args, **options):
+
         if not does_pg_user_exist(PG_USER_NAME):
             create_pg_user(PG_USER_NAME, PG_USER_PASSWORD)
 
-        sql_commands = [
-            'GRANT SELECT("{column}") ON {table} TO {username}'.format(
-                column=column, table=table, username=PG_USER_NAME
+        # Gets a dict of table names with a list of non-sensitive columns
+        non_sensitive_models = get_all_non_restricted_models(apps.get_models())
+
+        sql_commands = []
+
+        for model, columns in non_sensitive_models.iteritems():
+            view_name = "{model_name}_view".format(model_name=model)
+            if does_view_exist(view_name):
+                delete_view(view_name)
+
+            formatted_columns = []
+            for column in columns:
+                formatted_columns.append("{model_name}.{column}".format(model_name=model, column=column))
+            formatted_columns = ", ".join(formatted_columns)
+
+            sql_commands.append(
+                "CREATE VIEW {view_name} AS SELECT {columns} FROM {table}".format(
+                    view_name=view_name, columns=formatted_columns, table=model
+                )
             )
-            for inner_list in get_all_non_restricted_models(apps.get_models())
-            for table, column in [inner_list]
-        ]
+            sql_commands.append("GRANT SELECT ON {view_name} TO {user}".format(view_name=view_name, user=PG_USER_NAME))
 
         with connection.cursor() as cursor:
             for command in sql_commands:

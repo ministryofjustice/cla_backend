@@ -60,6 +60,14 @@ def get_all_non_restricted_columns(model):
 
 
 def does_pg_user_exist(username):
+    """Checks if a given postgres role exists
+
+    Args:
+        username (str): User role
+
+    Returns:
+        Bool: Does the role exist
+    """
     with connection.cursor() as cursor:
         cursor.execute("select * from pg_catalog.pg_roles where rolname=%s", [username])
         roles = cursor.fetchall()
@@ -67,15 +75,34 @@ def does_pg_user_exist(username):
 
 
 def create_pg_user(username, password):
+    """Creates a postgres user, giving them permissions to connect to the database and usage of the public schema.
+    This does not give any permissions for tables within the schema.
+
+    Args:
+        username (str): Postgres user name
+        password (str): User password
+
+    Raises:
+        ValueError: ValueError will be raised if a password is not given.
+    """
     if password is None or password == "":
         raise ValueError("ANALYTICS_DB_PASSWORD must be set.")
     with connection.cursor() as cursor:
         cursor.execute("CREATE ROLE %s WITH LOGIN PASSWORD %s", [AsIs(username), password])
         cursor.execute("GRANT CONNECT ON DATABASE cla_backend TO %s", [AsIs(username)])
+        cursor.execute("GRANT USAGE ON SCHEMA public TO %s", [AsIs(username)])
     logger.info("Created pg user: {username}".format(username=username))
 
 
 def does_view_exist(view_name):
+    """Checks if a given view exists in the public schema
+
+    Args:
+        view_name (str): View name
+
+    Returns:
+        Bool: Does view exist
+    """
     with connection.cursor() as cursor:
         cursor.execute(
             "select * from pg_catalog.pg_views pv where schemaname='public' and viewname='{view_name}'".format(
@@ -86,6 +113,35 @@ def does_view_exist(view_name):
         return len(views) != 0
 
 
+def create_view(view_name, table, columns):
+    """Creates a view with the given name in the public schema.
+
+    Args:
+        view_name (str): Name of the view
+        table (str): Name of the table the columns belong to
+        columns (list[str]): List of column names to include in the view
+    """
+    command = "CREATE VIEW {view_name} AS SELECT {columns} FROM {table}".format(
+        view_name=view_name, columns=columns, table=table
+    )
+    with connection.cursor() as cursor:
+        cursor.execute(command)
+        logger.info("Executed: {command}".format(command=command))
+
+
+def grant_permission_for_view(view_name, role):
+    """Grants the role permission to select from the given view.
+
+    Args:
+        view_name (str): Name of the view
+        role (str): Postgres role name
+    """
+    command = "GRANT SELECT ON {view_name} TO {role}".format(view_name=view_name, role=role)
+    with connection.cursor() as cursor:
+        cursor.execute(command)
+        logger.info("Executed: {command}".format(command=command))
+
+
 def delete_view(view_name):
     with connection.cursor() as cursor:
         cursor.execute("DROP VIEW {view_name}".format(view_name=view_name))
@@ -93,7 +149,7 @@ def delete_view(view_name):
 
 
 class Command(BaseCommand):
-    help = "Grants the analytics postgres user permissions read permissions for columns not containing sensitive personal data as defined by the Analytics model class."
+    help = "Creates restricted views containing only non personal data, as defined by the Analytics model class. Then grants the analytics user read permission on these views, if the analytics user does not exist it will be created."
 
     def handle(self, *args, **options):
 
@@ -102,8 +158,6 @@ class Command(BaseCommand):
 
         # Gets a dict of table names with a list of non-sensitive columns
         non_sensitive_models = get_all_non_restricted_models(apps.get_models())
-
-        sql_commands = []
 
         for model, columns in non_sensitive_models.iteritems():
             view_name = "{model_name}_view".format(model_name=model)
@@ -115,14 +169,5 @@ class Command(BaseCommand):
                 formatted_columns.append("{model_name}.{column}".format(model_name=model, column=column))
             formatted_columns = ", ".join(formatted_columns)
 
-            sql_commands.append(
-                "CREATE VIEW {view_name} AS SELECT {columns} FROM {table}".format(
-                    view_name=view_name, columns=formatted_columns, table=model
-                )
-            )
-            sql_commands.append("GRANT SELECT ON {view_name} TO {user}".format(view_name=view_name, user=PG_USER_NAME))
-
-        with connection.cursor() as cursor:
-            for command in sql_commands:
-                cursor.execute(command)
-                logger.info("Executed: {command}".format(command=command))
+            create_view(view_name, model, formatted_columns)
+            grant_permission_for_view(view_name, PG_USER_NAME)

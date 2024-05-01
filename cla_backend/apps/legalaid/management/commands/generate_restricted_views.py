@@ -53,8 +53,14 @@ def get_all_non_restricted_columns(model):
         pii_columns = model.Analytics._PII
 
     for column in model._meta.get_fields():
-        if column not in pii_columns and not column.is_relation:
-            non_restricted_columns.append(column.name)
+        if column in pii_columns:
+            continue
+        # If the column is auto generated or an inverse m2m relation, it will not exist as a column in the database.
+        # Django created a fake field representing this relationship.
+        if column.auto_created or hasattr(column, "m2m_reverse_field_name"):
+            continue
+        if column.column:
+            non_restricted_columns.append(column.column)
 
     return non_restricted_columns
 

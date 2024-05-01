@@ -54,7 +54,6 @@ venv
 *.iml
 *.iws
 
-
 cla_backend/settings/local.py
 
 # collect static output directory

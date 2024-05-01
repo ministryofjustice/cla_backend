@@ -45,7 +45,7 @@ def get_all_non_restricted_columns(model):
     if not hasattr(model.Analytics, "_allow_analytics") or not model.Analytics._allow_analytics:
         return []
 
-    non_restricted_columns = []
+    non_restricted_columns = ["id"]  # If we are allowing analytics then the ID should always be included.
     pii_columns = []
 
     # If column contains sensitive information it should be restricted.

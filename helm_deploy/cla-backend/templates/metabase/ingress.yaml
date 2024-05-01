@@ -4,7 +4,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ include "laa-govuk-notify-orchestrator.fullname" . }}-app
+  name: {{ .Release.Namespace }}-metabase
   labels:
     {{- include "cla-backend.labels" . | nindent 4 }}
   namespace: {{.Release.Namespace}}
@@ -17,9 +17,9 @@ metadata:
 spec:
   tls:
   - hosts:
-      - "cla-dashboard-{{ .Values.environment }}.cloud-platform.service.justice.gov.uk"
+      - "{{ .Values.metabase.host }}.cloud-platform.service.justice.gov.uk"
   rules:
-  - host: "cla-dashboard-{{ .Values.environment }}.cloud-platform.service.justice.gov.uk"
+  - host: "{{ .Values.metabase.host }}.cloud-platform.service.justice.gov.uk"
     http:
     paths:
         - path: "/"

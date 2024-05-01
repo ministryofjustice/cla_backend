@@ -64,6 +64,7 @@ localPostgres:
 
 metabase:
   enabled: false
+  host: "cla-dashboard"
 
 queueWorkers:
   enabled: true

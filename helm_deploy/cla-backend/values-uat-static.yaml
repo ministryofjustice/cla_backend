@@ -12,6 +12,7 @@ localPostgres:
 
 metabase:
   enabled: true
+  host: "cla-dashboard-uat"
 
 ingress:
   enabled: true

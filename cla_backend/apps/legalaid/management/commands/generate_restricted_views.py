@@ -103,12 +103,11 @@ def does_view_exist(view_name):
     Returns:
         Bool: Does view exist
     """
+    command = "select * from pg_catalog.pg_views pv where schemaname='public' and viewname='{view_name}'".format(
+        view_name=view_name
+    )
     with connection.cursor() as cursor:
-        cursor.execute(
-            "select * from pg_catalog.pg_views pv where schemaname='public' and viewname='{view_name}'".format(
-                view_name=view_name
-            )
-        )
+        cursor.execute(command)
         views = cursor.fetchall()
         return len(views) != 0
 
@@ -121,12 +120,10 @@ def create_view(view_name, table, columns):
         table (str): Name of the table the columns belong to
         columns (list[str]): List of column names to include in the view
     """
-    command = "CREATE VIEW {view_name} AS SELECT {columns} FROM {table}".format(
-        view_name=view_name, columns=columns, table=table
-    )
+    command = "CREATE VIEW %s AS SELECT %s FROM %s"
     with connection.cursor() as cursor:
-        cursor.execute(command)
-        logger.info("Executed: {command}".format(command=command))
+        cursor.execute(command, [AsIs(view_name), AsIs(columns), AsIs(table)])
+        logger.info("Created view: {view_name} with columns: {columns}".format(view_name=view_name, columns=columns))
 
 
 def grant_permission_for_view(view_name, role):
@@ -136,15 +133,16 @@ def grant_permission_for_view(view_name, role):
         view_name (str): Name of the view
         role (str): Postgres role name
     """
-    command = "GRANT SELECT ON {view_name} TO {role}".format(view_name=view_name, role=role)
+    command = "GRANT SELECT ON %s TO %s"
     with connection.cursor() as cursor:
-        cursor.execute(command)
-        logger.info("Executed: {command}".format(command=command))
+        cursor.execute(command, [AsIs(view_name), AsIs(role)])
+        logger.info("Granted {role} view permissions on view: {view_name}".format(role=role, view_name=view_name))
 
 
 def delete_view(view_name):
+    command = "DROP VIEW %s"
     with connection.cursor() as cursor:
-        cursor.execute("DROP VIEW {view_name}".format(view_name=view_name))
+        cursor.execute(command, [AsIs(view_name)])
     logger.info("Dropped view {view_name}".format(view_name=view_name))
 
 

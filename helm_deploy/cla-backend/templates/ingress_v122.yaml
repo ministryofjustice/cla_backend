@@ -31,10 +31,6 @@ spec:
       {{- if .Values.secretName }}
       secretName: {{ .Values.secretName }}
       {{- end }}
-    {{- if .Values.metabase.enabled }}
-    - hosts:
-       - "cla-dashboard-{{ .Values.environment }}.apps.live.cloud-platform.service.justice.gov.uk"
-    {{- end }}
   rules:
     - host: "{{ .Values.host }}"
       http:
@@ -46,16 +42,4 @@ spec:
                 name: {{ $fullName }}-app
                 port:
                   number: {{ $svcPort }}
-    {{- if .Values.metabase.enabled }}
-    - host: "cla-dashboard-{{ .Values.environment }}.apps.live.cloud-platform.service.justice.gov.uk"
-      http:
-        paths:
-          - path: "/"
-            pathType: ImplementationSpecific
-            backend:
-              service:
-                name: {{ $fullName }}-metabase
-                port:
-                  number: 80
-    {{- end}}
 {{- end }}

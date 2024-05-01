@@ -11,7 +11,7 @@ localPostgres:
   enabled: false
 
 metabase:
-  enabled: true
+  enabled: false
   host: "cla-dashboard-training"
 
 ingress:

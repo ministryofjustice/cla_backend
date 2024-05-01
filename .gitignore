@@ -54,7 +54,6 @@ venv
 *.iml
 *.iws
 
-.vscode
 
 cla_backend/settings/local.py
 

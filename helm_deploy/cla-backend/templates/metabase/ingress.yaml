@@ -9,7 +9,7 @@ metadata:
     {{- include "cla-backend.labels" . | nindent 4 }}
   namespace: {{.Release.Namespace}}
   annotations:
-    external-dns.alpha.kubernetes.io/set-identifier: "metabase-{{ .Release.Namespace }}-{{- .Values.ingress.cluster.name -}}"
+    external-dns.alpha.kubernetes.io/set-identifier: "{{ .Release.Namespace }}-metabase-{{ .Release.Namespace }}-{{- .Values.ingress.cluster.name -}}"
     external-dns.alpha.kubernetes.io/aws-weight: "{{- .Values.ingress.cluster.weight -}}"
     {{- with .Values.ingress.annotations }}
     {{- toYaml . | nindent 4 }}

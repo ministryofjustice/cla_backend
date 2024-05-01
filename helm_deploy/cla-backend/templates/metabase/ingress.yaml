@@ -16,18 +16,18 @@ metadata:
     {{- end }}
 spec:
   tls:
-  - hosts:
-      - "{{ .Values.metabase.host }}.cloud-platform.service.justice.gov.uk"
+    - hosts:
+        - "{{ .Values.metabase.host }}.cloud-platform.service.justice.gov.uk"
   rules:
-  - host: "{{ .Values.metabase.host }}.cloud-platform.service.justice.gov.uk"
-    http:
-    paths:
-        - path: "/"
-        pathType: ImplementationSpecific
-        backend:
-            service:
-            name: {{ $fullName }}-metabase
-            port:
-                number: 80
+    - host: "{{ .Values.metabase.host }}.cloud-platform.service.justice.gov.uk"
+      http:
+        paths:
+          - path: "/"
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ $fullName }}-metabase
+                port:
+                  number: 80
 {{- end }}
 {{- end }}

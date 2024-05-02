@@ -10,6 +10,10 @@ replicaCount: 2
 localPostgres:
   enabled: false
 
+metabase:
+  enabled: false
+  host: "cla-dashboard-training"
+
 ingress:
   enabled: true
   whitelist_additional:

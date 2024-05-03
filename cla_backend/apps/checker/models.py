@@ -1,4 +1,5 @@
 import datetime
+from datetime import timedelta
 from django.db import models
 from django.db.models import Count
 from django.utils import timezone
@@ -260,24 +261,27 @@ class CallbackTimeSlot(TimeStampedModel):
         return dt.time()
 
     @staticmethod
-    def get_remaining_capacity_by_date(dt):
+    def is_threshold_breached_on_date(dt):
         """
-        This function returns the remaining capacity for the specified date
-        if capacity has been allocated to all slots
+        This function checks if there are any remaining slots available in a day
+        and returns True if there are none. This works from current time in case
+        of previous slots
 
         If a callback slot has not been defined, it will default the capacity to
-        99999 to prevent alerting emails being sent every time someone books on a day
+        False to prevent alerting emails being sent every time someone books on a day
         with unlimited capacity as per business requirement
         """
-        remaining_capacity = 0
         for slot_time in CALLBACK_TIME_SLOTS.CHOICES:
             time = CallbackTimeSlot.get_time_from_interval_string(slot_time[0])
             slot_dt = datetime.datetime.combine(dt.date(), time)
             _, slot = CallbackTimeSlot.get_model_from_datetime(slot_dt)
+            # Undefined Slot
             if slot is None:
-                return 99999
-            remaining_capacity += slot.remaining_capacity
-        return remaining_capacity
+                return False
+            if slot_dt >= (datetime.datetime.now() + timedelta(hours=2)):
+                if slot.remaining_capacity > 0:
+                    return False
+        return True
 
     @staticmethod
     def get_remaining_capacity_by_range(capacity, start_dt, end_dt):

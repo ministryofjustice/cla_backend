@@ -1,0 +1,13 @@
+{{- if .Values.metabase.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "cla-backend.fullname" . }}-metabase
+spec:
+  ports:
+  - port: 80
+    name: http
+    targetPort: 3000
+  selector:
+    app: {{ include "cla-backend.fullname" . }}-metabase
+{{- end }}

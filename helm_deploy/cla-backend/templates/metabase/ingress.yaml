@@ -1,0 +1,34 @@
+{{- if .Values.ingress.enabled -}}
+{{- if .Values.metabase.enabled -}}
+{{- $fullName := include "cla-backend.fullname" . -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Namespace }}-metabase
+  labels:
+    {{- include "cla-backend.labels" . | nindent 4 }}
+  namespace: {{.Release.Namespace}}
+  annotations:
+    external-dns.alpha.kubernetes.io/set-identifier: "{{ .Release.Namespace }}-metabase-{{ .Release.Namespace }}-{{- .Values.ingress.cluster.name -}}"
+    external-dns.alpha.kubernetes.io/aws-weight: "{{- .Values.ingress.cluster.weight -}}"
+    nginx.ingress.kubernetes.io/whitelist-source-range: "{{ include "cla-backend.whitelist" . }}"
+    {{- with .Values.ingress.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  tls:
+    - hosts:
+        - "{{ .Values.metabase.host }}.cloud-platform.service.justice.gov.uk"
+  rules:
+    - host: "{{ .Values.metabase.host }}.cloud-platform.service.justice.gov.uk"
+      http:
+        paths:
+          - path: "/"
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ $fullName }}-metabase
+                port:
+                  number: 80
+{{- end }}
+{{- end }}

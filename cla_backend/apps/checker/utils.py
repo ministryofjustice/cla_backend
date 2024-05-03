@@ -53,8 +53,13 @@ class CallbackTimeSlotCSVImporter(object):
         except Exception:
             raise ValidationError(message=dict(date="Write the date in this format: dd/mm/yyyy"))
         try:
-            assert row[CSV_COL_TIME].strip() in CALLBACK_TIME_SLOTS
-            row[CSV_COL_TIME] = row[CSV_COL_TIME].strip()
+            time = row[CSV_COL_TIME].strip()
+            # Excel will sometimes remove the leading zero from values it interprets as numbers.
+            # If the first number isn't a 0, 1 or 2 it will add a leading 0
+            if not time[0] in ["0", "1", "2"]:
+                time = "0{time}".format(time=time)
+            assert time in CALLBACK_TIME_SLOTS
+            row[CSV_COL_TIME] = time
         except Exception:
             raise ValidationError(
                 message=dict(time="Check the time is correct, for example, 1500 (for the 1500 to 1530 slot)")
@@ -111,15 +116,8 @@ def callback_capacity_get_slots_for_date(date, fallback_to_previous_week=True):
 
 
 def callback_capacity_threshold_breached(date):
-    slots = callback_capacity_get_slots_for_date(date, fallback_to_previous_week=True)
-    if not slots:
-        # No callback capacity slots were defined for this date so no capacity breach
-        return False
-
     # All slots need to exceed the capacity for it to be a breach
-    if CallbackTimeSlot.get_remaining_capacity_by_date(date) <= 0:
-        return True
-    return False
+    return CallbackTimeSlot.is_threshold_breached_on_date(date)
 
 
 def callback_capacity_threshold_breach_send_notification(dt):

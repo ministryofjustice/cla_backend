@@ -62,6 +62,10 @@ ingress:
 localPostgres:
   enabled: false
 
+metabase:
+  enabled: false
+  host: "cla-dashboard"
+
 queueWorkers:
   enabled: true
 

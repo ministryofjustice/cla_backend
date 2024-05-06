@@ -328,7 +328,7 @@ virtualenv==20.15.1
     # via pre-commit
 webencodings==0.5.1
     # via bleach
-werkzeug==0.15.3
+werkzeug==3.0.3
     # via -r requirements/source/requirements-dev.in
 wrapt==1.15.0
     # via vcrpy

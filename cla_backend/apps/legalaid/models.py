@@ -146,7 +146,7 @@ class PersonalDetails(CloneModelMixin, TimeStampedModel):
             "email",
             "full_name",
             "home_phone",
-            "id",
+            "ni_number",
             "mobile_phone",
             "postcode",
             "search_field",

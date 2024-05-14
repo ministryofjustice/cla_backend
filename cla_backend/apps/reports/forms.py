@@ -1079,6 +1079,10 @@ class MITellUsMoreAboutYourProblem(SQLFileDateRangeReport):
             "Legalaid Category Code",
             "Legalaid Category Name",
             "Outcome Code",
+            "Matter Type 1 Code",
+            "Matter Type 1 Description",
+            "Matter Type 2 Code",
+            "Matter Type 2 Description",
         ]
 
 

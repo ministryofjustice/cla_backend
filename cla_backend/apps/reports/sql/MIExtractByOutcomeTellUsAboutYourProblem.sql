@@ -28,11 +28,11 @@ SELECT
   ,COALESCE(log_changed_category.diagnosis_category, category.code) as "Diagnosis Category"
   ,category.code as "Legalaid Category Code"
   ,category.name as "Legalaid Category Name"
-  ,c.outcome_code as "Outcome Code"
   ,mt1.code as "Matter Type 1 Code"
-  ,mt1.description as "Matter Type 1 Description"
   ,mt2.code as "Matter Type 2 Code"
+  ,mt1.description as "Matter Type 1 Description"
   ,mt2.description as "Matter Type 2 Description"
+  ,c.outcome_code as "Outcome Code"
 FROM legalaid_case as c
 LEFT OUTER JOIN legalaid_eligibilitycheck as ec on c.eligibility_check_id = ec.id
 LEFT OUTER JOIN legalaid_category as category on ec.category_id = category.id

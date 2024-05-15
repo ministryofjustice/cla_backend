@@ -28,11 +28,17 @@ SELECT
   ,COALESCE(log_changed_category.diagnosis_category, category.code) as "Diagnosis Category"
   ,category.code as "Legalaid Category Code"
   ,category.name as "Legalaid Category Name"
+  ,mt1.code as "Matter Type 1 Code"
+  ,mt2.code as "Matter Type 2 Code"
+  ,mt1.description as "Matter Type 1 Description"
+  ,mt2.description as "Matter Type 2 Description"
   ,c.outcome_code as "Outcome Code"
 FROM legalaid_case as c
 LEFT OUTER JOIN legalaid_eligibilitycheck as ec on c.eligibility_check_id = ec.id
 LEFT OUTER JOIN legalaid_category as category on ec.category_id = category.id
 LEFT OUTER JOIN legalaid_adaptationdetails as adapt on c.adaptation_details_id = adapt.id
 LEFT OUTER JOIN log_changed_category ON log_changed_category.case_id = c.id
+LEFT OUTER JOIN legalaid_mattertype as mt1 on mt1.id = c.matter_type1_id
+LEFT OUTER JOIN legalaid_mattertype as mt2 on mt2.id = c.matter_type2_id
 WHERE c.modified >= %(from_date)s AND c.modified < %(to_date)s
 ORDER BY c.modified DESC

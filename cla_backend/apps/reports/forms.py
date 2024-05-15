@@ -1078,6 +1078,10 @@ class MITellUsMoreAboutYourProblem(SQLFileDateRangeReport):
             "Diagnosis Category",
             "Legalaid Category Code",
             "Legalaid Category Name",
+            "Matter Type 1 Code",
+            "Matter Type 2 Code",
+            "Matter Type 1 Description",
+            "Matter Type 2 Description",
             "Outcome Code",
         ]
 

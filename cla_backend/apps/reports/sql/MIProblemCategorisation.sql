@@ -32,6 +32,11 @@ SELECT
   ,mt2.code as "Matter Type 2 Code"
   ,mt1.description as "Matter Type 1 Description"
   ,mt2.description as "Matter Type 2 Description"
+  ,CASE diagnosis.state
+      when 'INSCOPE' then 'PASS'
+      when 'OUTOFSCOPE' then 'FAIL'
+      else 'UNKNOWN'
+   END as "CLA_Frontend Scope Status"
   ,c.outcome_code as "Outcome Code"
 FROM legalaid_case as c
 LEFT OUTER JOIN legalaid_eligibilitycheck as ec on c.eligibility_check_id = ec.id
@@ -40,5 +45,6 @@ LEFT OUTER JOIN legalaid_adaptationdetails as adapt on c.adaptation_details_id =
 LEFT OUTER JOIN log_changed_category ON log_changed_category.case_id = c.id
 LEFT OUTER JOIN legalaid_mattertype as mt1 on mt1.id = c.matter_type1_id
 LEFT OUTER JOIN legalaid_mattertype as mt2 on mt2.id = c.matter_type2_id
+LEFT OUTER JOIN diagnosis_diagnosistraversal as diagnosis on c.diagnosis_id = diagnosis.id
 WHERE c.modified >= %(from_date)s AND c.modified < %(to_date)s
 ORDER BY c.modified DESC

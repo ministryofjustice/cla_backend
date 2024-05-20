@@ -17,6 +17,10 @@ service:
 ingress:
   enabled: false
 
+metabase:
+  enabled: false
+  host: "cla-dashboard-dev"
+
 # Lists don't deep merge, so this list of envVars overrides anything defined in an earlier values file
 envVars:
   DEBUG:

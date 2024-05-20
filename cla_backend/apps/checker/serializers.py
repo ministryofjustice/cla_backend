@@ -191,6 +191,7 @@ class CaseSerializer(CaseSerializerBase):
             "callback_window_type",
             "adaptation_details",
             "thirdparty_details",
+            "gtm_anon_id",
         )
         writable_nested_fields = ["adaptation_details", "personal_details", "thirdparty_details"]
 

@@ -250,6 +250,7 @@ class CaseSerializer(CaseSerializerFull):
             "outcome_description",
             "source",
             "complaint_flag",
+            "gtm_anon_id",
         )
 
 

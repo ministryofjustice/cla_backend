@@ -6,7 +6,7 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [('legalaid', '0034_case_callback_type'),]
+    dependencies = [('legalaid', '0034_case_callback_type')]
 
     operations = [
         migrations.AddField(

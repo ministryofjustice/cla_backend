@@ -446,6 +446,7 @@ class CaseSerializerFull(CaseSerializerBase):
 
     exempt_user = serializers.NullBooleanField(required=False)
 
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta(object):
         model = User

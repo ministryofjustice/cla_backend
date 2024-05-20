@@ -1419,6 +1419,7 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
             "organisation",
             "callback_window_type",
             "callback_type",
+            "gtm_anon_id",
         ]
 
         if internal:
@@ -1464,6 +1465,7 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
             "ecf_statement": case.ecf_statement,
             "personal_details": case.personal_details,
             "from_case": case,
+            "gtm_anon_id": None,
         }
 
         if internal:

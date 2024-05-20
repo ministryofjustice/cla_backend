@@ -63,6 +63,7 @@ class BaseCaseTestCase(CLAProviderAuthBaseApiTestMixin, BaseFullCaseAPIMixin, AP
             "category",
             "source",
             "complaint_flag",
+            "gtm_anon_id",
         ]
 
     def get_extra_search_make_recipe_kwargs(self):

@@ -75,6 +75,7 @@ class BaseCaseTestCase(CLAOperatorAuthBaseApiTestMixin, BaseFullCaseAPIMixin, AP
             "call_started",
             "organisation_name",
             "organisation",
+            "gtm_anon_id",
         ]
 
 

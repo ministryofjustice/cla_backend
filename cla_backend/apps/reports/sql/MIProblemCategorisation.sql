@@ -10,7 +10,7 @@ SELECT
   ,c.source as "Source"
   ,to_char(c.created, 'YYYY-MM-DD') as "Created"
   ,to_char(c.modified, 'YYYY-MM-DD') as "Modified"
-  ,ec.notes as "Diagnosis Notes"
+  ,ec.notes as "CLA_Public Diagnosis Notes"
   ,c.notes as "Operator Notes"
   ,c.provider_notes as "Provider Notes"
   ,COALESCE(adapt.bsl_webcam, false)::bool as "Adjustments BSL Webcam"

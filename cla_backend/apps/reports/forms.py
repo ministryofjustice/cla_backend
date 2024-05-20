@@ -1065,7 +1065,7 @@ class MIProblemCategorisation(SQLFileDateRangeReport):
             "Source",
             "Created",
             "Modified",
-            "Diagnosis Notes",
+            "CLA_Public Diagnosis Notes",
             "Operator Notes",
             "Provider Notes",
             "Adjustments BSL Webcam",

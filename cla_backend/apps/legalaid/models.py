@@ -269,7 +269,6 @@ class ThirdPartyDetails(CloneModelMixin, TimeStampedModel):
 class AdaptationDetails(CloneModelMixin, TimeStampedModel):
     class Analytics:
         _allow_analytics = True
-        _PII = ["notes"]
 
     bsl_webcam = models.BooleanField(default=False)
     minicom = models.BooleanField(default=False)
@@ -681,6 +680,9 @@ class MediaCodeGroup(models.Model):
 
 
 class MediaCode(TimeStampedModel):
+    class Analytics:
+        _allow_analytics = True
+
     group = models.ForeignKey(MediaCodeGroup)
     name = models.CharField(max_length=128)
     code = models.CharField(max_length=20)

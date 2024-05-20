@@ -30,6 +30,10 @@ class ProviderManager(models.Manager):
 
 
 class Provider(TimeStampedModel):
+    class Analytics:
+        _allow_analytics = True
+        _PII = ["telephone_frontdoor", "telephone_backdoor", "email_address"]
+
     name = models.CharField(max_length=255, unique=True)
     opening_hours = models.CharField(max_length=100, blank=True)
     law_category = models.ManyToManyField("legalaid.Category", through="ProviderAllocation")
@@ -50,6 +54,9 @@ class WorkingDays(models.Model):
     """
     This model represents the working days for Education specialist providers, to align with the changes required as part of LGA-2904.
     """
+
+    class Analytics:
+        _allow_analytics = True
 
     provider_allocation = models.OneToOneField("ProviderAllocation")
     monday = models.BooleanField(default=DEFAULT_WORKING_DAYS["monday"])
@@ -125,6 +132,9 @@ class ProviderAllocationManager(models.Manager):
 
 
 class ProviderAllocation(TimeStampedModel):
+    class Analytics:
+        _allow_analytics = True
+
     provider = models.ForeignKey(Provider)
     category = models.ForeignKey("legalaid.Category")
     weighted_distribution = models.FloatField()  # see XXXXXXXXXXXX
@@ -254,6 +264,9 @@ class OutOfHoursRotaManager(models.Manager):
 
 
 class OutOfHoursRota(TimeStampedModel):
+    class Analytics:
+        _allow_analytics = True
+
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     category = models.ForeignKey("legalaid.Category")

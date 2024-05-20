@@ -37,6 +37,11 @@ SELECT
       when 'OUTOFSCOPE' then 'FAIL'
       else 'UNKNOWN'
    END as "CLA_Frontend Scope Status"
+  ,CASE ec.state
+      when 'yes' then 'PASS'
+      when 'no' then 'FAIL'
+      else 'UNKNOWN'
+   END as "	Latest Eligibility Status"
   ,c.outcome_code as "Outcome Code"
 FROM legalaid_case as c
 LEFT OUTER JOIN legalaid_eligibilitycheck as ec on c.eligibility_check_id = ec.id

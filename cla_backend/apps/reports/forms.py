@@ -1083,6 +1083,7 @@ class MIProblemCategorisation(SQLFileDateRangeReport):
             "Matter Type 1 Description",
             "Matter Type 2 Description",
             "CLA_Frontend Scope Status",
+            "Latest Eligibility Status",
             "Outcome Code",
         ]
 

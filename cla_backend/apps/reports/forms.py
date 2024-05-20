@@ -1051,8 +1051,8 @@ class AllKnowledgeBaseArticles(ReportForm):
         ]
 
 
-class MITellUsMoreAboutYourProblem(SQLFileDateRangeReport):
-    QUERY_FILE = "MIExtractByOutcomeTellUsAboutYourProblem.sql"
+class MIProblemCategorisation(SQLFileDateRangeReport):
+    QUERY_FILE = "MIProblemCategorisation.sql"
 
     def get_sql_params(self):
         from_date, to_date = self.date_range

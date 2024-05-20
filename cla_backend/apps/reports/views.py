@@ -34,7 +34,7 @@ from .forms import (
     ReasonsForContactingReport,
     ReasonsForContactingDisaggregated,
     CaseDemographicsReport,
-    MITellUsMoreAboutYourProblem,
+    MIProblemCategorisation,
     MinimalCaseDemographicsReport,
     CallbackTimeSlotReport,
 )
@@ -274,8 +274,8 @@ def minimal_case_demographic_report(request):
 
 @staff_member_required
 @permission_required("legalaid.run_reports")
-def problem_categorisation(request):
-    return report_view(request, MITellUsMoreAboutYourProblem, "Tell us more about your problem")
+def mi_problem_categorisation(request):
+    return report_view(request, MIProblemCategorisation, "MI problem categorisation")
 
 
 @staff_member_required

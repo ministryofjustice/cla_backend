@@ -216,7 +216,7 @@ pyyaml==5.4
     # via
     #   -r requirements/source/requirements-base.in
     #   vcrpy
-requests==2.27.1
+requests==2.32.0
     # via
     #   -r requirements/source/requirements-base.in
     #   cla-common

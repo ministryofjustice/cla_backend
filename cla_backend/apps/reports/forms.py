@@ -1051,8 +1051,8 @@ class AllKnowledgeBaseArticles(ReportForm):
         ]
 
 
-class MITellUsMoreAboutYourProblem(SQLFileDateRangeReport):
-    QUERY_FILE = "MIExtractByOutcomeTellUsAboutYourProblem.sql"
+class MIProblemCategorisation(SQLFileDateRangeReport):
+    QUERY_FILE = "MIProblemCategorisation.sql"
 
     def get_sql_params(self):
         from_date, to_date = self.date_range
@@ -1065,7 +1065,7 @@ class MITellUsMoreAboutYourProblem(SQLFileDateRangeReport):
             "Source",
             "Created",
             "Modified",
-            "Diagnosis Notes",
+            "CLA_Public Diagnosis Notes",
             "Operator Notes",
             "Provider Notes",
             "Adjustments BSL Webcam",
@@ -1082,6 +1082,8 @@ class MITellUsMoreAboutYourProblem(SQLFileDateRangeReport):
             "Matter Type 2 Code",
             "Matter Type 1 Description",
             "Matter Type 2 Description",
+            "CLA_Frontend Scope Status",
+            "Latest Eligibility Status",
             "Outcome Code",
         ]
 

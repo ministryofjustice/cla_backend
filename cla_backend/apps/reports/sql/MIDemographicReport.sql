@@ -1,3 +1,4 @@
+
 with latest_outcome as (
     select
       e.*
@@ -53,9 +54,9 @@ SELECT
     legalaid_case.source as "Contact Type",
     media_code.name as "Referral Agencies",
     legalaid_case.exempt_user_reason as "Exempt Client",
-    CASE upper(adaptations.language) 
-      WHEN upper('Welsh') THEN true 
-      ELSE false 
+    CASE upper(adaptations.language)
+      WHEN upper('Welsh') THEN true
+      ELSE false
     END as "Welsh",
     CASE upper(adaptations.language)
       WHEN 'ENGLISH' THEN 'English'
@@ -68,7 +69,7 @@ SELECT
     legalaid_case.thirdparty_details_id::bool as "Has Third Party",
     call_centre_organisation.name as "Organisation",
     personal_details.vulnerable_user as "Vulnerable User",
-    CASE 
+    CASE
       WHEN TRIM('123456789' FROM SUBSTRING(personal_details.postcode, 1, 2)) IN ('DE', 'LE', 'LN', 'NG') THEN 'East Midlands'
       WHEN TRIM('123456789' FROM SUBSTRING(personal_details.postcode, 1, 2)) IN ('AL', 'CB', 'CM', 'CO', 'HP', 'IP', 'LU', 'NR', 'SG', 'SS') THEN 'East of England'
       WHEN TRIM('123456789' FROM SUBSTRING(personal_details.postcode, 1, 2)) IN ('BR', 'CR', 'DA', 'E', 'EC', 'EN', 'HA', 'IG', 'KT', 'N', 'NW', 'RM', 'SE', 'SM', 'SW', 'TW', 'UB', 'W', 'WC', 'WD') THEN 'Greater London'

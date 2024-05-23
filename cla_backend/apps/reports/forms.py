@@ -478,8 +478,8 @@ class CaseDemographicsReport(SQLFileDateRangeReport):
         return self.execute_query(sql, sql_args)
 
 
-class MinimalCaseDemographicsReport(SQLFileDateRangeReport):
-    QUERY_FILE = "MinimalCaseDemographicsReport.sql"
+class MIDemographicReport(SQLFileDateRangeReport):
+    QUERY_FILE = "MIDemographicReport.sql"
 
     passphrase = forms.CharField(
         required=False, help_text="Optional. If not provided, the report will not include diversity data"

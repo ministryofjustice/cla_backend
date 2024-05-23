@@ -268,7 +268,7 @@ def case_demographic_report(request):
 
 @staff_member_required
 @permission_required("legalaid.run_reports")
-def minimal_case_demographic_report(request):
+def mi_demographic_report(request):
     return report_view(request, MinimalCaseDemographicsReport, "Minimal Case Demographic Report")
 
 

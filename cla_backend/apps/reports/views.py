@@ -33,9 +33,8 @@ from .forms import (
     AllKnowledgeBaseArticles,
     ReasonsForContactingReport,
     ReasonsForContactingDisaggregated,
-    CaseDemographicsReport,
     MIProblemCategorisation,
-    MinimalCaseDemographicsReport,
+    MIDemographicReport,
     CallbackTimeSlotReport,
 )
 
@@ -262,14 +261,8 @@ def download_file(request, file_name="", *args, **kwargs):
 
 @staff_member_required
 @permission_required("legalaid.run_reports")
-def case_demographic_report(request):
-    return report_view(request, CaseDemographicsReport, "Case Demographic Report")
-
-
-@staff_member_required
-@permission_required("legalaid.run_reports")
 def mi_demographic_report(request):
-    return report_view(request, MinimalCaseDemographicsReport, "Minimal Case Demographic Report")
+    return report_view(request, MIDemographicReport, "Minimal Case Demographic Report")
 
 
 @staff_member_required

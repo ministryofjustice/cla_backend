@@ -98,5 +98,4 @@ FROM legalaid_case AS legalaid_case
     LEFT OUTER JOIN call_centre_organisation AS call_centre_organisation ON call_centre_organisation.id = legalaid_case.organisation_id
     LEFT OUTER JOIN legalaid_personaldetails AS personal_details ON personal_details.id = legalaid_case.personal_details_id
 WHERE
-    -- If a case does not have an outcome log event then it should not be part of this dataset.
-    latest_outcome.created >= %s AND latest_outcome.created < %s
+    legalaid_case.created >= %s AND legalaid_case.created < %s

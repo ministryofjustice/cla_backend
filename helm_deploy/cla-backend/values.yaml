@@ -58,6 +58,8 @@ ingress:
     - 35.176.93.186/32
     - 18.130.148.126/32
     - 35.176.148.126/32
+    # MoJ Official
+    - 51.149.250.0/24
 
 localPostgres:
   enabled: false

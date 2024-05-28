@@ -130,7 +130,7 @@ future==0.18.3
     # via notifications-python-client
 futures==3.4.0
     # via s3transfer
-idna==2.10
+idna==3.7
     # via
     #   requests
     #   urllib3

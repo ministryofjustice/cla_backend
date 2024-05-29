@@ -108,7 +108,7 @@ class ExportTask(ExportTaskBase):
             error_message = text_type(error).strip()
             if "wrong key" in error_message.lower() or "corrupt data" in error_message.lower():
                 # e.g. if pgcrypto key is incorrect
-                self.message = u"Check passphrase and try again"
+                self.message = u"Check passphrase and try again: {error}".format(error=str(error))
             else:
                 self.message = u"An error occurred:\n%s" % error_message
 

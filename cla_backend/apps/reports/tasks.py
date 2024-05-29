@@ -147,7 +147,7 @@ class OBIEEExportTask(ExportTaskBase):
                 message = text_type(message).strip()
                 if "wrong key" in message.lower() or "corrupt data" in message.lower():
                     # e.g. if pgcrypto key is incorrect
-                    self.message = u"Check passphrase and try again"
+                    self.message = u"Check passphrase and try again: {error}".format(error=str(e))
                 else:
                     self.message = u"An error occurred creating the zip file: {message}".format(message=message)
                 raise
@@ -214,7 +214,7 @@ class ReasonForContactingExportTask(ExportTaskBase):
             if parse_url.hostname:
                 parts.append(parse_url.hostname.replace(".", "_"))
             if parse_url.path:
-                parts.append(parse_url.path.replace("/", "_"),)
+                parts.append(parse_url.path.replace("/", "_"))
             if parse_url.query:
                 parts.append(parse_url.query.replace("=", "_"))
 

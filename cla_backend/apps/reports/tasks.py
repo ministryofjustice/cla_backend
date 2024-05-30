@@ -108,7 +108,7 @@ class ExportTask(ExportTaskBase):
             error_message = text_type(error).strip()
             if "wrong key" in error_message.lower() or "corrupt data" in error_message.lower():
                 # e.g. if pgcrypto key is incorrect
-                self.message = u"Check passphrase and try again: {error}".format(error=str(error))
+                self.message = u"Check passphrase and try again"
             else:
                 self.message = u"An error occurred:\n%s" % error_message
 
@@ -147,7 +147,7 @@ class OBIEEExportTask(ExportTaskBase):
                 message = text_type(message).strip()
                 if "wrong key" in message.lower() or "corrupt data" in message.lower():
                     # e.g. if pgcrypto key is incorrect
-                    self.message = u"Check passphrase and try again: {error}".format(error=str(e))
+                    self.message = u"Check passphrase and try again"
                 else:
                     self.message = u"An error occurred creating the zip file: {message}".format(message=message)
                 raise

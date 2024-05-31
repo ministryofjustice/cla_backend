@@ -49,11 +49,6 @@ urlpatterns = patterns(
         views.reasons_for_contacting_disaggregated,
         name="reasons_for_contacting_disaggregated",
     ),
-    url(r"^case-demographic-report/$", views.case_demographic_report, name="case_demographic_report"),
-    url(
-        r"^minimal-case-demographic-report/$",
-        views.minimal_case_demographic_report,
-        name="minimal_case_demographic_report",
-    ),
+    url(r"^mi-demographic-report/$", views.mi_demographic_report, name="mi_demographic_report"),
     url(r"^callback-time-slot-report/$", views.callback_time_slot_report, name="callback_time_slot_report"),
 )

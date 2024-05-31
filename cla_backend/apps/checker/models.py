@@ -228,6 +228,9 @@ class CallbackTimeSlot(TimeStampedModel):
         time (TextField)
     """
 
+    class Analytics:
+        _allow_analytics = True
+
     time = models.CharField(max_length=4, choices=CALLBACK_TIME_SLOTS.CHOICES)
     date = models.DateField()
     capacity = models.IntegerField()

@@ -240,7 +240,7 @@ typing==3.10.0.0
     #   sphinx
 ua-parser==0.10.0
     # via django-cookies-samesite
-urllib3==1.26.14
+urllib3==1.26.19
     # via
     #   botocore
     #   requests

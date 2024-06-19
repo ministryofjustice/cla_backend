@@ -14,7 +14,7 @@ SELECT
     legalaid_case.reference AS "Case ID",
     legalaid_provider.name AS "Provider ID",
     category.code AS "Category Name",
-    legalaid_case.created AS "Date Case Created",
+    TO_CHAR(legalaid_case.created, 'DD-MM-YYYY') AS "Date Case Created",
     matter_type_1.code AS "Matter Type 1",
     matter_type_2.code AS "Matter Type 2",
     CASE diagnosis.state
@@ -65,7 +65,7 @@ SELECT
       ELSE 'Non-English'
     END as "Language",
     legalaid_case.outcome_code as "Outcome code",
-    latest_outcome.created as "Outcome Created At",
+    TO_CHAR(latest_outcome.created, 'DD-MM-YYYY') as "Outcome Created At",
     legalaid_case.thirdparty_details_id::bool as "Has Third Party",
     call_centre_organisation.name as "Organisation",
     personal_details.vulnerable_user as "Vulnerable User",

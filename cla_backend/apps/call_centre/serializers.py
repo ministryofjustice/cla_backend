@@ -346,6 +346,7 @@ class CreateCaseSerializer(CaseSerializer):
 
     def create(self, validated_data):
         validated_data['gtm_anon_id'] = str(uuid.uuid4())
+        super(CreateCaseSerializer, self).create(validated_data)
 
         instance = Case.objects.create(**validated_data)
         return instance

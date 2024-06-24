@@ -1,3 +1,4 @@
+import uuid
 from rest_framework import serializers
 
 from cla_common.constants import FEEDBACK_ISSUE
@@ -304,6 +305,7 @@ class CaseSerializer(CaseSerializerFull):
             "complaint_count",
             "organisation_name",
             "organisation",
+            "gtm_anon_id",
         )
 
 
@@ -341,6 +343,10 @@ class CreateCaseSerializer(CaseSerializer):
     It allows the API to create a case with optional personal_details reference.
     No other fields can be used when creating a case atm.
     """
+
+    def create(self, validated_data):
+        validated_data['gtm_anon_id'] = str(uuid.uuid4())
+        return super(CreateCaseSerializer, self).create(validated_data)
 
     personal_details = UUIDSerializer(
         slug_field="reference", required=False, queryset=PersonalDetails.objects.all(), allow_null=True

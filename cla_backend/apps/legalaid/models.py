@@ -775,6 +775,8 @@ class Case(TimeStampedModel):
     complaint_flag = models.BooleanField(default=False)
     is_urgent = models.BooleanField(default=False)
 
+    gtm_anon_id = models.UUIDField(unique=False, null=True, blank=True)
+
     class Meta(object):
         ordering = ("-created",)
         permissions = (

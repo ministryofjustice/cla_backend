@@ -29,7 +29,7 @@ from legalaid.serializers import (
 )
 
 from .models import Operator
-from legalaid.models import PersonalDetails, Case
+from legalaid.models import PersonalDetails
 
 
 class PropertySerializer(PropertySerializerBase):

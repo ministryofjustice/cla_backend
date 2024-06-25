@@ -393,7 +393,7 @@ class CaseSerializerBase(PartialUpdateExcludeReadonlySerializerMixin, ClaModelSe
     outcome_code = serializers.CharField(max_length=50, required=False, allow_blank=True)
     outcome_description = serializers.SerializerMethodField("_get_outcome_description")
     call_started = serializers.SerializerMethodField("_call_started")
-    gtm_anon_id = serializers.UUIDField(required=False)
+    gtm_anon_id = serializers.UUIDField(required=False, allow_null=True)
 
     def _call_started(self, case):
         return Log.objects.filter(case=case, code="CALL_STARTED").exists()

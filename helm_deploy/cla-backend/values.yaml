@@ -60,6 +60,9 @@ ingress:
     - 35.176.148.126/32
     # MoJ Official
     - 51.149.250.0/24
+    # DOM1 VPN Addresses
+    - 51.149.249.0/29
+    - 51.149.249.32/29
 
 localPostgres:
   enabled: false

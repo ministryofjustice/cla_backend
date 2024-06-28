@@ -127,6 +127,8 @@ def create_view(view_name, table, columns):
         columns (list[str]): List of column names to include in the view
     """
     command = "CREATE VIEW %s AS SELECT %s FROM %s"
+    if "diagnosis_diagnosistraversal.nodes" in columns:
+        columns = columns.replace("diagnosis_diagnosistraversal.nodes", "json_array_elements(nodes) as nodes")
     with connection.cursor() as cursor:
         cursor.execute(command, [AsIs(view_name), AsIs(columns), AsIs(table)])
         logger.info("Created view: {view_name} with columns: {columns}".format(view_name=view_name, columns=columns))

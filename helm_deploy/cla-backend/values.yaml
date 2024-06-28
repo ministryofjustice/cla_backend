@@ -61,7 +61,9 @@ ingress:
     # MoJ Official
     - 51.149.250.0/24
     # DOM1 VPN Addresses
+    # ARK Corsham Internet Egress Exponential-E
     - 51.149.249.0/29
+    # ARK Farnborough Internet Egress Exponential-E
     - 51.149.249.32/29
 
 localPostgres:

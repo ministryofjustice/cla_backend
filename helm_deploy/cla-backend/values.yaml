@@ -65,6 +65,12 @@ ingress:
     - 51.149.249.0/29
     # ARK Farnborough Internet Egress Exponential-E
     - 51.149.249.32/29
+    # PRP DIA Sites
+    - 194.33.200.0/21
+    - 194.33.216.0/23
+    - 194.33.218.0/24
+    # Palo Alto Prisma Access Egress IP Addresses - Prisma_Access:
+    - 128.77.75.64/26
 
 localPostgres:
   enabled: false

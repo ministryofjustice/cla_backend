@@ -334,7 +334,7 @@ wrapt==1.15.0
     # via vcrpy
 xlrd==2.0.1
     # via csvkit
-zipp==1.2.0
+zipp==3.19.1
     # via
     #   importlib-metadata
     #   importlib-resources

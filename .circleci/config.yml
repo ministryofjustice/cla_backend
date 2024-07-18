@@ -344,7 +344,7 @@ workflows:
             branches:
               ignore:
                 - master
-                - '^snyk-fix.*'
+                - snyk-fix.*
           context:
            - laa-cla-backend
            - laa-cla-backend-live-uat

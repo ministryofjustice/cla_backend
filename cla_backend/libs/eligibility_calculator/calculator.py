@@ -36,7 +36,6 @@ class EligibilityChecker(object):
         cfe_result, cfe_calcs, cfe_response = self._do_cfe_civil_check()
 
         # Send data to Civil Application Data Store
-        import random
         reference = "CGWKT"
         # e.g. {"employment_income":"5000", "reference_number":"MN-3457"}
         civil_application_data = {

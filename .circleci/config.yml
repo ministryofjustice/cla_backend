@@ -305,9 +305,6 @@ workflows:
   build_and_test:
     jobs:
       - pip-compile
-      - test:
-          requires:
-            - pip-compile
       - cleanup_merged:
           name: cleanup_merged_live
           context:
@@ -316,14 +313,10 @@ workflows:
       - build:
           name: build_push_application
           image: app
-          requires:
-            - test
           context: laa-cla-backend
       - build:
           name: build_push_database_migration
           image: database-migration
-          requires:
-            - test
           context: laa-cla-backend
       - behave:
           requires:

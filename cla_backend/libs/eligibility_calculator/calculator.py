@@ -37,19 +37,24 @@ class EligibilityChecker(object):
 
         # Send data to Civil Application Data Store
         import random
-        reference = "CGWKT" + str(random.randint(1, 1000))
+        reference = "CGWKT"
         # e.g. {"employment_income":"5000", "reference_number":"MN-3457"}
         civil_application_data = {
             "reference_number": reference,
-            "employment_income": self.case_data.you.income.earnings,
+            "employment_income_amount": self.case_data.you.income.earnings,
+            "employment_income_frequency": "monthly",
+            "housing_amount": self.case_data.you.deductions.rent,
+            "housing_frequency": "monthly",
+            "savings_amount": self.case_data.you.savings.bank_balance,
         }
         url = "https://laa-civil-applications-datastore-uat.apps.live.cloud-platform.service.justice.gov.uk/civil_applications"
-        print("POST %s %r" % (url, json.dumps(civil_application_data)))
+        logger.info("POST: %s %r", url, json.dumps(civil_application_data))
+        # print("POST %s %r" % (url, json.dumps(civil_application_data)))
         try:
             response = requests.post(url=url, json=civil_application_data)
-            print(response.status_code)
+            logger.info("POST response: %s", response.status_code)
         except Exception as e:
-            print("ERROR: %r" % e.__dict__)
+            logger.error("ERROR: %r", e.__dict__)
 
         # import pdb; pdb.set_trace()
 

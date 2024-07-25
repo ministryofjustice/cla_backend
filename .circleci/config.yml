@@ -307,7 +307,6 @@ workflows:
       - pip-compile
       - test:
           requires:
-            - lint
             - pip-compile
       - cleanup_merged:
           name: cleanup_merged_live

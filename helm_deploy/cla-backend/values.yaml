@@ -46,31 +46,10 @@ ingress:
     name: ~
     weight: ~
   whitelist:
-    # Cisco Anyconnect (Dom1) / ARK data centre
-    - 194.33.192.0/25
-    - 194.33.196.0/25
     # HGS
     - 84.43.86.100/32
     # CHS
     - 52.210.114.89/32
-    # GlobalProtect VPN (Digital Mac)
-    - 18.169.147.172/32
-    - 35.176.93.186/32
-    - 18.130.148.126/32
-    - 35.176.148.126/32
-    # MoJ Official
-    - 51.149.250.0/24
-    # DOM1 VPN Addresses
-    # ARK Corsham Internet Egress Exponential-E
-    - 51.149.249.0/29
-    # ARK Farnborough Internet Egress Exponential-E
-    - 51.149.249.32/29
-    # PRP DIA Sites
-    - 194.33.200.0/21
-    - 194.33.216.0/23
-    - 194.33.218.0/24
-    # Palo Alto Prisma Access Egress IP Addresses - Prisma_Access:
-    - 128.77.75.64/26
 
 localPostgres:
   enabled: false

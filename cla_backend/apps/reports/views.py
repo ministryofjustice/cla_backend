@@ -34,6 +34,7 @@ from .forms import (
     ReasonsForContactingReport,
     ReasonsForContactingDisaggregated,
     MIProblemCategorisation,
+    MIScopeReport,
     MIDemographicReport,
     CallbackTimeSlotReport,
 )
@@ -269,6 +270,12 @@ def mi_demographic_report(request):
 @permission_required("legalaid.run_reports")
 def mi_problem_categorisation(request):
     return report_view(request, MIProblemCategorisation, "MI Problem Categorisation")
+
+
+@staff_member_required
+@permission_required("legalaid.run_reports")
+def mi_scope_report(request):
+    return report_view(request, MIScopeReport, "MI Scope report")
 
 
 @staff_member_required

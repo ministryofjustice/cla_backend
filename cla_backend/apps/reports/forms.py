@@ -1008,6 +1008,38 @@ class MIProblemCategorisation(SQLFileDateRangeReport):
         ]
 
 
+class MIScopeReport(SQLFileDateRangeReport):
+    QUERY_FILE = "MIScopeReport.sql"
+
+    def get_sql_params(self):
+        from_date, to_date = self.date_range
+        return {"from_date": from_date, "to_date": to_date}
+
+    def get_headers(self):
+        return [
+            "Person ID",
+            "Case ID",
+            "Created",
+            "Modified",
+            "Case source",
+            "CHS scope state",
+            "Web scope state",
+            "Means eligibility state",
+            "Workflow status",
+            "CHS case outcome code",
+            "Provider Notes",
+            "Operator Notes",
+            "Client notes",
+            "Category code",
+            "Category name",
+            "Matter Type 1 code",
+            "Matter Type 1 description",
+            "Matter Type 2 code",
+            "Matter Type 2 description",
+            "Web diagnosis categories",
+        ]
+
+
 class CallbackTimeSlotReport(DateRangeReportForm):
     def get_queryset(self):
         from_date, to_date = self.date_range

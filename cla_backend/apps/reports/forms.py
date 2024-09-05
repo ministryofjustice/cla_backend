@@ -41,12 +41,9 @@ class ReportForm(ConvertDateMixin, forms.Form):
             yield row
 
     def __iter__(self):
-        try:
-            yield self.get_headers()
-            for row in self.get_rows():
-                yield row
-        except Exception as e:
-            print "ERROR: %s" % e
+        yield self.get_headers()
+        for row in self.get_rows():
+            yield row
 
     def get_output(self):
         return list(self)
@@ -1081,19 +1078,17 @@ class MIScopeReport(SQLFileDateRangeReport):
 
     @staticmethod
     def notes_to_dict(notes):
-        parts = notes.split("User selected:\nWhat do you need help with?:")
+        ret = {"user problem": "", "categories": [], "scope": ""}
+        parts = notes.split("User selected:\nWhat do you need help with?: ")
+        if not notes:
+            return ret
+
         if len(parts) == 1:
-            user_problem = ""
             categories = parts[0]
         else:
-            user_problem = parts[0].split("User problem:\n")[1]
+            ret["user problem"] = parts[0].split("User problem:\n")[1]
             categories = parts[1]
-        categories, scope = categories.split("Outcome: ")
-        ret = {
-            "user problem": user_problem,
-            "categories": [],
-            "scope": scope
-        }
+        categories, ret["scope"] = categories.split("Outcome: ")
         for category in categories.split("\n\n"):
             if "?: " in category:
                 category = category.split("?: ")[1]

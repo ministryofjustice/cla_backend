@@ -1,10 +1,4 @@
-WITH log_changed_category as (
-    SELECT log_created.case_id, (log_changed_category.patch #>> '{}')::json#>>'{backwards,0,value}' as "diagnosis_category"
-    FROM cla_eventlog_log as log_created
-    JOIN cla_eventlog_log as log_changed_category ON log_created.case_id=log_changed_category.case_id
-        AND log_created.notes = 'Case created digitally' AND log_changed_category.notes LIKE 'Changed category to%%'
-),
-log_mi_oos_outcome_code as (
+WITH log_mi_oos_outcome_code as (
     SELECT case_id, code
     FROM cla_eventlog_log
     WHERE code = 'MIS-OOS'
@@ -12,7 +6,7 @@ log_mi_oos_outcome_code as (
 )
 
 SELECT
-  c.personal_details_id as "Person ID"
+   DISTINCT c.personal_details_id as "Person ID"
   ,c.reference as "Case Id"
   ,to_char(c.created, 'YYYY-MM-DD') as "Created"
   ,to_char(c.modified, 'YYYY-MM-DD') as "Modified"
@@ -30,9 +24,11 @@ SELECT
   ,CASE
      WHEN ec.state NOT IN('yes', 'no') THEN 'Pending'
      WHEN ec.state IS NOT NULL AND provider_assigned_at IS NULL THEN 'Operator'
-     WHEN c.provider_viewed IS NOT NULL AND log_mi_oos_outcome_code.code IS NULL THEN 'Read and approved by SP'
+      -- All the provider outcome codes that are not MI-OOS
+     WHEN c.provider_viewed IS NOT NULL AND log_mi_oos_outcome_code.code IS NULL AND c.outcome_code IN ('MIS-MEANS', 'COI', 'MIS', 'SPOP', 'CLSP', 'DREFER', 'REOPEN', 'REF-EXT', 'REF-INT', 'REF-EXT_CREATED', 'REF-INT_CREATED') THEN 'Read and approved by SP'
      WHEN c.provider_viewed IS NOT NULL AND log_mi_oos_outcome_code.code IS NOT NULL THEN 'Read and NOT approved by SP'
-    ELSE 'Provider has not viewed'
+     WHEN c.provider_viewed IS NOT NULL THEN 'Read by SP'
+    ELSE 'NOT read by SP'
   END as "Workflow status"
   ,c.outcome_code as "CHS case outcome code"
   ,c.provider_notes as "Provider Notes"
@@ -54,9 +50,10 @@ FROM legalaid_case as c
 LEFT OUTER JOIN legalaid_eligibilitycheck as ec on c.eligibility_check_id = ec.id
 LEFT OUTER JOIN legalaid_category as category on ec.category_id = category.id
 LEFT OUTER JOIN legalaid_adaptationdetails as adapt on c.adaptation_details_id = adapt.id
-LEFT OUTER JOIN log_changed_category ON log_changed_category.case_id = c.id
 LEFT OUTER JOIN legalaid_mattertype as mt1 on mt1.id = c.matter_type1_id
 LEFT OUTER JOIN legalaid_mattertype as mt2 on mt2.id = c.matter_type2_id
 LEFT OUTER JOIN diagnosis_diagnosistraversal as diagnosis on c.diagnosis_id = diagnosis.id
 LEFT OUTER JOIN log_mi_oos_outcome_code ON log_mi_oos_outcome_code.case_id = c.id
-ORDER BY c.modified DESC
+WHERE  source IN ('WEB')
+AND c.modified >= %(from_date)s AND c.modified < %(to_date)s
+ORDER BY to_char(c.modified, 'YYYY-MM-DD') DESC

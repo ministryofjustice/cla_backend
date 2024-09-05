@@ -532,110 +532,15 @@ class TestCallbackTimeSlotReport(TestCase):
             self.assertDictEqual(row_dict, callbacks[row_dict["Interval"]])
 
 
-class TestScopeReportTwo(TestCase):
-    CALLBACK_TIME_SLOT = "checker.callback_time_slot"
-    LEGALAID_CASE = "legalaid.case"
-
-    def get_report(self, date_range):
-        with mock.patch("reports.forms.MIScopeReport.date_range", date_range):
-            report = reports.forms.MIScopeReport()
-            rows = report.get_rows()
-            headers = report.get_headers()
-            data = []
-            for row in rows:
-                data.append(zip(headers, row))
-
-        return data
-
-    @mock.patch("cla_common.call_centre_availability.OpeningHours.available", return_value=True)
-    def test_callback_time_slots(self, _):
-        tomorrow = datetime.datetime(2024, 1, 2)
-        overmorrow = tomorrow + datetime.timedelta(days=1)
-        date_format = "%d/%m/%Y"
-        # Create callback time slots with capacity
-        callbacks = {
-            "0900": {
-                "Date": tomorrow.strftime(date_format),
-                "Interval": u"0900",
-                "Total capacity": 4,
-                "Used capacity": 1,
-                "Remaining capacity": 3,
-                "% Remaining capacity": "75",
-            },
-            "1000": {
-                "Date": tomorrow.strftime(date_format),
-                "Interval": u"1000",
-                "Total capacity": 9,
-                "Used capacity": 3,
-                "Remaining capacity": 6,
-                "% Remaining capacity": "66.66",
-            },
-            "1100": {
-                "Date": tomorrow.strftime(date_format),
-                "Interval": u"1100",
-                "Total capacity": 0,
-                "Used capacity": 0,
-                "Remaining capacity": 0,
-                "% Remaining capacity": "0",
-            },
-            "1200": {
-                "Date": tomorrow.strftime(date_format),
-                "Interval": u"1200",
-                "Total capacity": 1,
-                "Used capacity": 1,
-                "Remaining capacity": 0,
-                "% Remaining capacity": "0",
-            },
-            "1300": {
-                "Date": tomorrow.strftime(date_format),
-                "Interval": u"1300",
-                "Total capacity": 1,
-                "Used capacity": 0,
-                "Remaining capacity": 1,
-                "% Remaining capacity": "100",
-            },
-            "1400": {
-                "Date": overmorrow.strftime(date_format),
-                "Interval": u"1400",
-                "Total capacity": 1,
-                "Used capacity": 0,
-                "Remaining capacity": 1,
-                "% Remaining capacity": "100",
-            },
-        }
-        for interval, callback in callbacks.iteritems():
-            # Create callback time slots
-            dt = datetime.datetime.strptime(callback["Date"], date_format)
-            make_recipe(self.CALLBACK_TIME_SLOT, capacity=callback["Total capacity"], date=dt, time=interval)
-            if callback["Used capacity"] > 0:
-                hour = int(interval[0:2])
-                minutes = int(interval[2:])
-                requires_action_at = datetime.datetime.combine(dt, datetime.time(hour=hour, minute=minutes))
-                # Create callbacks
-                make_recipe(
-                    self.LEGALAID_CASE,
-                    requires_action_at=requires_action_at,
-                    _quantity=callback["Used capacity"],
-                    eligibility_check=None,
-                    callback_type=CALLBACK_TYPES.CHECKER_SELF,
-                    notes=interval,
-                    source="WEB"
-                )
-
-        date_range = (tomorrow, tomorrow)
-        report = self.get_report(date_range)
-
-
-        for row in report:
-            row_dict = dict(row)
-            self.assertEqual(row_dict["Date"], tomorrow.strftime(date_format))
-            self.assertDictEqual(row_dict, callbacks[row_dict["Interval"]])
-
 class TestMIScopeReport(TestCase):
     LEGALAID_CASE = "legalaid.case"
+    today = datetime.date.today()
 
-    def get_report(self, date_range):
-        with mock.patch("reports.forms.MIScopeReport.date_range", date_range):
+    def get_report(self):
+        date_from = self.today - datetime.timedelta(days=1)
+        date_to = self.today + datetime.timedelta(days=1)
+
+        with mock.patch("reports.forms.MIScopeReport.date_range", (date_from, date_to)):
             report = reports.forms.MIScopeReport()
             rows = report.get_rows()
             headers = report.get_headers()
@@ -645,19 +550,75 @@ class TestMIScopeReport(TestCase):
 
         return data
 
-    def test_report(self):
-        eligible_case = make_recipe("legalaid.case", source="WEB")
+    def test_report_client_notes(self):
+        eligible_case = make_recipe("legalaid.eligible_case", source="WEB")
         eligible_case.eligibility_check.notes = self.get_notes()
         eligible_case.eligibility_check.save()
-        eligible_case.save()
-        # self.assertEqual(eligible_case.eligibility_check.state, "yes")
-        # self.assertEqual(eligible_case.diagnosis.state, "INSCOPE")
-        # self.assertEqual(eligible_case.source, "WEB")
 
-        today = datetime.date.today()
-        report = self.get_report((today, today))
+        self.assertEqual(eligible_case.eligibility_check.state, "yes")
+        self.assertEqual(eligible_case.diagnosis.state, "INSCOPE")
+        self.assertEqual(eligible_case.source, "WEB")
 
-        import pdb;pdb.set_trace()
+        report = self.get_report()
+        expected = {
+            "Web diagnosis category 1": "Discrimination",
+            "Web diagnosis category 2": "Age",
+            "Web diagnosis category 3": "18 or over",
+            "Web diagnosis category 4": "At work",
+            "Web diagnosis category 5": "",
+            "Web diagnosis category 6": "",
+            "Web scope state": "INSCOPE",
+            "Client notes": "This is a free text field\nI can type whatever I want\nYes\nNo\nDiscrimination\n\n",
+            "Workflow status": "Operator",
+        }
+        self.assertDictContainsSubset(expected, dict(report[0]))
+
+    def test_report_workflow_status_pending(self):
+        eligible_case = make_recipe("legalaid.case", source="WEB")
+        self.assertEqual(eligible_case.source, "WEB")
+        report = self.get_report()
+        expected = {"Workflow status": "Pending"}
+        self.assertDictContainsSubset(expected, dict(report[0]))
+
+    def test_report_workflow_status_operator(self):
+        eligible_case = make_recipe("legalaid.eligible_case", source="WEB")
+        self.assertEqual(eligible_case.source, "WEB")
+        report = self.get_report()
+        expected = {"Workflow status": "Operator"}
+        self.assertDictContainsSubset(expected, dict(report[0]))
+
+    def test_report_workflow_status_read_approved_by_SP(self):
+        eligible_case = make_recipe(
+            "legalaid.eligible_case",
+            source="WEB",
+            provider_viewed=self.today,
+            provider_assigned_at=self.today,
+            outcome_code="COI",
+        )
+        make_recipe("cla_eventlog.log", case=eligible_case, code="COI")
+        self.assertEqual(eligible_case.source, "WEB")
+        report = self.get_report()
+        expected = {"Workflow status": "Read and approved by SP"}
+        self.assertDictContainsSubset(expected, dict(report[0]))
+
+    def test_report_workflow_status_read_NOT_approved_by_SP(self):
+        eligible_case = make_recipe(
+            "legalaid.eligible_case", source="WEB", provider_viewed=self.today, provider_assigned_at=self.today
+        )
+        make_recipe("cla_eventlog.log", case=eligible_case, code="MIS-OOS")
+
+        self.assertEqual(eligible_case.source, "WEB")
+
+        report = self.get_report()
+        expected = {"Workflow status": "Read and NOT approved by SP"}
+        self.assertDictContainsSubset(expected, dict(report[0]))
+
+    def test_report_workflow_status_NOT_read_by_SP(self):
+        eligible_case = make_recipe("legalaid.eligible_case", source="WEB", provider_assigned_at=self.today)
+        self.assertEqual(eligible_case.source, "WEB")
+        report = self.get_report()
+        expected = {"Workflow status": "NOT read by SP"}
+        self.assertDictContainsSubset(expected, dict(report[0]))
 
     def get_notes(self):
         return """User problem:

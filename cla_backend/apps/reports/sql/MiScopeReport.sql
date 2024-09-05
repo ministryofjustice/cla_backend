@@ -18,15 +18,15 @@ SELECT
   ,to_char(c.modified, 'YYYY-MM-DD') as "Modified"
   ,c.source as "Case source"
   ,CASE diagnosis.state
-      when 'INSCOPE' then 'yes'
+      when 'INSCOPE' then 'INSCOPE'
       else NULL
    END as "CHS scope state"
-  ,COALESCE(log_changed_category.diagnosis_category, category.code) as "Web scope state"
+  ,'' as "Web scope state"
   ,CASE ec.state
       when 'yes' then 'yes'
       when 'no' then 'no'
       else 'unknown'
-  END AS "Means eligibility state"
+   END as "Means eligibility state"
   ,CASE
      WHEN ec.state NOT IN('yes', 'no') THEN 'Pending'
      WHEN ec.state IS NOT NULL AND provider_assigned_at IS NULL THEN 'Operator'
@@ -44,9 +44,12 @@ SELECT
   ,mt1.description as "Matter Type 1 description"
   ,mt2.code as "Matter Type 2 code"
   ,mt2.description as "Matter Type 2 description"
-  ,ec.notes as "Web diagnosis categories"
-
-
+  ,'' as "Web diagnosis category 1"
+  ,'' as "Web diagnosis category 2"
+  ,'' as "Web diagnosis category 3"
+  ,'' as "Web diagnosis category 4"
+  ,'' as "Web diagnosis category 5"
+  ,'' as "Web diagnosis category 6"
 FROM legalaid_case as c
 LEFT OUTER JOIN legalaid_eligibilitycheck as ec on c.eligibility_check_id = ec.id
 LEFT OUTER JOIN legalaid_category as category on ec.category_id = category.id
@@ -56,6 +59,4 @@ LEFT OUTER JOIN legalaid_mattertype as mt1 on mt1.id = c.matter_type1_id
 LEFT OUTER JOIN legalaid_mattertype as mt2 on mt2.id = c.matter_type2_id
 LEFT OUTER JOIN diagnosis_diagnosistraversal as diagnosis on c.diagnosis_id = diagnosis.id
 LEFT OUTER JOIN log_mi_oos_outcome_code ON log_mi_oos_outcome_code.case_id = c.id
-WHERE  source IN ('WEB')
-AND c.modified >= %(from_date)s AND c.modified < %(to_date)s
 ORDER BY c.modified DESC

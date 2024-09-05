@@ -41,9 +41,12 @@ class ReportForm(ConvertDateMixin, forms.Form):
             yield row
 
     def __iter__(self):
-        yield self.get_headers()
-        for row in self.get_rows():
-            yield row
+        try:
+            yield self.get_headers()
+            for row in self.get_rows():
+                yield row
+        except Exception as e:
+            print "ERROR: %s" % e
 
     def get_output(self):
         return list(self)
@@ -1036,8 +1039,66 @@ class MIScopeReport(SQLFileDateRangeReport):
             "Matter Type 1 description",
             "Matter Type 2 code",
             "Matter Type 2 description",
-            "Web diagnosis categories",
+            "Web diagnosis category 1",
+            "Web diagnosis category 2",
+            "Web diagnosis category 3",
+            "Web diagnosis category 4",
+            "Web diagnosis category 5",
+            "Web diagnosis category 6",
         ]
+
+    def get_rows(self):
+        for row in self.get_queryset():
+
+            row = list(row)
+            notes_col = self._get_col_index("Client notes")
+            notes = row[notes_col]
+            data = self.notes_to_dict(notes)
+            row[notes_col] = data["user problem"]
+
+            category_1_col = self._get_col_index("Web diagnosis category 1")
+            category_2_col = self._get_col_index("Web diagnosis category 2")
+            category_3_col = self._get_col_index("Web diagnosis category 3")
+            category_4_col = self._get_col_index("Web diagnosis category 4")
+            category_5_col = self._get_col_index("Web diagnosis category 5")
+            category_6_col = self._get_col_index("Web diagnosis category 6")
+
+            row[notes_col] = data["user problem"]
+            row[category_1_col] = data["categories"].pop(0) if data["categories"] else ""
+            row[category_2_col] = data["categories"].pop(0) if data["categories"] else ""
+            row[category_3_col] = data["categories"].pop(0) if data["categories"] else ""
+            row[category_4_col] = data["categories"].pop(0) if data["categories"] else ""
+            row[category_5_col] = data["categories"].pop(0) if data["categories"] else ""
+            row[category_6_col] = data["categories"].pop(0) if data["categories"] else ""
+
+            web_scope_state_col = self._get_col_index("Web scope state")
+            row[web_scope_state_col] = data["scope"]
+
+            yield row
+
+    def _get_col_index(self, column_name):
+        return self.get_headers().index(column_name)
+
+    @staticmethod
+    def notes_to_dict(notes):
+        parts = notes.split("User selected:\nWhat do you need help with?:")
+        if len(parts) == 1:
+            user_problem = ""
+            categories = parts[0]
+        else:
+            user_problem = parts[0].split("User problem:\n")[1]
+            categories = parts[1]
+        categories, scope = categories.split("Outcome: ")
+        ret = {
+            "user problem": user_problem,
+            "categories": [],
+            "scope": scope
+        }
+        for category in categories.split("\n\n"):
+            if "?: " in category:
+                category = category.split("?: ")[1]
+            ret["categories"].append(category)
+        return ret
 
 
 class CallbackTimeSlotReport(DateRangeReportForm):

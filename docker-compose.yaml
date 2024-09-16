@@ -37,6 +37,7 @@ services:
       target: ${ENVIRONMENT:-development}
     ports:
       - '8010:8000'
+      - '2222:22'
     stdin_open: true
     tty: true
     volumes:

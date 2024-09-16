@@ -573,6 +573,29 @@ class TestMIScopeReport(TestCase):
         }
         self.assertDictContainsSubset(expected, dict(report[0]))
 
+    def test_report_client_notes_no_user_problem(self):
+        eligible_case = make_recipe("legalaid.eligible_case", source="WEB")
+        eligible_case.eligibility_check.notes = self.get_notes_without_user_problem()
+        eligible_case.eligibility_check.save()
+
+        self.assertEqual(eligible_case.eligibility_check.state, "yes")
+        self.assertEqual(eligible_case.diagnosis.state, "INSCOPE")
+        self.assertEqual(eligible_case.source, "WEB")
+
+        report = self.get_report()
+        expected = {
+            "Web diagnosis category 1": "Discrimination",
+            "Web diagnosis category 2": "Age",
+            "Web diagnosis category 3": "18 or over",
+            "Web diagnosis category 4": "At work",
+            "Web diagnosis category 5": "",
+            "Web diagnosis category 6": "",
+            "Web scope state": "INSCOPE",
+            "Client notes": "",
+            "Workflow status": "Operator",
+        }
+        self.assertDictContainsSubset(expected, dict(report[0]))
+
     def test_report_workflow_status_pending(self):
         eligible_case = make_recipe("legalaid.case", source="WEB")
         self.assertEqual(eligible_case.source, "WEB")
@@ -629,6 +652,18 @@ No
 Discrimination
 
 User selected:
+What do you need help with?: Discrimination
+
+On what grounds have you been discriminated against?: Age
+
+How old are you?: 18 or over
+
+Where did the discrimination occur?: At work
+
+Outcome: INSCOPE"""
+
+    def get_notes_without_user_problem(self):
+        return """User selected:
 What do you need help with?: Discrimination
 
 On what grounds have you been discriminated against?: Age

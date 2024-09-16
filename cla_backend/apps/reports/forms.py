@@ -1079,7 +1079,7 @@ class MIScopeReport(SQLFileDateRangeReport):
     @staticmethod
     def notes_to_dict(notes):
         ret = {"user problem": "", "categories": [], "scope": ""}
-        parts = notes.split("User selected:\nWhat do you need help with?: ")
+        parts = filter(None, notes.split("User selected:\nWhat do you need help with?: "))
         if not notes:
             return ret
 

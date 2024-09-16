@@ -22,7 +22,7 @@ SELECT
       else 'unknown'
    END as "Means eligibility state"
   ,CASE
-     WHEN ec.state NOT IN('yes', 'no') THEN 'Pending'
+     WHEN diagnosis.state IS NULL OR diagnosis.state = 'UNKNOWN' THEN 'Pending'
      WHEN ec.state IS NOT NULL AND provider_assigned_at IS NULL THEN 'Operator'
       -- All the provider outcome codes that are not MI-OOS
      WHEN c.provider_viewed IS NOT NULL AND log_mi_oos_outcome_code.code IS NULL AND c.outcome_code IN ('MIS-MEANS', 'COI', 'MIS', 'SPOP', 'CLSP', 'DREFER', 'REOPEN', 'REF-EXT', 'REF-INT', 'REF-EXT_CREATED', 'REF-INT_CREATED') THEN 'Read and approved by SP'

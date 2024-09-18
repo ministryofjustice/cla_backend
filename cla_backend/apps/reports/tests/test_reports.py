@@ -619,6 +619,29 @@ class TestMIScopeReport(TestCase):
         }
         self.assertDictContainsSubset(expected, dict(report[0]))
 
+    def test_report_client_public_diagnosis_note(self):
+        eligible_case = make_recipe("legalaid.eligible_case", source="WEB")
+        eligible_case.eligibility_check.notes = self.get_notes_public_diagnosis_note()
+        eligible_case.eligibility_check.save()
+
+        self.assertEqual(eligible_case.eligibility_check.state, "yes")
+        self.assertEqual(eligible_case.diagnosis.state, "INSCOPE")
+        self.assertEqual(eligible_case.source, "WEB")
+
+        report = self.get_report()
+        expected = {
+            "Web diagnosis category 1": "Domestic abuse",
+            "Web diagnosis category 2": "Domestic abuse",
+            "Web diagnosis category 3": "Yes",
+            "Web diagnosis category 4": "",
+            "Web diagnosis category 5": "",
+            "Web diagnosis category 6": "",
+            "Web scope state": "CONTACT",
+            "Client notes": "",
+            "Workflow status": "Operator",
+        }
+        self.assertDictContainsSubset(expected, dict(report[0]))
+
     def test_report_workflow_status_pending(self):
         eligible_case = make_recipe("legalaid.case", source="WEB")
         self.assertEqual(eligible_case.source, "WEB")
@@ -700,3 +723,17 @@ Outcome: INSCOPE"""
     def get_notes_just_user_problem(self):
         return """User problem:
 This is a free text field"""
+
+    def get_notes_public_diagnosis_note(self):
+        return """Public Diagnosis note:
+User is at immediate risk of harm
+
+User selected:
+What do you need help with?: Domestic abuse
+
+Choose the option that best describes your personal situation: Domestic abuse
+
+Are you or your children at immediate risk of harm?: Yes
+
+Outcome: CONTACT
+        """

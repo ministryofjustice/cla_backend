@@ -1080,31 +1080,35 @@ class MIScopeReport(SQLFileDateRangeReport):
     def notes_to_dict(notes):
         def get_categories_and_scope(user_selected_text):
             items, scope = user_selected_text.split("Outcome: ")
+            scope = re.sub(r"\s+|\n", "", scope)
             categories = []
             for category in items.split("\n\n"):
-                if "?: " in category:
-                    category = category.split("?: ")[1]
+                if ": " in category:
+                    category = category.split(": ")[1]
                 categories.append(category)
-            return categories, scope
+            return filter(None, categories), scope
 
         ret = {"user problem": "", "categories": [], "scope": ""}
-        parts = filter(None, notes.split("User selected:\nWhat do you need help with?: "))
         if not notes:
             return ret
 
         contains_user_selected = "User selected:\n" in notes
         contains_user_problem = "User problem:\n" in notes
-        # import pdb; pdb.set_trace();
+        contains_public_diagnosis_note = "Public Diagnosis note:\n" in notes
+
+        new_notes = notes
+        if contains_public_diagnosis_note:
+            new_notes = re.sub("Public Diagnosis note:\n.*\n\n", "", notes)
 
         if contains_user_selected:
-            parts = filter(None, notes.split("User selected:\nWhat do you need help with?: "))
+            parts = filter(None, new_notes.split("User selected:\nWhat do you need help with?: "))
             if contains_user_problem:
                 ret["categories"], ret["scope"] = get_categories_and_scope(parts[1])
                 ret["user problem"] = parts[0].split("User problem:\n")[1]
             else:
                 ret["categories"], ret["scope"] = get_categories_and_scope(parts[0])
         elif contains_user_problem:
-            ret["user problem"] = filter(None, notes.split("User problem:\n"))[0]
+            ret["user problem"] = filter(None, new_notes.split("User problem:\n"))[0]
 
         return ret
 

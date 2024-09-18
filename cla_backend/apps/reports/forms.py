@@ -1078,21 +1078,34 @@ class MIScopeReport(SQLFileDateRangeReport):
 
     @staticmethod
     def notes_to_dict(notes):
+        def get_categories_and_scope(user_selected_text):
+            items, scope = user_selected_text.split("Outcome: ")
+            categories = []
+            for category in items.split("\n\n"):
+                if "?: " in category:
+                    category = category.split("?: ")[1]
+                categories.append(category)
+            return categories, scope
+
         ret = {"user problem": "", "categories": [], "scope": ""}
         parts = filter(None, notes.split("User selected:\nWhat do you need help with?: "))
         if not notes:
             return ret
 
-        if len(parts) == 1:
-            categories = parts[0]
-        else:
-            ret["user problem"] = parts[0].split("User problem:\n")[1]
-            categories = parts[1]
-        categories, ret["scope"] = categories.split("Outcome: ")
-        for category in categories.split("\n\n"):
-            if "?: " in category:
-                category = category.split("?: ")[1]
-            ret["categories"].append(category)
+        contains_user_selected = "User selected:\n" in notes
+        contains_user_problem = "User problem:\n" in notes
+        # import pdb; pdb.set_trace();
+
+        if contains_user_selected:
+            parts = filter(None, notes.split("User selected:\nWhat do you need help with?: "))
+            if contains_user_problem:
+                ret["categories"], ret["scope"] = get_categories_and_scope(parts[1])
+                ret["user problem"] = parts[0].split("User problem:\n")[1]
+            else:
+                ret["categories"], ret["scope"] = get_categories_and_scope(parts[0])
+        elif contains_user_problem:
+            ret["user problem"] = filter(None, notes.split("User problem:\n"))[0]
+
         return ret
 
 

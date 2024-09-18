@@ -596,6 +596,29 @@ class TestMIScopeReport(TestCase):
         }
         self.assertDictContainsSubset(expected, dict(report[0]))
 
+    def test_report_client_just_user_problem(self):
+        eligible_case = make_recipe("legalaid.eligible_case", source="WEB")
+        eligible_case.eligibility_check.notes = self.get_notes_just_user_problem()
+        eligible_case.eligibility_check.save()
+
+        self.assertEqual(eligible_case.eligibility_check.state, "yes")
+        self.assertEqual(eligible_case.diagnosis.state, "INSCOPE")
+        self.assertEqual(eligible_case.source, "WEB")
+
+        report = self.get_report()
+        expected = {
+            "Web diagnosis category 1": "",
+            "Web diagnosis category 2": "",
+            "Web diagnosis category 3": "",
+            "Web diagnosis category 4": "",
+            "Web diagnosis category 5": "",
+            "Web diagnosis category 6": "",
+            "Web scope state": "",
+            "Client notes": "This is a free text field",
+            "Workflow status": "Operator",
+        }
+        self.assertDictContainsSubset(expected, dict(report[0]))
+
     def test_report_workflow_status_pending(self):
         eligible_case = make_recipe("legalaid.case", source="WEB")
         self.assertEqual(eligible_case.source, "WEB")
@@ -673,3 +696,7 @@ How old are you?: 18 or over
 Where did the discrimination occur?: At work
 
 Outcome: INSCOPE"""
+
+    def get_notes_just_user_problem(self):
+        return """User problem:
+This is a free text field"""

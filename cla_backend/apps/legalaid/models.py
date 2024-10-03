@@ -783,6 +783,8 @@ class Case(TimeStampedModel):
             ("run_reports", u"Can run reports"),
             ("run_obiee_reports", u"Can run OBIEE reports"),
             ("run_complaints_report", u"Can run complaints report"),
+            # Used to give internal users access to reports that should not be used without the appropriate context.
+            ("run_internal_reports", u"Can run internal reports"),
         )
 
     def __unicode__(self):

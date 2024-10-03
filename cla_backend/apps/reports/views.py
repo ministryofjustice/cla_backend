@@ -274,6 +274,7 @@ def mi_problem_categorisation(request):
 
 @staff_member_required
 @permission_required("legalaid.run_reports")
+@permission_required("legalaid.run_internal_reports")
 def mi_scope_report(request):
     return report_view(request, MIScopeReport, "MI Scope report")
 

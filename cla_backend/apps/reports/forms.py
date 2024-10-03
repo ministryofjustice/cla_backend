@@ -1010,6 +1010,10 @@ class MIProblemCategorisation(SQLFileDateRangeReport):
 
 class MIScopeReport(SQLFileDateRangeReport):
     QUERY_FILE = "MIScopeReport.sql"
+    description = "Reports on the current status of cases and extracts how the user self diagnosed their category of law based on the answers provided on Check if you can get legal aid"
+    documentation_link = (
+        "https://dsdmoj.atlassian.net/wiki/spaces/laagetaccess/pages/5183537366/Reports#MI-Scope-Report"
+    )
 
     def get_sql_params(self):
         from_date, to_date = self.date_range

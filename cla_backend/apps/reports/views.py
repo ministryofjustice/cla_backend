@@ -59,7 +59,15 @@ def report_view(request, form_class, title, template="case_report", success_task
         messages.info(request, u"Your export is being processed. It will show up in the downloads tab shortly.")
 
     return render(
-        request, tmpl, {"has_permission": admin_site_instance.has_permission(request), "title": title, "form": form}
+        request,
+        tmpl,
+        {
+            "has_permission": admin_site_instance.has_permission(request),
+            "title": title,
+            "form": form,
+            "description": getattr(form, "description", None),
+            "documentation_link": getattr(form, "documentation_link", None),
+        },
     )
 
 

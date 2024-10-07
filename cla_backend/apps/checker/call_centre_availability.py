@@ -23,6 +23,12 @@ class CheckerOpeningHours(OpeningHours):
         """
         slots = super(CheckerOpeningHours, self).time_slots(day)
 
+        # cla_common gives all valid time slots from 00:00 to 23:30
+        # The call centre doesn't work before 5AM, this allows us to check far fewer time slots and
+        # also fix an ambiguous time error where 01:00:00 on a DST switchover date could belong to multiple
+        # timezones.
+        slots = filter(lambda dt: dt.hour > 5, slots)
+
         if is_third_party_callback:  # Third party callbacks always have capacity.
             return slots
 

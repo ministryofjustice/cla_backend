@@ -404,9 +404,9 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
             "category": -1,
             "your_problem_notes": "a" * 501,
             "property_set": [
-                {"value": 111, "mortgage_left": 222, "share": 33, "disputed": True},  # valid
-                {"value": -1, "mortgage_left": -1, "share": -1, "disputed": True},  # invalid
-                {"value": 0, "mortgage_left": 0, "share": 101, "disputed": True},  # invalid
+                {"value": 111, "mortgage_left": 222, "share": 33, "disputed": True, "main": True},  # valid
+                {"value": -1, "mortgage_left": -1, "share": -1, "disputed": True, "main": False},  # invalid
+                {"value": 0, "mortgage_left": 0, "share": 101, "disputed": True, "main": False},  # invalid
             ],
             "dependants_young": -1,
             "dependants_old": -1,
@@ -753,8 +753,8 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
         # an extra one
         data = {
             "property_set": [
-                {"value": 111, "mortgage_left": 222, "share": 33, "id": properties[0].id, "disputed": True},
-                {"value": 999, "mortgage_left": 888, "share": 77, "disputed": True},
+                {"value": 111, "mortgage_left": 222, "share": 33, "id": properties[0].id, "disputed": True, "main": True},
+                {"value": 999, "mortgage_left": 888, "share": 77, "disputed": True, "main": False},
             ]
         }
         response = self.client.patch(
@@ -776,6 +776,7 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
         self.assertItemsEqual([p["mortgage_left"] for p in response.data["property_set"]], [222, 888])
         self.assertItemsEqual([p["share"] for p in response.data["property_set"]], [33, 77])
         self.assertItemsEqual([p["disputed"] for p in response.data["property_set"]], [True, True])
+        self.assertItemsEqual([p["main"] for p in response.data["property_set"]], [True, True])
 
         # checking the db just in case
         self.assertEqual(self.resource.property_set.count(), 2)
@@ -1114,7 +1115,7 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
         """
         other_property = make_recipe("legalaid.property")
         data = {
-            "property_set": [{"value": 0, "mortgage_left": 0, "share": 0, "id": other_property.pk, "disputed": False}]
+            "property_set": [{"value": 0, "mortgage_left": 0, "share": 0, "id": other_property.pk, "disputed": False, "main": False}]
         }
         response = self.client.patch(
             self.detail_url, data, format="json", HTTP_AUTHORIZATION=self.get_http_authorization()

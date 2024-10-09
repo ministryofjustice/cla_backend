@@ -36,6 +36,8 @@ class PropertySerializer(PropertySerializerBase):
     value = serializers.IntegerField(required=True)
     mortgage_left = serializers.IntegerField(required=True)
     share = serializers.FloatField(required=True)
+    main = serializers.BooleanField(required=True)
+    disputed = serializers.BooleanField(required=True)
 
     class Meta(PropertySerializerBase.Meta):
         fields = ("value", "mortgage_left", "share", "id", "disputed", "main")

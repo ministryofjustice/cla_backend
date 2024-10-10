@@ -197,6 +197,7 @@ class EODDetailsSerializer(EODDetailsSerializerBase):
 
 class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
     def validate_property_set(self, value):
+        property_item = super(EligibilityCheckSerializer, self).validate_property_set(value)
         # Iterate through each item (property) in the property_set list
         for property_item in value:
             if property_item.get('value') is None:

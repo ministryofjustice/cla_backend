@@ -202,7 +202,6 @@ class EODDetailsSerializer(EODDetailsSerializerBase):
 
 
 class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
-
     def validate_property_set(self,value):
         # Iterate through each item (property) in the property_set list
         for property_item in value:
@@ -216,7 +215,6 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
                 raise serializers.ValidationError("Property 'disputed' cannot be null.")
             if property_item.get('main') is None:
                 raise serializers.ValidationError("Property 'main' cannot be null.")
-        
         return value
     property_set = PropertySerializer(many=True, required=False)
     you = PersonSerializer(required=False, allow_null=True)

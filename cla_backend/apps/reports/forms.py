@@ -1008,6 +1008,115 @@ class MIProblemCategorisation(SQLFileDateRangeReport):
         ]
 
 
+class MIScopeReport(SQLFileDateRangeReport):
+    QUERY_FILE = "MIScopeReport.sql"
+    description = "Reports on the current status of cases and extracts how the user self diagnosed their category of law based on the answers provided on Check if you can get legal aid"
+    documentation_link = (
+        "https://dsdmoj.atlassian.net/wiki/spaces/laagetaccess/pages/5183537366/Reports#MI-Scope-Report"
+    )
+
+    def get_sql_params(self):
+        from_date, to_date = self.date_range
+        return {"from_date": from_date, "to_date": to_date}
+
+    def get_headers(self):
+        return [
+            "Person ID",
+            "Case ID",
+            "Created",
+            "Modified",
+            "Case source",
+            "CHS scope state",
+            "Web scope state",
+            "Means eligibility state",
+            "Workflow status",
+            "CHS case outcome code",
+            "Provider Notes",
+            "Operator Notes",
+            "Client notes",
+            "Category code",
+            "Category name",
+            "Matter Type 1 code",
+            "Matter Type 1 description",
+            "Matter Type 2 code",
+            "Matter Type 2 description",
+            "Web diagnosis category 1",
+            "Web diagnosis category 2",
+            "Web diagnosis category 3",
+            "Web diagnosis category 4",
+            "Web diagnosis category 5",
+            "Web diagnosis category 6",
+        ]
+
+    def get_rows(self):
+        for row in self.get_queryset():
+
+            row = list(row)
+            notes_col = self._get_col_index("Client notes")
+            notes = row[notes_col]
+            data = self.notes_to_dict(notes)
+            row[notes_col] = data["user problem"]
+
+            category_1_col = self._get_col_index("Web diagnosis category 1")
+            category_2_col = self._get_col_index("Web diagnosis category 2")
+            category_3_col = self._get_col_index("Web diagnosis category 3")
+            category_4_col = self._get_col_index("Web diagnosis category 4")
+            category_5_col = self._get_col_index("Web diagnosis category 5")
+            category_6_col = self._get_col_index("Web diagnosis category 6")
+
+            row[notes_col] = data["user problem"]
+            row[category_1_col] = data["categories"].pop(0) if data["categories"] else ""
+            row[category_2_col] = data["categories"].pop(0) if data["categories"] else ""
+            row[category_3_col] = data["categories"].pop(0) if data["categories"] else ""
+            row[category_4_col] = data["categories"].pop(0) if data["categories"] else ""
+            row[category_5_col] = data["categories"].pop(0) if data["categories"] else ""
+            row[category_6_col] = data["categories"].pop(0) if data["categories"] else ""
+
+            web_scope_state_col = self._get_col_index("Web scope state")
+            row[web_scope_state_col] = data["scope"]
+
+            yield row
+
+    def _get_col_index(self, column_name):
+        return self.get_headers().index(column_name)
+
+    @staticmethod
+    def notes_to_dict(notes):
+        def get_categories_and_scope(user_selected_text):
+            items, scope = user_selected_text.split("Outcome: ")
+            scope = re.sub(r"\s+|\n", "", scope)
+            categories = []
+            for category in items.split("\n\n"):
+                if ": " in category:
+                    category = category.split(": ")[1]
+                categories.append(category)
+            return filter(None, categories), scope
+
+        ret = {"user problem": "", "categories": [], "scope": ""}
+        if not notes:
+            return ret
+
+        contains_user_selected = "User selected:\n" in notes
+        contains_user_problem = "User problem:\n" in notes
+        contains_public_diagnosis_note = "Public Diagnosis note:\n" in notes
+
+        new_notes = notes
+        if contains_public_diagnosis_note:
+            new_notes = re.sub("Public Diagnosis note:\n.*\n\n", "", notes)
+
+        if contains_user_selected:
+            parts = filter(None, new_notes.split("User selected:\nWhat do you need help with?: "))
+            if contains_user_problem:
+                ret["categories"], ret["scope"] = get_categories_and_scope(parts[1])
+                ret["user problem"] = parts[0].split("User problem:\n")[1]
+            else:
+                ret["categories"], ret["scope"] = get_categories_and_scope(parts[0])
+        elif contains_user_problem:
+            ret["user problem"] = filter(None, new_notes.split("User problem:\n"))[0]
+
+        return ret
+
+
 class CallbackTimeSlotReport(DateRangeReportForm):
     def get_queryset(self):
         from_date, to_date = self.date_range

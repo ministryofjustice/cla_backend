@@ -34,6 +34,7 @@ from .forms import (
     ReasonsForContactingReport,
     ReasonsForContactingDisaggregated,
     MIProblemCategorisation,
+    MIScopeReport,
     MIDemographicReport,
     CallbackTimeSlotReport,
 )
@@ -58,7 +59,15 @@ def report_view(request, form_class, title, template="case_report", success_task
         messages.info(request, u"Your export is being processed. It will show up in the downloads tab shortly.")
 
     return render(
-        request, tmpl, {"has_permission": admin_site_instance.has_permission(request), "title": title, "form": form}
+        request,
+        tmpl,
+        {
+            "has_permission": admin_site_instance.has_permission(request),
+            "title": title,
+            "form": form,
+            "description": getattr(form, "description", None),
+            "documentation_link": getattr(form, "documentation_link", None),
+        },
     )
 
 
@@ -269,6 +278,13 @@ def mi_demographic_report(request):
 @permission_required("legalaid.run_reports")
 def mi_problem_categorisation(request):
     return report_view(request, MIProblemCategorisation, "MI Problem Categorisation")
+
+
+@staff_member_required
+@permission_required("legalaid.run_reports")
+@permission_required("legalaid.run_internal_reports")
+def mi_scope_report(request):
+    return report_view(request, MIScopeReport, "MI Scope report")
 
 
 @staff_member_required

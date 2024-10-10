@@ -36,6 +36,7 @@ from legalaid.models import (
     EODDetailsCategory,
     Property,
 )
+from historic.models import CaseArchived
 from timer.models import Timer
 from legalaid.utils import diversity
 from cla_butler.models import DiversityDataCheck, ACTION, STATUS
@@ -71,6 +72,7 @@ class DeleteOldData(Task):
         self.cleanup_adaptation_details()
         self.cleanup_sessions()
         self.cleanup_access_tokens()
+        self.cleanup_historic_casearchive()
 
     def _setup(self):
         self.now = timezone.now()
@@ -229,6 +231,14 @@ class DeleteOldData(Task):
         case_complaints = Complaint.objects.filter(eod_id__in=eods).values_list("pk", flat=True)
         audit_logs = AuditLog.objects.filter(complaint__in=case_complaints)
         audit_logs.delete()
+
+    def cleanup_historic_casearchive(self):
+        """ Removes all Archived Cases that not been modified in over 3 years.
+            No fields in this model have a relationship to any other model.
+        """
+        three_years_ago = self.now - relativedelta(years=3)
+        archived_cases = CaseArchived.objects.filter(modifed__lte=three_years_ago)
+        archived_cases.delete()
 
 
 class DiversityDataCheckTask(Task):

@@ -1,6 +1,12 @@
 {% extends "admin/reports/base.html" %}
 
 {% block inner_form %}
+  {% if description %}
+    <p>{{ description }}</p>
+  {% endif %}
+  {% if documentation_link %}
+    <p><a href="{{ documentation_link }}">read more</a></p>
+  {% endif %}
   {{ form.as_p }}
 {% endblock inner_form %}
 

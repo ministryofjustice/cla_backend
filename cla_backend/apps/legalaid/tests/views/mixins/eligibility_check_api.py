@@ -742,7 +742,7 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
         """
         PATCH should add/remove/change properties.
         """
-        properties = make_recipe("legalaid.property", eligibility_check=self.resource, _quantity=4, disputed=False)
+        properties = make_recipe("legalaid.property", eligibility_check=self.resource, _quantity=4, disputed=False, main=False)
 
         # making extra properties not associated to this eligibility check
         make_recipe("legalaid.property", _quantity=5)
@@ -753,8 +753,8 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
         # an extra one
         data = {
             "property_set": [
-                {"value": 111, "mortgage_left": 222, "share": 33, "id": properties[0].id, "disputed": True},
-                {"value": 999, "mortgage_left": 888, "share": 77, "disputed": True},
+                {"value": 111, "mortgage_left": 222, "share": 33, "id": properties[0].id, "disputed": True, "main": False},
+                {"value": 999, "mortgage_left": 888, "share": 77, "disputed": True, "main": False},
             ]
         }
         response = self.client.patch(
@@ -1114,7 +1114,7 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
         """
         other_property = make_recipe("legalaid.property")
         data = {
-            "property_set": [{"value": 0, "mortgage_left": 0, "share": 0, "id": other_property.pk, "disputed": False}]
+            "property_set": [{"value": 0, "mortgage_left": 0, "share": 0, "id": other_property.pk, "disputed": False, "main": False}]
         }
         response = self.client.patch(
             self.detail_url, data, format="json", HTTP_AUTHORIZATION=self.get_http_authorization()

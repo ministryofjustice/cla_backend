@@ -62,6 +62,7 @@ def get_full_case(matter_type1, matter_type2, provider=None):
         on_passported_benefits=True,
         specific_benefits={"income_support": True},
         disregards={"criminal_injuries": True},
+        disregard_selection="yes",
         on_nass_benefits=True,
         is_you_or_your_partner_over_60=True,
         under_18_passported=False,

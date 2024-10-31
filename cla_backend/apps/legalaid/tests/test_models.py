@@ -1284,6 +1284,7 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
                 "calculations",
                 "specific_benefits",
                 "disregards",
+                "disregard_selection",
                 "has_passported_proceedings_letter",
             ],
             check_not_None=True,

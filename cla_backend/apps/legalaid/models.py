@@ -444,7 +444,7 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin):
     specific_benefits = JSONField(null=True, blank=True)
     disregards = JSONField(null=True, blank=True)
     disregard_selection = models.CharField(
-        max_length=10, default=None, choices=DISREGARD_SELECTION, blank=True, null=True
+        max_length=10, default=None, choices=DISREGARD_SELECTION.CHOICES, blank=True, null=True
     )
 
     # need to be moved into graph/questions format soon

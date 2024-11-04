@@ -118,7 +118,7 @@ class PersonalDetailsSerializer(PersonalDetailsSerializerFull):
             "safe_to_contact",
             "vulnerable_user",
             "has_diversity",
-            "announce_call"
+            "announce_call",
         )
 
 
@@ -200,17 +200,18 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
         property_item = super(EligibilityCheckSerializer, self).validate_property_set(value)
         # Iterate through each item (property) in the property_set list
         for property_item in value:
-            if property_item.get('value') is None:
+            if property_item.get("value") is None:
                 raise serializers.ValidationError("Property 'value' cannot be null.")
-            if property_item.get('mortgage_left') is None:
+            if property_item.get("mortgage_left") is None:
                 raise serializers.ValidationError("Property 'mortgage_left' cannot be null.")
-            if property_item.get('share') is None:
+            if property_item.get("share") is None:
                 raise serializers.ValidationError("Property 'share' cannot be null.")
-            if property_item.get('disputed') is None:
+            if property_item.get("disputed") is None:
                 raise serializers.ValidationError("Property 'disputed' cannot be null.")
-            if property_item.get('main') is None:
+            if property_item.get("main") is None:
                 raise serializers.ValidationError("Property 'main' cannot be null.")
         return value
+
     property_set = PropertySerializer(many=True, required=False)
     you = PersonSerializer(required=False, allow_null=True)
     partner = PartnerPersonSerializer(required=False, allow_null=True)
@@ -236,6 +237,7 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
             "state",
             "specific_benefits",
             "disregards",
+            "disregard_selection",
             "has_passported_proceedings_letter",
             "under_18_passported",
             "is_you_under_18",
@@ -360,7 +362,7 @@ class CreateCaseSerializer(CaseSerializer):
     """
 
     def create(self, validated_data):
-        validated_data['gtm_anon_id'] = str(uuid.uuid4())
+        validated_data["gtm_anon_id"] = str(uuid.uuid4())
         return super(CreateCaseSerializer, self).create(validated_data)
 
     personal_details = UUIDSerializer(

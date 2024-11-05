@@ -644,7 +644,7 @@ class TestMIScopeReport(TestCase):
 
     def test_report_client_new_frontend(self):
         eligible_case = make_recipe("legalaid.eligible_case", source="WEB")
-        eligible_case.eligibility_check.notes = self.get_notes_public_diagnosis_note()
+        eligible_case.eligibility_check.notes = self.get_notes_new_frontend()
         eligible_case.eligibility_check.save()
 
         self.assertEqual(eligible_case.eligibility_check.state, "yes")
@@ -667,7 +667,7 @@ class TestMIScopeReport(TestCase):
 
     def test_report_client_new_frontend_public_diagnsosis_note(self):
         eligible_case = make_recipe("legalaid.eligible_case", source="WEB")
-        eligible_case.eligibility_check.notes = self.get_notes_public_diagnosis_note()
+        eligible_case.eligibility_check.notes = self.get_notes_new_frontend_public_diagnsosis_note()
         eligible_case.eligibility_check.save()
 
         self.assertEqual(eligible_case.eligibility_check.state, "yes")

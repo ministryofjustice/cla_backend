@@ -35,6 +35,7 @@ class EligibilityCheckTestCase(CLAOperatorAuthBaseApiTestMixin, NestedEligibilit
             "state",
             "specific_benefits",
             "disregards",
+            "disregard_selection",
             "has_passported_proceedings_letter",
         ]
 

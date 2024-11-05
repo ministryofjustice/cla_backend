@@ -217,7 +217,6 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
             "on_passported_benefits": random.choice([None, True, False]),
             "specific_benefits": None,
             "disregards": None,
-            "disregard_selection": None,
         }
         response = self._create(data=data)
 
@@ -236,7 +235,6 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
                 on_passported_benefits=data["on_passported_benefits"],
                 specific_benefits=None,
                 disregards=None,
-                disregard_selection=None,
             ),
         )
 

@@ -40,7 +40,6 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
             "on_passported_benefits",
             "specific_benefits",
             "disregards",
-            "disregard_selection",
             "on_nass_benefits",
             "is_you_or_your_partner_over_60",
         ]

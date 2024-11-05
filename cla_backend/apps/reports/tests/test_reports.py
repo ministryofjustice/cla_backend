@@ -659,8 +659,8 @@ class TestMIScopeReport(TestCase):
             "Web diagnosis category 4": "",
             "Web diagnosis category 5": "",
             "Web diagnosis category 6": "",
-            "Web scope state": "INSCOPE",
-            "Client notes": "",
+            "Web scope state": "InScope",
+            "Client notes": "Optional data\n\n",
             "Workflow status": "Operator",
         }
         self.assertDictContainsSubset(expected, dict(report[0]))
@@ -671,7 +671,7 @@ class TestMIScopeReport(TestCase):
         eligible_case.eligibility_check.save()
 
         self.assertEqual(eligible_case.eligibility_check.state, "yes")
-        self.assertEqual(eligible_case.diagnosis.state, "CONTACT")
+        self.assertEqual(eligible_case.diagnosis.state, "INSCOPE")
         self.assertEqual(eligible_case.source, "WEB")
 
         report = self.get_report()
@@ -682,8 +682,8 @@ class TestMIScopeReport(TestCase):
             "Web diagnosis category 4": "",
             "Web diagnosis category 5": "",
             "Web diagnosis category 6": "",
-            "Web scope state": "CONTACT",
-            "Client notes": "",
+            "Web scope state": "InScope - Skip means test",
+            "Client notes": "Data\n\n",
             "Workflow status": "Operator",
         }
         self.assertDictContainsSubset(expected, dict(report[0]))

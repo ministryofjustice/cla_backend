@@ -659,7 +659,7 @@ class TestMIScopeReport(TestCase):
             "Web diagnosis category 4": "",
             "Web diagnosis category 5": "",
             "Web diagnosis category 6": "",
-            "Web scope state": "InScope",
+            "Web scope state": "In Scope",
             "Client notes": "Optional data\n\n",
             "Workflow status": "Operator",
         }
@@ -676,13 +676,13 @@ class TestMIScopeReport(TestCase):
 
         report = self.get_report()
         expected = {
-            "Web diagnosis category 1": "Domestic Abuse",
+            "Web diagnosis category 1": "Domestic abuse",
             "Web diagnosis category 2": "Help to protect you and your children",
             "Web diagnosis category 3": "Yes",
             "Web diagnosis category 4": "",
             "Web diagnosis category 5": "",
             "Web diagnosis category 6": "",
-            "Web scope state": "InScope - Skip means test",
+            "Web scope state": "In Scope - Skip means test",
             "Client notes": "Data\n\n",
             "Workflow status": "Operator",
         }
@@ -812,5 +812,5 @@ Domestic Abuse: Help to protect you and your children
 
 Are you or your children at immediate risk of harm?: Yes
 
-Outcome: In Scope - skip means test
+Outcome: In Scope - Skip means test
         """

@@ -388,13 +388,15 @@ workflows:
 
       - training_deploy_approval:
           requires:
-            - staging_deploy_live
+            - build_push_application
+            - build_push_database_migration
           type: approval
           filters:
             branches:
               only:
                 - django-upgrade
                 - master
+                - feature/LGA-3323-mtr-disregard-changes
 
       - production_deploy_approval:
           requires:

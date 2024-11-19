@@ -44,6 +44,7 @@ from cla_common.constants import (
     CALLBACK_WINDOW_TYPES,
     CALLBACK_TYPES,
 )
+from legalaid.constants import DISREGARD_SELECTION
 
 from legalaid.fields import MoneyField
 
@@ -442,6 +443,9 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin):
     under_18_has_valuables = models.NullBooleanField(default=None)
     specific_benefits = JSONField(null=True, blank=True)
     disregards = JSONField(null=True, blank=True)
+    disregard_selection = models.CharField(
+        max_length=10, default=None, choices=DISREGARD_SELECTION.CHOICES, blank=True, null=True
+    )
 
     # need to be moved into graph/questions format soon
     is_you_or_your_partner_over_60 = models.NullBooleanField(default=None)

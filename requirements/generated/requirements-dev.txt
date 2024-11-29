@@ -312,7 +312,7 @@ unittest-xml-reporting==2.5.1
     # via -r requirements/source/requirements-testing.in
 urllib3-secure-extra==0.1.0
     # via urllib3
-urllib3[secure]==1.26.14
+urllib3==1.26.19
     # via
     #   botocore
     #   coveralls
@@ -334,7 +334,7 @@ wrapt==1.15.0
     # via vcrpy
 xlrd==2.0.1
     # via csvkit
-zipp==1.2.0
+zipp==3.19.1
     # via
     #   importlib-metadata
     #   importlib-resources

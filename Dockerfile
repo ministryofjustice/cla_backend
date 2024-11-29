@@ -43,6 +43,21 @@ FROM base AS development
 # additional package required otherwise build of coveralls fails
 RUN apk add --no-cache libffi-dev
 
+# Allow connecting to the container via ssh so that some IDE's can use the python interpreter
+RUN apk add openssh vim
+RUN ssh-keygen -A
+# Create directory for SSHD to run
+RUN mkdir /var/run/sshd
+# Set a password for root (for testing purposes)
+RUN echo 'root:password' | chpasswd
+# Allow root login with password
+RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+RUN sed -i 's/AllowTcpForwarding\sno/AllowTcpForwarding yes/' /etc/ssh/sshd_config
+
+# Expose SSH port
+EXPOSE 22
+
+
 RUN PIP_CONSTRAINT=/tmp/constraint.txt pip install -r ./requirements/requirements-dev.txt --no-cache-dir
 COPY . .
 
@@ -50,7 +65,6 @@ COPY . .
 RUN chown -R app:app /home/app && \
     mkdir -p cla_backend/assets
 
-USER 1000
 EXPOSE 8000
 CMD ["docker/run_dev.sh"]
 

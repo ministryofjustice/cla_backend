@@ -693,7 +693,7 @@ class MediaCode(TimeStampedModel):
 class Case(TimeStampedModel):
     class Analytics:
         _allow_analytics = True
-        _PII = ["notes", "provider_notes", "source"]
+        _PII = ["notes", "provider_notes"]
 
     reference = models.CharField(max_length=128, unique=True, editable=False)
     eligibility_check = models.OneToOneField(EligibilityCheck, null=True, blank=True)

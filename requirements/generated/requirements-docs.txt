@@ -226,7 +226,7 @@ speaklater==1.3
     # via cla-common
 sphinx-rtd-theme==0.1.6
     # via -r requirements/source/requirements-docs.in
-sphinx==1.8.6
+sphinx==3.0.4
     # via sphinx-rtd-theme
 sphinxcontrib-websupport==1.1.2
     # via sphinx

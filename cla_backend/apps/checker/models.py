@@ -325,7 +325,7 @@ class ScopeTraversal(TimeStampedModel):
     )
 
     scope_answers = JSONField(default=dict)
-    category = JSONField(default=dict)  # {"name": Categegory display name, "chs_code": Category name code}
+    category = JSONField(default=dict)  # {"name": Category display name, "chs_code": Category name code}
     subcategory = JSONField(default=dict)  # {"name": Subcategory Name, "description": Subcategory description}
     financial_assessment_status = models.CharField(null=True, max_length=32, choices=FINANCIAL_ASSESSMENT_STATUSES)
     fast_track_reason = models.CharField(null=True, max_length=32, choices=FAST_TRACK_REASON)

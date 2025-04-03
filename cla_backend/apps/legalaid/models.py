@@ -693,7 +693,7 @@ class MediaCode(TimeStampedModel):
 class Case(TimeStampedModel):
     class Analytics:
         _allow_analytics = True
-        _PII = ["notes", "provider_notes"]
+        _PII = ["notes", "provider_notes", "client_notes"]
 
     reference = models.CharField(max_length=128, unique=True, editable=False)
     eligibility_check = models.OneToOneField(EligibilityCheck, null=True, blank=True)
@@ -908,7 +908,7 @@ class Case(TimeStampedModel):
                     "assigned_out_of_hours",
                     "is_urgent",
                 ],
-                "clone_fks": ["thirdparty_details", "adaptation_details"],
+                "clone_fks": ["thirdparty_details", "adaptation_details", "scope_traversal"],
                 "override_values": override_values,
             },
         )

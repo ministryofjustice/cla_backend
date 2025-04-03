@@ -6,10 +6,9 @@ from django.utils import timezone
 from extended_choices import Choices
 from model_utils.models import TimeStampedModel
 from uuidfield import UUIDField
-
+from jsonfield import JSONField
 from cla_common.constants import REASONS_FOR_CONTACTING, CALLBACK_TYPES
 from cla_common.call_centre_availability import SLOT_INTERVAL_MINS
-
 
 # These are all the possible start times for a callback slot,
 # a slot has a duration of 30 minutes.
@@ -300,3 +299,33 @@ class CallbackTimeSlot(TimeStampedModel):
 
     def callback_end_datetime(self):
         return self.callback_start_datetime() + datetime.timedelta(minutes=SLOT_INTERVAL_MINS)
+
+
+class ScopeTraversal(TimeStampedModel):
+    """ Stores the information about the users journey through Check if you can get Legal Aid. """
+
+    class Analytics:
+        _allow_analytics = True
+
+    FINANCIAL_ASSESSMENT_STATUSES = Choices(
+        # constant, db_id, display string
+        ("PASSED", "PASSED", "Passed"),
+        ("FAILED", "FAILED", "Failed"),
+        ("FAST_TRACK", "FAST_TRACK", "Client told to call the helpline for the assessment."),
+        # Operationally fast tracked due the client indicating they are at risk of harm, are under 18, have trapped capital etc.
+        ("SKIPPED", "SKIPPED", "No details. Client called the helpline directly.")
+        # The client skipped the financial assessment due to clicking "Contact Us" directly.
+    )
+
+    FAST_TRACK_REASON = Choices(
+        # constant, db_id, display string
+        ("HARM", "HARM", "User has indicated they are at risk of harm"),
+        ("MORE_INFO_REQUIRED", "MORE_INFO_REQUIRED", "Further scoping information is required"),
+        ("OTHER", "OTHER", "Other"),
+    )
+
+    scope_answers = JSONField(default=dict)
+    category = JSONField(default=dict)  # {"name": Categegory display name, "chs_code": Category name code}
+    subcategory = JSONField(default=dict)  # {"name": Subcategory Name, "description": Subcategory description}
+    financial_assessment_status = models.CharField(null=True, max_length=32, choices=FINANCIAL_ASSESSMENT_STATUSES)
+    fast_track_reason = models.CharField(null=True, max_length=32, choices=FAST_TRACK_REASON)

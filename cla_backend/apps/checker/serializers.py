@@ -1,7 +1,6 @@
 from django.conf import settings
 from django.utils.functional import SimpleLazyObject
 from rest_framework import serializers
-
 from cla_common.constants import CALLBACK_WINDOW_TYPES, CALLBACK_TYPES
 from diagnosis.graph import get_graph
 from diagnosis.serializers import DiagnosisSerializer
@@ -19,11 +18,9 @@ from legalaid.serializers import (
     AdaptationDetailsSerializerBase,
     ThirdPartyDetailsSerializerBase,
 )
-
 from legalaid.models import Case, EligibilityCheck
-
-from checker.models import ReasonForContacting, ReasonForContactingCategory
-from core.serializers import ClaModelSerializer
+from checker.models import ReasonForContacting, ReasonForContactingCategory, ScopeTraversal
+from core.serializers import ClaModelSerializer, JSONField
 
 checker_graph = SimpleLazyObject(lambda: get_graph(file_name=settings.CHECKER_DIAGNOSIS_FILE_NAME))
 
@@ -170,6 +167,22 @@ class AdaptationDetailsSerializer(AdaptationDetailsSerializerBase):
         fields = ("bsl_webcam", "minicom", "text_relay", "skype_webcam", "language", "notes")
 
 
+class ScopeTraversalSerializer(serializers.ModelSerializer):
+    """ Can optionally be included when creating a Case via the checker case API route."""
+
+    scope_answers = JSONField(required=False, allow_null=True)
+    category = JSONField(required=False, allow_null=True)
+    subcategory = JSONField(required=False, allow_null=True)
+    financial_assessment_status = serializers.ChoiceField(
+        required=False, choices=ScopeTraversal.FINANCIAL_ASSESSMENT_STATUSES
+    )
+    harm_flag = serializers.NullBooleanField(required=False, default=False)
+
+    class Meta(object):
+        fields = "__all__"
+        model = ScopeTraversal
+
+
 class CaseSerializer(CaseSerializerBase):
     eligibility_check = UUIDSerializer(
         slug_field="reference", required=False, queryset=EligibilityCheck.objects.all(), allow_null=True
@@ -180,6 +193,8 @@ class CaseSerializer(CaseSerializerBase):
     requires_action_at = serializers.DateTimeField(required=False, allow_null=True)
     callback_type = serializers.ChoiceField(required=False, choices=CALLBACK_TYPES)
     callback_window_type = serializers.ChoiceField(choices=CALLBACK_WINDOW_TYPES, required=False, allow_null=True)
+    client_notes = serializers.CharField(required=False, allow_blank=True, max_length=5000)
+    scope_traversal = ScopeTraversalSerializer(required=False, allow_null=True)
 
     class Meta(CaseSerializerBase.Meta):
         fields = (
@@ -192,8 +207,10 @@ class CaseSerializer(CaseSerializerBase):
             "adaptation_details",
             "thirdparty_details",
             "gtm_anon_id",
+            "client_notes",
+            "scope_traversal",
         )
-        writable_nested_fields = ["adaptation_details", "personal_details", "thirdparty_details"]
+        writable_nested_fields = ["adaptation_details", "personal_details", "thirdparty_details", "scope_traversal"]
 
 
 class CheckerDiagnosisSerializer(DiagnosisSerializer):

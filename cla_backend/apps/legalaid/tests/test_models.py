@@ -118,6 +118,7 @@ def get_full_case(matter_type1, matter_type2, provider=None):
         provider_assigned_at=timezone.now(),
         is_urgent=True,
         organisation=organisation,
+        scope_traversal=make_recipe("checker.scope_traversal"),
     )
     make_recipe("legalaid.eod_details", notes="EOD notes", case=case)
     CaseKnowledgebaseAssignment.objects.create(
@@ -1425,6 +1426,7 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
             "callback_window_type",
             "callback_type",
             "gtm_anon_id",
+            "scope_traversal",
         ]
 
         if internal:

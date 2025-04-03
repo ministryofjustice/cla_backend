@@ -9,6 +9,7 @@ from uuidfield import UUIDField
 from jsonfield import JSONField
 from cla_common.constants import REASONS_FOR_CONTACTING, CALLBACK_TYPES
 from cla_common.call_centre_availability import SLOT_INTERVAL_MINS
+from core.cloning import CloneModelMixin
 
 # These are all the possible start times for a callback slot,
 # a slot has a duration of 30 minutes.
@@ -301,7 +302,7 @@ class CallbackTimeSlot(TimeStampedModel):
         return self.callback_start_datetime() + datetime.timedelta(minutes=SLOT_INTERVAL_MINS)
 
 
-class ScopeTraversal(TimeStampedModel):
+class ScopeTraversal(CloneModelMixin, TimeStampedModel):
     """ Stores the information about the users journey through Check if you can get Legal Aid. """
 
     class Analytics:
@@ -329,3 +330,5 @@ class ScopeTraversal(TimeStampedModel):
     subcategory = JSONField(default=dict)  # {"name": Subcategory Name, "description": Subcategory description}
     financial_assessment_status = models.CharField(null=True, max_length=32, choices=FINANCIAL_ASSESSMENT_STATUSES)
     fast_track_reason = models.CharField(null=True, max_length=32, choices=FAST_TRACK_REASON)
+
+    cloning_config = {"excludes": ["created", "modified"]}

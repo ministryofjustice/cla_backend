@@ -1410,6 +1410,7 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
             "provider_closed",
             "search_field",
             "is_urgent",
+            "scope_traversal",
         ]
         equal_fields = [
             "personal_details",
@@ -1426,7 +1427,6 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
             "callback_window_type",
             "callback_type",
             "gtm_anon_id",
-            "scope_traversal",
         ]
 
         if internal:

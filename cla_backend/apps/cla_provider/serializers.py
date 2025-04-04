@@ -360,4 +360,4 @@ class CSVUploadDetailSerializer(CSVUploadSerializerBase):
 
 class CaseNotesHistorySerializer(CaseNotesHistorySerializerBase):
     class Meta(CaseNotesHistorySerializerBase.Meta):
-        fields = ("created_by", "created", "operator_notes", "", "type_notes")
+        fields = ("created_by", "created", "operator_notes", "provider_notes", "type_notes")

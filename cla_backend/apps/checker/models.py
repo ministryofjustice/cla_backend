@@ -332,4 +332,4 @@ class ScopeTraversal(CloneModelMixin, TimeStampedModel):
     fast_track_reason = models.CharField(null=True, max_length=32, choices=FAST_TRACK_REASON)
     reference = UUIDField(auto=True, unique=True)
 
-    cloning_config = {"excludes": ["created", "modified"]}
+    cloning_config = {"excludes": ["created", "modified", "reference"]}

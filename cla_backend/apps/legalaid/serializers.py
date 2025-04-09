@@ -395,6 +395,7 @@ class CaseSerializerBase(PartialUpdateExcludeReadonlySerializerMixin, ClaModelSe
     outcome_description = serializers.SerializerMethodField("_get_outcome_description")
     call_started = serializers.SerializerMethodField("_call_started")
     gtm_anon_id = serializers.UUIDField(required=False, allow_null=True)
+    scope_traversal = UUIDSerializer(slug_field="reference", read_only=True)
 
     def _call_started(self, case):
         return Log.objects.filter(case=case, code="CALL_STARTED").exists()
@@ -446,6 +447,8 @@ class CaseSerializerFull(CaseSerializerBase):
     category = serializers.CharField(source="diagnosis.category.name", read_only=True)
 
     exempt_user = serializers.NullBooleanField(required=False)
+
+    scope_traversal = UUIDSerializer(required=False, slug_field="reference", read_only=True)
 
 
 class UserSerializer(serializers.ModelSerializer):

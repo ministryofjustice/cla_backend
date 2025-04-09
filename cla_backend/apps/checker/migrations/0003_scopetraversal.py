@@ -2,9 +2,11 @@
 from __future__ import unicode_literals
 
 from django.db import migrations, models
-import django.utils.timezone
 import jsonfield.fields
+import django.utils.timezone
 import model_utils.fields
+import uuidfield.fields
+import core.cloning
 
 
 class Migration(migrations.Migration):
@@ -56,7 +58,9 @@ class Migration(migrations.Migration):
                         ],
                     ),
                 ),
+                ("reference", uuidfield.fields.UUIDField(unique=True, max_length=32, editable=False, blank=True)),
             ],
             options={"abstract": False},
+            bases=(core.cloning.CloneModelMixin, models.Model),
         )
     ]

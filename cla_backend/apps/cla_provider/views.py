@@ -33,6 +33,7 @@ from legalaid.views import (
     BaseCaseNotesHistoryViewSet,
     BaseCSVUploadViewSet,
     DescCaseOrderingFilter,
+    BaseScopeTraversalViewSet,
 )
 from legalaid.serializers import ContactResearchMethodSerializerBase
 
@@ -105,7 +106,9 @@ class CaseViewSet(CLAProviderPermissionViewSetMixin, FullCaseViewSet):
     serializer_class = CaseListSerializer
     serializer_detail_class = CaseSerializer
 
-    queryset = Case.objects.exclude(provider=None).select_related("diagnosis", "eligibility_check", "personal_details")
+    queryset = Case.objects.exclude(provider=None).select_related(
+        "diagnosis", "eligibility_check", "personal_details", "scope_traversal"
+    )
     queryset_detail = Case.objects.exclude(provider=None).select_related(
         "eligibility_check",
         "personal_details",
@@ -116,6 +119,7 @@ class CaseViewSet(CLAProviderPermissionViewSetMixin, FullCaseViewSet):
         "media_code",
         "eligibility_check__category",
         "created_by",
+        "scope_traversal",
     )
 
     filter_backends = (DescCaseOrderingFilter, SearchFilter)
@@ -295,6 +299,10 @@ class ContactResearchMethodViewSet(CLAProviderPermissionViewSetMixin, BaseContac
 
 
 class DiagnosisViewSet(CLAProviderPermissionViewSetMixin, BaseDiagnosisViewSet):
+    pass
+
+
+class ScopeTraversalViewSet(CLAProviderPermissionViewSetMixin, BaseScopeTraversalViewSet):
     pass
 
 

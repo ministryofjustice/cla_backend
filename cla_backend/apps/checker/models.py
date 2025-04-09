@@ -330,5 +330,6 @@ class ScopeTraversal(CloneModelMixin, TimeStampedModel):
     subcategory = JSONField(default=dict)  # {"name": Subcategory Name, "description": Subcategory description}
     financial_assessment_status = models.CharField(null=True, max_length=32, choices=FINANCIAL_ASSESSMENT_STATUSES)
     fast_track_reason = models.CharField(null=True, max_length=32, choices=FAST_TRACK_REASON)
+    reference = UUIDField(auto=True, unique=True)
 
     cloning_config = {"excludes": ["created", "modified"]}

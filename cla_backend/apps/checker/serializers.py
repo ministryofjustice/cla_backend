@@ -176,7 +176,7 @@ class ScopeTraversalSerializer(serializers.ModelSerializer):
     financial_assessment_status = serializers.ChoiceField(
         required=False, choices=ScopeTraversal.FINANCIAL_ASSESSMENT_STATUSES
     )
-    fast_track_reason = serializers.ChoiceField(required=False, choices=ScopeTraversal.FINANCIAL_ASSESSMENT_STATUSES)
+    fast_track_reason = serializers.ChoiceField(required=False, choices=ScopeTraversal.FAST_TRACK_REASON)
 
     class Meta(object):
         fields = "__all__"

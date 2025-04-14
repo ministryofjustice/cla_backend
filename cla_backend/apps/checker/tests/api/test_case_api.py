@@ -45,6 +45,8 @@ class BaseCaseTestCase(
                 "adaptation_details",
                 "thirdparty_details",
                 "gtm_anon_id",
+                "client_notes",
+                "scope_traversal",
             ],
         )
 

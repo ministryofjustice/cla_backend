@@ -259,6 +259,7 @@ class LogSerializer(LogSerializerBase):
 
 class CaseSerializer(CaseSerializerFull):
     provider_notes = serializers.CharField(max_length=10000, required=False, read_only=True)
+    client_notes = serializers.CharField(max_length=10000, required=False, read_only=True)
     organisation = serializers.PrimaryKeyRelatedField(required=False, read_only=True)
     organisation_name = serializers.SerializerMethodField()
     billable_time = serializers.IntegerField(read_only=True)
@@ -290,6 +291,7 @@ class CaseSerializer(CaseSerializerFull):
             "provider",
             "notes",
             "provider_notes",
+            "client_notes",
             "full_name",
             "thirdparty_details",
             "adaptation_details",
@@ -323,6 +325,7 @@ class CaseSerializer(CaseSerializerFull):
             "organisation_name",
             "organisation",
             "gtm_anon_id",
+            "scope_traversal",
         )
 
 

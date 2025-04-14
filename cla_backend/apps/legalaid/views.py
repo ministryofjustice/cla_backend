@@ -1,5 +1,7 @@
 import json
 
+from checker.models import ScopeTraversal
+from checker.serializers import ScopeTraversalSerializer
 from core.drf.exceptions import ConflictException
 from django import forms
 from django.db import connection, transaction, IntegrityError
@@ -334,6 +336,14 @@ class BaseCaseOrderingFilter(OrderingFilter):
             ordering.append(self.default_modified)
 
         return queryset.order_by(*ordering)
+
+
+class BaseScopeTraversalViewSet(mixins.RetrieveModelMixin, NestedGenericModelMixin, CompatGenericViewSet):
+    queryset = ScopeTraversal.objects.all()
+    model = ScopeTraversal
+    serializer_class = ScopeTraversalSerializer
+    lookup_field = "reference"
+    PARENT_FIELD = "scope_traversal"
 
 
 class AscCaseOrderingFilter(BaseCaseOrderingFilter):

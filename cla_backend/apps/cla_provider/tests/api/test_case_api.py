@@ -41,6 +41,7 @@ class BaseCaseTestCase(CLAProviderAuthBaseApiTestMixin, BaseFullCaseAPIMixin, AP
             "provider",
             "notes",
             "provider_notes",
+            "client_notes",
             "provider_viewed",
             "provider_accepted",
             "provider_closed",
@@ -64,6 +65,7 @@ class BaseCaseTestCase(CLAProviderAuthBaseApiTestMixin, BaseFullCaseAPIMixin, AP
             "source",
             "complaint_flag",
             "gtm_anon_id",
+            "scope_traversal",
         ]
 
     def get_extra_search_make_recipe_kwargs(self):

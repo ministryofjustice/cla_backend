@@ -44,6 +44,7 @@ class BaseCaseTestCase(CLAOperatorAuthBaseApiTestMixin, BaseFullCaseAPIMixin, AP
             "provider",
             "notes",
             "provider_notes",
+            "client_notes",
             "full_name",
             "laa_reference",
             "eligibility_state",
@@ -76,6 +77,7 @@ class BaseCaseTestCase(CLAOperatorAuthBaseApiTestMixin, BaseFullCaseAPIMixin, AP
             "organisation_name",
             "organisation",
             "gtm_anon_id",
+            "scope_traversal",
         ]
 
 

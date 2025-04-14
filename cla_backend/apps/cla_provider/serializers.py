@@ -105,7 +105,7 @@ class PersonalDetailsSerializer(PersonalDetailsSerializerFull):
             "vulnerable_user",
             "has_diversity",
             "contact_for_research_methods",
-            "announce_call"
+            "announce_call",
         )
 
 
@@ -229,6 +229,7 @@ class CaseSerializer(CaseSerializerFull):
             "provider_closed",
             "notes",
             "provider_notes",
+            "client_notes",
             "full_name",
             "thirdparty_details",
             "adaptation_details",
@@ -251,6 +252,7 @@ class CaseSerializer(CaseSerializerFull):
             "source",
             "complaint_flag",
             "gtm_anon_id",
+            "scope_traversal",
         )
 
 

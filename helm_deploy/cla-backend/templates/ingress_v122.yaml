@@ -29,7 +29,7 @@ metadata:
       # See LGA-3333 for more details.
       SecRuleRemoveById 933210
 spec:
-  ingressClassName: "modsec-non-prod"
+  ingressClassName: modsec-non-prod
   tls:
     - hosts:
        - "{{ .Values.host }}"

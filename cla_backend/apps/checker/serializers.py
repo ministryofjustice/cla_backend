@@ -1,7 +1,12 @@
 from django.conf import settings
 from django.utils.functional import SimpleLazyObject
 from rest_framework import serializers
-from cla_common.constants import CALLBACK_WINDOW_TYPES, CALLBACK_TYPES
+from cla_common.constants import (
+    CALLBACK_WINDOW_TYPES,
+    CALLBACK_TYPES,
+    FAST_TRACK_REASON,
+    FINANCIAL_ASSESSMENT_STATUSES,
+)
 from diagnosis.graph import get_graph
 from diagnosis.serializers import DiagnosisSerializer
 
@@ -173,10 +178,8 @@ class ScopeTraversalSerializer(serializers.ModelSerializer):
     scope_answers = JSONField(required=False, allow_null=True)
     category = JSONField(required=False, allow_null=True)
     subcategory = JSONField(required=False, allow_null=True)
-    financial_assessment_status = serializers.ChoiceField(
-        required=False, choices=ScopeTraversal.FINANCIAL_ASSESSMENT_STATUSES
-    )
-    fast_track_reason = serializers.ChoiceField(required=False, choices=ScopeTraversal.FAST_TRACK_REASON)
+    financial_assessment_status = serializers.ChoiceField(required=False, choices=FINANCIAL_ASSESSMENT_STATUSES)
+    fast_track_reason = serializers.ChoiceField(required=False, choices=FAST_TRACK_REASON)
 
     class Meta(object):
         fields = "__all__"

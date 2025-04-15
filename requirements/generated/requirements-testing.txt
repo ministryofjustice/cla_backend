@@ -253,7 +253,7 @@ transifex-client==0.11b3
     # via -r requirements/source/requirements-base.in
 typing==3.10.0.0
     # via pathlib2
-ua-parser==0.10.0
+ua-parser==0.15.0
     # via django-cookies-samesite
 unittest-xml-reporting==2.5.1
     # via -r requirements/source/requirements-testing.in

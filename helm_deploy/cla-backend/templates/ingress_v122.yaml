@@ -28,6 +28,8 @@ metadata:
       # This rule is triggering false positives when trying to save guidance notes that contain markdown.
       # See LGA-3333 for more details.
       SecRuleRemoveById 933210
+      # This rule is triggering false positives when trying to upload CSV files
+      SecRuleRemoveById 932130
 spec:
   ingressClassName: "modsec"
   tls:

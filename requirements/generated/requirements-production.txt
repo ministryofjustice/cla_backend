@@ -220,5 +220,5 @@ webencodings==0.5.1
     # via bleach
 xlrd==2.0.1
     # via csvkit
-zipp==1.2.0
+zipp==3.19.1
     # via importlib-metadata

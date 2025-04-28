@@ -375,6 +375,7 @@ workflows:
               only:
                 - master
                 - django-upgrade
+                - feature/LGA-3655-pdb-budget
 
       - deploy:
           name: staging_deploy_live

@@ -5,7 +5,7 @@ environment: "uat"
 image:
   pullPolicy: IfNotPresent
 
-replicaCount: 2
+replicaCount: 1
 
 localPostgres:
   enabled: false
@@ -47,5 +47,4 @@ envVars:
 
 pdb:
   enabled: true
-  minAvailable: 4
-  maxUnavailable: 6
+  minAvailable: 1

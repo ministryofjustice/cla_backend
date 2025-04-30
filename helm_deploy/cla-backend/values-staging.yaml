@@ -5,7 +5,7 @@ environment: "staging"
 image:
   pullPolicy: IfNotPresent
 
-replicaCount: 2
+replicaCount: 1
 
 localPostgres:
   enabled: false
@@ -39,3 +39,6 @@ envVars:
     value: "True"
   CFE_HOST:
     value: "http://cfe-civil.cfe-civil-production.svc.cluster.local"
+pdb:
+  enabled: true
+  minAvailable: 1

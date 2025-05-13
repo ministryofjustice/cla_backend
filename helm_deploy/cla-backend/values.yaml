@@ -225,4 +225,5 @@ tolerations: []
 affinity: {}
 
 pdb:
-  enabled: false
+  enabled: true
+  minAvailable: 2

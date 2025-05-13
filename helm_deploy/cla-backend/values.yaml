@@ -223,3 +223,7 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+pdb:
+  enabled: true
+  minAvailable: 2

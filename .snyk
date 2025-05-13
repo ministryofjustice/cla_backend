@@ -1,0 +1,9 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.25.0
+ignore:
+  django:
+    - '*':  # Apply to all vulnerabilities in django
+        reason: Cannot upgrade Django past 1.8.19 due to legacy constraint
+  certifi:
+    - '*':
+        reason: Ignoring certifi due to pinned dependency requirements

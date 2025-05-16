@@ -1084,7 +1084,7 @@ class MIScopeReport(SQLFileDateRangeReport):
     def notes_to_dict(notes):
         def get_categories_and_scope(user_selected_text):
             items, scope = user_selected_text.split("Outcome: ")
-            scope = re.sub(r"\s+|\n", "", scope)
+            scope = re.sub(r"\s+", " ", scope).strip()
             categories = []
             for category in items.split("\n\n"):
                 if ": " in category:

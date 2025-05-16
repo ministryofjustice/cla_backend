@@ -642,6 +642,52 @@ class TestMIScopeReport(TestCase):
         }
         self.assertDictContainsSubset(expected, dict(report[0]))
 
+    def test_report_client_new_frontend(self):
+        eligible_case = make_recipe("legalaid.eligible_case", source="WEB")
+        eligible_case.eligibility_check.notes = self.get_notes_new_frontend()
+        eligible_case.eligibility_check.save()
+
+        self.assertEqual(eligible_case.eligibility_check.state, "yes")
+        self.assertEqual(eligible_case.diagnosis.state, "INSCOPE")
+        self.assertEqual(eligible_case.source, "WEB")
+
+        report = self.get_report()
+        expected = {
+            "Web diagnosis category 1": "Discrimination",
+            "Web diagnosis category 2": "Work - including colleagues, employer or employment agency",
+            "Web diagnosis category 3": "Disability, health condition, mental health condition",
+            "Web diagnosis category 4": "",
+            "Web diagnosis category 5": "",
+            "Web diagnosis category 6": "",
+            "Web scope state": "In Scope",
+            "Client notes": "Optional data\n\n",
+            "Workflow status": "Operator",
+        }
+        self.assertDictContainsSubset(expected, dict(report[0]))
+
+    def test_report_client_new_frontend_public_diagnsosis_note(self):
+        eligible_case = make_recipe("legalaid.eligible_case", source="WEB")
+        eligible_case.eligibility_check.notes = self.get_notes_new_frontend_public_diagnsosis_note()
+        eligible_case.eligibility_check.save()
+
+        self.assertEqual(eligible_case.eligibility_check.state, "yes")
+        self.assertEqual(eligible_case.diagnosis.state, "INSCOPE")
+        self.assertEqual(eligible_case.source, "WEB")
+
+        report = self.get_report()
+        expected = {
+            "Web diagnosis category 1": "Domestic abuse",
+            "Web diagnosis category 2": "Help to protect you and your children",
+            "Web diagnosis category 3": "Yes",
+            "Web diagnosis category 4": "",
+            "Web diagnosis category 5": "",
+            "Web diagnosis category 6": "",
+            "Web scope state": "In Scope - Skip means test",
+            "Client notes": "Data\n\n",
+            "Workflow status": "Operator",
+        }
+        self.assertDictContainsSubset(expected, dict(report[0]))
+
     def test_report_workflow_status_pending(self):
         eligible_case = make_recipe("legalaid.case", source="WEB")
         self.assertEqual(eligible_case.source, "WEB")
@@ -736,4 +782,35 @@ Choose the option that best describes your personal situation: Domestic abuse
 Are you or your children at immediate risk of harm?: Yes
 
 Outcome: CONTACT
+        """
+
+    def get_notes_new_frontend(self):
+        return """User problem:
+Optional data
+
+User selected:
+What do you need help with?: Discrimination
+
+Where did the discrimination happen?: Work - including colleagues, employer or employment agency
+
+Why were you treated differently?: Disability, health condition, mental health condition
+
+Outcome: In Scope
+        """
+
+    def get_notes_new_frontend_public_diagnsosis_note(self):
+        return """User problem:
+Data
+
+Public Diagnosis note:
+User is at immediate risk of harm
+
+User selected:
+What do you need help with?: Domestic abuse
+
+Domestic Abuse: Help to protect you and your children
+
+Are you or your children at immediate risk of harm?: Yes
+
+Outcome: In Scope - Skip means test
         """

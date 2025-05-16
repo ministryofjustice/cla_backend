@@ -14,7 +14,7 @@ class CheckerOpeningHours(OpeningHours):
         otherwise the capacity will be based from the set of cases in range.
 
         Args:
-            callback_times (List): List callback times
+            callback_times (List): List of callback date times
             day (datetime.date, optional): Date to get slots for. Defaults to None.
             is_third_party_callback (bool, optional): Is the callback for a third party. Defaults to False.
 

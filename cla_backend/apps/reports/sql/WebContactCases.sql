@@ -16,4 +16,8 @@ JOIN legalaid_personaldetails pd ON pd.id = lc.personal_details_id
 JOIN checker_scopetraversal cst ON cst.id = lc.scope_traversal_id
 LEFT JOIN rfc ON rfc.case_id = lc.id
 WHERE source='WEB'
-
+AND (
+    (lc.modified >= %(from_date)s::timestamp AND lc.modified <= %(to_date)s::timestamp)
+        OR
+    (lc.created >= %(from_date)s::timestamp AND lc.created <= %(to_date)s::timestamp)
+)

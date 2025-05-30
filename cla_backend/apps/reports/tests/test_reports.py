@@ -20,6 +20,7 @@ from checker.models import ReasonForContacting
 
 import mock
 from core.tests.mommy_utils import make_recipe
+from checker.models import FINANCIAL_ASSESSMENT_STATUSES, FAST_TRACK_REASON
 
 
 class ReportsSQLColumnsMatchHeadersTestCase(TestCase):
@@ -738,3 +739,115 @@ Are you or your children at immediate risk of harm?: Yes
 
 Outcome: CONTACT
         """
+
+
+class TestWebCaseReport(TestCase):
+    def test_report(self):
+        mwc1 = self.make_web_cases(
+            FAST_TRACK_REASON.OTHER,
+            FINANCIAL_ASSESSMENT_STATUSES.SKIPPED,
+            reason_for_contacting_categories=[
+                REASONS_FOR_CONTACTING.MISSING_PAPERWORK,
+                REASONS_FOR_CONTACTING.DIFFICULTY_ONLINE,
+                REASONS_FOR_CONTACTING.HOW_SERVICE_HELPS,
+                REASONS_FOR_CONTACTING.PNS,
+            ],
+            callback_type="web_form_self",
+        )
+
+        mwc2 = self.make_web_cases(
+            FAST_TRACK_REASON.MORE_INFO_REQUIRED,
+            FINANCIAL_ASSESSMENT_STATUSES.PASSED,
+            reason_for_contacting_categories=[REASONS_FOR_CONTACTING.PNS],
+            callback_type="web_form_third_party",
+        )
+
+        expected_data = [
+            [
+                ("Case ref", mwc2["case"].reference),
+                ("Case created date", mwc2["case"].created),
+                ("Case modified date", mwc2["case"].modified),
+                ("Contact type", FINANCIAL_ASSESSMENT_STATUSES.PASSED + " + " + FAST_TRACK_REASON.MORE_INFO_REQUIRED),
+                ("Enquiry contact reason", REASONS_FOR_CONTACTING.PNS),
+                ("Callback type", "web_form_third_party"),
+                ("Client notes", ""),
+                ("CHS outcome code", "CB1"),
+                ("Urgent", False),
+            ],
+            [
+                ("Case ref", mwc1["case"].reference),
+                ("Case created date", mwc1["case"].created),
+                ("Case modified date", mwc1["case"].modified),
+                ("Contact type", FINANCIAL_ASSESSMENT_STATUSES.SKIPPED + " + " + FAST_TRACK_REASON.OTHER),
+                (
+                    "Enquiry contact reason",
+                    ", ".join(
+                        [
+                            REASONS_FOR_CONTACTING.MISSING_PAPERWORK,
+                            REASONS_FOR_CONTACTING.DIFFICULTY_ONLINE,
+                            REASONS_FOR_CONTACTING.HOW_SERVICE_HELPS,
+                            REASONS_FOR_CONTACTING.PNS,
+                        ]
+                    ),
+                ),
+                ("Callback type", "web_form_self"),
+                ("Client notes", ""),
+                ("CHS outcome code", "CB1"),
+                ("Urgent", False),
+            ],
+        ]
+        report = self.get_report()
+        self.assertListEqual(expected_data[0], report[0])
+        self.assertListEqual(expected_data[1], report[1])
+
+    def make_web_cases(
+        self, fast_track_reason, financial_assessment_status, reason_for_contacting_categories, callback_type
+    ):
+        scope_traversal = make_recipe(
+            "checker.scope_traversal",
+            scope_answers={},
+            category={},
+            subcategory={},
+            financial_assessment_status=financial_assessment_status,
+            fast_track_reason=fast_track_reason,
+        )
+
+        case = make_recipe(
+            "legalaid.case",
+            source="WEB",
+            scope_traversal=scope_traversal,
+            callback_type=callback_type,
+            outcome_code="CB1",
+        )
+
+        reasons_for_contacting = make_recipe(
+            "checker.reasonforcontacting", referrer="https://localhost/scope/diagnosis", case=case
+        )
+        reason_for_contacting_categories = make_recipe(
+            "checker.reasonforcontacting_category",
+            reason_for_contacting=reasons_for_contacting,
+            category=cycle(reason_for_contacting_categories),
+            _quantity=len(reason_for_contacting_categories),
+        )
+
+        return dict(
+            scope_traversal=scope_traversal,
+            case=case,
+            reasons_for_contacting=reasons_for_contacting,
+            reason_for_contacting_categories=reason_for_contacting_categories,
+        )
+
+    def get_report(self):
+        today = datetime.date.today()
+        date_from = today - datetime.timedelta(days=1)
+        date_to = today + datetime.timedelta(days=1)
+
+        with mock.patch("reports.forms.WebContactCases.date_range", (date_from, date_to)):
+            report = reports.forms.WebContactCases()
+            rows = report.get_rows()
+            headers = report.get_headers()
+            data = []
+            for row in rows:
+                data.append(zip(headers, row))
+
+        return data

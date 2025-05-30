@@ -1,5 +1,5 @@
 WITH rfc as (
-    SELECT string_agg(crfc_cat.category, ', ') as cats, case_id
+    SELECT string_agg(crfc_cat.category, ', ' order by crfc.id) as cats, case_id
     FROM checker_reasonforcontacting crfc
     JOIN checker_reasonforcontactingcategory crfc_cat on crfc.id = crfc_cat.reason_for_contacting_id
     GROUP BY case_id
@@ -12,7 +12,6 @@ SELECT lc.reference as "Case ref", lc.created as "Case created date", lc.modifie
     lc.outcome_code as "CHS outcome code",
     lc.is_urgent as "Urgent"
 FROM legalaid_case lc
-JOIN legalaid_personaldetails pd ON pd.id = lc.personal_details_id
 JOIN checker_scopetraversal cst ON cst.id = lc.scope_traversal_id
 LEFT JOIN rfc ON rfc.case_id = lc.id
 WHERE source='WEB'
@@ -21,3 +20,5 @@ AND (
         OR
     (lc.created >= %(from_date)s::timestamp AND lc.created <= %(to_date)s::timestamp)
 )
+
+ORDER BY lc.created DESC

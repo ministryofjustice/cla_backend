@@ -812,13 +812,15 @@ class TestWebCaseReport(TestCase):
             fast_track_reason=fast_track_reason,
         )
 
+        operator = make_recipe("call_centre.operator")
         case = make_recipe(
             "legalaid.case",
-            source="WEB",
+            created_by=operator.user,
             scope_traversal=scope_traversal,
             callback_type=callback_type,
             outcome_code="CB1",
         )
+        make_recipe("cla_eventlog.Log", code="CB1", case=case)
 
         reasons_for_contacting = make_recipe(
             "checker.reasonforcontacting", referrer="https://localhost/scope/diagnosis", case=case

@@ -743,7 +743,8 @@ Outcome: CONTACT
 
 class TestWebCaseReport(TestCase):
     def test_report(self):
-        mwc1 = self.make_web_cases(
+        # Create call me back case
+        case_call_me_back = self.make_web_cases(
             FAST_TRACK_REASON.OTHER,
             FINANCIAL_ASSESSMENT_STATUSES.SKIPPED,
             reason_for_contacting_categories=[
@@ -754,19 +755,37 @@ class TestWebCaseReport(TestCase):
             ],
             callback_type="web_form_self",
         )
-
-        mwc2 = self.make_web_cases(
+        # Create call someone else case
+        case_call_someone_else = self.make_web_cases(
             FAST_TRACK_REASON.MORE_INFO_REQUIRED,
             FINANCIAL_ASSESSMENT_STATUSES.PASSED,
             reason_for_contacting_categories=[REASONS_FOR_CONTACTING.PNS],
             callback_type="web_form_third_party",
         )
+        # Create I will call you back case
+        case_i_will_call_you_back = self.make_web_cases(
+            FAST_TRACK_REASON.MORE_INFO_REQUIRED,
+            FINANCIAL_ASSESSMENT_STATUSES.PASSED,
+            reason_for_contacting_categories=[REASONS_FOR_CONTACTING.PNS],
+            callback_type=None,
+        )
 
         expected_data = [
             [
-                ("Case ref", mwc2["case"].reference),
-                ("Case created date", mwc2["case"].created),
-                ("Case modified date", mwc2["case"].modified),
+                ("Case ref", case_i_will_call_you_back.reference),
+                ("Case created date", case_i_will_call_you_back.created),
+                ("Case modified date", case_i_will_call_you_back.modified),
+                ("Contact type", FINANCIAL_ASSESSMENT_STATUSES.PASSED + " + " + FAST_TRACK_REASON.MORE_INFO_REQUIRED),
+                ("Enquiry contact reason", REASONS_FOR_CONTACTING.PNS),
+                ("Callback type", None),
+                ("Client notes", ""),
+                ("CHS outcome code", ""),
+                ("Urgent", False),
+            ],
+            [
+                ("Case ref", case_call_someone_else.reference),
+                ("Case created date", case_call_someone_else.created),
+                ("Case modified date", case_call_someone_else.modified),
                 ("Contact type", FINANCIAL_ASSESSMENT_STATUSES.PASSED + " + " + FAST_TRACK_REASON.MORE_INFO_REQUIRED),
                 ("Enquiry contact reason", REASONS_FOR_CONTACTING.PNS),
                 ("Callback type", "web_form_third_party"),
@@ -775,9 +794,9 @@ class TestWebCaseReport(TestCase):
                 ("Urgent", False),
             ],
             [
-                ("Case ref", mwc1["case"].reference),
-                ("Case created date", mwc1["case"].created),
-                ("Case modified date", mwc1["case"].modified),
+                ("Case ref", case_call_me_back.reference),
+                ("Case created date", case_call_me_back.created),
+                ("Case modified date", case_call_me_back.modified),
                 ("Contact type", FINANCIAL_ASSESSMENT_STATUSES.SKIPPED + " + " + FAST_TRACK_REASON.OTHER),
                 (
                     "Enquiry contact reason",
@@ -799,10 +818,13 @@ class TestWebCaseReport(TestCase):
         report = self.get_report()
         self.assertListEqual(expected_data[0], report[0])
         self.assertListEqual(expected_data[1], report[1])
+        self.assertListEqual(expected_data[2], report[2])
 
     def make_web_cases(
         self, fast_track_reason, financial_assessment_status, reason_for_contacting_categories, callback_type
     ):
+        operator = make_recipe("call_centre.operator")
+
         scope_traversal = make_recipe(
             "checker.scope_traversal",
             scope_answers={},
@@ -812,32 +834,33 @@ class TestWebCaseReport(TestCase):
             fast_track_reason=fast_track_reason,
         )
 
-        operator = make_recipe("call_centre.operator")
+        # Create dummy cases that shouldn't be include in the report
+        make_recipe("legalaid.case", eligibility_check=None, _quantity=5)
+        # Create the web case
         case = make_recipe(
             "legalaid.case",
             created_by=operator.user,
             scope_traversal=scope_traversal,
             callback_type=callback_type,
-            outcome_code="CB1",
-        )
-        make_recipe("cla_eventlog.Log", code="CB1", case=case)
-
-        reasons_for_contacting = make_recipe(
-            "checker.reasonforcontacting", referrer="https://localhost/scope/diagnosis", case=case
-        )
-        reason_for_contacting_categories = make_recipe(
-            "checker.reasonforcontacting_category",
-            reason_for_contacting=reasons_for_contacting,
-            category=cycle(reason_for_contacting_categories),
-            _quantity=len(reason_for_contacting_categories),
+            outcome_code="CB1" if callback_type else "",
         )
 
-        return dict(
-            scope_traversal=scope_traversal,
-            case=case,
-            reasons_for_contacting=reasons_for_contacting,
-            reason_for_contacting_categories=reason_for_contacting_categories,
-        )
+        make_recipe("cla_eventlog.Log", code="CASE_CREATED", case=case)
+        if callback_type:
+            make_recipe("cla_eventlog.Log", code="CB1", case=case)
+
+        if reason_for_contacting_categories:
+            reasons_for_contacting = make_recipe(
+                "checker.reasonforcontacting", referrer="https://localhost/scope/diagnosis", case=case
+            )
+            make_recipe(
+                "checker.reasonforcontacting_category",
+                reason_for_contacting=reasons_for_contacting,
+                category=cycle(reason_for_contacting_categories),
+                _quantity=len(reason_for_contacting_categories),
+            )
+
+        return case
 
     def get_report(self):
         today = datetime.date.today()

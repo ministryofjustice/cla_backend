@@ -1,7 +1,12 @@
 WITH rfc as (
-    SELECT string_agg(crfc_cat.category, ', ' order by crfc.id) as cats, case_id
+    SELECT string_agg(crfc_cat.category, ', ' order by crfc_cat.category) as cats, case_id
     FROM checker_reasonforcontacting crfc
+    JOIN legalaid_case lc ON crfc.case_id = lc.id
     JOIN checker_reasonforcontactingcategory crfc_cat on crfc.id = crfc_cat.reason_for_contacting_id
+    WHERE
+        (lc.modified >= %(from_date)s AND lc.modified <= %(to_date)s)
+            OR
+        (lc.created >= %(from_date)s AND lc.created <= %(to_date)s)
     GROUP BY case_id
 ),
 valid_creators as (
@@ -33,8 +38,8 @@ WHERE
         OR cel.id is NOT NULL
     )
     AND(
-        (lc.modified >= %(from_date)s:: timestamp AND lc.modified <= %(to_date)s:: timestamp)
+        (lc.modified >= %(from_date)s AND lc.modified <= %(to_date)s)
             OR
-        (lc.created >= %(from_date)s:: timestamp AND lc.created <= %(to_date)s:: timestamp)
+        (lc.created >= %(from_date)s AND lc.created <= %(to_date)s)
     )
 ORDER BY lc.created DESC

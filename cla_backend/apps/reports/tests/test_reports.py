@@ -802,9 +802,9 @@ class TestWebCaseReport(TestCase):
                     "Enquiry contact reason",
                     ", ".join(
                         [
-                            REASONS_FOR_CONTACTING.MISSING_PAPERWORK,
                             REASONS_FOR_CONTACTING.DIFFICULTY_ONLINE,
                             REASONS_FOR_CONTACTING.HOW_SERVICE_HELPS,
+                            REASONS_FOR_CONTACTING.MISSING_PAPERWORK,
                             REASONS_FOR_CONTACTING.PNS,
                         ]
                     ),
@@ -816,6 +816,7 @@ class TestWebCaseReport(TestCase):
             ],
         ]
         report = self.get_report()
+
         self.assertListEqual(expected_data[0], report[0])
         self.assertListEqual(expected_data[1], report[1])
         self.assertListEqual(expected_data[2], report[2])

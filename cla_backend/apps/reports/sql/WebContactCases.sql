@@ -8,12 +8,6 @@ WITH rfc as (
             OR
         (lc.created >= %(from_date)s AND lc.created <= %(to_date)s)
     GROUP BY case_id
-),
-valid_creators as (
-    SELECT auth_user.id
-    FROM auth_user
-    LEFT JOIN call_centre_operator cco ON auth_user.id = cco.user_id
-    WHERE cco.id IS NOT NULL OR auth_user.username = 'web'
 )
 SELECT lc.reference as "Case ref", lc.created as "Case created date", lc.modified as "Case modified date",
     CASE
@@ -23,12 +17,11 @@ SELECT lc.reference as "Case ref", lc.created as "Case created date", lc.modifie
     rfc.cats as "Enquiry contact reason",
     lc.callback_type as "Callback type",
     lc.client_notes as "Client notes",
-    cel.code as "CHS outcome code",
+    lc.outcome_code as "CHS outcome code",
     lc.is_urgent as "Urgent"
 FROM legalaid_case lc
-JOIN valid_creators vc ON vc.id = lc.created_by_id
 JOIN checker_scopetraversal cst ON cst.id = lc.scope_traversal_id
-LEFT JOIN cla_eventlog_log cel ON cel.case_id = lc.id AND cel.code = 'CB1'
+JOIN cla_eventlog_log cel on lc.id = cel.case_id AND cel.notes LIKE 'Case created digitally'
 LEFT JOIN rfc ON rfc.case_id = lc.id
 WHERE
         (lc.modified >= %(from_date)s AND lc.modified <= %(to_date)s)

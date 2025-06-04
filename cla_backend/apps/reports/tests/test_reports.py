@@ -779,7 +779,7 @@ class TestWebCaseReport(TestCase):
                 ("Enquiry contact reason", REASONS_FOR_CONTACTING.PNS),
                 ("Callback type", None),
                 ("Client notes", ""),
-                ("CHS outcome code", None),
+                ("CHS outcome code", "CASE_CREATED"),
                 ("Urgent", False),
             ],
             [
@@ -843,10 +843,10 @@ class TestWebCaseReport(TestCase):
             created_by=operator.user,
             scope_traversal=scope_traversal,
             callback_type=callback_type,
-            outcome_code="CB1" if callback_type else "",
+            outcome_code="CB1" if callback_type else "CASE_CREATED",
         )
 
-        make_recipe("cla_eventlog.Log", code="CASE_CREATED", case=case)
+        make_recipe("cla_eventlog.Log", code="CASE_CREATED", case=case, notes="Case created digitally")
         if callback_type:
             make_recipe("cla_eventlog.Log", code="CB1", case=case)
 

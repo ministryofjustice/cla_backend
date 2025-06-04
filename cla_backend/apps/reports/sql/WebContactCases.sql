@@ -23,7 +23,7 @@ SELECT lc.reference as "Case ref", lc.created as "Case created date", lc.modifie
     rfc.cats as "Enquiry contact reason",
     lc.callback_type as "Callback type",
     lc.client_notes as "Client notes",
-    lc.outcome_code as "CHS outcome code",
+    cel.code as "CHS outcome code",
     lc.is_urgent as "Urgent"
 FROM legalaid_case lc
 JOIN valid_creators vc ON vc.id = lc.created_by_id

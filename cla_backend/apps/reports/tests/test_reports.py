@@ -779,7 +779,7 @@ class TestWebCaseReport(TestCase):
                 ("Enquiry contact reason", REASONS_FOR_CONTACTING.PNS),
                 ("Callback type", None),
                 ("Client notes", ""),
-                ("CHS outcome code", ""),
+                ("CHS outcome code", None),
                 ("Urgent", False),
             ],
             [

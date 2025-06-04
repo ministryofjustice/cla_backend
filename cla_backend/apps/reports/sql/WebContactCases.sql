@@ -27,19 +27,12 @@ SELECT lc.reference as "Case ref", lc.created as "Case created date", lc.modifie
     lc.is_urgent as "Urgent"
 FROM legalaid_case lc
 JOIN valid_creators vc ON vc.id = lc.created_by_id
+JOIN checker_scopetraversal cst ON cst.id = lc.scope_traversal_id
 LEFT JOIN cla_eventlog_log cel ON cel.case_id = lc.id AND cel.code = 'CB1'
-LEFT JOIN checker_scopetraversal cst ON cst.id = lc.scope_traversal_id
 LEFT JOIN rfc ON rfc.case_id = lc.id
 WHERE
-    (
-    -- Web cases that are I will call you back: No callback is created in the event log
-        (lc.callback_type IS NULL AND cst.id IS NOT NULL)
-    -- Call me or someone else web cases
-        OR cel.id is NOT NULL
-    )
-    AND(
         (lc.modified >= %(from_date)s AND lc.modified <= %(to_date)s)
             OR
         (lc.created >= %(from_date)s AND lc.created <= %(to_date)s)
-    )
+
 ORDER BY lc.created DESC

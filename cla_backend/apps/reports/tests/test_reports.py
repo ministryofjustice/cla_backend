@@ -520,6 +520,7 @@ class TestCallbackTimeSlotReport(TestCase):
                     _quantity=callback["Used capacity"],
                     eligibility_check=None,
                     callback_type=CALLBACK_TYPES.CHECKER_SELF,
+                    outcome_code="CB1",
                     notes=interval,
                 )
 

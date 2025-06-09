@@ -36,7 +36,10 @@ class CallbackTimeSlotsTestCase(SimpleResourceAPIMixin, CLACheckerAuthBaseApiTes
         # Book a callback for 10am tomorrow. 10am slot only has a capacity of 1, after this it should not be available
         requires_action_at = dt.datetime.combine(tomorrow, dt.time(hour=10, minute=0))
         make_recipe(
-            self.LEGALAID_CASE, requires_action_at=requires_action_at, callback_type=CALLBACK_TYPES.CHECKER_SELF
+            self.LEGALAID_CASE,
+            requires_action_at=requires_action_at,
+            callback_type=CALLBACK_TYPES.CHECKER_SELF,
+            outcome_code="CB1",
         )
         slots = get_available_slots(num_days=2)
         self.assertIn(dt.datetime.combine(tomorrow, dt.time(hour=9, minute=0)), slots)
@@ -57,7 +60,10 @@ class CallbackTimeSlotsTestCase(SimpleResourceAPIMixin, CLACheckerAuthBaseApiTes
         requires_action_at = dt.datetime.combine(tomorrow, dt.time(hour=10, minute=0))
         for _ in range(2):
             make_recipe(
-                self.LEGALAID_CASE, requires_action_at=requires_action_at, callback_type=CALLBACK_TYPES.CHECKER_SELF
+                self.LEGALAID_CASE,
+                requires_action_at=requires_action_at,
+                callback_type=CALLBACK_TYPES.CHECKER_SELF,
+                outcome_code="CB1",
             )
         slots = get_available_slots(num_days=2)
         self.assertIn(dt.datetime.combine(tomorrow, dt.time(9, 0)), slots)
@@ -77,7 +83,10 @@ class CallbackTimeSlotsTestCase(SimpleResourceAPIMixin, CLACheckerAuthBaseApiTes
         # Book a callback for 10am tomorrow
         requires_action_at = dt.datetime.combine(tomorrow, dt.time(hour=10, minute=0))
         make_recipe(
-            self.LEGALAID_CASE, requires_action_at=requires_action_at, callback_type=CALLBACK_TYPES.CHECKER_SELF
+            self.LEGALAID_CASE,
+            requires_action_at=requires_action_at,
+            callback_type=CALLBACK_TYPES.CHECKER_SELF,
+            outcome_code="CB1",
         )
 
         slots = get_available_slots(num_days=2, is_third_party_callback=True)
@@ -114,7 +123,10 @@ class CallbackTimeSlotsTestCase(SimpleResourceAPIMixin, CLACheckerAuthBaseApiTes
         # Book a callback for 14:30 tomorrow.
         requires_action_at = dt.datetime.combine(tomorrow, dt.time(hour=14, minute=30))
         make_recipe(
-            self.LEGALAID_CASE, requires_action_at=requires_action_at, callback_type=CALLBACK_TYPES.CHECKER_SELF
+            self.LEGALAID_CASE,
+            requires_action_at=requires_action_at,
+            callback_type=CALLBACK_TYPES.CHECKER_SELF,
+            outcome_code="CB1",
         )
         slots = get_available_slots(num_days=2)
         self.assertIn(dt.datetime.combine(tomorrow, dt.time(hour=14, minute=0)), slots)
@@ -129,7 +141,12 @@ class TestGetListCallbackTimes(unittest.TestCase):
         start_dt = dt.datetime.now()
         timeslots = [start_dt + dt.timedelta(hours=i) for i in range(1, 12)]
         for timeslot in timeslots:
-            make_recipe(self.LEGALAID_CASE, requires_action_at=timeslot, callback_type=CALLBACK_TYPES.CHECKER_SELF)
+            make_recipe(
+                self.LEGALAID_CASE,
+                requires_action_at=timeslot,
+                callback_type=CALLBACK_TYPES.CHECKER_SELF,
+                outcome_code="CB1",
+            )
         actual_result = get_list_callback_times(start_dt, start_dt + dt.timedelta(days=1))
         assert len(actual_result) == len(timeslots)
         for timeslot in timeslots:
@@ -139,7 +156,12 @@ class TestGetListCallbackTimes(unittest.TestCase):
         start_dt = dt.datetime.now() + dt.timedelta(days=2)
         timeslots = [start_dt, start_dt, start_dt, start_dt + dt.timedelta(hours=1)]
         for timeslot in timeslots:
-            make_recipe(self.LEGALAID_CASE, requires_action_at=timeslot, callback_type=CALLBACK_TYPES.CHECKER_SELF)
+            make_recipe(
+                self.LEGALAID_CASE,
+                requires_action_at=timeslot,
+                callback_type=CALLBACK_TYPES.CHECKER_SELF,
+                outcome_code="CB1",
+            )
         actual_result = get_list_callback_times(start_dt, start_dt + dt.timedelta(days=1))
         count = 0
         for slot in actual_result:
@@ -150,7 +172,12 @@ class TestGetListCallbackTimes(unittest.TestCase):
     def test_out_of_range(self):
         timeslots = [dt.datetime(2024, 1, 1), dt.datetime(2024, 1, 3), dt.datetime(2024, 1, 5)]
         for timeslot in timeslots:
-            make_recipe(self.LEGALAID_CASE, requires_action_at=timeslot, callback_type=CALLBACK_TYPES.CHECKER_SELF)
+            make_recipe(
+                self.LEGALAID_CASE,
+                requires_action_at=timeslot,
+                callback_type=CALLBACK_TYPES.CHECKER_SELF,
+                outcome_code="CB1",
+            )
         actual_result = get_list_callback_times(dt.datetime(2024, 1, 2), dt.datetime(2024, 1, 4))
         assert len(actual_result) == 1
 

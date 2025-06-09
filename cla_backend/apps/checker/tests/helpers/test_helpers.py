@@ -107,4 +107,9 @@ class TestGetTimeslotOfDate(TestCase):
             make_recipe(self.CALLBACK_TIME_SLOT, **slot)
 
     def _create_callback(self, requires_action_at):
-        make_recipe("legalaid.case", requires_action_at=requires_action_at, callback_type=CALLBACK_TYPES.CHECKER_SELF)
+        make_recipe(
+            "legalaid.case",
+            requires_action_at=requires_action_at,
+            callback_type=CALLBACK_TYPES.CHECKER_SELF,
+            outcome_code="CB1",
+        )

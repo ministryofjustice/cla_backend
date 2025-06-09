@@ -290,12 +290,25 @@ class CallbackTimeSlot(TimeStampedModel):
 
     @staticmethod
     def get_remaining_capacity_by_range(capacity, start_dt, end_dt):
+        """ Gets a count of the remaining callback slots for callbacks booked via the webform for a given period of time.
+            Excludes callbacks requested for a third party.
+
+            Only includes cases with an outcome code of CB1, i.e. First callback attempt is yet to occur.
+
+            Args:
+                capacity (int): The capacity for a given time slot
+                start_dt (datetime.datetime): Start of time range
+                end_dt (datetime.datetime): End of time range
+
+            Returns:
+                list[datetime.datetime]: List of requested callback times.
+            """
         from legalaid.models import Case
 
         # otherwise this will match cases that have a requires_action_at of the end date(don't want it to be inclusive)
         end_dt = end_dt - datetime.timedelta(seconds=1)
         count = Case.objects.filter(
-            requires_action_at__range=(start_dt, end_dt), callback_type=CALLBACK_TYPES.CHECKER_SELF
+            requires_action_at__range=(start_dt, end_dt), callback_type=CALLBACK_TYPES.CHECKER_SELF, outcome_code="CB1"
         ).count()
         return capacity - count
 

@@ -256,7 +256,7 @@ pyyaml==5.4
     #   aspy.yaml
     #   pre-commit
     #   vcrpy
-requests==2.27.1
+requests==2.32.4
     # via
     #   -r requirements/source/requirements-base.in
     #   cla-common

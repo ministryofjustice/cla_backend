@@ -14,7 +14,7 @@ class CheckerOpeningHours(OpeningHours):
         otherwise the capacity will be based from the set of cases in range.
 
         Args:
-            cases_in_range (QuerySet): Set of cases with callbacks
+            callback_times (List): List of callback date times
             day (datetime.date, optional): Date to get slots for. Defaults to None.
             is_third_party_callback (bool, optional): Is the callback for a third party. Defaults to False.
 
@@ -129,11 +129,15 @@ def get_available_slots(num_days=7, is_third_party_callback=False):
         Dict: Dictionary of callback slots in the form: {"YYYYMMDD":  {"HHMM": {"start": datetime, "end": datetime}}}
     """
     start_dt = current_datetime()
-    end_dt = start_dt + datetime.timedelta(days=num_days)
     days = [start_dt]
     # Generate time slots options for call on another day select options
     if num_days > 1:
-        days.extend(CALL_CENTER_HOURS.available_days(num_days - 1))
+        # available_days gives us all call centre working days meaning Sundays and bank holidays are excluded.
+        days.extend(CALL_CENTER_HOURS.available_days(num_days - 1))  # days will always have length = num_days
+
+    end_dt = datetime.datetime.combine(
+        date=days[-1].date(), time=datetime.datetime.max.time()
+    )  # 23:59:59 on the final date of relevant time period.
 
     # As making a Case query is expensive, we want to make a single query for relevant callback times and compare all time slots to this set of times.
     callback_times = get_list_callback_times(start_dt, end_dt)

@@ -86,6 +86,8 @@ def get_list_callback_times(start_dt, end_dt):
     """ Gets a list of requested callback times made via the web form within the given range.
         Excludes callbacks requested for a third party.
 
+        Only includes cases with an outcome code of CB1, i.e. First callback attempt is yet to occur.
+
     Args:
         start_dt (datetime.datetime): Start of time range
         end_dt (datetime.datetime): End of time range
@@ -94,7 +96,7 @@ def get_list_callback_times(start_dt, end_dt):
         list[datetime.datetime]: List of requested callback times.
     """
     callback_times = Case.objects.filter(
-        requires_action_at__range=(start_dt, end_dt), callback_type=CALLBACK_TYPES.CHECKER_SELF
+        requires_action_at__range=(start_dt, end_dt), callback_type=CALLBACK_TYPES.CHECKER_SELF, outcome_code="CB1"
     ).values_list("requires_action_at", flat=True)
     return callback_times
 

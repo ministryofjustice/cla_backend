@@ -25,6 +25,11 @@ metadata:
       SecRuleEngine On
       SecDefaultAction "phase:2,pass,log,tag:github_team=laa-get-access"
       SecRule REQUEST_METHOD "DELETE" "phase:1,id:1000,nolog,allow"
+      # This rule is triggering false positives when trying to save guidance notes that contain markdown.
+      # See LGA-3333 for more details.
+      SecRuleRemoveById 933210
+      # This rule is triggering false positives when trying to upload CSV files
+      SecRuleRemoveById 932130
 spec:
   ingressClassName: "modsec"
   tls:

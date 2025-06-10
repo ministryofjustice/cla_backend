@@ -14,7 +14,7 @@ class CheckerOpeningHours(OpeningHours):
         otherwise the capacity will be based from the set of cases in range.
 
         Args:
-            cases_in_range (QuerySet): Set of cases with callbacks
+            callback_times (List): List of callback date times
             day (datetime.date, optional): Date to get slots for. Defaults to None.
             is_third_party_callback (bool, optional): Is the callback for a third party. Defaults to False.
 
@@ -22,6 +22,12 @@ class CheckerOpeningHours(OpeningHours):
             slots: List of valid callback time slots.
         """
         slots = super(CheckerOpeningHours, self).time_slots(day)
+
+        # cla_common gives all valid time slots from 00:00 to 23:30
+        # The call centre doesn't work before 5AM, this allows us to check far fewer time slots and
+        # also fix an ambiguous time error where 01:00:00 on a DST switchover date could belong to multiple
+        # timezones.
+        slots = filter(lambda dt: dt.hour > 5, slots)
 
         if is_third_party_callback:  # Third party callbacks always have capacity.
             return slots
@@ -80,6 +86,8 @@ def get_list_callback_times(start_dt, end_dt):
     """ Gets a list of requested callback times made via the web form within the given range.
         Excludes callbacks requested for a third party.
 
+        Only includes cases with an outcome code of CB1, i.e. First callback attempt is yet to occur.
+
     Args:
         start_dt (datetime.datetime): Start of time range
         end_dt (datetime.datetime): End of time range
@@ -88,7 +96,7 @@ def get_list_callback_times(start_dt, end_dt):
         list[datetime.datetime]: List of requested callback times.
     """
     callback_times = Case.objects.filter(
-        requires_action_at__range=(start_dt, end_dt), callback_type=CALLBACK_TYPES.CHECKER_SELF
+        requires_action_at__range=(start_dt, end_dt), callback_type=CALLBACK_TYPES.CHECKER_SELF, outcome_code="CB1"
     ).values_list("requires_action_at", flat=True)
     return callback_times
 
@@ -121,11 +129,15 @@ def get_available_slots(num_days=7, is_third_party_callback=False):
         Dict: Dictionary of callback slots in the form: {"YYYYMMDD":  {"HHMM": {"start": datetime, "end": datetime}}}
     """
     start_dt = current_datetime()
-    end_dt = start_dt + datetime.timedelta(days=num_days)
     days = [start_dt]
     # Generate time slots options for call on another day select options
     if num_days > 1:
-        days.extend(CALL_CENTER_HOURS.available_days(num_days - 1))
+        # available_days gives us all call centre working days meaning Sundays and bank holidays are excluded.
+        days.extend(CALL_CENTER_HOURS.available_days(num_days - 1))  # days will always have length = num_days
+
+    end_dt = datetime.datetime.combine(
+        date=days[-1].date(), time=datetime.datetime.max.time()
+    )  # 23:59:59 on the final date of relevant time period.
 
     # As making a Case query is expensive, we want to make a single query for relevant callback times and compare all time slots to this set of times.
     callback_times = get_list_callback_times(start_dt, end_dt)

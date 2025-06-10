@@ -44,3 +44,5 @@ envVars:
     value: "True"
   CFE_HOST:
     value: "http://cfe-civil.cfe-civil-staging.svc.cluster.local"
+pdb:
+  enabled: false

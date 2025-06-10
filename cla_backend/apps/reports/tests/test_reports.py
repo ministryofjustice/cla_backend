@@ -520,6 +520,7 @@ class TestCallbackTimeSlotReport(TestCase):
                     _quantity=callback["Used capacity"],
                     eligibility_check=None,
                     callback_type=CALLBACK_TYPES.CHECKER_SELF,
+                    outcome_code="CB1",
                     notes=interval,
                 )
 
@@ -530,3 +531,210 @@ class TestCallbackTimeSlotReport(TestCase):
             row_dict = dict(row)
             self.assertEqual(row_dict["Date"], tomorrow.strftime(date_format))
             self.assertDictEqual(row_dict, callbacks[row_dict["Interval"]])
+
+
+class TestMIScopeReport(TestCase):
+    LEGALAID_CASE = "legalaid.case"
+    today = datetime.date.today()
+
+    def get_report(self):
+        date_from = self.today - datetime.timedelta(days=1)
+        date_to = self.today + datetime.timedelta(days=1)
+
+        with mock.patch("reports.forms.MIScopeReport.date_range", (date_from, date_to)):
+            report = reports.forms.MIScopeReport()
+            rows = report.get_rows()
+            headers = report.get_headers()
+            data = []
+            for row in rows:
+                data.append(zip(headers, row))
+
+        return data
+
+    def test_report_client_notes(self):
+        eligible_case = make_recipe("legalaid.eligible_case", source="WEB")
+        eligible_case.eligibility_check.notes = self.get_notes()
+        eligible_case.eligibility_check.save()
+
+        self.assertEqual(eligible_case.eligibility_check.state, "yes")
+        self.assertEqual(eligible_case.diagnosis.state, "INSCOPE")
+        self.assertEqual(eligible_case.source, "WEB")
+
+        report = self.get_report()
+        expected = {
+            "Web diagnosis category 1": "Discrimination",
+            "Web diagnosis category 2": "Age",
+            "Web diagnosis category 3": "18 or over",
+            "Web diagnosis category 4": "At work",
+            "Web diagnosis category 5": "",
+            "Web diagnosis category 6": "",
+            "Web scope state": "INSCOPE",
+            "Client notes": "This is a free text field\nI can type whatever I want\nYes\nNo\nDiscrimination\n\n",
+            "Workflow status": "Operator",
+        }
+        self.assertDictContainsSubset(expected, dict(report[0]))
+
+    def test_report_client_notes_no_user_problem(self):
+        eligible_case = make_recipe("legalaid.eligible_case", source="WEB")
+        eligible_case.eligibility_check.notes = self.get_notes_without_user_problem()
+        eligible_case.eligibility_check.save()
+
+        self.assertEqual(eligible_case.eligibility_check.state, "yes")
+        self.assertEqual(eligible_case.diagnosis.state, "INSCOPE")
+        self.assertEqual(eligible_case.source, "WEB")
+
+        report = self.get_report()
+        expected = {
+            "Web diagnosis category 1": "Discrimination",
+            "Web diagnosis category 2": "Age",
+            "Web diagnosis category 3": "18 or over",
+            "Web diagnosis category 4": "At work",
+            "Web diagnosis category 5": "",
+            "Web diagnosis category 6": "",
+            "Web scope state": "INSCOPE",
+            "Client notes": "",
+            "Workflow status": "Operator",
+        }
+        self.assertDictContainsSubset(expected, dict(report[0]))
+
+    def test_report_client_just_user_problem(self):
+        eligible_case = make_recipe("legalaid.eligible_case", source="WEB")
+        eligible_case.eligibility_check.notes = self.get_notes_just_user_problem()
+        eligible_case.eligibility_check.save()
+
+        self.assertEqual(eligible_case.eligibility_check.state, "yes")
+        self.assertEqual(eligible_case.diagnosis.state, "INSCOPE")
+        self.assertEqual(eligible_case.source, "WEB")
+
+        report = self.get_report()
+        expected = {
+            "Web diagnosis category 1": "",
+            "Web diagnosis category 2": "",
+            "Web diagnosis category 3": "",
+            "Web diagnosis category 4": "",
+            "Web diagnosis category 5": "",
+            "Web diagnosis category 6": "",
+            "Web scope state": "",
+            "Client notes": "This is a free text field",
+            "Workflow status": "Operator",
+        }
+        self.assertDictContainsSubset(expected, dict(report[0]))
+
+    def test_report_client_public_diagnosis_note(self):
+        eligible_case = make_recipe("legalaid.eligible_case", source="WEB")
+        eligible_case.eligibility_check.notes = self.get_notes_public_diagnosis_note()
+        eligible_case.eligibility_check.save()
+
+        self.assertEqual(eligible_case.eligibility_check.state, "yes")
+        self.assertEqual(eligible_case.diagnosis.state, "INSCOPE")
+        self.assertEqual(eligible_case.source, "WEB")
+
+        report = self.get_report()
+        expected = {
+            "Web diagnosis category 1": "Domestic abuse",
+            "Web diagnosis category 2": "Domestic abuse",
+            "Web diagnosis category 3": "Yes",
+            "Web diagnosis category 4": "",
+            "Web diagnosis category 5": "",
+            "Web diagnosis category 6": "",
+            "Web scope state": "CONTACT",
+            "Client notes": "",
+            "Workflow status": "Operator",
+        }
+        self.assertDictContainsSubset(expected, dict(report[0]))
+
+    def test_report_workflow_status_pending(self):
+        eligible_case = make_recipe("legalaid.case", source="WEB")
+        self.assertEqual(eligible_case.source, "WEB")
+        report = self.get_report()
+        expected = {"Workflow status": "Pending"}
+        self.assertDictContainsSubset(expected, dict(report[0]))
+
+    def test_report_workflow_status_operator(self):
+        eligible_case = make_recipe("legalaid.eligible_case", source="WEB")
+        self.assertEqual(eligible_case.source, "WEB")
+        report = self.get_report()
+        expected = {"Workflow status": "Operator"}
+        self.assertDictContainsSubset(expected, dict(report[0]))
+
+    def test_report_workflow_status_read_approved_by_SP(self):
+        eligible_case = make_recipe(
+            "legalaid.eligible_case",
+            source="WEB",
+            provider_viewed=self.today,
+            provider_assigned_at=self.today,
+            outcome_code="COI",
+        )
+        make_recipe("cla_eventlog.log", case=eligible_case, code="COI")
+        self.assertEqual(eligible_case.source, "WEB")
+        report = self.get_report()
+        expected = {"Workflow status": "Read and approved by SP"}
+        self.assertDictContainsSubset(expected, dict(report[0]))
+
+    def test_report_workflow_status_read_NOT_approved_by_SP(self):
+        eligible_case = make_recipe(
+            "legalaid.eligible_case", source="WEB", provider_viewed=self.today, provider_assigned_at=self.today
+        )
+        make_recipe("cla_eventlog.log", case=eligible_case, code="MIS-OOS")
+
+        self.assertEqual(eligible_case.source, "WEB")
+
+        report = self.get_report()
+        expected = {"Workflow status": "Read and NOT approved by SP"}
+        self.assertDictContainsSubset(expected, dict(report[0]))
+
+    def test_report_workflow_status_NOT_read_by_SP(self):
+        eligible_case = make_recipe("legalaid.eligible_case", source="WEB", provider_assigned_at=self.today)
+        self.assertEqual(eligible_case.source, "WEB")
+        report = self.get_report()
+        expected = {"Workflow status": "NOT read by SP"}
+        self.assertDictContainsSubset(expected, dict(report[0]))
+
+    def get_notes(self):
+        return """User problem:
+This is a free text field
+I can type whatever I want
+Yes
+No
+Discrimination
+
+User selected:
+What do you need help with?: Discrimination
+
+On what grounds have you been discriminated against?: Age
+
+How old are you?: 18 or over
+
+Where did the discrimination occur?: At work
+
+Outcome: INSCOPE"""
+
+    def get_notes_without_user_problem(self):
+        return """User selected:
+What do you need help with?: Discrimination
+
+On what grounds have you been discriminated against?: Age
+
+How old are you?: 18 or over
+
+Where did the discrimination occur?: At work
+
+Outcome: INSCOPE"""
+
+    def get_notes_just_user_problem(self):
+        return """User problem:
+This is a free text field"""
+
+    def get_notes_public_diagnosis_note(self):
+        return """Public Diagnosis note:
+User is at immediate risk of harm
+
+User selected:
+What do you need help with?: Domestic abuse
+
+Choose the option that best describes your personal situation: Domestic abuse
+
+Are you or your children at immediate risk of harm?: Yes
+
+Outcome: CONTACT
+        """

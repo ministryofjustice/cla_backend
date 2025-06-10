@@ -8,6 +8,7 @@ import time
 
 from celery import Task
 from cla_butler.constants import delete_option_three_years, delete_option_no_personal_details
+from django.db import transaction
 from django.contrib.sessions.models import Session
 from django.contrib.admin.models import LogEntry
 from django.contrib.contenttypes.models import ContentType
@@ -36,6 +37,7 @@ from legalaid.models import (
     EODDetailsCategory,
     Property,
 )
+from historic.models import CaseArchived
 from timer.models import Timer
 from legalaid.utils import diversity
 from cla_butler.models import DiversityDataCheck, ACTION, STATUS
@@ -71,6 +73,7 @@ class DeleteOldData(Task):
         self.cleanup_adaptation_details()
         self.cleanup_sessions()
         self.cleanup_access_tokens()
+        self.cleanup_historic_casearchive()
 
     def _setup(self):
         self.now = timezone.now()
@@ -229,6 +232,17 @@ class DeleteOldData(Task):
         case_complaints = Complaint.objects.filter(eod_id__in=eods).values_list("pk", flat=True)
         audit_logs = AuditLog.objects.filter(complaint__in=case_complaints)
         audit_logs.delete()
+
+    @transaction.atomic
+    def cleanup_historic_casearchive(self):
+        """ Removes all Archived Cases that not been modified in over 3 years.
+            No fields in this model have a relationship to any other model so we don't need to cascade delete anything.
+
+            This is an atomic transaction to ensure changes are rolled back if an exception occurs.
+        """
+        three_years_ago = self.now - relativedelta(years=3)
+        archived_cases = CaseArchived.objects.filter(modified__lte=three_years_ago)
+        self._delete_objects(archived_cases)
 
 
 class DiversityDataCheckTask(Task):

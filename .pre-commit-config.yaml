@@ -10,6 +10,8 @@ repos:
     rev: v2.1.0
     hooks:
     - id: flake8
+      # Pre-commit fails to install on apple chips as install pyyaml 5.4
+      additional_dependencies: ['PyYAML==5.3.1']
       language_version: python2.7
       args: ['--config=setup.cfg',  '--exclude=./cla_backend/settings/*,./docs/*']
 -   repo: https://github.com/jazzband/pip-tools

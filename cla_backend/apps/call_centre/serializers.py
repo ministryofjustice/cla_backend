@@ -118,7 +118,7 @@ class PersonalDetailsSerializer(PersonalDetailsSerializerFull):
             "safe_to_contact",
             "vulnerable_user",
             "has_diversity",
-            "announce_call"
+            "announce_call",
         )
 
 
@@ -196,6 +196,22 @@ class EODDetailsSerializer(EODDetailsSerializerBase):
 
 
 class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
+    def validate_property_set(self, value):
+        property_item = super(EligibilityCheckSerializer, self).validate_property_set(value)
+        # Iterate through each item (property) in the property_set list
+        for property_item in value:
+            if property_item.get("value") is None:
+                raise serializers.ValidationError("Property 'value' cannot be null.")
+            if property_item.get("mortgage_left") is None:
+                raise serializers.ValidationError("Property 'mortgage_left' cannot be null.")
+            if property_item.get("share") is None:
+                raise serializers.ValidationError("Property 'share' cannot be null.")
+            if property_item.get("disputed") is None:
+                raise serializers.ValidationError("Property 'disputed' cannot be null.")
+            if property_item.get("main") is None:
+                raise serializers.ValidationError("Property 'main' cannot be null.")
+        return value
+
     property_set = PropertySerializer(many=True, required=False)
     you = PersonSerializer(required=False, allow_null=True)
     partner = PartnerPersonSerializer(required=False, allow_null=True)
@@ -221,6 +237,7 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
             "state",
             "specific_benefits",
             "disregards",
+            "disregard_selection",
             "has_passported_proceedings_letter",
             "under_18_passported",
             "is_you_under_18",
@@ -242,6 +259,7 @@ class LogSerializer(LogSerializerBase):
 
 class CaseSerializer(CaseSerializerFull):
     provider_notes = serializers.CharField(max_length=10000, required=False, read_only=True)
+    client_notes = serializers.CharField(max_length=10000, required=False, read_only=True)
     organisation = serializers.PrimaryKeyRelatedField(required=False, read_only=True)
     organisation_name = serializers.SerializerMethodField()
     billable_time = serializers.IntegerField(read_only=True)
@@ -273,6 +291,7 @@ class CaseSerializer(CaseSerializerFull):
             "provider",
             "notes",
             "provider_notes",
+            "client_notes",
             "full_name",
             "thirdparty_details",
             "adaptation_details",
@@ -306,6 +325,7 @@ class CaseSerializer(CaseSerializerFull):
             "organisation_name",
             "organisation",
             "gtm_anon_id",
+            "scope_traversal",
         )
 
 
@@ -345,7 +365,7 @@ class CreateCaseSerializer(CaseSerializer):
     """
 
     def create(self, validated_data):
-        validated_data['gtm_anon_id'] = str(uuid.uuid4())
+        validated_data["gtm_anon_id"] = str(uuid.uuid4())
         return super(CreateCaseSerializer, self).create(validated_data)
 
     personal_details = UUIDSerializer(

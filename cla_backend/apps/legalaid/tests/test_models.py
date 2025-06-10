@@ -62,6 +62,7 @@ def get_full_case(matter_type1, matter_type2, provider=None):
         on_passported_benefits=True,
         specific_benefits={"income_support": True},
         disregards={"criminal_injuries": True},
+        disregard_selection="yes",
         on_nass_benefits=True,
         is_you_or_your_partner_over_60=True,
         under_18_passported=False,
@@ -97,6 +98,7 @@ def get_full_case(matter_type1, matter_type2, provider=None):
         provider=provider,
         notes="Notes",
         provider_notes="Provider Notes",
+        client_notes="Client Notes",
         thirdparty_details=make_recipe("legalaid.thirdparty_details"),
         adaptation_details=make_recipe("legalaid.adaptation_details"),
         billable_time=2000,
@@ -116,6 +118,7 @@ def get_full_case(matter_type1, matter_type2, provider=None):
         provider_assigned_at=timezone.now(),
         is_urgent=True,
         organisation=organisation,
+        scope_traversal=make_recipe("checker.scope_traversal"),
     )
     make_recipe("legalaid.eod_details", notes="EOD notes", case=case)
     CaseKnowledgebaseAssignment.objects.create(
@@ -1284,6 +1287,7 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
                 "calculations",
                 "specific_benefits",
                 "disregards",
+                "disregard_selection",
                 "has_passported_proceedings_letter",
             ],
             check_not_None=True,
@@ -1338,6 +1342,7 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
         self.assertEqual(new_case.requires_action_by, REQUIRES_ACTION_BY.OPERATOR)
         self.assertEqual(new_case.notes, "")
         self.assertEqual(new_case.provider_notes, "")
+        self.assertEqual(new_case.client_notes, "")
         self.assertNotEqual(case.laa_reference, new_case.laa_reference)
         self.assertEqual(new_case.billable_time, 0)
         self.assertEqual(new_case.matter_type1, self.cat2_data.matter_type1)
@@ -1405,11 +1410,13 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
             "provider_closed",
             "search_field",
             "is_urgent",
+            "scope_traversal",
         ]
         equal_fields = [
             "personal_details",
             "notes",
             "provider_notes",
+            "client_notes",
             "media_code",
             "exempt_user",
             "exempt_user_reason",
@@ -1458,6 +1465,7 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
             # it should keep these values from the original case
             "notes": case.notes,
             "provider_notes": case.provider_notes,
+            "client_notes": case.client_notes,
             "media_code": case.media_code,
             "source": case.source,
             "exempt_user": case.exempt_user,

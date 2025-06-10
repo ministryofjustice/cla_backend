@@ -6,10 +6,15 @@ from django.utils import timezone
 from extended_choices import Choices
 from model_utils.models import TimeStampedModel
 from uuidfield import UUIDField
-
-from cla_common.constants import REASONS_FOR_CONTACTING, CALLBACK_TYPES
+from jsonfield import JSONField
+from cla_common.constants import (
+    REASONS_FOR_CONTACTING,
+    CALLBACK_TYPES,
+    FINANCIAL_ASSESSMENT_STATUSES,
+    FAST_TRACK_REASON,
+)
 from cla_common.call_centre_availability import SLOT_INTERVAL_MINS
-
+from core.cloning import CloneModelMixin
 
 # These are all the possible start times for a callback slot,
 # a slot has a duration of 30 minutes.
@@ -285,12 +290,25 @@ class CallbackTimeSlot(TimeStampedModel):
 
     @staticmethod
     def get_remaining_capacity_by_range(capacity, start_dt, end_dt):
+        """ Gets a count of the remaining callback slots for callbacks booked via the webform for a given period of time.
+            Excludes callbacks requested for a third party.
+
+            Only includes cases with an outcome code of CB1, i.e. First callback attempt is yet to occur.
+
+            Args:
+                capacity (int): The capacity for a given time slot
+                start_dt (datetime.datetime): Start of time range
+                end_dt (datetime.datetime): End of time range
+
+            Returns:
+                list[datetime.datetime]: List of requested callback times.
+            """
         from legalaid.models import Case
 
         # otherwise this will match cases that have a requires_action_at of the end date(don't want it to be inclusive)
         end_dt = end_dt - datetime.timedelta(seconds=1)
         count = Case.objects.filter(
-            requires_action_at__range=(start_dt, end_dt), callback_type=CALLBACK_TYPES.CHECKER_SELF
+            requires_action_at__range=(start_dt, end_dt), callback_type=CALLBACK_TYPES.CHECKER_SELF, outcome_code="CB1"
         ).count()
         return capacity - count
 
@@ -300,3 +318,19 @@ class CallbackTimeSlot(TimeStampedModel):
 
     def callback_end_datetime(self):
         return self.callback_start_datetime() + datetime.timedelta(minutes=SLOT_INTERVAL_MINS)
+
+
+class ScopeTraversal(CloneModelMixin, TimeStampedModel):
+    """ Stores the information about the users journey through Check if you can get Legal Aid. """
+
+    class Analytics:
+        _allow_analytics = True
+
+    scope_answers = JSONField(default=dict)
+    category = JSONField(default=dict)  # {"name": Category display name, "chs_code": Category name code}
+    subcategory = JSONField(default=dict)  # {"name": Subcategory Name, "description": Subcategory description}
+    financial_assessment_status = models.CharField(null=True, max_length=32, choices=FINANCIAL_ASSESSMENT_STATUSES)
+    fast_track_reason = models.CharField(null=True, max_length=32, choices=FAST_TRACK_REASON)
+    reference = UUIDField(auto=True, unique=True)
+
+    cloning_config = {"excludes": ["created", "modified", "reference"]}

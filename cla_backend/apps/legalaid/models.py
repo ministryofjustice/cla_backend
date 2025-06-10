@@ -11,7 +11,7 @@ from uuidfield import UUIDField
 from django.conf import settings
 from django.core.validators import MaxValueValidator
 from django.db import models
-from django.db.models import SET_NULL
+from django.db.models import SET_NULL, CASCADE
 from django.utils.timezone import localtime, utc
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -44,6 +44,7 @@ from cla_common.constants import (
     CALLBACK_WINDOW_TYPES,
     CALLBACK_TYPES,
 )
+from legalaid.constants import DISREGARD_SELECTION
 
 from legalaid.fields import MoneyField
 
@@ -442,6 +443,9 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin):
     under_18_has_valuables = models.NullBooleanField(default=None)
     specific_benefits = JSONField(null=True, blank=True)
     disregards = JSONField(null=True, blank=True)
+    disregard_selection = models.CharField(
+        max_length=10, default=None, choices=DISREGARD_SELECTION.CHOICES, blank=True, null=True
+    )
 
     # need to be moved into graph/questions format soon
     is_you_or_your_partner_over_60 = models.NullBooleanField(default=None)
@@ -689,7 +693,7 @@ class MediaCode(TimeStampedModel):
 class Case(TimeStampedModel):
     class Analytics:
         _allow_analytics = True
-        _PII = ["notes", "provider_notes", "source"]
+        _PII = ["notes", "provider_notes", "client_notes"]
 
     reference = models.CharField(max_length=128, unique=True, editable=False)
     eligibility_check = models.OneToOneField(EligibilityCheck, null=True, blank=True)
@@ -724,8 +728,9 @@ class Case(TimeStampedModel):
     locked_at = models.DateTimeField(auto_now=False, blank=True, null=True)
     provider = models.ForeignKey("cla_provider.Provider", blank=True, null=True)
     organisation = models.ForeignKey("call_centre.Organisation", blank=True, null=True)
-    notes = models.TextField(blank=True)
-    provider_notes = models.TextField(blank=True)
+    notes = models.TextField(blank=True)  # These notes are assigned by call centre operators
+    provider_notes = models.TextField(blank=True)  # These notes are set by specialist providers
+    client_notes = models.TextField(blank=True)  # These notes are populated by users on the public contact form
     laa_reference = models.BigIntegerField(null=True, blank=True, unique=True, editable=False)
     thirdparty_details = models.ForeignKey("ThirdPartyDetails", blank=True, null=True)
     adaptation_details = models.ForeignKey("AdaptationDetails", blank=True, null=True)
@@ -777,12 +782,16 @@ class Case(TimeStampedModel):
 
     gtm_anon_id = models.UUIDField(unique=False, null=True, blank=True)
 
+    scope_traversal = models.OneToOneField("checker.ScopeTraversal", blank=True, null=True, on_delete=CASCADE)
+
     class Meta(object):
         ordering = ("-created",)
         permissions = (
             ("run_reports", u"Can run reports"),
             ("run_obiee_reports", u"Can run OBIEE reports"),
             ("run_complaints_report", u"Can run complaints report"),
+            # Used to give internal users access to reports that should not be used without the appropriate context.
+            ("run_internal_reports", u"Can run internal reports"),
         )
 
     def __unicode__(self):
@@ -899,7 +908,7 @@ class Case(TimeStampedModel):
                     "assigned_out_of_hours",
                     "is_urgent",
                 ],
-                "clone_fks": ["thirdparty_details", "adaptation_details"],
+                "clone_fks": ["thirdparty_details", "adaptation_details", "scope_traversal"],
                 "override_values": override_values,
             },
         )

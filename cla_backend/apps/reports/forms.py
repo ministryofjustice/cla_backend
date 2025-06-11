@@ -1138,6 +1138,27 @@ class CallbackTimeSlotReport(DateRangeReportForm):
         return ["Date", "Interval", "Total capacity", "Used capacity", "Remaining capacity", "% Remaining capacity"]
 
 
+class WebContactCases(SQLFileDateRangeReport):
+    QUERY_FILE = "WebContactCases.sql"
+
+    def get_sql_params(self):
+        from_date, to_date = self.date_range
+        return {"from_date": from_date, "to_date": to_date}
+
+    def get_headers(self):
+        return [
+            "Case ref",
+            "Case created date",
+            "Case modified date",
+            "Contact type",
+            "Enquiry contact reason",
+            "Callback type",
+            "Client notes",
+            "CHS outcome code",
+            "Urgent",
+        ]
+
+
 def get_from_nth(items, n, attribute):
     try:
         item = items[n - 1]

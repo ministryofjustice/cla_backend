@@ -20,6 +20,7 @@ from checker.models import ReasonForContacting
 
 import mock
 from core.tests.mommy_utils import make_recipe
+from checker.models import FINANCIAL_ASSESSMENT_STATUSES, FAST_TRACK_REASON
 
 
 class ReportsSQLColumnsMatchHeadersTestCase(TestCase):
@@ -738,3 +739,152 @@ Are you or your children at immediate risk of harm?: Yes
 
 Outcome: CONTACT
         """
+
+
+class TestWebCaseReport(TestCase):
+    def test_report(self):
+        # Create call me back case
+        case_call_me_back = self.make_web_cases(
+            FAST_TRACK_REASON.OTHER,
+            FINANCIAL_ASSESSMENT_STATUSES.SKIPPED,
+            reason_for_contacting_categories=[
+                REASONS_FOR_CONTACTING.MISSING_PAPERWORK,
+                REASONS_FOR_CONTACTING.DIFFICULTY_ONLINE,
+                REASONS_FOR_CONTACTING.HOW_SERVICE_HELPS,
+                REASONS_FOR_CONTACTING.PNS,
+            ],
+            callback_type="web_form_self",
+        )
+        assert case_call_me_back.outcome_code == "CB1"
+
+        # Create call someone else case
+        case_call_someone_else = self.make_web_cases(
+            FAST_TRACK_REASON.MORE_INFO_REQUIRED,
+            FINANCIAL_ASSESSMENT_STATUSES.PASSED,
+            reason_for_contacting_categories=[REASONS_FOR_CONTACTING.PNS],
+            callback_type="web_form_third_party",
+        )
+        assert case_call_someone_else.outcome_code == "CB1"
+
+        # Create I will call you back case
+        case_i_will_call_you_back = self.make_web_cases(
+            FAST_TRACK_REASON.MORE_INFO_REQUIRED,
+            FINANCIAL_ASSESSMENT_STATUSES.PASSED,
+            reason_for_contacting_categories=[REASONS_FOR_CONTACTING.PNS],
+            callback_type=None,
+        )
+        assert case_i_will_call_you_back.outcome_code == "CASE_CREATED"
+
+        expected_data = [
+            [
+                ("Case ref", case_i_will_call_you_back.reference),
+                ("Case created date", case_i_will_call_you_back.created),
+                ("Case modified date", case_i_will_call_you_back.modified),
+                ("Contact type", FINANCIAL_ASSESSMENT_STATUSES.PASSED + " + " + FAST_TRACK_REASON.MORE_INFO_REQUIRED),
+                ("Enquiry contact reason", REASONS_FOR_CONTACTING.PNS),
+                ("Callback type", None),
+                ("Client notes", ""),
+                ("CHS outcome code", "CASE_CREATED"),
+                ("Urgent", False),
+            ],
+            [
+                ("Case ref", case_call_someone_else.reference),
+                ("Case created date", case_call_someone_else.created),
+                ("Case modified date", case_call_someone_else.modified),
+                ("Contact type", FINANCIAL_ASSESSMENT_STATUSES.PASSED + " + " + FAST_TRACK_REASON.MORE_INFO_REQUIRED),
+                ("Enquiry contact reason", REASONS_FOR_CONTACTING.PNS),
+                ("Callback type", "web_form_third_party"),
+                ("Client notes", ""),
+                ("CHS outcome code", "CB1"),
+                ("Urgent", False),
+            ],
+            [
+                ("Case ref", case_call_me_back.reference),
+                ("Case created date", case_call_me_back.created),
+                ("Case modified date", case_call_me_back.modified),
+                ("Contact type", FINANCIAL_ASSESSMENT_STATUSES.SKIPPED + " + " + FAST_TRACK_REASON.OTHER),
+                (
+                    "Enquiry contact reason",
+                    ", ".join(
+                        [
+                            REASONS_FOR_CONTACTING.DIFFICULTY_ONLINE,
+                            REASONS_FOR_CONTACTING.HOW_SERVICE_HELPS,
+                            REASONS_FOR_CONTACTING.MISSING_PAPERWORK,
+                            REASONS_FOR_CONTACTING.PNS,
+                        ]
+                    ),
+                ),
+                ("Callback type", "web_form_self"),
+                ("Client notes", ""),
+                ("CHS outcome code", "CB1"),
+                ("Urgent", False),
+            ],
+        ]
+        report = self.get_report()
+
+        self.assertListEqual(expected_data[0], report[0])
+        self.assertListEqual(expected_data[1], report[1])
+        self.assertListEqual(expected_data[2], report[2])
+
+    def make_web_cases(
+        self, fast_track_reason, financial_assessment_status, reason_for_contacting_categories, callback_type
+    ):
+        operator = make_recipe("call_centre.operator")
+
+        scope_traversal = make_recipe(
+            "checker.scope_traversal",
+            scope_answers={},
+            category={},
+            subcategory={},
+            financial_assessment_status=financial_assessment_status,
+            fast_track_reason=fast_track_reason,
+        )
+
+        # Create dummy cases that shouldn't be include in the report
+        make_recipe("legalaid.case", eligibility_check=None, _quantity=5)
+        # Create the web case
+        outcome_code = "CB1" if callback_type else "CASE_CREATED"
+        case = make_recipe(
+            "legalaid.case",
+            created_by=operator.user,
+            scope_traversal=scope_traversal,
+            callback_type=callback_type,
+            outcome_code=outcome_code,
+        )
+
+        make_recipe("cla_eventlog.Log", code="CASE_CREATED", case=case, notes="Case created digitally")
+        if callback_type:
+            make_recipe("cla_eventlog.Log", code=outcome_code, case=case)
+
+        if reason_for_contacting_categories:
+            reasons_for_contacting = make_recipe(
+                "checker.reasonforcontacting", referrer="https://localhost/scope/diagnosis", case=case
+            )
+            make_recipe(
+                "checker.reasonforcontacting_category",
+                reason_for_contacting=reasons_for_contacting,
+                category=cycle(reason_for_contacting_categories),
+                _quantity=len(reason_for_contacting_categories),
+            )
+
+        # If you don't do this then outcome come could be modified by either the eventlog or other hooks in the app
+        # making the test flake
+        case.outcome_code = outcome_code
+        case.save()
+
+        return case
+
+    def get_report(self):
+        today = datetime.date.today()
+        date_from = today - datetime.timedelta(days=1)
+        date_to = today + datetime.timedelta(days=1)
+
+        with mock.patch("reports.forms.WebContactCases.date_range", (date_from, date_to)):
+            report = reports.forms.WebContactCases()
+            rows = report.get_rows()
+            headers = report.get_headers()
+            data = []
+            for row in rows:
+                data.append(zip(headers, row))
+
+        return data

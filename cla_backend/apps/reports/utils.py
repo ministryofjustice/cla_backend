@@ -16,6 +16,8 @@ from legalaid.utils import diversity
 
 
 def get_reports_cursor():
+    if settings.TEST_MODE:
+        return connection.cursor()
     try:
         return connections["reports"].cursor()
     except ConnectionDoesNotExist:

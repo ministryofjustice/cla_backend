@@ -37,6 +37,7 @@ from .forms import (
     MIScopeReport,
     MIDemographicReport,
     CallbackTimeSlotReport,
+    WebContactCases,
 )
 
 from reports.models import Export
@@ -299,3 +300,9 @@ def delete_record(user_id, file_name):
         export_record.delete()
     except Export.DoesNotExist:
         raise Http404("Export does not exist")
+
+
+@staff_member_required
+@permission_required("legalaid.run_reports")
+def web_contact_cases_report(request):
+    return report_view(request, WebContactCases, "Web contact case export")

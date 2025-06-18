@@ -207,7 +207,7 @@ typing==3.10.0.0
     # via pathlib2
 ua-parser==0.10.0
     # via django-cookies-samesite
-urllib3==1.26.14
+urllib3==2.5.0
     # via
     #   botocore
     #   requests

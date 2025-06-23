@@ -7,6 +7,7 @@ from core.drf.mixins import ClaCreateModelMixin, ClaUpdateModelMixin
 from core.drf.paginator import StandardResultsSetPagination
 
 from django.shortcuts import get_object_or_404
+from guidance.views import BaseGuidanceNoteViewSet
 from legalaid.permissions import IsManagerOrMePermission
 
 from rest_framework import mixins
@@ -283,6 +284,10 @@ class ThirdPartyDetailsViewSet(CLAProviderPermissionViewSetMixin, BaseThirdParty
 
 
 class EventViewSet(CLAProviderPermissionViewSetMixin, BaseEventViewSet):
+    pass
+
+
+class GuidanceNoteViewSet(CLAProviderPermissionViewSetMixin, BaseGuidanceNoteViewSet):
     pass
 
 

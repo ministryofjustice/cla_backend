@@ -13,7 +13,10 @@ SELECT lc.reference as "Case ref",
     END as "Third Party bypass",
     cel.created::date as "Request made date",
     TO_CHAR((cel.created)::timestamp, 'HH24:MI:SS') as "Request made time",
-    ccbts.capacity as "Interval cap"
+    CASE
+        WHEN source = 'WEB' THEN ccbts.capacity
+        ELSE NULL
+    END as "Interval cap"
 FROM cla_eventlog_log cel
 JOIN legalaid_case lc ON cel.case_id = lc.id
 LEFT JOIN checker_callbacktimeslot ccbts ON ccbts.date = (cel.context->>'requires_action_at')::timestamp::date AND ccbts.time = TO_CHAR((cel.context->>'requires_action_at')::timestamp, 'HH24MI')

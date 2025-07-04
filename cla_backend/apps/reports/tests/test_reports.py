@@ -888,3 +888,127 @@ class TestWebCaseReport(TestCase):
                 data.append(zip(headers, row))
 
         return data
+
+
+class TestMiCallbacks(TestCase):
+    def setup_test_data(self):
+        make_recipe("legalaid.case", source="WEB", outcome_code="CB1", _quantity=5, eligibility_check=None)
+
+        make_recipe("checker.callback_time_slot", capacity=10, date="2025-07-03", time="0900")
+        make_recipe("checker.callback_time_slot", capacity=20, date="2025-07-03", time="1700")
+
+        case_web = make_recipe("legalaid.case", source="WEB", callback_type=CALLBACK_TYPES.CHECKER_THIRD_PARTY)
+        make_recipe("cla_eventlog.Log", code="CASE_CREATED", case=case_web, notes="Case created digitally")
+        make_recipe("cla_eventlog.Log", code="CASE_VIEWED", case=case_web)
+        make_recipe(
+            "cla_eventlog.Log", code="CB1", case=case_web, context={"requires_action_at": "2025-07-03T09:00:00+01:00"}
+        )
+        make_recipe(
+            "cla_eventlog.Log", code="CB2", case=case_web, context={"requires_action_at": "2025-07-03T14:30:00+01:00"}
+        )
+
+        case_phone = make_recipe("legalaid.case", source="PHONE", callback_type=CALLBACK_TYPES.CHECKER_SELF)
+        make_recipe("cla_eventlog.Log", code="CASE_CREATED", case=case_phone)
+        make_recipe(
+            "cla_eventlog.Log",
+            code="CB1",
+            case=case_phone,
+            context={"requires_action_at": "2025-07-03T13:00:00+01:00"},
+        )
+        make_recipe(
+            "cla_eventlog.Log",
+            code="CB2",
+            case=case_phone,
+            context={"requires_action_at": "2025-07-03T15:00:00+01:00"},
+        )
+        make_recipe(
+            "cla_eventlog.Log",
+            code="CB3",
+            case=case_phone,
+            context={"requires_action_at": "2025-07-03T17:00:00+01:00"},
+        )
+
+        expected_data = [
+            [
+                ("Case ref", case_phone.reference),
+                ("Callback date", datetime.date(year=2025, month=7, day=3)),
+                ("Callback time", "17:00"),
+                ("Case source", "PHONE"),
+                ("Callback code", "CB3"),
+                ("Callback requested by", "Operator"),
+                ("Third Party bypass", "N"),
+                ("Request made date", datetime.date(year=2025, month=7, day=3)),
+                ("Request made time", "08:00:00"),
+                ("Interval cap", None),
+            ],
+            [
+                ("Case ref", case_phone.reference),
+                ("Callback date", datetime.date(year=2025, month=7, day=3)),
+                ("Callback time", "15:00"),
+                ("Case source", "PHONE"),
+                ("Callback code", "CB2"),
+                ("Callback requested by", "Operator"),
+                ("Third Party bypass", "N"),
+                ("Request made date", datetime.date(year=2025, month=7, day=3)),
+                ("Request made time", "08:00:00"),
+                ("Interval cap", None),
+            ],
+            [
+                ("Case ref", case_web.reference),
+                ("Callback date", datetime.date(year=2025, month=7, day=3)),
+                ("Callback time", "14:30"),
+                ("Case source", "WEB"),
+                ("Callback code", "CB2"),
+                ("Callback requested by", "Client"),
+                ("Third Party bypass", "Y"),
+                ("Request made date", datetime.date(year=2025, month=7, day=3)),
+                ("Request made time", "08:00:00"),
+                ("Interval cap", None),
+            ],
+            [
+                ("Case ref", case_phone.reference),
+                ("Callback date", datetime.date(year=2025, month=7, day=3)),
+                ("Callback time", "13:00"),
+                ("Case source", "PHONE"),
+                ("Callback code", "CB1"),
+                ("Callback requested by", "Operator"),
+                ("Third Party bypass", "N"),
+                ("Request made date", datetime.date(year=2025, month=7, day=3)),
+                ("Request made time", "08:00:00"),
+                ("Interval cap", None),
+            ],
+            [
+                ("Case ref", case_web.reference),
+                ("Callback date", datetime.date(year=2025, month=7, day=3)),
+                ("Callback time", "09:00"),
+                ("Case source", "WEB"),
+                ("Callback code", "CB1"),
+                ("Callback requested by", "Client"),
+                ("Third Party bypass", "Y"),
+                ("Request made date", datetime.date(year=2025, month=7, day=3)),
+                ("Request made time", "08:00:00"),
+                ("Interval cap", 10),
+            ],
+        ]
+        return expected_data
+
+    @freeze_time("2025-07-03T08:00:00+01:00")
+    def test_mi_callbacks(self):
+        expected_data = self.setup_test_data()
+        report = self.get_report()
+        self.assertEqual(report, expected_data)
+
+    def get_report(self):
+        today = datetime.date.today()
+        date_from = today - datetime.timedelta(days=1)
+        date_to = today + datetime.timedelta(days=1)
+
+        with mock.patch("reports.forms.MICallbacks.date_range", (date_from, date_to)):
+            report = reports.forms.MICallbacks()
+            rows = report.get_rows()
+            headers = report.get_headers()
+            data = []
+            for row in rows:
+                data.append(zip(headers, row))
+
+        return data

@@ -46,6 +46,7 @@ urlpatterns = patterns(
     url(r"^all-knowledgebase-articles/$", views.all_knowledgebase_articles, name="all_knowledgebase_articles"),
     url(r"^reasons-for-contacting/$", views.reasons_for_contacting, name="reasons_for_contacting"),
     url(r"^web-contact-cases/$", views.web_contact_cases_report, name="web_contact_cases_report"),
+    url(r"^mi-callbacks-report/$", views.mi_callbacks_report, name="mi_callbacks_report"),
     url(
         r"^reasons-for-contacting-disaggregated/$",
         views.reasons_for_contacting_disaggregated,

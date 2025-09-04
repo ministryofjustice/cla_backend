@@ -385,41 +385,18 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 # LGA-2236 Set rota hours start and end times using environment variables so can change without updating the code.
 # Want to alter start and end times via environment variables.
 # In case these are not set, default values are set here
-DEFAULT_NON_ROTA_START_TIME_HR = 8
-DEFAULT_NON_ROTA_END_TIME_HR = 17
-DEFAULT_ED_START_TIME_HR = 9
-DEFAULT_ED_END_TIME_HR = 17
-DEFAULT_DISCRIM_START_TIME_HR = 8
-DEFAULT_DISCRIM_END_TIME_HR = 18
+DEFAULT_NON_ROTA_START_TIME_HR = 9
+DEFAULT_NON_ROTA_END_TIME_HR = 18
 
 NON_ROTA_START_TIME_HR = int(os.environ.get("NON_ROTA_START_TIME_HR", DEFAULT_NON_ROTA_START_TIME_HR))
 NON_ROTA_END_TIME_HR = int(os.environ.get("NON_ROTA_END_TIME_HR", DEFAULT_NON_ROTA_END_TIME_HR))
 
-EDUCATION_START_TIME_HR = int(os.environ.get("EDUCATION_START_TIME_HR", DEFAULT_ED_START_TIME_HR))
-EDUCATION_END_TIME_HR = int(os.environ.get("EDUCATION_END_TIME_HR", DEFAULT_ED_END_TIME_HR))
-
-DISCRIMINATION_START_TIME_HR = int(os.environ.get("DISCRIMINATION_START_TIME_HR", DEFAULT_DISCRIM_START_TIME_HR))
-DISCRIMINATION_END_TIME_HR = int(os.environ.get("DISCRIMINATION_END_TIME_HR", DEFAULT_DISCRIM_END_TIME_HR))
-
 NON_ROTA_HOURS = {"weekday": (datetime.time(NON_ROTA_START_TIME_HR, 0), datetime.time(NON_ROTA_END_TIME_HR, 0))}
-EDUCATION_DAILY_HOURS = (datetime.time(EDUCATION_START_TIME_HR, 0), datetime.time(EDUCATION_END_TIME_HR, 0))
-DISCRIMINATION_NON_ROTA_HOURS = {
-    "weekday": (datetime.time(DISCRIMINATION_START_TIME_HR, 0), datetime.time(DISCRIMINATION_END_TIME_HR, 0))
-}
-
-EDUCATION_NON_ROTA_HOURS = {
-    "monday": EDUCATION_DAILY_HOURS,
-    "tuesday": EDUCATION_DAILY_HOURS,
-    "wednesday": EDUCATION_DAILY_HOURS,
-    "thursday": EDUCATION_DAILY_HOURS,
-}
 
 # If an unknown or empty is used to get from NON_ROTA_OPENING_HOURS then it will default to a basic NON_ROTA_HOURS
 NON_ROTA_OPENING_HOURS = defaultdict(lambda: OpeningHours(**NON_ROTA_HOURS))
 
-# If provider types have different opening hours they will need to be added here, with the category they service as the key.
-NON_ROTA_OPENING_HOURS["discrimination"] = OpeningHours(**DISCRIMINATION_NON_ROTA_HOURS)
-NON_ROTA_OPENING_HOURS["education"] = OpeningHours(**EDUCATION_NON_ROTA_HOURS)
+# If provider types have different opening hours they can be added here, with the category they service as the key.
 
 
 OBIEE_IP_PERMISSIONS = ("*",)

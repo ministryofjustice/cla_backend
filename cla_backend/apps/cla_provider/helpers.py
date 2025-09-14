@@ -362,8 +362,8 @@ class ProviderAllocationHelper(object):
         non_rota_hours = settings.NON_ROTA_OPENING_HOURS[getattr(category, "code")]
         if self.as_of not in non_rota_hours:
             override_provider = self._get_rota_provider(category)
-            # If there is no out of hours rota configured a provider will still be suggested.
-            if override_provider:
+            # If ALWAYS_SUGGEST_PROVIDER = False and override_provider = None, use the standard suggested provider logic.
+            if not settings.ALWAYS_SUGGEST_PROVIDER or override_provider:
                 return override_provider
         if not os.path.isfile("/tmp/DISABLE_BEST_FIT_PROVIDER"):
             return self._get_best_fit_provider(category)

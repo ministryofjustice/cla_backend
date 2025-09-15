@@ -585,7 +585,9 @@ class TestGetValidEducationProviders(TestCase):
         provider_allocations = []
         for id in range(2):
             provider = make_recipe(self.provider_model, active=True, id=id)
-            provider_allocation = make_recipe(self.provider_allocation_model, provider=provider, category=self.education_category)
+            provider_allocation = make_recipe(
+                self.provider_allocation_model, provider=provider, category=self.education_category
+            )
             make_recipe(self.working_days_model, saturday=True, sunday=True, provider_allocation=provider_allocation)
             provider_allocations.append(provider_allocation)
 
@@ -730,7 +732,15 @@ class TestGetCasesAssignedToCode(TestCase):
             now = datetime.datetime.strptime("%d January, 2024" % day, self.date_format)
             cases.append(make_recipe(self.case_model, outcome_code="EDFF", modified=now))
 
-        assert len(cases) == len(self.helper.get_cases_assigned_to_code("EDFF", datetime.datetime.strptime("1 January, 2024", self.date_format))) == 30
+        assert (
+            len(cases)
+            == len(
+                self.helper.get_cases_assigned_to_code(
+                    "EDFF", datetime.datetime.strptime("1 January, 2024", self.date_format)
+                )
+            )
+            == 30
+        )
 
     def test_multiple_outcome_codes(self):
         outcome_codes = ["MANREF", "SPFM", "EDFF", "SPOR"]
@@ -738,9 +748,13 @@ class TestGetCasesAssignedToCode(TestCase):
         for day in range(1, 31):
             now = datetime.datetime.strptime("%d January, 2024" % day, self.date_format)
             outcome_code = outcome_codes[day % len(outcome_codes)]  # Iterate across the list of possible outcome codes
-            cases.append(make_recipe('legalaid.case', outcome_code=outcome_code, modified=now))
+            cases.append(make_recipe("legalaid.case", outcome_code=outcome_code, modified=now))
 
-        assert 8 == len(self.helper.get_cases_assigned_to_code("SPFM", datetime.datetime.strptime("1 January, 2024", self.date_format)))
+        assert 8 == len(
+            self.helper.get_cases_assigned_to_code(
+                "SPFM", datetime.datetime.strptime("1 January, 2024", self.date_format)
+            )
+        )
 
 
 class TestProviderAllocationDifferenceVsIdeal(TestCase):
@@ -786,20 +800,36 @@ class TestProviderAllocationDifferenceVsIdeal(TestCase):
     def test_standard_distribution(self):
         provider_1 = make_recipe(self.provider_model, id=1)
         provider_2 = make_recipe(self.provider_model, id=2)
-        provider_allocation_1 = make_recipe(self.provider_allocation_model, provider=provider_1, weighted_distribution=0.6)
-        provider_allocation_2 = make_recipe(self.provider_allocation_model, provider=provider_2, weighted_distribution=0.2)
+        provider_allocation_1 = make_recipe(
+            self.provider_allocation_model, provider=provider_1, weighted_distribution=0.6
+        )
+        provider_allocation_2 = make_recipe(
+            self.provider_allocation_model, provider=provider_2, weighted_distribution=0.2
+        )
         distribution = {provider_1.id: 4, provider_2.id: 10}
-        assert self.isFloatClose(self.helper._get_provider_allocation_difference_vs_ideal(provider_allocation_1, distribution), 4.4)
-        assert self.isFloatClose(self.helper._get_provider_allocation_difference_vs_ideal(provider_allocation_2, distribution), -7.2)
+        assert self.isFloatClose(
+            self.helper._get_provider_allocation_difference_vs_ideal(provider_allocation_1, distribution), 4.4
+        )
+        assert self.isFloatClose(
+            self.helper._get_provider_allocation_difference_vs_ideal(provider_allocation_2, distribution), -7.2
+        )
 
     def test_edff_distribution(self):
         provider_1 = make_recipe(self.provider_model, id=1)
         provider_2 = make_recipe(self.provider_model, id=2)
-        provider_allocation_1 = make_recipe(self.provider_allocation_model, provider=provider_1, weighted_distribution=0.6)
-        provider_allocation_2 = make_recipe(self.provider_allocation_model, provider=provider_2, weighted_distribution=0.2)
+        provider_allocation_1 = make_recipe(
+            self.provider_allocation_model, provider=provider_1, weighted_distribution=0.6
+        )
+        provider_allocation_2 = make_recipe(
+            self.provider_allocation_model, provider=provider_2, weighted_distribution=0.2
+        )
         distribution = {provider_1.id: 4, provider_2.id: 10, "EDFF": 10}
-        assert self.isFloatClose(self.helper._get_provider_allocation_difference_vs_ideal(provider_allocation_1, distribution), 10.4)
-        assert self.isFloatClose(self.helper._get_provider_allocation_difference_vs_ideal(provider_allocation_2, distribution), -5.2)
+        assert self.isFloatClose(
+            self.helper._get_provider_allocation_difference_vs_ideal(provider_allocation_1, distribution), 10.4
+        )
+        assert self.isFloatClose(
+            self.helper._get_provider_allocation_difference_vs_ideal(provider_allocation_2, distribution), -5.2
+        )
 
 
 class TestGetBestFitEducationProvider(TestCase):
@@ -819,8 +849,18 @@ class TestGetBestFitEducationProvider(TestCase):
         provider_1 = make_recipe(self.provider_model, id=1, active=True)
         provider_2 = make_recipe(self.provider_model, id=2, active=True)
 
-        make_recipe(self.provider_allocation_model, provider=provider_1, weighted_distribution=0.5, category=self.education_category)
-        make_recipe(self.provider_allocation_model, provider=provider_2, weighted_distribution=0.2, category=self.education_category)
+        make_recipe(
+            self.provider_allocation_model,
+            provider=provider_1,
+            weighted_distribution=0.5,
+            category=self.education_category,
+        )
+        make_recipe(
+            self.provider_allocation_model,
+            provider=provider_2,
+            weighted_distribution=0.2,
+            category=self.education_category,
+        )
 
         # This is a Wednesday
         with freeze_time("2024-01-03"):
@@ -835,8 +875,18 @@ class TestGetBestFitEducationProvider(TestCase):
         provider_1 = make_recipe(self.provider_model, id=1, active=True)
         provider_2 = make_recipe(self.provider_model, id=2, active=True)
 
-        make_recipe(self.provider_allocation_model, provider=provider_1, weighted_distribution=0, category=self.education_category)
-        make_recipe(self.provider_allocation_model, provider=provider_2, weighted_distribution=0.5, category=self.education_category)
+        make_recipe(
+            self.provider_allocation_model,
+            provider=provider_1,
+            weighted_distribution=0,
+            category=self.education_category,
+        )
+        make_recipe(
+            self.provider_allocation_model,
+            provider=provider_2,
+            weighted_distribution=0.5,
+            category=self.education_category,
+        )
 
         # This is a Wednesday
         with freeze_time("2024-01-03"):
@@ -851,8 +901,18 @@ class TestGetBestFitEducationProvider(TestCase):
         provider_1 = make_recipe(self.provider_model, id=1, active=True)
         provider_2 = make_recipe(self.provider_model, id=2, active=True)
 
-        make_recipe(self.provider_allocation_model, provider=provider_1, weighted_distribution=0.2, category=self.education_category)
-        make_recipe(self.provider_allocation_model, provider=provider_2, weighted_distribution=0.6, category=self.education_category)
+        make_recipe(
+            self.provider_allocation_model,
+            provider=provider_1,
+            weighted_distribution=0.2,
+            category=self.education_category,
+        )
+        make_recipe(
+            self.provider_allocation_model,
+            provider=provider_2,
+            weighted_distribution=0.6,
+            category=self.education_category,
+        )
 
         # This is a Wednesday
         with freeze_time("2024-01-03"):
@@ -866,11 +926,109 @@ class TestGetBestFitEducationProvider(TestCase):
         provider_2 = make_recipe(self.provider_model, id=2, active=True)
 
         for _ in range(99):
-            make_recipe('legalaid.case', outcome_code="EDFF", modified=datetime.datetime.now())
+            make_recipe("legalaid.case", outcome_code="EDFF", modified=datetime.datetime.now())
 
-        make_recipe('cla_provider.provider_allocation', provider=provider_1, weighted_distribution=0.2, category=self.education_category)
-        make_recipe('cla_provider.provider_allocation', provider=provider_2, weighted_distribution=0.6, category=self.education_category)
+        make_recipe(
+            "cla_provider.provider_allocation",
+            provider=provider_1,
+            weighted_distribution=0.2,
+            category=self.education_category,
+        )
+        make_recipe(
+            "cla_provider.provider_allocation",
+            provider=provider_2,
+            weighted_distribution=0.6,
+            category=self.education_category,
+        )
 
         # This is a Wednesday
         with freeze_time("2024-01-03"):
             assert self.helper.get_best_fit_education_provider(self.education_category).id == provider_2.id
+
+
+class TestAlwaysSuggestProvider(TestCase):
+    def setUp(self):
+        self.category = make_recipe("legalaid.category")
+        self.provider = make_recipe("cla_provider.provider", active=True)
+        make_recipe("cla_provider.provider_allocation", provider=self.provider, category=self.category)
+
+        # Set up out of hours time (when rota should be checked)
+        self.out_of_hours_time = timezone.make_aware(
+            datetime.datetime(day=1, month=1, year=2025, hour=21, minute=0), timezone.get_current_timezone()
+        )
+
+        # Set up in hours time (when rota should not be checked)
+        self.in_hours_time = timezone.make_aware(
+            datetime.datetime(day=1, month=1, year=2025, hour=10, minute=0), timezone.get_current_timezone()
+        )
+
+    @mock.patch("cla_provider.helpers.settings.ALWAYS_SUGGEST_PROVIDER", True)
+    @mock.patch.object(ProviderAllocationHelper, "_get_rota_provider")
+    @mock.patch.object(ProviderAllocationHelper, "_get_best_fit_provider")
+    def test_always_suggest_provider_true_with_rota_provider(self, mock_best_fit, mock_rota):
+        """When ALWAYS_SUGGEST_PROVIDER=True and there's a rota provider, return rota provider"""
+        mock_rota.return_value = self.provider
+
+        helper = ProviderAllocationHelper(as_of=self.out_of_hours_time)
+        result = helper.get_suggested_provider(self.category)
+
+        mock_rota.assert_called_once_with(self.category)
+        mock_best_fit.assert_not_called()
+        self.assertEqual(result, self.provider)
+
+    @mock.patch("cla_provider.helpers.settings.ALWAYS_SUGGEST_PROVIDER", True)
+    @mock.patch.object(ProviderAllocationHelper, "_get_rota_provider")
+    @mock.patch.object(ProviderAllocationHelper, "_get_best_fit_provider")
+    def test_always_suggest_provider_true_without_rota_provider(self, mock_best_fit, mock_rota):
+        """When ALWAYS_SUGGEST_PROVIDER=True and no rota provider, call best fit provider"""
+        mock_rota.return_value = None
+        mock_best_fit.return_value = self.provider
+
+        helper = ProviderAllocationHelper(as_of=self.out_of_hours_time)
+        result = helper.get_suggested_provider(self.category)
+
+        mock_rota.assert_called_once_with(self.category)
+        mock_best_fit.assert_called_once_with(self.category)
+        self.assertEqual(result, self.provider)
+
+    @mock.patch("cla_provider.helpers.settings.ALWAYS_SUGGEST_PROVIDER", False)
+    @mock.patch.object(ProviderAllocationHelper, "_get_rota_provider")
+    @mock.patch.object(ProviderAllocationHelper, "_get_best_fit_provider")
+    def test_always_suggest_provider_false_with_rota_provider(self, mock_best_fit, mock_rota):
+        """When ALWAYS_SUGGEST_PROVIDER=False and there's a rota provider, return rota provider"""
+        mock_rota.return_value = self.provider
+
+        helper = ProviderAllocationHelper(as_of=self.out_of_hours_time)
+        result = helper.get_suggested_provider(self.category)
+
+        mock_rota.assert_called_once_with(self.category)
+        mock_best_fit.assert_not_called()
+        self.assertEqual(result, self.provider)
+
+    @mock.patch("cla_provider.helpers.settings.ALWAYS_SUGGEST_PROVIDER", False)
+    @mock.patch.object(ProviderAllocationHelper, "_get_rota_provider")
+    @mock.patch.object(ProviderAllocationHelper, "_get_best_fit_provider")
+    def test_always_suggest_provider_false_without_rota_provider(self, mock_best_fit, mock_rota):
+        """When ALWAYS_SUGGEST_PROVIDER=False and no rota provider, return None without calling best fit"""
+        mock_rota.return_value = None
+
+        helper = ProviderAllocationHelper(as_of=self.out_of_hours_time)
+        result = helper.get_suggested_provider(self.category)
+
+        mock_rota.assert_called_once_with(self.category)
+        mock_best_fit.assert_not_called()
+        self.assertEqual(result, None)
+
+    @mock.patch("cla_provider.helpers.settings.ALWAYS_SUGGEST_PROVIDER", True)
+    @mock.patch.object(ProviderAllocationHelper, "_get_rota_provider")
+    @mock.patch.object(ProviderAllocationHelper, "_get_best_fit_provider")
+    def test_always_suggest_provider_during_business_hours(self, mock_best_fit, mock_rota):
+        """During business hours, ALWAYS_SUGGEST_PROVIDER should not affect behavior - rota not checked"""
+        mock_best_fit.return_value = self.provider
+
+        helper = ProviderAllocationHelper(as_of=self.in_hours_time)
+        result = helper.get_suggested_provider(self.category)
+
+        mock_rota.assert_not_called()
+        mock_best_fit.assert_called_once_with(self.category)
+        self.assertEqual(result, self.provider)

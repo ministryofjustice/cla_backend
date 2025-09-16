@@ -1020,9 +1020,12 @@ class TestAlwaysSuggestProvider(TestCase):
         self.assertEqual(result, None)
 
     @mock.patch("cla_provider.helpers.settings.ALWAYS_SUGGEST_PROVIDER", True)
+    @mock.patch("cla_common.call_centre_availability.OpeningHours.available", return_value=True)
     @mock.patch.object(ProviderAllocationHelper, "_get_rota_provider")
     @mock.patch.object(ProviderAllocationHelper, "_get_best_fit_provider")
-    def test_always_suggest_provider_during_business_hours(self, mock_best_fit, mock_rota):
+    def test_always_suggest_provider_during_business_hours(
+        self, mock_best_fit, mock_rota, mock_openinghours_available
+    ):
         """During business hours, ALWAYS_SUGGEST_PROVIDER should not affect behavior - rota not checked"""
         mock_best_fit.return_value = self.provider
 

@@ -398,6 +398,8 @@ NON_ROTA_OPENING_HOURS = defaultdict(lambda: OpeningHours(**NON_ROTA_HOURS))
 
 # If provider types have different opening hours they can be added here, with the category they service as the key.
 
+# If this is enabled when out of hours a provider will be suggested regardless of the out of hours rota, otherwise no provider will be suggested.
+ALWAYS_SUGGEST_PROVIDER = os.environ.get("ALWAYS_SUGGEST_PROVIDER", "False") == "True"
 
 OBIEE_IP_PERMISSIONS = ("*",)
 

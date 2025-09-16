@@ -272,9 +272,13 @@ class ProviderAllocationHelper(object):
         if valid_providers == [] or valid_providers is None:
             return None
 
-        current_distribution = dict(self.distribution.get_distribution(education_category, include_pre_allocations=True))
+        current_distribution = dict(
+            self.distribution.get_distribution(education_category, include_pre_allocations=True)
+        )
 
-        last_updated_datetime = ProviderAllocation.objects.filter(category=education_category).order_by("-modified").first().modified
+        last_updated_datetime = (
+            ProviderAllocation.objects.filter(category=education_category).order_by("-modified").first().modified
+        )
 
         # The EDFF code is used to denote cases assigned to Face to Face providers, they should be included in the total cases
         cases_with_edff_code = self.distribution.get_cases_assigned_to_code("EDFF", last_updated_datetime)
@@ -285,9 +289,13 @@ class ProviderAllocationHelper(object):
         provider_cases_vs_ideal = {}
 
         for provider_allocation in valid_providers:
-            provider_cases_vs_ideal[provider_allocation.provider] = self._get_provider_allocation_difference_vs_ideal(provider_allocation, current_distribution)
+            provider_cases_vs_ideal[provider_allocation.provider] = self._get_provider_allocation_difference_vs_ideal(
+                provider_allocation, current_distribution
+            )
 
-        sorted_provider_cases_vs_ideal = sorted(provider_cases_vs_ideal, reverse=True, key=provider_cases_vs_ideal.__getitem__)
+        sorted_provider_cases_vs_ideal = sorted(
+            provider_cases_vs_ideal, reverse=True, key=provider_cases_vs_ideal.__getitem__
+        )
         return sorted_provider_cases_vs_ideal[0]
 
     def is_provider_under_capacity(self, provider_allocation):
@@ -311,7 +319,9 @@ class ProviderAllocationHelper(object):
 
         if category.code == "education":
             # The EDFF code is used to denote cases assigned to Face to Face providers, they should be included in the total cases
-            last_updated_datetime = ProviderAllocation.objects.filter(category=category).order_by("-modified").first().modified
+            last_updated_datetime = (
+                ProviderAllocation.objects.filter(category=category).order_by("-modified").first().modified
+            )
             cases_with_edff_code = self.distribution.get_cases_assigned_to_code("EDFF", last_updated_datetime)
             total_current_cases += len(cases_with_edff_code)
 
@@ -351,7 +361,10 @@ class ProviderAllocationHelper(object):
                 return self.get_best_fit_education_provider(category)
         non_rota_hours = settings.NON_ROTA_OPENING_HOURS[getattr(category, "code")]
         if self.as_of not in non_rota_hours:
-            return self._get_rota_provider(category)
+            override_provider = self._get_rota_provider(category)
+            # If ALWAYS_SUGGEST_PROVIDER = False and override_provider = None, use the standard suggested provider logic.
+            if not settings.ALWAYS_SUGGEST_PROVIDER or override_provider:
+                return override_provider
         if not os.path.isfile("/tmp/DISABLE_BEST_FIT_PROVIDER"):
             return self._get_best_fit_provider(category)
         return self._get_random_provider(category)

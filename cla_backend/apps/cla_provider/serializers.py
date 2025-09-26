@@ -256,6 +256,20 @@ class CaseSerializer(CaseSerializerFull):
         )
 
 
+class DetailedCaseSerializer(CaseSerializer):
+    """
+    Extended case serializer that includes all nested details
+    for the detailed endpoint
+    """
+    personal_details = PersonalDetailsSerializerFull(read_only=True)
+    adaptation_details = AdaptationDetailsSerializerBase(read_only=True)
+    thirdparty_details = ThirdPartyDetailsSerializerBase(read_only=True)
+    eligibility_check = EligibilityCheckSerializerBase(read_only=True)
+
+    class Meta(CaseSerializer.Meta):
+        fields = CaseSerializer.Meta.fields
+
+
 class CaseListSerializer(CaseSerializer):
     class Meta(CaseSerializer.Meta):
         fields = (

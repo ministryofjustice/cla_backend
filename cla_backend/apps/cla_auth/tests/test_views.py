@@ -1,4 +1,5 @@
 import datetime
+import json
 
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
@@ -39,7 +40,7 @@ class LoginTestCase(TestCase):
         self.staff_user = User.objects.create_user(self.staff_username, self.staff_email, self.staff_password)
 
         self.prov = make_recipe("cla_provider.provider")
-        self.prov.staff_set.add(Staff(user=self.staff_user))
+        self.staff = Staff.objects.create(user=self.staff_user, provider=self.prov)
         self.prov.save()
 
         # create an operator API client
@@ -105,6 +106,13 @@ class LoginTestCase(TestCase):
         response = self.client.post(self.url, data=self.get_operator_data())
         self.assertEqual(response.status_code, 200)
 
+        # Check that user details are included in response
+        response_data = json.loads(response.content)
+        self.assertIn("user", response_data)
+        self.assertEqual(response_data["user"]["user_type"], "operator")
+        self.assertEqual(response_data["user"]["username"], self.op_username)
+        self.assertEqual(response_data["user"]["email"], self.op_email)
+
     def test_operator_invalid_password(self):
         response = self.client.post(self.url, data=self.get_operator_data(password="invalid"))
         self.assertEqual(response.status_code, 401)
@@ -114,6 +122,13 @@ class LoginTestCase(TestCase):
         response = self.client.post(self.url, data=self.get_provider_data())
 
         self.assertEqual(response.status_code, 200)
+
+        # Check that user details are included in response
+        response_data = json.loads(response.content)
+        self.assertIn("user", response_data)
+        self.assertEqual(response_data["user"]["user_type"], "staff")
+        self.assertEqual(response_data["user"]["username"], self.staff_username)
+        self.assertEqual(response_data["user"]["email"], self.staff_email)
 
     def test_staff_invalid_password(self):
         response = self.client.post(self.url, data=self.get_provider_data(password="invalid"))

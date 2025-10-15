@@ -223,3 +223,284 @@ class LoginTestCase(TestCase):
         response = self.client.post(self.url, data=data)
         self.assertEqual(response.status_code, 401)
         self.assertEqual(response.content, expected_error)
+
+    def test_operator_not_found_for_user(self):
+        """Test operator user with no associated Operator model"""
+        # Create a user without an associated Operator
+        orphan_user = User.objects.create_user("orphan_op", "orphan@test.com", "password")
+
+        # Create application for this orphan user
+        Application.objects.create(
+            user=orphan_user,
+            name="operator",
+            client_type=0,
+            client_id="orphan_client",
+            client_secret="secret",
+            redirect_uris="http://localhost/redirect",
+            authorization_grant_type="password",
+        )
+
+        data = {
+            "client_id": "orphan_client",
+            "client_secret": "secret",
+            "grant_type": "password",
+            "username": "orphan_op",
+            "password": "password",
+        }
+
+        # This should fail because user exists but has no Operator model
+        self.assert_unauthorised_response(data, self.INVALID_GRANT_ERROR)
+
+    def test_staff_not_found_for_user(self):
+        """Test staff user with no associated Staff model"""
+        # Create a user without an associated Staff
+        orphan_user = User.objects.create_user("orphan_staff", "orphan@test.com", "password")
+
+        # Create application for this orphan user
+        Application.objects.create(
+            user=orphan_user,
+            name="staff",
+            client_type=0,
+            client_id="orphan_staff_client",
+            client_secret="secret",
+            redirect_uris="http://localhost/redirect",
+            authorization_grant_type="password",
+        )
+
+        data = {
+            "client_id": "orphan_staff_client",
+            "client_secret": "secret",
+            "grant_type": "password",
+            "username": "orphan_staff",
+            "password": "password",
+        }
+
+        # This should fail because user exists but has no Staff model
+        self.assert_unauthorised_response(data, self.INVALID_GRANT_ERROR)
+
+    @mock.patch("cla_auth.views.logger")
+    def test_user_data_retrieval_with_missing_operator(self, mock_logger):
+        """Test _get_operator_data when Operator.DoesNotExist is raised"""
+        from cla_auth.views import AccessTokenView
+
+        view = AccessTokenView()
+        orphan_user = User.objects.create_user("test_user", "test@example.com", "password")
+
+        # This should trigger the Operator.DoesNotExist exception
+        result = view._get_operator_data(orphan_user)
+
+        self.assertIsNone(result)
+        mock_logger.warning.assert_called_once_with("Operator not found for user", extra={"username": "test_user"})
+
+    @mock.patch("cla_auth.views.logger")
+    def test_user_data_retrieval_with_missing_staff(self, mock_logger):
+        """Test _get_staff_data when Staff.DoesNotExist is raised"""
+        from cla_auth.views import AccessTokenView
+
+        view = AccessTokenView()
+        orphan_user = User.objects.create_user("test_staff_user", "test@example.com", "password")
+
+        # This should trigger the Staff.DoesNotExist exception
+        result = view._get_staff_data(orphan_user)
+
+        self.assertIsNone(result)
+        mock_logger.warning.assert_called_once_with("Staff not found for user", extra={"username": "test_staff_user"})
+
+    @mock.patch("cla_auth.views.logger")
+    def test_add_user_details_error_handling(self, mock_logger):
+        """Test error handling in add_user_details_to_response"""
+        from cla_auth.views import AccessTokenView
+        from django.http import HttpResponse
+
+        view = AccessTokenView()
+
+        # Create a mock request with invalid data
+        class MockRequest:
+            def __init__(self):
+                self.POST = {"username": "nonexistent", "client_id": "invalid"}
+
+        request = MockRequest()
+        response = HttpResponse('{"access_token": "test"}', content_type="application/json")
+
+        # This should trigger exception handling and log error
+        result = view.add_user_details_to_response(request, response)
+
+        # Should return original response when error occurs
+        self.assertEqual(result, response)
+        # Should log an error
+        mock_logger.error.assert_called_once()
+
+    def test_add_user_details_no_username(self):
+        """Test add_user_details_to_response with no username"""
+        from cla_auth.views import AccessTokenView
+        from django.http import HttpResponse
+
+        view = AccessTokenView()
+
+        class MockRequest:
+            def __init__(self):
+                self.POST = {}  # No username
+
+        request = MockRequest()
+        response = HttpResponse('{"access_token": "test"}', content_type="application/json")
+
+        with mock.patch("cla_auth.views.logger") as mock_logger:
+            result = view.add_user_details_to_response(request, response)
+
+            # Should return original response
+            self.assertEqual(result, response)
+            # Should log warning about no username
+            mock_logger.warning.assert_called_once_with("No username found in request")
+
+    @mock.patch("cla_auth.views.logger")
+    def test_add_user_details_no_user_data_returned(self, mock_logger):
+        """Test add_user_details_to_response when no user data is returned"""
+        from cla_auth.views import AccessTokenView
+        from django.http import HttpResponse
+
+        view = AccessTokenView()
+
+        # Create user and client but no associated Staff/Operator
+        User.objects.create_user("orphan_user", "test@example.com", "password")
+        Application.objects.create(
+            name="staff",  # This will try to get Staff data
+            client_type=0,
+            client_id="test_client",
+            client_secret="secret",
+            redirect_uris="http://localhost/redirect",
+            authorization_grant_type="password",
+        )
+
+        class MockRequest:
+            def __init__(self):
+                self.POST = {"username": "orphan_user", "client_id": "test_client"}
+
+        request = MockRequest()
+        response = HttpResponse('{"access_token": "test"}', content_type="application/json")
+
+        result = view.add_user_details_to_response(request, response)
+
+        # Should return original response without user data
+        self.assertEqual(result, response)
+        # Should log warning about no user data returned
+        mock_logger.warning.assert_called_with(
+            "No user data returned", extra={"username": "orphan_user", "client_name": "staff"}
+        )
+
+    @mock.patch("cla_auth.views.logger")
+    def test_add_user_details_successful_logging(self, mock_logger):
+        """Test successful logging in add_user_details_to_response"""
+        # Test with the existing operator setup
+        response = self.client.post(self.url, data=self.get_operator_data())
+        self.assertEqual(response.status_code, 200)
+
+        # Verify the logging calls were made
+        mock_logger.info.assert_any_call(
+            "Getting user data for authentication", extra={"client_name": "operator", "username": "operator"}
+        )
+        mock_logger.info.assert_any_call("Successfully added user details to response")
+
+
+class MinimalCoverageTestCase(TestCase):
+    """Minimal tests to cover specific uncovered lines"""
+
+    def test_line_194_196_operator_does_not_exist(self):
+        """Cover lines 194-196: Operator.DoesNotExist exception"""
+        from cla_auth.views import AccessTokenView
+
+        view = AccessTokenView()
+        user = User.objects.create_user("test", "test@test.com", "pass")
+
+        with mock.patch("cla_auth.views.logger") as mock_logger:
+            result = view._get_operator_data(user)
+            self.assertIsNone(result)
+            mock_logger.warning.assert_called_once()
+
+    def test_line_210_212_staff_does_not_exist(self):
+        """Cover lines 210-212: Staff.DoesNotExist exception"""
+        from cla_auth.views import AccessTokenView
+
+        view = AccessTokenView()
+        user = User.objects.create_user("test2", "test2@test.com", "pass")
+
+        with mock.patch("cla_auth.views.logger") as mock_logger:
+            result = view._get_staff_data(user)
+            self.assertIsNone(result)
+            mock_logger.warning.assert_called_once()
+
+    def test_line_222_unknown_client_type(self):
+        """Cover line 222: return None for unknown client type"""
+        from cla_auth.views import AccessTokenView
+
+        view = AccessTokenView()
+        user = User.objects.create_user("test3", "test3@test.com", "pass")
+
+        result = view._get_user_data_by_client_type(user, "unknown_client")
+        self.assertIsNone(result)
+
+    def test_line_232_233_no_username(self):
+        """Cover lines 232-233: no username in request"""
+        from cla_auth.views import AccessTokenView
+        from django.http import HttpResponse
+
+        view = AccessTokenView()
+
+        class MockRequest:
+            POST = {}  # No username
+
+        request = MockRequest()
+        response = HttpResponse("{}")
+
+        with mock.patch("cla_auth.views.logger") as mock_logger:
+            result = view.add_user_details_to_response(request, response)
+            self.assertEqual(result, response)
+            mock_logger.warning.assert_called_once_with("No username found in request")
+
+    def test_line_244_245_no_user_data(self):
+        """Cover lines 244-245: no user data returned"""
+        from cla_auth.views import AccessTokenView
+        from django.http import HttpResponse
+        from oauth2_provider.models import Application
+
+        view = AccessTokenView()
+        User.objects.create_user("test4", "test4@test.com", "pass")
+        Application.objects.create(
+            name="unknown",
+            client_id="test_client",
+            client_secret="secret",
+            client_type=0,
+            authorization_grant_type="password",
+        )
+
+        class MockRequest:
+            POST = {"username": "test4", "client_id": "test_client"}
+
+        request = MockRequest()
+        response = HttpResponse("{}")
+
+        with mock.patch("cla_auth.views.logger") as mock_logger:
+            result = view.add_user_details_to_response(request, response)
+            self.assertEqual(result, response)
+            mock_logger.warning.assert_called_with(
+                "No user data returned", extra={"username": "test4", "client_name": "unknown"}
+            )
+
+    def test_line_258_260_exception_in_add_user_details(self):
+        """Cover lines 258-260: Exception handling in add_user_details_to_response"""
+        from cla_auth.views import AccessTokenView
+        from django.http import HttpResponse
+
+        view = AccessTokenView()
+
+        class MockRequest:
+            POST = {"username": "nonexistent", "client_id": "invalid"}
+
+        request = MockRequest()
+        response = HttpResponse("{}")
+
+        with mock.patch("cla_auth.views.logger") as mock_logger:
+            result = view.add_user_details_to_response(request, response)
+            self.assertEqual(result, response)
+            mock_logger.error.assert_called_once_with(
+                "Error adding user details to response", exc_info=True, extra={"error": mock.ANY}
+            )

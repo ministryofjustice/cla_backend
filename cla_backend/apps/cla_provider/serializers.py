@@ -214,6 +214,7 @@ class CaseSerializer(CaseSerializerFull):
     provider_viewed = serializers.DateTimeField(read_only=True)
     provider_accepted = serializers.DateTimeField(read_only=True)
     provider_closed = serializers.DateTimeField(read_only=True)
+    provider_assigned_at = serializers.DateTimeField(read_only=True)
 
     class Meta(CaseSerializerFull.Meta):
         fields = (
@@ -227,6 +228,7 @@ class CaseSerializer(CaseSerializerFull):
             "provider_viewed",
             "provider_accepted",
             "provider_closed",
+            "provider_assigned_at",
             "notes",
             "provider_notes",
             "client_notes",
@@ -291,6 +293,7 @@ class CaseListSerializer(CaseSerializer):
             "provider_viewed",
             "provider_accepted",
             "provider_closed",
+            "provider_assigned_at",
             "is_urgent",
         )
 

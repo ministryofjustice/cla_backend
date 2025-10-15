@@ -45,6 +45,7 @@ class BaseCaseTestCase(CLAProviderAuthBaseApiTestMixin, BaseFullCaseAPIMixin, AP
             "provider_viewed",
             "provider_accepted",
             "provider_closed",
+            "provider_assigned_at",
             "full_name",
             "laa_reference",
             "eligibility_state",

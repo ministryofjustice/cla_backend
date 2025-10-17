@@ -47,6 +47,7 @@ from rest_framework.views import APIView
 from .serializers import (
     EligibilityCheckSerializer,
     CaseSerializer,
+    DetailedCaseSerializer,
     StaffSerializer,
     AdaptationDetailsSerializer,
     PersonalDetailsSerializer,
@@ -114,6 +115,7 @@ class CaseViewSet(CLAProviderPermissionViewSetMixin, FullCaseViewSet):
         "eligibility_check",
         "personal_details",
         "adaptation_details",
+        "thirdparty_details",
         "matter_type1",
         "matter_type2",
         "diagnosis",
@@ -131,6 +133,8 @@ class CaseViewSet(CLAProviderPermissionViewSetMixin, FullCaseViewSet):
         "priority",
         "personal_details__full_name",
         "personal_details__postcode",
+        "provider_assigned_at",
+        "provider_closed",
     )
 
     def get_queryset(self, **kwargs):
@@ -201,6 +205,15 @@ class CaseViewSet(CLAProviderPermissionViewSetMixin, FullCaseViewSet):
             "eligibility_check": ExtendedEligibilityCheckSerializer(instance=case.eligibility_check).data,
         }
         return DRFResponse(data)
+
+    @detail_route()
+    def detailed(self, *args, **kwargs):
+        """
+        Returns case with all nested details in a single call
+        """
+        case = self.get_object()
+        serializer = DetailedCaseSerializer(instance=case)
+        return DRFResponse(serializer.data)
 
     @detail_route(methods=["post"])
     def split(self, request, reference=None, **kwargs):

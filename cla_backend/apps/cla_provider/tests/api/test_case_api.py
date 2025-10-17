@@ -448,3 +448,85 @@ class SplitCaseTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
         new_case = self.resource.split_cases.first()
         ref_log = Log.objects.filter(case=new_case)[0]
         self.assertEqual(ref_log.notes, "Notes")
+
+
+class CaseStateTestCase(BaseCaseTestCase):
+    """
+    Test case state property functionality
+    """
+
+    def get_url(self, reference=None):
+        reference = reference or self.resource.reference
+        return reverse("cla_provider:case-detail", args=(), kwargs={"reference": reference})
+
+    def test_case_state_new(self):
+        """Test that a case with no provider actions returns 'new' state"""
+        case = make_recipe(
+            "legalaid.case",
+            provider=self.provider,
+            provider_viewed=None,
+            provider_accepted=None,
+            provider_closed=None,
+        )
+        self.assertEqual(case.state, 'new')
+
+    def test_case_state_opened(self):
+        """Test that a case viewed by provider returns 'opened' state"""
+        case = make_recipe(
+            "legalaid.case",
+            provider=self.provider,
+            provider_viewed=timezone.now(),
+            provider_accepted=None,
+            provider_closed=None,
+        )
+        self.assertEqual(case.state, 'opened')
+
+    def test_case_state_accepted(self):
+        """Test that a case accepted by provider returns 'accepted' state"""
+        case = make_recipe(
+            "legalaid.case",
+            provider=self.provider,
+            provider_viewed=timezone.now(),
+            provider_accepted=timezone.now(),
+            provider_closed=None,
+        )
+        self.assertEqual(case.state, 'accepted')
+
+    def test_case_state_closed(self):
+        """Test that a case closed by provider returns 'closed' state"""
+        case = make_recipe(
+            "legalaid.case",
+            provider=self.provider,
+            provider_viewed=timezone.now(),
+            provider_accepted=timezone.now(),
+            provider_closed=timezone.now(),
+        )
+        self.assertEqual(case.state, 'closed')
+
+    def test_api_returns_state_field(self):
+        """Test that the detailed API endpoint includes the state field"""
+        detailed_url = "{0}detailed/".format(self.get_url(self.resource.reference))
+        response = self.client.get(detailed_url, HTTP_AUTHORIZATION=self.get_http_authorization())
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.assertIn('state', response.data)
+        self.assertEqual(response.data['state'], 'new')  # Default state for test case
+
+        # Test that regular endpoint does NOT include state field
+        response = self.client.get(self.get_url(self.resource.reference), HTTP_AUTHORIZATION=self.get_http_authorization())
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertNotIn('state', response.data)
+
+    def test_detailed_endpoint_excludes_eligibility_check(self):
+        """Test that the detailed endpoint does NOT include eligibility_check reference"""
+        detailed_url = "{0}detailed/".format(self.get_url(self.resource.reference))
+        response = self.client.get(detailed_url, HTTP_AUTHORIZATION=self.get_http_authorization())
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Detailed endpoint should NOT have eligibility_check reference
+        self.assertNotIn('eligibility_check', response.data)
+
+        # Regular endpoint should still have eligibility_check reference
+        response = self.client.get(self.get_url(self.resource.reference), HTTP_AUTHORIZATION=self.get_http_authorization())
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('eligibility_check', response.data)

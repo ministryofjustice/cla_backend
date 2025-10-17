@@ -1037,6 +1037,21 @@ class Case(TimeStampedModel):
         else:
             return date_filter(localtime(self.requires_action_at), "g:iA")
 
+    @property
+    def state(self):
+        """
+        Returns the current state of the case based on provider actions.
+        States: 'new', 'opened', 'accepted', 'closed'
+        """
+        if self.provider_closed:
+            return 'closed'
+        elif self.provider_accepted:
+            return 'accepted'
+        elif self.provider_viewed:
+            return 'opened'
+        else:
+            return 'new'
+
 
 class CaseNotesHistory(TimeStampedModel):
     class Analytics:

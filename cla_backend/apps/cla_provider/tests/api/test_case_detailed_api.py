@@ -28,11 +28,20 @@ class DetailedCaseSerializerTestCase(CLAProviderAuthBaseApiTestMixin, APITestCas
         """Test that DetailedCaseSerializer has nested read-only fields"""
         serializer = DetailedCaseSerializer()
 
-        nested_fields = ["personal_details", "adaptation_details", "thirdparty_details", "eligibility_check"]
+        nested_fields = ["personal_details", "adaptation_details", "thirdparty_details", "state"]
         for field_name in nested_fields:
             self.assertIn(field_name, serializer.fields)
             field = serializer.fields[field_name]
             self.assertTrue(field.read_only, "Field %s should be read_only" % field_name)
+
+    def test_detailed_serializer_excludes_eligibility_check(self):
+        """Test that DetailedCaseSerializer excludes eligibility_check field"""
+        serializer = DetailedCaseSerializer()
+        self.assertNotIn("eligibility_check", serializer.fields)
+
+        # But basic CaseSerializer should still have it
+        basic_serializer = CaseSerializer()
+        self.assertIn("eligibility_check", basic_serializer.fields)
 
     def test_detailed_serializer_returns_expanded_objects(self):
         """Test that DetailedCaseSerializer returns full objects instead of references"""
@@ -43,17 +52,18 @@ class DetailedCaseSerializerTestCase(CLAProviderAuthBaseApiTestMixin, APITestCas
         basic_data = basic_serializer.data
         detailed_data = detailed_serializer.data
 
-        # Detailed should include all basic fields
-        for key in basic_data.keys():
-            self.assertIn(key, detailed_data)
+        # Detailed should include state field that basic doesn't have
+        self.assertNotIn("state", basic_data)
+        self.assertIn("state", detailed_data)
+
+        # Basic should have eligibility_check but detailed should not
+        self.assertIn("eligibility_check", basic_data)
+        self.assertNotIn("eligibility_check", detailed_data)
 
         # The key difference: nested objects should be expanded as dictionaries
         if self.case.personal_details:
             self.assertIsInstance(detailed_data["personal_details"], dict)
             self.assertIn("full_name", detailed_data["personal_details"])
-
-        if self.case.eligibility_check:
-            self.assertIsInstance(detailed_data["eligibility_check"], dict)
 
     def test_detailed_serializer_handles_null_relations(self):
         """Test that DetailedCaseSerializer handles null related objects gracefully"""
@@ -67,6 +77,10 @@ class DetailedCaseSerializerTestCase(CLAProviderAuthBaseApiTestMixin, APITestCas
         # Should return None for missing relations without errors
         self.assertIsNone(data["personal_details"])
         self.assertIsNone(data["adaptation_details"])
+
+        # Should still have state field even with minimal case
+        self.assertIn("state", data)
+        self.assertEqual(data["state"], "new")  # Default state for new case
 
 
 class DetailedCaseEndpointTestCase(CLAProviderAuthBaseApiTestMixin, APITestCase):
@@ -97,6 +111,10 @@ class DetailedCaseEndpointTestCase(CLAProviderAuthBaseApiTestMixin, APITestCase)
             # Should have nested objects as dicts if they exist
             if self.case.personal_details:
                 self.assertIsInstance(data.get("personal_details"), dict)
+
+            # Should have state field but not eligibility_check
+            self.assertIn("state", data)
+            self.assertNotIn("eligibility_check", data)
 
     def test_detailed_endpoint_case_ownership(self):
         """Test that detailed endpoint respects case ownership"""

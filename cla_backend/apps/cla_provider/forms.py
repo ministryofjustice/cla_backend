@@ -54,6 +54,20 @@ class AcceptCaseForm(BaseCaseLogForm):
         return val
 
 
+class OpenCaseForm(BaseCaseLogForm):
+    """
+    Opens a case and sets case.provider_viewed field
+    """
+
+    LOG_EVENT_KEY = "open_case"
+
+    def save(self, user):
+        val = super(OpenCaseForm, self).save(user)
+        if hasattr(user, "staff") and user.staff.provider:
+            self.case.view_by_provider(user.staff.provider)
+        return val
+
+
 class CloseCaseForm(BaseCaseLogForm):
     """
     Closes a case and sets case.provider_closed field

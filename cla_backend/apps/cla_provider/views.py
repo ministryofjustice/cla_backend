@@ -60,7 +60,7 @@ from .serializers import (
     CSVUploadSerializer,
     CSVUploadDetailSerializer,
 )
-from .forms import RejectCaseForm, AcceptCaseForm, CloseCaseForm, SplitCaseForm, ReopenCaseForm
+from .forms import RejectCaseForm, AcceptCaseForm, OpenCaseForm, CloseCaseForm, SplitCaseForm, ReopenCaseForm
 
 logger = logging.getLogger(__name__)
 
@@ -181,6 +181,13 @@ class CaseViewSet(CLAProviderPermissionViewSetMixin, FullCaseViewSet):
         Accepts a case
         """
         return self._form_action(request, Form=AcceptCaseForm, no_body=False)
+
+    @detail_route(methods=["post"])
+    def open(self, request, reference=None, **kwargs):
+        """
+        Opens a case (marks as viewed by provider)
+        """
+        return self._form_action(request, Form=OpenCaseForm, no_body=False)
 
     @detail_route(methods=["post"])
     def close(self, request, reference=None, **kwargs):

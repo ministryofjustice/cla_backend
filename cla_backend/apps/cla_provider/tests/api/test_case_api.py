@@ -353,6 +353,22 @@ class AcceptCaseTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
         return reverse("cla_provider:case-accept", args=(), kwargs={"reference": reference})
 
 
+class OpenCaseTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
+    NO_BODY_RESPONSE = False
+
+    def get_url(self, reference=None):
+        reference = reference or self.resource.reference
+        return reverse("cla_provider:case-open", args=(), kwargs={"reference": reference})
+
+    def test_successful(self):
+        self.assertEqual(self.resource.provider_viewed, None)
+
+        super(OpenCaseTestCase, self).test_successful()
+
+        self.resource = self.resource.__class__.objects.get(pk=self.resource.pk)
+        self.assertNotEqual(self.resource.provider_viewed, None)
+
+
 class CloseCaseTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
     def get_url(self, reference=None):
         reference = reference or self.resource.reference

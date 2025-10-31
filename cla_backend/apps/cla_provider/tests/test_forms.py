@@ -23,7 +23,7 @@ from legalaid.models import (
     Savings,
     ThirdPartyDetails,
 )
-from cla_provider.forms import CloseCaseForm, AcceptCaseForm, RejectCaseForm, SplitCaseForm
+from cla_provider.forms import CloseCaseForm, AcceptCaseForm, OpenCaseForm, RejectCaseForm, SplitCaseForm
 
 
 class AcceptCaseFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
@@ -36,6 +36,19 @@ class AcceptCaseFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
         self._test_save_successfull(case=case)
 
         self.assertNotEqual(case.provider_accepted, None)
+
+
+class OpenCaseFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
+    FORM = OpenCaseForm
+
+    def test_save_successfull(self):
+        case = make_recipe("legalaid.case")
+        user = make_user()
+
+        self.assertEqual(case.provider_viewed, None)
+        self._test_save_successfull(case=case, user=user)
+
+        self.assertNotEqual(case.provider_viewed, None)
 
 
 class RejectCaseFormTestCase(EventSpecificLogFormTestCaseMixin, TestCase):

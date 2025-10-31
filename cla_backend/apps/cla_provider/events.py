@@ -79,8 +79,8 @@ class OpenCaseEvent(BaseEvent):
     key = "open_case"
     codes = {
         "CASE_VIEWED": {
-            "type": LOG_TYPES.SYSTEM,
-            "level": LOG_LEVELS.MODERATE,
+            "type": LOG_TYPES.OUTCOME,
+            "level": LOG_LEVELS.HIGH,
             "selectable_by": [],
             "description": "Case opened by provider",
             "stops_timer": False,

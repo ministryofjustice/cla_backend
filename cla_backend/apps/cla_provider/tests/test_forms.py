@@ -42,12 +42,16 @@ class OpenCaseFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
     FORM = OpenCaseForm
 
     def test_save_successfull(self):
-        case = make_recipe("legalaid.case")
-        user = make_user()
+        provider = make_recipe("cla_provider.provider")
+        case = make_recipe("legalaid.case", provider=provider)
+
+        # Set up user with staff and provider
+        make_recipe("cla_provider.staff", user=self.user, provider=provider)
 
         self.assertEqual(case.provider_viewed, None)
-        self._test_save_successfull(case=case, user=user)
+        self._test_save_successfull(case=case)
 
+        case.refresh_from_db()
         self.assertNotEqual(case.provider_viewed, None)
 
 

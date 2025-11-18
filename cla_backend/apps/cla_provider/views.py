@@ -150,6 +150,8 @@ class CaseViewSet(CLAProviderPermissionViewSetMixin, FullCaseViewSet):
                 only == 'accepted'
             closed:
                 only == 'closed'
+            rejected:
+                only == 'rejected'
         """
         this_provider = get_object_or_404(Staff, user=self.request.user).provider
         qs = (
@@ -165,6 +167,8 @@ class CaseViewSet(CLAProviderPermissionViewSetMixin, FullCaseViewSet):
             qs = qs.filter(provider_accepted__isnull=False, provider_closed__isnull=True)
         elif only_param == "closed":
             qs = qs.filter(provider_closed__isnull=False)
+        elif only_param == "rejected":
+            qs = qs.filter(outcome_code__in=["COI", "MIS", "MIS-OOS", "MIS-MEANS"])
 
         return qs
 

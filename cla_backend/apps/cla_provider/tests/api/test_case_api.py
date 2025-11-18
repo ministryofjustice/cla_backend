@@ -255,6 +255,23 @@ class FilteredSearchCaseTestCase(BaseCaseTestCase):
         self.assertEqual(1, len(response.data["results"]))
         self.assertItemsEqual([c["reference"] for c in response.data["results"]], ["ref7"])
 
+    def test_rejected_cases(self):
+        # Create rejected cases with different rejection codes
+        make_recipe("legalaid.case", reference="ref_coi", provider=self.provider, outcome_code="COI")
+        make_recipe("legalaid.case", reference="ref_mis", provider=self.provider, outcome_code="MIS")
+        make_recipe("legalaid.case", reference="ref_mis_oos", provider=self.provider, outcome_code="MIS-OOS")
+        make_recipe("legalaid.case", reference="ref_mis_means", provider=self.provider, outcome_code="MIS-MEANS")
+
+        response = self.client.get(
+            u"%s?only=rejected" % self.list_url, format="json", HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(4, len(response.data["results"]))
+        self.assertItemsEqual(
+            [c["reference"] for c in response.data["results"]],
+            ["ref_coi", "ref_mis", "ref_mis_oos", "ref_mis_means"]
+        )
+
 
 class UpdateCaseTestCase(BaseUpdateCaseTestCase, BaseCaseTestCase):
     def test_patch_provider_notes_allowed(self):

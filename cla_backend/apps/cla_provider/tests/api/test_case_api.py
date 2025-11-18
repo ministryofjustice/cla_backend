@@ -272,6 +272,21 @@ class FilteredSearchCaseTestCase(BaseCaseTestCase):
             ["ref_coi", "ref_mis", "ref_mis_oos", "ref_mis_means"]
         )
 
+    def test_completed_cases(self):
+        # Create completed cases with different completion codes
+        make_recipe("legalaid.case", reference="ref_clsp", provider=self.provider, outcome_code="CLSP")
+        make_recipe("legalaid.case", reference="ref_drefer", provider=self.provider, outcome_code="DREFER")
+
+        response = self.client.get(
+            u"%s?only=completed" % self.list_url, format="json", HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(2, len(response.data["results"]))
+        self.assertItemsEqual(
+            [c["reference"] for c in response.data["results"]],
+            ["ref_clsp", "ref_drefer"]
+        )
+
 
 class UpdateCaseTestCase(BaseUpdateCaseTestCase, BaseCaseTestCase):
     def test_patch_provider_notes_allowed(self):

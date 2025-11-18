@@ -23,8 +23,7 @@ class MaxSizeUploadHandler(MemoryFileUploadHandler):
         StopUpload: When the uploaded file exceeds MAX_REQUEST_CONTENT_LENGTH_BYTES.
 
     Example:
-        To use this handler, configure it in Django settings:
-        
+        To use this handler, configure it in Django settings:        
         FILE_UPLOAD_HANDLERS = [
             'path.to.MaxSizeUploadHandler',
         ]
@@ -79,6 +78,6 @@ class RequestSizeMiddleware:
                     return HttpResponseBadRequest("Payload exceeds {} bytes.".format(MAX_REQUEST_CONTENT_LENGTH_BYTES), status=413)
             except (ValueError, TypeError):
                 return HttpResponseBadRequest("Invalid content length")
-            
+
         if request.method in ("POST", "PUT", "PATCH"):
             request.upload_handlers.insert(0, MaxSizeUploadHandler())

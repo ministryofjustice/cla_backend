@@ -4,6 +4,7 @@ from django.core.files.uploadhandler import MemoryFileUploadHandler, StopUpload
 # Limit to 5MB
 MAX_REQUEST_CONTENT_LENGTH_BYTES = 5 * 1024 * 1024
 
+
 class MaxSizeUploadHandler(MemoryFileUploadHandler):
     """
     Custom file upload handler that enforces a maximum file size limit.
@@ -38,6 +39,7 @@ class MaxSizeUploadHandler(MemoryFileUploadHandler):
         if self.total_bytes > MAX_REQUEST_CONTENT_LENGTH_BYTES:
             raise StopUpload(connection_reset=True)
         return raw_data
+
 
 class RequestSizeMiddleware:
     """

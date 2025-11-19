@@ -22,6 +22,8 @@ helm upgrade $RELEASE_NAME \
   --set fullnameOverride=$RELEASE_NAME \
   --set environment=$RELEASE_NAME \
   --set host=$RELEASE_HOST \
+  --set postgresql.image.repository=bitnamilegacy/postgresql \
+  --set global.security.allowInsecureImages=true \
   --set ingress.cluster.name=${INGRESS_CLUSTER_NAME} \
   --set ingress.cluster.weight=${INGRESS_CLUSTER_WEIGHT} \
   --set image.repository=$DOCKER_REPOSITORY \

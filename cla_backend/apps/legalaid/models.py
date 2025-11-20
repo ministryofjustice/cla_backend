@@ -1041,9 +1041,12 @@ class Case(TimeStampedModel):
     def state(self):
         """
         Returns the current state of the case based on provider actions.
-        States: 'new', 'opened', 'accepted', 'closed'
+        States: 'new', 'opened', 'accepted', 'closed', 'rejected'
         """
-        if self.provider_closed:
+        # Check for rejection first (outcome_code takes precedence)
+        if self.outcome_code in ['COI', 'MIS', 'MIS-OOS', 'MIS-MEANS']:
+            return 'rejected'
+        elif self.provider_closed:
             return 'closed'
         elif self.provider_accepted:
             return 'accepted'
@@ -1051,6 +1054,35 @@ class Case(TimeStampedModel):
             return 'opened'
         else:
             return 'new'
+
+    @property
+    def state_note(self):
+        """
+        Returns the notes from the most recent state-changing event.
+        Based on the current state, retrieves notes from the corresponding event log.
+        """
+        from cla_eventlog.models import Log
+
+        state = self.state
+        code_mapping = {
+            'opened': ['CASE_VIEWED'],
+            'accepted': ['SPOP'],
+            'rejected': ['COI', 'MIS', 'MIS-OOS', 'MIS-MEANS'],
+            'closed': ['CLSP', 'DREFER', 'REOPEN']
+        }
+
+        if state == 'new' or state not in code_mapping:
+            return None
+
+        codes = code_mapping[state]
+        try:
+            log = Log.objects.filter(
+                case=self,
+                code__in=codes
+            ).order_by('-created').first()
+            return log.notes if log else None
+        except Log.DoesNotExist:
+            return None
 
 
 class CaseNotesHistory(TimeStampedModel):

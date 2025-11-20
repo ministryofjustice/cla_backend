@@ -267,9 +267,10 @@ class DetailedCaseSerializer(CaseSerializer):
     adaptation_details = AdaptationDetailsSerializerBase(read_only=True)
     thirdparty_details = ThirdPartyDetailsSerializerBase(read_only=True)
     state = serializers.CharField(read_only=True)
+    state_note = serializers.CharField(read_only=True)
 
     class Meta(CaseSerializer.Meta):
-        fields = tuple(field for field in CaseSerializer.Meta.fields if field != "eligibility_check") + ("state",)
+        fields = tuple(field for field in CaseSerializer.Meta.fields if field != "eligibility_check") + ("state", "state_note")
 
 
 class CaseListSerializer(CaseSerializer):

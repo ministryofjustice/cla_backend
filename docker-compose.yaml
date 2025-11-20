@@ -19,7 +19,7 @@ services:
       - '5672:5672'
 
   db:
-    image: postgres:14.7-bullseye
+    image: postgres:18-trixie
     ports:
       - ${DOCKER_DATABASE_PORT_MAPPING:-5433:5432}
     security_opt:

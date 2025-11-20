@@ -109,8 +109,6 @@ spec:
               value: postgres
             - name: POSTGRES_DB
               value: cla_backend
-            - name: ALLOW_EMPTY_PASSWORD
-              value: "yes"
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

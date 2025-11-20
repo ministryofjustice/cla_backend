@@ -10,6 +10,19 @@ replicaCount: 1
 localPostgres:
   enabled: true
 
+podSecurityContext:
+  runAsNonRoot: true
+  fsGroup: 999
+
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 999
+  runAsGroup: 999
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+
 queueWorkers:
   enabled: false
 

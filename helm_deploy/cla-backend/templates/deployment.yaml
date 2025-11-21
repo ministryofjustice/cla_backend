@@ -94,7 +94,7 @@ spec:
         - name: {{ include "cla-backend.fullname" . }}-db
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "postgres:18.1-alpine3.22"
+          image: "postgres:14.7-bullseye"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http

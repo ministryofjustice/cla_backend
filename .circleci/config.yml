@@ -186,7 +186,7 @@ jobs:
           DB_NAME: circle_test
           DB_USER: postgres
           DJANGO_SETTINGS_MODULE: cla_backend.settings.circle
-      - image: postgres:18-trixie
+      - image: postgres:18.1-alpine3.22
         environment:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres

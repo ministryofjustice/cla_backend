@@ -94,7 +94,7 @@ spec:
         - name: {{ include "cla-backend.fullname" . }}-db
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "bitnamilegacy/postgresql:14-debian-10"
+          image: "bitnamilegacy/postgresql:17.6.0-debian-12-r4"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http

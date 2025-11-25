@@ -96,29 +96,28 @@ class CSVUploadSerializerBase(serializers.ModelSerializer):
 
     def create(self, validated_data):
         """
-        Create a new instance with sanitised CSV data.
+        Create a new CSV upload instance with sanitised data.
 
-        This method processes and sanitises CSV data before creating a new instance. It performs
-        multiple sanitisation steps on each cell in the CSV to prevent security vulnerabilities.
+        This method sanitises each cell in the CSV data to prevent security vulnerabilities
+        including HTML injection, JavaScript injection, and CSV injection attacks.
 
         Args:
-            validated_data (dict): Dictionary containing validated data with a 'body' key that
-                holds the CSV data as a list of lists (rows and cells).
+            validated_data (dict): Dictionary containing validated data with a 'body' key
+                                  that holds a list of lists representing CSV rows and cells.
 
         Returns:
-            Model instance: The created instance with sanitized CSV data.
+            Model instance: The created model instance with sanitised CSV data.
 
         Sanitisation steps performed on each cell:
-            1. Convert cell content to string using force_text, since type is Unicode
-            2. Remove all HTML tags using regex pattern matching
-            3. Remove 'javascript:' URL schemes (case-insensitive)
-            4. Prevent CSV formula injection by prepending single quote to cells starting with
-               =, @, +, or - characters
+            1. Convert cell content to string using force_text()
+            2. Remove HTML tags using regex pattern
+            3. Remove JavaScript URL schemes (case-insensitive)
+            4. Prevent CSV injection by prepending single quote to cells starting with
+               special characters (=, @, +, -)
 
-        Example:
-            >>> validated_data = {'body': [['=SUM(A1:A10)', 'normal text']]}
-            >>> serializer.create(validated_data)
-            # Results in: [["'=SUM(A1:A10)", 'normal text']]
+        Note:
+            The sanitised data replaces the original 'body' in validated_data before
+            calling the parent class's create method.
         """
         body = validated_data.get("body", [])
         sanitised_csv = []

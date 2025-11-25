@@ -461,9 +461,6 @@ CacheAdapter.set_adapter_factory(bank_holidays_cache_adapter_factory)
 MAINTENANCE_MODE = os.environ.get("MAINTENANCE_MODE", "False") == "True"
 
 # Settings for django-session-security.
-SESSION_COOKIE_SECURE = os.environ.get("SESSION_COOKIE_SECURE", "True") == "True"
-SESSION_COOKIE_HTTPONLY = os.environ.get("SESSION_COOKIE_HTTPONLY", "True") == "True"
-
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 DEFAULT_SESSION_SECURITY_WARN_AFTER = 60 * 25 # 25 minutes
 DEFAULT_SESSION_SECURITY_EXPIRE_AFTER = 60 * 30 # 30 minutes

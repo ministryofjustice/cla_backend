@@ -181,8 +181,8 @@ STATICFILES_FINDERS = (
 
 # Limit in-memory upload size to 5MB
 # Prevents files above 5MB being kept in the memory.
-FILE_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024
-DATA_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024
+FILE_UPLOAD_MAX_MEMORY_SIZE = 100 * 1024 * 1024
+DATA_UPLOAD_MAX_MEMORY_SIZE = 100 * 1024 * 1024
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = os.environ.get("SECRET_KEY", "iia425u_J_pwntnEyqBuI1xBDqOX8nZ4uC73epGce_w")

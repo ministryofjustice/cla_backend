@@ -15,6 +15,7 @@ from cla_common.money_interval.models import MoneyInterval
 
 from cla_provider.models import Provider, OutOfHoursRota, Feedback, CSVUpload
 from cla_eventlog import registry as event_registry
+
 from django.utils.encoding import force_text
 import re
 

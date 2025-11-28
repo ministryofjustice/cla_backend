@@ -1080,8 +1080,8 @@ class Case(TimeStampedModel):
 
         codes = code_mapping[state]
         # Use Q objects to avoid potential SQL injection from kwargs
-        log = Log.objects.filter(
-            Q(case=self) & Q(code__in=codes)
+        log = Log.objects.filter(case=self).filter(
+            Q(code__in=codes)
         ).order_by('-created').first()
         return log.notes if log else None
 

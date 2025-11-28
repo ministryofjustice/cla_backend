@@ -486,21 +486,37 @@ class MinimalCoverageTestCase(TestCase):
             )
 
     def test_line_258_260_exception_in_add_user_details(self):
-        """Cover lines 258-260: Exception handling in add_user_details_to_response"""
+        """Cover exception handling in add_user_details_to_response"""
         from cla_auth.views import AccessTokenView
         from django.http import HttpResponse
 
         view = AccessTokenView()
 
+        # Create test user and operator
+        user = User.objects.create_user("testuser", "test@test.com", "password")
+        Operator.objects.create(user=user)
+
+        # Create test application
+        Application.objects.create(
+            user=user,
+            name="operator",
+            client_type=0,
+            client_id="test_client",
+            client_secret="secret",
+            authorization_grant_type="password",
+        )
+
         class MockRequest:
-            POST = {"username": "nonexistent", "client_id": "invalid"}
+            POST = {"username": "testuser", "client_id": "test_client"}
 
         request = MockRequest()
         response = HttpResponse("{}")
 
+        # Mock json.loads to raise an exception to trigger the exception handler
         with mock.patch("cla_auth.views.logger") as mock_logger:
-            result = view.add_user_details_to_response(request, response)
-            self.assertEqual(result, response)
-            mock_logger.error.assert_called_once_with(
-                "Error adding user details to response", exc_info=True, extra={"error": mock.ANY}
-            )
+            with mock.patch("cla_auth.views.json.loads", side_effect=ValueError("Invalid JSON")):
+                result = view.add_user_details_to_response(request, response)
+                self.assertEqual(result, response)
+                mock_logger.error.assert_called_once_with(
+                    "Error adding user details to response", exc_info=True, extra={"error": mock.ANY}
+                )

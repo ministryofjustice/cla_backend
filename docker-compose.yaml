@@ -19,7 +19,7 @@ services:
       - '5672:5672'
 
   db:
-    image: postgres:11.6-alpine
+    image: postgres:14-alpine
     ports:
       - ${DOCKER_DATABASE_PORT_MAPPING:-5433:5432}
     security_opt:

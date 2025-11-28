@@ -253,7 +253,7 @@ jobs:
           name: Authenticate with cluster
           command: |
             .circleci/authenticate_with_kubernetes_cluster
-      - deploy:
+      - run:
           name: Deploy to << parameters.namespace >>
           command: |
             export INGRESS_CLUSTER_NAME=`kubectl get configmap ingress-cluster -o jsonpath='{.data.name}'`

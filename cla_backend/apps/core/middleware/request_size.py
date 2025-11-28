@@ -2,7 +2,7 @@ from django.http import HttpResponseBadRequest
 from django.core.files.uploadhandler import MemoryFileUploadHandler, StopUpload
 
 # Limit to 5MB
-MAX_REQUEST_CONTENT_LENGTH_BYTES = 100 * 1024 * 1024
+MAX_REQUEST_CONTENT_LENGTH_BYTES = 5 * 1024 * 1024
 
 
 class MaxSizeUploadHandler(MemoryFileUploadHandler):

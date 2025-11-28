@@ -33,6 +33,7 @@ def test_serializer_fields():
         print("CaseListSerializer fields:")
         print("  - Has 'state': {}".format('state' in list_fields))
         print("  - Has 'eligibility_check': {}".format('eligibility_check' in list_fields))
+        print("  - Has 'safe_to_contact': {}".format('safe_to_contact' in list_fields))
         print()
 
         # Test DetailedCaseSerializer fields
@@ -54,6 +55,7 @@ def test_serializer_fields():
 
         assert 'state' not in list_fields, "CaseListSerializer should NOT have 'state' field"
         assert 'eligibility_check' not in list_fields, "CaseListSerializer should NOT have 'eligibility_check' field"
+        assert 'safe_to_contact' in list_fields, "CaseListSerializer should have 'safe_to_contact' field"
 
         assert 'state' in detailed_fields, "DetailedCaseSerializer should have 'state' field"
         assert 'eligibility_check' not in detailed_fields, "DetailedCaseSerializer should NOT have 'eligibility_check' field"
@@ -62,6 +64,7 @@ def test_serializer_fields():
         print("The serializer configuration is correct:")
         print("  - 'state' field is only available in DetailedCaseSerializer")
         print("  - 'eligibility_check' field is removed from DetailedCaseSerializer")
+        print("  - 'safe_to_contact' field is available in CaseListSerializer")
 
     except Exception as e:
         print("[ERROR] Error: {}".format(e))

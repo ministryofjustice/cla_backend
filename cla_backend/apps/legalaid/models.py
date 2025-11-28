@@ -824,7 +824,10 @@ class Case(TimeStampedModel):
         TODO Replace painfully circuitous reload method when refresh_from_db available in Django 1.8
         """
         if self.id:
-            case = Case.objects.get(id=self.id)
+            case = Case.objects.filter(id=self.id).first()
+            if not case:
+                logger.warning("LGA-275 Case not found for id: {}".format(self.id))
+                return
             if case.level and case.outcome_code_id:
                 if case.outcome_code:
                     msg = "LGA-275 All three denormalized outcome values present for Case (ref:{})"
@@ -1061,6 +1064,7 @@ class Case(TimeStampedModel):
         Returns the notes from the most recent state-changing event.
         Based on the current state, retrieves notes from the corresponding event log.
         """
+        from django.db.models import Q
         from cla_eventlog.models import Log
 
         state = self.state
@@ -1075,14 +1079,11 @@ class Case(TimeStampedModel):
             return None
 
         codes = code_mapping[state]
-        try:
-            log = Log.objects.filter(
-                case=self,
-                code__in=codes
-            ).order_by('-created').first()
-            return log.notes if log else None
-        except Log.DoesNotExist:
-            return None
+        # Use Q objects to avoid potential SQL injection from kwargs
+        log = Log.objects.filter(
+            Q(case=self) & Q(code__in=codes)
+        ).order_by('-created').first()
+        return log.notes if log else None
 
 
 class CaseNotesHistory(TimeStampedModel):

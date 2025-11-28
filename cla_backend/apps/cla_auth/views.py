@@ -4,6 +4,7 @@ import logging
 
 from django.conf import settings
 from django.core.serializers.json import DjangoJSONEncoder
+from django.db.models import Q
 from django.http import HttpResponse
 from django.utils import timezone
 from django.contrib.auth.models import User
@@ -101,10 +102,11 @@ class AccessTokenView(Oauth2AccessTokenView):
         """
         This checks that the user is set to active
         """
-        user = None
         username = request.POST.get("username")
         try:
-            user = User.objects.get(username=username)
+            user = User.objects.filter(Q(username=username)).first()
+            if not user:
+                raise User.DoesNotExist
         except User.DoesNotExist:
             raise OAuth2Error("invalid_client")
 
@@ -118,15 +120,21 @@ class AccessTokenView(Oauth2AccessTokenView):
         where to send the user.
         """
         # Initial getting the client, if client doesnt exist we catch the error
+        client_id = request.POST.get("client_id")
         try:
-            client = Application.objects.get(client_id=request.POST.get("client_id"))
+            client = Application.objects.filter(Q(client_id=client_id)).first()
+            if not client:
+                raise Application.DoesNotExist
         except Application.DoesNotExist:
             raise OAuth2Error("invalid_client")
 
         class_name = self.get_user_model(client.name)
+        username = request.POST.get("username")
 
         try:
-            assert class_name.objects.get(user__username=request.POST.get("username"))
+            user_instance = class_name.objects.filter(Q(user__username=username)).first()
+            if not user_instance:
+                raise class_name.DoesNotExist
         except class_name.DoesNotExist:
             raise OAuth2Error("invalid_grant")
 
@@ -153,7 +161,7 @@ class AccessTokenView(Oauth2AccessTokenView):
 
         cool_off_time = timezone.now() - datetime.timedelta(minutes=settings.LOGIN_FAILURE_COOLOFF_TIME)
 
-        attempts = AccessAttempt.objects.filter(username=username, created__gt=cool_off_time).count()
+        attempts = AccessAttempt.objects.filter(Q(username=username) & Q(created__gt=cool_off_time)).count()
 
         if attempts >= settings.LOGIN_FAILURE_LIMIT:
 
@@ -186,7 +194,9 @@ class AccessTokenView(Oauth2AccessTokenView):
         try:
             from call_centre.serializers import OperatorSerializer
 
-            operator = Operator.objects.get(user=user)
+            operator = Operator.objects.filter(Q(user=user)).first()
+            if not operator:
+                raise Operator.DoesNotExist
             serializer = OperatorSerializer(operator)
             user_data = serializer.data
             user_data["user_type"] = "operator"
@@ -202,7 +212,9 @@ class AccessTokenView(Oauth2AccessTokenView):
         try:
             from cla_provider.serializers import StaffSerializer
 
-            staff = Staff.objects.get(user=user)
+            staff = Staff.objects.filter(Q(user=user)).first()
+            if not staff:
+                raise Staff.DoesNotExist
             serializer = StaffSerializer(staff)
             user_data = serializer.data
             user_data["user_type"] = "staff"
@@ -233,8 +245,15 @@ class AccessTokenView(Oauth2AccessTokenView):
             return response
 
         try:
-            user = User.objects.get(username=username)
-            client = Application.objects.get(client_id=client_id)
+            user = User.objects.filter(Q(username=username)).first()
+            if not user:
+                logger.warning("User not found", extra={"username": username})
+                return response
+
+            client = Application.objects.filter(Q(client_id=client_id)).first()
+            if not client:
+                logger.warning("Client not found", extra={"client_id": client_id})
+                return response
 
             logger.info("Getting user data for authentication", extra={"client_name": client.name, "username": username})
 

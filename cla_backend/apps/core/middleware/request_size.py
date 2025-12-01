@@ -80,7 +80,6 @@ class RequestSizeMiddleware:
 
     Example:
         Add to MIDDLEWARE in Django settings:
-        
         MIDDLEWARE = [
             ...
             'cla_backend.apps.core.middleware.request_size.RequestSizeMiddleware',

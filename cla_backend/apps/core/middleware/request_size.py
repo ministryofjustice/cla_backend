@@ -35,6 +35,24 @@ class MaxSizeUploadHandler(MemoryFileUploadHandler):
         self.total_bytes = 0
 
     def receive_data_chunk(self, raw_data, start):
+        """
+        Process incoming data chunks and enforce request size limits.
+
+        This method is called iteratively as chunks of request body data are received.
+        It tracks the cumulative size of received data and enforces a maximum content
+        length limit to prevent excessive memory usage or denial-of-service attacks.
+
+        Args:
+            raw_data (bytes): The chunk of raw data received from the request body.
+            start (int): The byte position where this chunk starts in the overall request body.
+
+        Returns:
+            bytes: The unmodified raw_data chunk to be processed by subsequent handlers.
+
+        Raises:
+            StopUpload: If the cumulative total_bytes exceeds MAX_REQUEST_CONTENT_LENGTH_BYTES,
+                        with connection_reset=True to immediately terminate the connection.
+        """
         self.total_bytes += len(raw_data)
         if self.total_bytes > MAX_REQUEST_CONTENT_LENGTH_BYTES:
             raise StopUpload(connection_reset=True)
@@ -43,34 +61,59 @@ class MaxSizeUploadHandler(MemoryFileUploadHandler):
 
 class RequestSizeMiddleware:
     """
-    Django middleware to limit the size of incoming HTTP request payloads.
-    This middleware enforces a maximum request body size to prevent denial-of-service
-    attacks and excessive memory usage from large payloads.
+    Middleware to enforce size limits on incoming HTTP request payloads.
+
+    This middleware intercepts incoming requests to validate that the payload size
+    does not exceed the configured maximum limit (MAX_REQUEST_CONTENT_LENGTH_BYTES).
+    It inspects the Content-Length header and rejects requests that are too large
+    before they are fully processed, helping to prevent resource exhaustion attacks
+    and ensure system stability.
+
+    For POST, PUT, and PATCH requests, it also inserts a custom upload handler
+    (MaxSizeUploadHandler) to monitor and enforce size limits during file uploads.
+
     Attributes:
-        get_response (callable): The next middleware or view in the Django request/response chain.
+        None
+
     Methods:
-        __init__(get_response):
-            Initialises the middleware with the next callable in the chain.
-            Args:
-                get_response (callable): The next middleware or view to be called.
-        __call__(request):
-            Processes each incoming request to validate payload size.
-            Checks the Content-Length header against MAX_REQUEST_CONTENT_LENGTH_BYTES.
-            For POST, PUT, and PATCH requests, inserts a MaxSizeUploadHandler to handle
-            file uploads within size constraints.
-            Args:
-                request (HttpRequest): The incoming Django HTTP request object.
-            Returns:
-                HttpResponse: Either the response from the next middleware/view, or an
-                             HttpResponseBadRequest (status 413) if payload exceeds limit,
-                             or HttpResponseBadRequest (status 400) if Content-Length is invalid.
-            Raises:
-                Returns HttpResponseBadRequest instead of raising exceptions for:
-                - Payloads exceeding MAX_REQUEST_CONTENT_LENGTH_BYTES
-                - Invalid Content-Length header values
+        process_request(request): Validates request size and configures upload handlers.
+
+    Example:
+        Add to MIDDLEWARE in Django settings:
+        
+        MIDDLEWARE = [
+            ...
+            'cla_backend.apps.core.middleware.request_size.RequestSizeMiddleware',
+            ...
+        ]
+
+    Notes:
+        - Requires MAX_REQUEST_CONTENT_LENGTH_BYTES to be defined in settings or module scope
+        - Returns HTTP 413 (Payload Too Large) for oversized requests
+        - Returns HTTP 400 (Bad Request) for invalid Content-Length headers
     """
 
     def process_request(self, request):
+        """
+        Process incoming HTTP request to enforce size limits on request payload.
+
+        This method checks the Content-Length header of incoming requests and validates
+        that the payload size does not exceed the maximum allowed size defined by
+        MAX_REQUEST_CONTENT_LENGTH_BYTES. For POST, PUT, and PATCH requests, it also
+        inserts a custom upload handler to monitor upload sizes.
+
+        Args:
+            request: The HttpRequest object containing metadata and content information.
+
+        Returns:
+            HttpResponseBadRequest: If the content length exceeds the maximum allowed size
+                                   (with status 413) or if the content length header is invalid.
+            None: If the request passes validation, allowing normal request processing to continue.
+
+        Raises:
+            No exceptions are raised directly; invalid content length values are caught
+            and returned as HttpResponseBadRequest.
+        """
         # Ascertain `Content-Length` header
         length = request.META.get("CONTENT_LENGTH")
 

@@ -26,14 +26,14 @@
         }
     },
     {
-        "pk": 3, 
-        "model": "oauth2_provider.application", 
+        "pk": 3,
+        "model": "oauth2_provider.application",
         "fields": {
-            "name": "OBIEE", 
-            "client_type": 0, 
-            "redirect_uris": "http://obiee.localhost/", 
-            "user": 95, 
-            "client_id": "39d31fdffd8c89ebb6d5", 
+            "name": "OBIEE",
+            "client_type": 0,
+            "redirect_uris": "http://obiee.localhost/",
+            "user": 95,
+            "client_id": "39d31fdffd8c89ebb6d5",
             "client_secret": "7ad5e3cbcdf656ececbd235557f99ec049bee604",
             "authorization_grant_type": "password"
         }
@@ -42,76 +42,56 @@
         "pk": 2,
         "model": "auth.user",
         "fields": {
-            "username": "test_operator",
-            "first_name": "",
-            "last_name": "",
+            "username": "cla_operator",
+            "first_name": "CLA",
+            "last_name": "Operator",
             "is_active": true,
             "is_superuser": false,
             "is_staff": false,
-            "last_login": "2014-03-19T16:26:31.018Z",
+            "last_login": "2025-01-01T00:00:00.000Z",
             "groups": [],
             "user_permissions": [],
             "password": "pbkdf2_sha256$12000$WYn2LhKp2uoF$74h6n/fbwLLVJu5b8plAAQ1lz7ojKpsxejXmTZirGaM=",
             "email": "",
-            "date_joined": "2014-03-19T16:26:31.018Z"
+            "date_joined": "2025-01-01T00:00:00.000Z"
         }
     },
     {
         "pk": 6,
         "model": "auth.user",
         "fields": {
-            "username": "test_operator_manager",
-            "first_name": "",
-            "last_name": "",
+            "username": "cla_operator_manager",
+            "first_name": "CLA",
+            "last_name": "Operator Manager",
             "is_active": true,
             "is_superuser": false,
             "is_staff": true,
-            "last_login": "2014-03-19T16:26:31.018Z",
+            "last_login": "2025-01-01T00:00:00.000Z",
             "groups": [
                 1
             ],
             "user_permissions": [],
             "password": "pbkdf2_sha256$12000$sT8aqMErQFhh$L0jCyOnpcr5t++N4OhGqRAExtnJHhAAdkZB4ndpOaI8=",
             "email": "",
-            "date_joined": "2014-03-19T16:26:31.018Z"
+            "date_joined": "2025-01-01T00:00:00.000Z"
         }
     },
     {
-        "pk": 80,
+        "pk": 95,
         "model": "auth.user",
         "fields": {
-            "username": "test_cla_superuser",
-            "first_name": "",
-            "last_name": "",
+            "username": "cla_obiee",
+            "first_name": "CLA",
+            "last_name": "OBIEE",
             "is_active": true,
             "is_superuser": false,
-            "is_staff": true,
-            "last_login": "2014-03-19T16:26:31.018Z",
-            "groups": [
-                2
-            ],
+            "is_staff": false,
+            "last_login": "2025-01-01T00:00:00.000Z",
+            "groups": [],
             "user_permissions": [],
-            "password": "pbkdf2_sha256$12000$feBd60sk36Tw$KIXpTNsv/kuOb3wYUoPLhfEETptZyx5/XINYjk2ex1A=", 
+            "password": "pbkdf2_sha256$12000$Z4munZiXNcyR$LmRRsNuctPDXUyoxWsf7IXjICqiBmXB+nu/SlD79p6w=",
             "email": "",
-            "date_joined": "2014-03-19T16:26:31.018Z"
-        }
-    },
-    {
-        "pk": 95, 
-        "model": "auth.user", 
-        "fields": {
-            "username": "cla_obiee", 
-            "first_name": "", 
-            "last_name": "", 
-            "is_active": true, 
-            "is_superuser": false, 
-            "is_staff": false, 
-            "last_login": "2015-01-05T14:59:58.046Z", 
-            "groups": [], 
-            "user_permissions": [], 
-            "password": "pbkdf2_sha256$12000$Z4munZiXNcyR$LmRRsNuctPDXUyoxWsf7IXjICqiBmXB+nu/SlD79p6w=", 
-            "email": "", 
-            "date_joined": "2015-01-05T14:59:58.046Z"
+            "date_joined": "2025-01-01T00:00:00.000Z"
         }
     },
     {
@@ -121,8 +101,8 @@
             "user": 2,
             "is_manager": false,
             "is_cla_superuser": false,
-            "modified": "2014-03-19T16:27:32.004Z",
-            "created": "2014-03-19T16:27:31.999Z"
+            "modified": "2025-01-01T00:00:00.000Z",
+            "created": "2025-01-01T00:00:00.000Z"
         }
     },
     {
@@ -132,19 +112,8 @@
             "user": 6,
             "is_manager": true,
             "is_cla_superuser": false,
-            "modified": "2014-03-19T16:27:32.004Z",
-            "created": "2014-03-19T16:27:31.999Z"
-        }
-    },
-    {
-        "pk": 3,
-        "model": "call_centre.operator",
-        "fields": {
-            "user": 80,
-            "is_manager": true,
-            "is_cla_superuser": true,
-            "modified": "2014-03-19T16:27:32.004Z",
-            "created": "2014-03-19T16:27:31.999Z"
+            "modified": "2025-01-01T00:00:00.000Z",
+            "created": "2025-01-01T00:00:00.000Z"
         }
     }
 ]

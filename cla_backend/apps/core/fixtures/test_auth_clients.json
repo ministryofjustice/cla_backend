@@ -115,5 +115,16 @@
             "modified": "2025-01-01T00:00:00.000Z",
             "created": "2025-01-01T00:00:00.000Z"
         }
+    },
+    {
+        "pk": 3,
+        "model": "call_centre.operator",
+        "fields": {
+            "user": 95,
+            "is_manager": true,
+            "is_cla_superuser": false,
+            "modified": "2025-01-01T00:00:00.000Z",
+            "created": "2025-01-01T00:00:00.000Z"
+        }
     }
 ]

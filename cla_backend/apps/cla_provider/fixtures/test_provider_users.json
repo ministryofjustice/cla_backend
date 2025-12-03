@@ -12,8 +12,8 @@
             "last_login": "2025-01-01T00:00:00.000Z",
             "groups": [],
             "user_permissions": [],
-            "password": "pbkdf2_sha256$12000$8zY9UFaR6zm8$FeWdkxAx+jz7oVMTGBiRmAhRlCG5814SqZk9L0ihBdw=",
-            "email": "",
+            "password": "pbkdf2_sha256$20000$70yJTowJAwCf$SPsYuksyDizNTiHXpZAixV7Ttew/Jlr/jc+LU3PL7ks=",
+            "email": "test@example.com",
             "date_joined": "2025-01-01T00:00:00.000Z"
         }
     },
@@ -30,8 +30,8 @@
             "last_login": "2025-01-01T00:00:00.000Z",
             "groups": [],
             "user_permissions": [],
-            "password": "pbkdf2_sha256$12000$7HdnXaKnil02$bLpukK5YwJ1IK6/cn9WyRSJ/6tj0VgpzXQT3HR/Avfw=",
-            "email": "",
+            "password": "pbkdf2_sha256$20000$h4ay1DBUnyWP$N0xMB6iF2mRl6XoDhfFYGyo/aDnJnA2ymxlMvOc48Pc=",
+            "email": "test@example.com",
             "date_joined": "2025-01-01T00:00:00.000Z"
         }
     },
@@ -48,7 +48,7 @@
             "last_login": "2025-01-01T00:00:00.000Z",
             "groups": [],
             "user_permissions": [],
-            "password": "pbkdf2_sha256$12000$8VxBcelsRgO9$I5fdf9LVaIGI88Z092CdOO9mYMkv0eTcWTpBzLDeA/w=",
+            "password": "pbkdf2_sha256$20000$UNk4567LzF27$ef7Ele1RCLEYuQyx4seOvHE6poGlDE+b0SHhAUxKrhQ=",
             "email": "test@example.com",
             "date_joined": "2025-01-01T00:00:00.000Z"
         }
@@ -66,7 +66,7 @@
             "last_login": "2025-01-01T00:00:00.000Z",
             "groups": [],
             "user_permissions": [],
-            "password": "pbkdf2_sha256$12000$fbw6OS4y0WaK$FHvF3oMMkD6aaxHrn7Uc+tyPKwtHGg9+28jo817OLo4=",
+            "password": "pbkdf2_sha256$20000$XXy10g5OwjAq$2fplKY2sbbzCRqctCVliYVR7gUe4FFJumxMoTfBa6/c=",
             "email": "test@example.com",
             "date_joined": "2025-01-01T00:00:00.000Z"
         }

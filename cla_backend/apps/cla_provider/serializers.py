@@ -275,6 +275,7 @@ class DetailedCaseSerializer(CaseSerializer):
 
 class CaseListSerializer(CaseSerializer):
     safe_to_contact = serializers.CharField(source='personal_details.safe_to_contact', read_only=True)
+    phone_number = serializers.CharField(source='personal_details.mobile_phone', read_only=True)
 
     class Meta(CaseSerializer.Meta):
         fields = (
@@ -299,6 +300,7 @@ class CaseListSerializer(CaseSerializer):
             "provider_assigned_at",
             "is_urgent",
             "safe_to_contact",
+            "phone_number",
         )
 
 

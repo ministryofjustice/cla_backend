@@ -2,7 +2,7 @@ default_language_version:
   python: python2.7
 repos:
   - repo: https://github.com/ministryofjustice/devsecops-hooks
-    rev: ddc20f2051aae31b9bfc1784460187da32a21155
+    rev: a5bd873c96a914b5be53d35085f8f554ff9c4720
     hooks:
       - id: baseline
         language_version: python2.7

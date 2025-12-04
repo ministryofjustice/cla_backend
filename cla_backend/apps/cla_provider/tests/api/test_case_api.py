@@ -45,6 +45,7 @@ class BaseCaseTestCase(CLAProviderAuthBaseApiTestMixin, BaseFullCaseAPIMixin, AP
             "provider_viewed",
             "provider_accepted",
             "provider_closed",
+            "provider_assigned_at",
             "full_name",
             "laa_reference",
             "eligibility_state",
@@ -254,6 +255,38 @@ class FilteredSearchCaseTestCase(BaseCaseTestCase):
         self.assertEqual(1, len(response.data["results"]))
         self.assertItemsEqual([c["reference"] for c in response.data["results"]], ["ref7"])
 
+    def test_rejected_cases(self):
+        # Create rejected cases with different rejection codes
+        make_recipe("legalaid.case", reference="ref_coi", provider=self.provider, outcome_code="COI")
+        make_recipe("legalaid.case", reference="ref_mis", provider=self.provider, outcome_code="MIS")
+        make_recipe("legalaid.case", reference="ref_mis_oos", provider=self.provider, outcome_code="MIS-OOS")
+        make_recipe("legalaid.case", reference="ref_mis_means", provider=self.provider, outcome_code="MIS-MEANS")
+
+        response = self.client.get(
+            u"%s?only=rejected" % self.list_url, format="json", HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(4, len(response.data["results"]))
+        self.assertItemsEqual(
+            [c["reference"] for c in response.data["results"]],
+            ["ref_coi", "ref_mis", "ref_mis_oos", "ref_mis_means"]
+        )
+
+    def test_completed_cases(self):
+        # Create completed cases with different completion codes
+        make_recipe("legalaid.case", reference="ref_clsp", provider=self.provider, outcome_code="CLSP")
+        make_recipe("legalaid.case", reference="ref_drefer", provider=self.provider, outcome_code="DREFER")
+
+        response = self.client.get(
+            u"%s?only=completed" % self.list_url, format="json", HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(2, len(response.data["results"]))
+        self.assertItemsEqual(
+            [c["reference"] for c in response.data["results"]],
+            ["ref_clsp", "ref_drefer"]
+        )
+
 
 class UpdateCaseTestCase(BaseUpdateCaseTestCase, BaseCaseTestCase):
     def test_patch_provider_notes_allowed(self):
@@ -351,6 +384,43 @@ class AcceptCaseTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
         reference = reference or self.resource.reference
         return reverse("cla_provider:case-accept", args=(), kwargs={"reference": reference})
 
+    def test_accept_resets_provider_closed(self):
+        """Test that accepting a case sets provider_closed to None if it was previously set"""
+        # Set provider_closed to simulate a previously closed case
+        self.resource.provider_closed = timezone.now()
+        self.resource.save()
+        self.assertIsNotNone(self.resource.provider_closed)
+
+        # Accept the case
+        response = self.client.post(
+            self.url, data={"notes": "accepting case"}, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Reload the resource from the database
+        self.resource = self.resource.__class__.objects.get(pk=self.resource.pk)
+
+        # Verify provider_accepted is set and provider_closed is None
+        self.assertIsNotNone(self.resource.provider_accepted)
+        self.assertIsNone(self.resource.provider_closed)
+
+
+class OpenCaseTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
+    NO_BODY_RESPONSE = False
+
+    def get_url(self, reference=None):
+        reference = reference or self.resource.reference
+        return reverse("cla_provider:case-open", args=(), kwargs={"reference": reference})
+
+    def test_successful(self):
+        self.assertEqual(self.resource.provider_viewed, None)
+
+        super(OpenCaseTestCase, self).test_successful()
+
+        self.resource = self.resource.__class__.objects.get(pk=self.resource.pk)
+        self.assertNotEqual(self.resource.provider_viewed, None)
+
 
 class CloseCaseTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
     def get_url(self, reference=None):
@@ -447,3 +517,85 @@ class SplitCaseTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
         new_case = self.resource.split_cases.first()
         ref_log = Log.objects.filter(case=new_case)[0]
         self.assertEqual(ref_log.notes, "Notes")
+
+
+class CaseStateTestCase(BaseCaseTestCase):
+    """
+    Test case state property functionality
+    """
+
+    def get_url(self, reference=None):
+        reference = reference or self.resource.reference
+        return reverse("cla_provider:case-detail", args=(), kwargs={"reference": reference})
+
+    def test_case_state_new(self):
+        """Test that a case with no provider actions returns 'new' state"""
+        case = make_recipe(
+            "legalaid.case",
+            provider=self.provider,
+            provider_viewed=None,
+            provider_accepted=None,
+            provider_closed=None,
+        )
+        self.assertEqual(case.state, 'new')
+
+    def test_case_state_opened(self):
+        """Test that a case viewed by provider returns 'opened' state"""
+        case = make_recipe(
+            "legalaid.case",
+            provider=self.provider,
+            provider_viewed=timezone.now(),
+            provider_accepted=None,
+            provider_closed=None,
+        )
+        self.assertEqual(case.state, 'opened')
+
+    def test_case_state_accepted(self):
+        """Test that a case accepted by provider returns 'accepted' state"""
+        case = make_recipe(
+            "legalaid.case",
+            provider=self.provider,
+            provider_viewed=timezone.now(),
+            provider_accepted=timezone.now(),
+            provider_closed=None,
+        )
+        self.assertEqual(case.state, 'accepted')
+
+    def test_case_state_closed(self):
+        """Test that a case closed by provider returns 'closed' state"""
+        case = make_recipe(
+            "legalaid.case",
+            provider=self.provider,
+            provider_viewed=timezone.now(),
+            provider_accepted=timezone.now(),
+            provider_closed=timezone.now(),
+        )
+        self.assertEqual(case.state, 'closed')
+
+    def test_api_returns_state_field(self):
+        """Test that the detailed API endpoint includes the state field"""
+        detailed_url = "{0}detailed/".format(self.get_url(self.resource.reference))
+        response = self.client.get(detailed_url, HTTP_AUTHORIZATION=self.get_http_authorization())
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.assertIn('state', response.data)
+        self.assertEqual(response.data['state'], 'new')  # Default state for test case
+
+        # Test that regular endpoint does NOT include state field
+        response = self.client.get(self.get_url(self.resource.reference), HTTP_AUTHORIZATION=self.get_http_authorization())
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertNotIn('state', response.data)
+
+    def test_detailed_endpoint_excludes_eligibility_check(self):
+        """Test that the detailed endpoint does NOT include eligibility_check reference"""
+        detailed_url = "{0}detailed/".format(self.get_url(self.resource.reference))
+        response = self.client.get(detailed_url, HTTP_AUTHORIZATION=self.get_http_authorization())
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Detailed endpoint should NOT have eligibility_check reference
+        self.assertNotIn('eligibility_check', response.data)
+
+        # Regular endpoint should still have eligibility_check reference
+        response = self.client.get(self.get_url(self.resource.reference), HTTP_AUTHORIZATION=self.get_http_authorization())
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('eligibility_check', response.data)

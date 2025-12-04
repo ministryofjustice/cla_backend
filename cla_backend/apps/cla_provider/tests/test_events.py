@@ -20,6 +20,13 @@ class AcceptCaseEventTestCase(EventTestCaseMixin, TestCase):
         self._test_process_with_implicit_code("SPOP")
 
 
+class OpenCaseEventTestCase(EventTestCaseMixin, TestCase):
+    EVENT_KEY = "open_case"
+
+    def test_open_case(self):
+        self._test_process_with_implicit_code("CASE_VIEWED")
+
+
 class CloseCaseEventTestCase(EventTestCaseMixin, TestCase):
     EVENT_KEY = "close_case"
 

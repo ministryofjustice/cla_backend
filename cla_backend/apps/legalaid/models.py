@@ -967,7 +967,8 @@ class Case(TimeStampedModel):
 
     def accept_by_provider(self):
         self.provider_accepted = datetime.datetime.utcnow().replace(tzinfo=utc)
-        self.save(update_fields=["provider_accepted"])
+        self.provider_closed = None
+        self.save(update_fields=["provider_accepted", "provider_closed"])
 
     def close_by_provider(self):
         self.provider_closed = datetime.datetime.utcnow().replace(tzinfo=utc)

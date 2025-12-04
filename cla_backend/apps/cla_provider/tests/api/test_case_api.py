@@ -384,6 +384,27 @@ class AcceptCaseTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
         reference = reference or self.resource.reference
         return reverse("cla_provider:case-accept", args=(), kwargs={"reference": reference})
 
+    def test_accept_resets_provider_closed(self):
+        """Test that accepting a case sets provider_closed to None if it was previously set"""
+        # Set provider_closed to simulate a previously closed case
+        self.resource.provider_closed = timezone.now()
+        self.resource.save()
+        self.assertIsNotNone(self.resource.provider_closed)
+
+        # Accept the case
+        response = self.client.post(
+            self.url, data={"notes": "accepting case"}, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Reload the resource from the database
+        self.resource = self.resource.__class__.objects.get(pk=self.resource.pk)
+
+        # Verify provider_accepted is set and provider_closed is None
+        self.assertIsNotNone(self.resource.provider_accepted)
+        self.assertIsNone(self.resource.provider_closed)
+
 
 class OpenCaseTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
     NO_BODY_RESPONSE = False

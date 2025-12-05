@@ -36,7 +36,7 @@ class CallbackTimeSlotAdmin(admin.ModelAdmin):
 
         form = CallbackTimeSlotCSVUploadForm()
         if request.method == "POST":
-            form = CallbackTimeSlotCSVUploadForm(files=request.FILES)
+            form = CallbackTimeSlotCSVUploadForm(request.POST, request.FILES)
             if form.is_valid():
                 form.save()
                 messages.add_message(request, messages.SUCCESS, "CSV Imported successfully")

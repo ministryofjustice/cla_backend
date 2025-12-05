@@ -2,10 +2,10 @@ default_language_version:
   python: python2.7
 repos:
   - repo: https://github.com/ministryofjustice/devsecops-hooks
-    rev: a5bd873c96a914b5be53d35085f8f554ff9c4720
+    rev: v1.0.0
     hooks:
       - id: baseline
-        language_version: python2.7
+        name: MoJ baseline security hook
   - repo: https://github.com/ambv/black
     rev: 18.9b0
     hooks:

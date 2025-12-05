@@ -65,7 +65,7 @@ class ArticleAdmin(admin.ModelAdmin):
 
         form = KnowledgebaseCSVUploadForm()
         if request.method == "POST":
-            form = KnowledgebaseCSVUploadForm(request.POST, request.data)
+            form = KnowledgebaseCSVUploadForm(request.POST, request.FILES)
             if form.is_valid():
                 form.save()
                 messages.add_message(request, messages.SUCCESS, "CSV Imported successfully")

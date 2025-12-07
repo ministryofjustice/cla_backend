@@ -56,7 +56,7 @@ class MaxSizeUploadHandler(MemoryFileUploadHandler):
         self.total_bytes += len(raw_data)
         if self.total_bytes > MAX_REQUEST_CONTENT_LENGTH_BYTES:
             raise StopUpload(connection_reset=True)
-        return raw_data
+        return super(MaxSizeUploadHandler, self).receive_data_chunk(raw_data, start)
 
 
 class RequestSizeMiddleware:
@@ -119,9 +119,11 @@ class RequestSizeMiddleware:
         if length:
             try:
                 if int(length) > MAX_REQUEST_CONTENT_LENGTH_BYTES:
-                    return HttpResponseBadRequest("Payload exceeds {} bytes.".format(MAX_REQUEST_CONTENT_LENGTH_BYTES), status=413)
+                    return HttpResponseBadRequest(
+                        "Payload exceeds {} bytes.".format(MAX_REQUEST_CONTENT_LENGTH_BYTES), status=413
+                    )
             except (ValueError, TypeError):
                 return HttpResponseBadRequest("Invalid content length")
 
         if request.method in ("POST", "PUT", "PATCH"):
-            request.upload_handlers.insert(0, MaxSizeUploadHandler())
+            request.upload_handlers.insert(0, MaxSizeUploadHandler(request))

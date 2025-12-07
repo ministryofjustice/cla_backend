@@ -16,9 +16,6 @@ from cla_common.money_interval.models import MoneyInterval
 from cla_provider.models import Provider, OutOfHoursRota, Feedback, CSVUpload
 from cla_eventlog import registry as event_registry
 
-from django.utils.encoding import force_text
-import re
-
 from .models import (
     Category,
     Property,
@@ -93,61 +90,6 @@ class CSVUploadSerializerBase(serializers.ModelSerializer):
     provider = serializers.CharField(read_only=True, source="provider.name")
     created_by = serializers.CharField(read_only=True, source="created_by.user.username")
     body = JSONField()
-
-    def create(self, validated_data):
-        """
-        Create a new CSV upload instance with sanitised data.
-
-        This method sanitises each cell in the CSV data to prevent security vulnerabilities
-        including HTML injection, JavaScript injection, and CSV injection attacks.
-
-        Args:
-            validated_data (dict): Dictionary containing validated data with a 'body' key
-                                  that holds a list of lists representing CSV rows and cells.
-
-        Returns:
-            Model instance: The created model instance with sanitised CSV data.
-
-        Sanitisation steps performed on each cell:
-            1. Convert cell content to string using force_text()
-            2. Remove HTML tags using regex pattern
-            3. Remove JavaScript URL schemes (case-insensitive)
-            4. Prevent CSV injection by prepending single quote to cells starting with
-               special characters (=, @, +, -)
-
-        Note:
-            The sanitised data replaces the original 'body' in validated_data before
-            calling the parent class's create method.
-        """
-        body = validated_data.get("body", [])
-        sanitised_csv = []
-
-        # Every row in the CSV
-        for row in body:
-            sanitised_row = []
-
-            # Every cell in the row
-            for cell in row:
-                # 0. Convert to string
-                cell = force_text(cell)
-
-                # 1. Sanitise HTML tags
-                cell = re.sub(r'<[^>]+>', '', cell)
-
-                # 2. Remove Javascript URL
-                cell = re.sub(r'javascript\s*:', '', cell, flags=re.IGNORECASE)
-
-                # 3. Sanitise CSV injection
-                if cell.strip().startswith(("=", "@", "+", "-")):
-                    cell = "'" + cell
-
-                sanitised_row.append(cell)
-
-            sanitised_csv.append(sanitised_row)
-
-        validated_data["body"] = sanitised_csv
-
-        return super(CSVUploadSerializerBase, self).create(validated_data)
 
     def get_rows(self, obj):
         return len(obj.body)

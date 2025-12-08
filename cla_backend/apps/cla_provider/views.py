@@ -47,6 +47,7 @@ from rest_framework.views import APIView
 from .serializers import (
     EligibilityCheckSerializer,
     CaseSerializer,
+    DetailedCaseSerializer,
     StaffSerializer,
     AdaptationDetailsSerializer,
     PersonalDetailsSerializer,
@@ -59,7 +60,7 @@ from .serializers import (
     CSVUploadSerializer,
     CSVUploadDetailSerializer,
 )
-from .forms import RejectCaseForm, AcceptCaseForm, CloseCaseForm, SplitCaseForm, ReopenCaseForm
+from .forms import RejectCaseForm, AcceptCaseForm, OpenCaseForm, CloseCaseForm, SplitCaseForm, ReopenCaseForm
 
 logger = logging.getLogger(__name__)
 
@@ -114,6 +115,7 @@ class CaseViewSet(CLAProviderPermissionViewSetMixin, FullCaseViewSet):
         "eligibility_check",
         "personal_details",
         "adaptation_details",
+        "thirdparty_details",
         "matter_type1",
         "matter_type2",
         "diagnosis",
@@ -131,6 +133,8 @@ class CaseViewSet(CLAProviderPermissionViewSetMixin, FullCaseViewSet):
         "priority",
         "personal_details__full_name",
         "personal_details__postcode",
+        "provider_assigned_at",
+        "provider_closed",
     )
 
     def get_queryset(self, **kwargs):
@@ -146,6 +150,10 @@ class CaseViewSet(CLAProviderPermissionViewSetMixin, FullCaseViewSet):
                 only == 'accepted'
             closed:
                 only == 'closed'
+            completed:
+                only == 'completed'
+            rejected:
+                only == 'rejected'
         """
         this_provider = get_object_or_404(Staff, user=self.request.user).provider
         qs = (
@@ -161,6 +169,10 @@ class CaseViewSet(CLAProviderPermissionViewSetMixin, FullCaseViewSet):
             qs = qs.filter(provider_accepted__isnull=False, provider_closed__isnull=True)
         elif only_param == "closed":
             qs = qs.filter(provider_closed__isnull=False)
+        elif only_param == "completed":
+            qs = qs.filter(outcome_code__in=["CLSP", "DREFER"])
+        elif only_param == "rejected":
+            qs = qs.filter(outcome_code__in=["COI", "MIS", "MIS-OOS", "MIS-MEANS"])
 
         return qs
 
@@ -177,6 +189,13 @@ class CaseViewSet(CLAProviderPermissionViewSetMixin, FullCaseViewSet):
         Accepts a case
         """
         return self._form_action(request, Form=AcceptCaseForm, no_body=False)
+
+    @detail_route(methods=["post"])
+    def open(self, request, reference=None, **kwargs):
+        """
+        Opens a case (marks as viewed by provider)
+        """
+        return self._form_action(request, Form=OpenCaseForm, no_body=False)
 
     @detail_route(methods=["post"])
     def close(self, request, reference=None, **kwargs):
@@ -201,6 +220,15 @@ class CaseViewSet(CLAProviderPermissionViewSetMixin, FullCaseViewSet):
             "eligibility_check": ExtendedEligibilityCheckSerializer(instance=case.eligibility_check).data,
         }
         return DRFResponse(data)
+
+    @detail_route()
+    def detailed(self, *args, **kwargs):
+        """
+        Returns case with all nested details in a single call
+        """
+        case = self.get_object()
+        serializer = DetailedCaseSerializer(instance=case)
+        return DRFResponse(serializer.data)
 
     @detail_route(methods=["post"])
     def split(self, request, reference=None, **kwargs):

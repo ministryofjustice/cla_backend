@@ -5,7 +5,6 @@ repos:
     rev: v1.1.0
     hooks:
       - id: baseline
-        name: MoJ baseline security hook
   - repo: https://github.com/ambv/black
     rev: 18.9b0
     hooks:

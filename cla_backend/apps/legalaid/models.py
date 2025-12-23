@@ -824,7 +824,10 @@ class Case(TimeStampedModel):
         TODO Replace painfully circuitous reload method when refresh_from_db available in Django 1.8
         """
         if self.id:
-            case = Case.objects.get(id=self.id)
+            case = Case.objects.filter(id=self.id).first()
+            if not case:
+                logger.warning("LGA-275 Case not found for id: {}".format(self.id))
+                return
             if case.level and case.outcome_code_id:
                 if case.outcome_code:
                     msg = "LGA-275 All three denormalized outcome values present for Case (ref:{})"
@@ -964,7 +967,8 @@ class Case(TimeStampedModel):
 
     def accept_by_provider(self):
         self.provider_accepted = datetime.datetime.utcnow().replace(tzinfo=utc)
-        self.save(update_fields=["provider_accepted"])
+        self.provider_closed = None
+        self.save(update_fields=["provider_accepted", "provider_closed"])
 
     def close_by_provider(self):
         self.provider_closed = datetime.datetime.utcnow().replace(tzinfo=utc)
@@ -1036,6 +1040,51 @@ class Case(TimeStampedModel):
             )
         else:
             return date_filter(localtime(self.requires_action_at), "g:iA")
+
+    @property
+    def state(self):
+        """
+        Returns the current state of the case based on provider actions.
+        States: 'new', 'opened', 'accepted', 'closed', 'rejected'
+        """
+        # Check for rejection first (outcome_code takes precedence)
+        if self.outcome_code in ['COI', 'MIS', 'MIS-OOS', 'MIS-MEANS']:
+            return 'rejected'
+        elif self.provider_closed:
+            return 'closed'
+        elif self.provider_accepted:
+            return 'accepted'
+        elif self.provider_viewed:
+            return 'opened'
+        else:
+            return 'new'
+
+    @property
+    def state_note(self):
+        """
+        Returns the notes from the most recent state-changing event.
+        Based on the current state, retrieves notes from the corresponding event log.
+        """
+        from django.db.models import Q
+        from cla_eventlog.models import Log
+
+        state = self.state
+        code_mapping = {
+            'opened': ['CASE_VIEWED'],
+            'accepted': ['SPOP'],
+            'rejected': ['COI', 'MIS', 'MIS-OOS', 'MIS-MEANS'],
+            'closed': ['CLSP', 'DREFER', 'REOPEN']
+        }
+
+        if state == 'new' or state not in code_mapping:
+            return None
+
+        codes = code_mapping[state]
+        # Use Q objects to avoid potential SQL injection from kwargs
+        log = Log.objects.filter(case=self).filter(
+            Q(code__in=codes)
+        ).order_by('-created').first()
+        return log.notes if log else None
 
 
 class CaseNotesHistory(TimeStampedModel):

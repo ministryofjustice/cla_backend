@@ -4,7 +4,7 @@
         "model": "auth.user",
         "fields": {
             "username": "cla_staff",
-            "first_name": "CLA",
+            "first_name": "Cla",
             "last_name": "Staff",
             "is_active": true,
             "is_superuser": false,

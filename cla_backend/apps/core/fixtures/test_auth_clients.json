@@ -32,7 +32,7 @@
             "name": "OBIEE",
             "client_type": 0,
             "redirect_uris": "http://obiee.localhost/",
-            "user": 95,
+            "user": 80,
             "client_id": "39d31fdffd8c89ebb6d5",
             "client_secret": "7ad5e3cbcdf656ececbd235557f99ec049bee604",
             "authorization_grant_type": "password"
@@ -122,7 +122,7 @@
         "fields": {
             "user": 80,
             "is_manager": true,
-            "is_cla_superuser": false,
+            "is_cla_superuser": true,
             "modified": "2025-01-01T00:00:00.000Z",
             "created": "2025-01-01T00:00:00.000Z"
         }

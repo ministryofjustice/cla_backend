@@ -77,7 +77,7 @@
         }
     },
     {
-        "pk": 95,
+        "pk": 80,
         "model": "auth.user",
         "fields": {
             "username": "cla_obiee",
@@ -120,7 +120,7 @@
         "pk": 3,
         "model": "call_centre.operator",
         "fields": {
-            "user": 95,
+            "user": 80,
             "is_manager": true,
             "is_cla_superuser": false,
             "modified": "2025-01-01T00:00:00.000Z",

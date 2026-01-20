@@ -1,0 +1,10 @@
+cla_backend/apps/call_centre/tests/api/test_user_api.py:generic-api-key:105
+cla_backend/apps/cla_provider/tests/api/test_user_api.py:generic-api-key:42
+cla_backend/apps/core/fixtures/test_auth_clients.json:generic-api-key:11
+cla_backend/apps/core/fixtures/test_auth_clients.json:generic-api-key:24
+cla_backend/apps/core/fixtures/test_auth_clients.json:generic-api-key:37
+cla_backend/apps/legalaid/utils/keys/diversity_dev_private.key:private-key:1
+cla_backend/apps/legalaid/utils/keys/diversity_dev_reencrypt_private.key:private-key:1
+.circleci/config.yml:generic-api-key:145
+cla_backend/settings/base.py:generic-api-key:188
+cla_backend/apps/legalaid/tests/views/mixins/user_api.py:generic-api-key:104

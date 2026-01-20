@@ -314,7 +314,7 @@ class BaseUpdateCaseTestCase(BaseFullCaseAPIMixin):
             "billable_time": 234,
             "created": "2014-08-05T10:41:55.979Z",
             "modified": "2014-08-05T10:41:55.985Z",
-            "created_by": "test_user",
+            "created_by": "cla_user",
             "matter_type1": matter_type1.code,
             "matter_type2": matter_type2.code,
             "media_code": media_code.code,

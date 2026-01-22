@@ -365,7 +365,7 @@
         "pk": 11,
         "model": "cla_provider.staff",
         "fields": {
-            "user": 64,
+            "user": 4,
             "provider": 11,
             "modified": "2014-08-26T13:23:32.591Z",
             "is_manager": false,
@@ -392,17 +392,6 @@
             "modified": "2014-08-26T13:23:32.678Z",
             "is_manager": false,
             "created": "2014-08-26T13:23:32.678Z"
-        }
-    },
-    {
-        "pk": 14,
-        "model": "cla_provider.staff",
-        "fields": {
-            "user": 4,
-            "provider": 2,
-            "modified": "2014-08-27T15:57:12.202Z",
-            "is_manager": false,
-            "created": "2014-08-27T15:57:12.191Z"
         }
     }
 ]

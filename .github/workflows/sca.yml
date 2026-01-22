@@ -15,10 +15,10 @@ on:
     - cron: "0 0 * * *"
 
   pull_request:
-    branches: ["main"]
+    branches: ["master", "main"]
 
   push:
-    branches: ["main"]
+    branches: ["master", "main"]
 
   workflow_dispatch:
   branch_protection_rule:

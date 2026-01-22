@@ -71,7 +71,6 @@
             "date_joined": "2014-08-26T13:23:32.178Z"
         }
     },
-
     {
         "pk": 57,
         "model": "auth.user",
@@ -285,7 +284,7 @@
             "created": "2014-08-26T13:23:32.219Z"
         }
     },
-     {
+    {
         "pk": 4,
         "model": "cla_provider.staff",
         "fields": {
@@ -373,7 +372,7 @@
             "created": "2014-08-26T13:23:32.591Z"
         }
     },
-     {
+    {
         "pk": 12,
         "model": "cla_provider.staff",
         "fields": {

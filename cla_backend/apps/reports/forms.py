@@ -1159,6 +1159,28 @@ class WebContactCases(SQLFileDateRangeReport):
         ]
 
 
+class MICallbacks(SQLFileDateRangeReport):
+    QUERY_FILE = "MICallbacks.sql"
+
+    def get_sql_params(self):
+        from_date, to_date = self.date_range
+        return {"from_date": from_date, "to_date": to_date}
+
+    def get_headers(self):
+        return [
+            "Case ref",
+            "Callback date",
+            "Callback time",
+            "Case source",
+            "Callback code",
+            "Callback requested by",
+            "Third Party bypass",
+            "Request made date",
+            "Request made time",
+            "Interval cap",
+        ]
+
+
 def get_from_nth(items, n, attribute):
     try:
         item = items[n - 1]

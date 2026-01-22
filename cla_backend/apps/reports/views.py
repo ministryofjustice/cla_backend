@@ -38,6 +38,7 @@ from .forms import (
     MIDemographicReport,
     CallbackTimeSlotReport,
     WebContactCases,
+    MICallbacks,
 )
 
 from reports.models import Export
@@ -306,3 +307,9 @@ def delete_record(user_id, file_name):
 @permission_required("legalaid.run_reports")
 def web_contact_cases_report(request):
     return report_view(request, WebContactCases, "Web contact case export")
+
+
+@staff_member_required
+@permission_required("legalaid.run_reports")
+def mi_callbacks_report(request):
+    return report_view(request, MICallbacks, "MI Callbacks export")

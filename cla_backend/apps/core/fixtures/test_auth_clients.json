@@ -43,8 +43,8 @@
         "model": "auth.user",
         "fields": {
             "username": "cla_operator",
-            "first_name": "CLA",
-            "last_name": "Operator",
+            "first_name": "",
+            "last_name": "",
             "is_active": true,
             "is_superuser": false,
             "is_staff": false,
@@ -61,8 +61,8 @@
         "model": "auth.user",
         "fields": {
             "username": "cla_operator_manager",
-            "first_name": "CLA",
-            "last_name": "Operator Manager",
+            "first_name": "",
+            "last_name": "",
             "is_active": true,
             "is_superuser": false,
             "is_staff": true,

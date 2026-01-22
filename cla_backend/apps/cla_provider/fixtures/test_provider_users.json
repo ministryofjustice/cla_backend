@@ -39,7 +39,7 @@
         "pk": 55,
         "model": "auth.user",
         "fields": {
-            "username": "cla_duncanlewis",
+            "username": "test_duncanlewis",
             "first_name": "",
             "last_name": "",
             "is_active": true,
@@ -48,7 +48,7 @@
             "last_login": "2014-08-26T13:23:32.128Z",
             "groups": [],
             "user_permissions": [],
-            "password": "pbkdf2_sha256$20000$UNk4567LzF27$ef7Ele1RCLEYuQyx4seOvHE6poGlDE+b0SHhAUxKrhQ=",
+            "password": "pbkdf2_sha256$12000$8VxBcelsRgO9$I5fdf9LVaIGI88Z092CdOO9mYMkv0eTcWTpBzLDeA/w=",
             "email": "test@example.com",
             "date_joined": "2014-08-26T13:23:32.128Z"
         }
@@ -57,7 +57,7 @@
         "pk": 56,
         "model": "auth.user",
         "fields": {
-            "username": "cla_ces",
+            "username": "test_ces",
             "first_name": "",
             "last_name": "",
             "is_active": true,
@@ -66,7 +66,7 @@
             "last_login": "2014-08-26T13:23:32.178Z",
             "groups": [],
             "user_permissions": [],
-            "password": "pbkdf2_sha256$20000$XXy10g5OwjAq$2fplKY2sbbzCRqctCVliYVR7gUe4FFJumxMoTfBa6/c=",
+            "password": "pbkdf2_sha256$12000$fbw6OS4y0WaK$FHvF3oMMkD6aaxHrn7Uc+tyPKwtHGg9+28jo817OLo4=",
             "email": "test@example.com",
             "date_joined": "2014-08-26T13:23:32.178Z"
         }
@@ -201,7 +201,7 @@
         "pk": 64,
         "model": "auth.user",
         "fields": {
-            "username": "cla_howells",
+            "username": "test_howells",
             "first_name": "",
             "last_name": "",
             "is_active": true,

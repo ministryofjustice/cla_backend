@@ -42,7 +42,7 @@
         "pk": 2,
         "model": "auth.user",
         "fields": {
-            "username": "test_operator",
+            "username": "cla_operator",
             "first_name": "",
             "last_name": "",
             "is_active": true,
@@ -51,7 +51,7 @@
             "last_login": "2014-03-19T16:26:31.018Z",
             "groups": [],
             "user_permissions": [],
-            "password": "pbkdf2_sha256$12000$WYn2LhKp2uoF$74h6n/fbwLLVJu5b8plAAQ1lz7ojKpsxejXmTZirGaM=",
+            "password": "pbkdf2_sha256$20000$b7rc4y4mAE4L$C1C6PeXRSig0Eakef4wpdUlyRXBp0CRk/vuHiYGnjf8=",
             "email": "",
             "date_joined": "2014-03-19T16:26:31.018Z"
         }
@@ -60,7 +60,7 @@
         "pk": 6,
         "model": "auth.user",
         "fields": {
-            "username": "test_operator_manager",
+            "username": "cla_operator_manager",
             "first_name": "",
             "last_name": "",
             "is_active": true,
@@ -71,7 +71,7 @@
                 1
             ],
             "user_permissions": [],
-            "password": "pbkdf2_sha256$12000$sT8aqMErQFhh$L0jCyOnpcr5t++N4OhGqRAExtnJHhAAdkZB4ndpOaI8=",
+            "password": "pbkdf2_sha256$20000$UFUyrGqWW8d9$Ms1fg+57prCycYCs94SFk6yki2PtVYj6mLbMeoru42w=",
             "email": "",
             "date_joined": "2014-03-19T16:26:31.018Z"
         }

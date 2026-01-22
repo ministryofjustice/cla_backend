@@ -75,6 +75,24 @@
     }
   },
   {
+    "pk": 95,
+    "model": "auth.user",
+    "fields": {
+      "username": "cla_obiee",
+      "first_name": "CLA",
+      "last_name": "Obiee",
+      "is_active": true,
+      "is_superuser": false,
+      "is_staff": false,
+      "last_login": "2015-01-05T14:59:58.046Z",
+      "groups": [],
+      "user_permissions": [],
+      "password": "pbkdf2_sha256$12000$Z4munZiXNcyR$LmRRsNuctPDXUyoxWsf7IXjICqiBmXB+nu/SlD79p6w=",
+      "email": "",
+      "date_joined": "2015-01-05T14:59:58.046Z"
+    }
+  },
+  {
     "pk": 1,
     "model": "call_centre.operator",
     "fields": {

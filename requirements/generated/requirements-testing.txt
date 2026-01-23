@@ -8,7 +8,7 @@ amqp==2.6.1
     # via kombu
 billiard==3.5.0.5
     # via celery
-bleach==3.3.0
+bleach==3.3.1
     # via -r requirements/source/requirements-base.in
 boto3==1.17.112
     # via -r requirements/source/requirements-base.in

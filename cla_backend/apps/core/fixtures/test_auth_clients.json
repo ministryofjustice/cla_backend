@@ -1,150 +1,117 @@
 [
-    {
-        "pk": 1,
-        "model": "oauth2_provider.application",
-        "fields": {
-            "name": "operator",
-            "client_type": 0,
-            "redirect_uris": "http://operator.localhost/",
-            "user": null,
-            "client_id": "b4b9220ffcb11ebfdab1",
-            "client_secret": "2df71313bdd38a2e1b815015e1b14387e7681d41",
-            "authorization_grant_type": "password"
-        }
-    },
-    {
-        "pk": 2,
-        "model": "oauth2_provider.application",
-        "fields": {
-            "name": "staff",
-            "client_type": 0,
-            "redirect_uris": "http://staff.localhost/",
-            "user": null,
-            "client_id": "59657ed22d980251cdd3",
-            "client_secret": "0494287c65bdf61d29f0eeed467ec8e090f0d80f",
-            "authorization_grant_type": "password"
-        }
-    },
-    {
-        "pk": 3, 
-        "model": "oauth2_provider.application", 
-        "fields": {
-            "name": "OBIEE", 
-            "client_type": 0, 
-            "redirect_uris": "http://obiee.localhost/", 
-            "user": 95, 
-            "client_id": "39d31fdffd8c89ebb6d5", 
-            "client_secret": "7ad5e3cbcdf656ececbd235557f99ec049bee604",
-            "authorization_grant_type": "password"
-        }
-    },
-    {
-        "pk": 2,
-        "model": "auth.user",
-        "fields": {
-            "username": "cla_operator",
-            "first_name": "",
-            "last_name": "",
-            "is_active": true,
-            "is_superuser": false,
-            "is_staff": false,
-            "last_login": "2014-03-19T16:26:31.018Z",
-            "groups": [],
-            "user_permissions": [],
-            "password": "pbkdf2_sha256$20000$b7rc4y4mAE4L$C1C6PeXRSig0Eakef4wpdUlyRXBp0CRk/vuHiYGnjf8=",
-            "email": "",
-            "date_joined": "2014-03-19T16:26:31.018Z"
-        }
-    },
-    {
-        "pk": 6,
-        "model": "auth.user",
-        "fields": {
-            "username": "cla_operator_manager",
-            "first_name": "",
-            "last_name": "",
-            "is_active": true,
-            "is_superuser": false,
-            "is_staff": true,
-            "last_login": "2014-03-19T16:26:31.018Z",
-            "groups": [
-                1
-            ],
-            "user_permissions": [],
-            "password": "pbkdf2_sha256$20000$UFUyrGqWW8d9$Ms1fg+57prCycYCs94SFk6yki2PtVYj6mLbMeoru42w=",
-            "email": "",
-            "date_joined": "2014-03-19T16:26:31.018Z"
-        }
-    },
-    {
-        "pk": 80,
-        "model": "auth.user",
-        "fields": {
-            "username": "test_cla_superuser",
-            "first_name": "",
-            "last_name": "",
-            "is_active": true,
-            "is_superuser": false,
-            "is_staff": true,
-            "last_login": "2014-03-19T16:26:31.018Z",
-            "groups": [
-                2
-            ],
-            "user_permissions": [],
-            "password": "pbkdf2_sha256$12000$feBd60sk36Tw$KIXpTNsv/kuOb3wYUoPLhfEETptZyx5/XINYjk2ex1A=", 
-            "email": "",
-            "date_joined": "2014-03-19T16:26:31.018Z"
-        }
-    },
-    {
-        "pk": 95, 
-        "model": "auth.user", 
-        "fields": {
-            "username": "cla_obiee", 
-            "first_name": "", 
-            "last_name": "", 
-            "is_active": true, 
-            "is_superuser": false, 
-            "is_staff": false, 
-            "last_login": "2015-01-05T14:59:58.046Z", 
-            "groups": [], 
-            "user_permissions": [], 
-            "password": "pbkdf2_sha256$12000$Z4munZiXNcyR$LmRRsNuctPDXUyoxWsf7IXjICqiBmXB+nu/SlD79p6w=", 
-            "email": "", 
-            "date_joined": "2015-01-05T14:59:58.046Z"
-        }
-    },
-    {
-        "pk": 1,
-        "model": "call_centre.operator",
-        "fields": {
-            "user": 2,
-            "is_manager": false,
-            "is_cla_superuser": false,
-            "modified": "2014-03-19T16:27:32.004Z",
-            "created": "2014-03-19T16:27:31.999Z"
-        }
-    },
-    {
-        "pk": 2,
-        "model": "call_centre.operator",
-        "fields": {
-            "user": 6,
-            "is_manager": true,
-            "is_cla_superuser": false,
-            "modified": "2014-03-19T16:27:32.004Z",
-            "created": "2014-03-19T16:27:31.999Z"
-        }
-    },
-    {
-        "pk": 3,
-        "model": "call_centre.operator",
-        "fields": {
-            "user": 80,
-            "is_manager": true,
-            "is_cla_superuser": true,
-            "modified": "2014-03-19T16:27:32.004Z",
-            "created": "2014-03-19T16:27:31.999Z"
-        }
+  {
+    "pk": 1,
+    "model": "oauth2_provider.application",
+    "fields": {
+      "name": "operator",
+      "client_type": 0,
+      "redirect_uris": "http://operator.localhost/",
+      "user": null,
+      "client_id": "b4b9220ffcb11ebfdab1",
+      "client_secret": "2df71313bdd38a2e1b815015e1b14387e7681d41",
+      "authorization_grant_type": "password"
     }
+  },
+  {
+    "pk": 2,
+    "model": "oauth2_provider.application",
+    "fields": {
+      "name": "staff",
+      "client_type": 0,
+      "redirect_uris": "http://staff.localhost/",
+      "user": null,
+      "client_id": "59657ed22d980251cdd3",
+      "client_secret": "0494287c65bdf61d29f0eeed467ec8e090f0d80f",
+      "authorization_grant_type": "password"
+    }
+  },
+  {
+    "pk": 3,
+    "model": "oauth2_provider.application",
+    "fields": {
+      "name": "OBIEE",
+      "client_type": 0,
+      "redirect_uris": "http://obiee.localhost/",
+      "user": 95,
+      "client_id": "39d31fdffd8c89ebb6d5",
+      "client_secret": "7ad5e3cbcdf656ececbd235557f99ec049bee604",
+      "authorization_grant_type": "password"
+    }
+  },
+  {
+    "pk": 2,
+    "model": "auth.user",
+    "fields": {
+      "username": "cla_operator",
+      "first_name": "CLA",
+      "last_name": "Operator",
+      "is_active": true,
+      "is_superuser": false,
+      "is_staff": false,
+      "last_login": "2014-03-19T16:26:31.018Z",
+      "groups": [],
+      "user_permissions": [],
+      "password": "pbkdf2_sha256$20000$b7rc4y4mAE4L$C1C6PeXRSig0Eakef4wpdUlyRXBp0CRk/vuHiYGnjf8=",
+      "email": "",
+      "date_joined": "2014-03-19T16:26:31.018Z"
+    }
+  },
+  {
+    "pk": 6,
+    "model": "auth.user",
+    "fields": {
+      "username": "cla_operator_manager",
+      "first_name": "CLA",
+      "last_name": "Operator Manager",
+      "is_active": true,
+      "is_superuser": false,
+      "is_staff": true,
+      "last_login": "2014-03-19T16:26:31.018Z",
+      "groups": [1],
+      "user_permissions": [],
+      "password": "pbkdf2_sha256$20000$UFUyrGqWW8d9$Ms1fg+57prCycYCs94SFk6yki2PtVYj6mLbMeoru42w=",
+      "email": "",
+      "date_joined": "2014-03-19T16:26:31.018Z"
+    }
+  },
+  {
+    "pk": 95,
+    "model": "auth.user",
+    "fields": {
+      "username": "cla_obiee",
+      "first_name": "CLA",
+      "last_name": "Obiee",
+      "is_active": true,
+      "is_superuser": false,
+      "is_staff": false,
+      "last_login": "2015-01-05T14:59:58.046Z",
+      "groups": [],
+      "user_permissions": [],
+      "password": "pbkdf2_sha256$12000$Z4munZiXNcyR$LmRRsNuctPDXUyoxWsf7IXjICqiBmXB+nu/SlD79p6w=",
+      "email": "",
+      "date_joined": "2015-01-05T14:59:58.046Z"
+    }
+  },
+  {
+    "pk": 1,
+    "model": "call_centre.operator",
+    "fields": {
+      "user": 2,
+      "is_manager": false,
+      "is_cla_superuser": false,
+      "modified": "2014-03-19T16:27:32.004Z",
+      "created": "2014-03-19T16:27:31.999Z"
+    }
+  },
+  {
+    "pk": 2,
+    "model": "call_centre.operator",
+    "fields": {
+      "user": 6,
+      "is_manager": true,
+      "is_cla_superuser": false,
+      "modified": "2014-03-19T16:27:32.004Z",
+      "created": "2014-03-19T16:27:31.999Z"
+    }
+  }
 ]

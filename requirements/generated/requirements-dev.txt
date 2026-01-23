@@ -173,7 +173,7 @@ jmespath==0.10.0
     # via
     #   boto3
     #   botocore
-jsonfield==0.9.22
+jsonfield==0.9.23
     # via -r requirements/source/requirements-base.in
 jsonpatch==1.9
     # via -r requirements/source/requirements-base.in

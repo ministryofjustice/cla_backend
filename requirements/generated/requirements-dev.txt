@@ -183,7 +183,7 @@ kombu==4.1.0
     # via
     #   -r requirements/source/requirements-base.in
     #   celery
-logstash-formatter==0.5.9
+logstash-formatter==0.5.17
     # via -r requirements/source/requirements-base.in
 lxml==4.9.1
     # via -r requirements/source/requirements-base.in

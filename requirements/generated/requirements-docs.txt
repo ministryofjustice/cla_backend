@@ -4,7 +4,7 @@
 #
 #    pip-compile --output-file=requirements/generated/requirements-docs.txt requirements/source/requirements-docs.in
 #
-alabaster==0.7.12
+alabaster==0.7.16
     # via sphinx
 amqp==2.6.1
     # via kombu

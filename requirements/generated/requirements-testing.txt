@@ -72,7 +72,7 @@ django-extended-choices==0.3.0
     #   cla-common
 django-filter==0.9.2
     # via -r requirements/source/requirements-base.in
-django-ipware==0.1.0
+django-ipware==0.1.1
     # via -r requirements/source/requirements-base.in
 django-model-utils==2.2
     # via -r requirements/source/requirements-base.in

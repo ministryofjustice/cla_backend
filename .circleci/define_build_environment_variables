@@ -19,7 +19,7 @@ else
   export RELEASE_HOST=${HOST}
 fi
 
-if [ "$CIRCLE_BRANCH" == "master" ]; then
+if [ "$CIRCLE_BRANCH" == "main" ]; then
   export TARGET_TAGS=$IMAGE_TAG,$CLEANED_BRANCH_NAME,"latest"
 else
   export TARGET_TAGS=$IMAGE_TAG,$CLEANED_BRANCH_NAME

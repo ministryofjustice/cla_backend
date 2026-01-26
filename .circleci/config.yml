@@ -343,7 +343,7 @@ workflows:
           filters:
             branches:
               ignore:
-                - master
+                - main
                 - /^snyk-fix.*/
           context:
            - laa-cla-backend
@@ -373,7 +373,7 @@ workflows:
           filters:
             branches:
               only:
-                - master
+                - main
                 - django-upgrade
 
       - deploy:
@@ -394,7 +394,7 @@ workflows:
             branches:
               only:
                 - django-upgrade
-                - master
+                - main
 
       - production_deploy_approval:
           requires:
@@ -403,7 +403,7 @@ workflows:
           filters:
             branches:
               only:
-                - master
+                - main
 
       - deploy:
           name: training_deploy_live

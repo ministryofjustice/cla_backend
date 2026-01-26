@@ -176,7 +176,7 @@ pygments==2.5.2
     # via sphinx
 pyjwt==1.7.1
     # via notifications-python-client
-pyminizip==0.2.3
+pyminizip==0.2.6
     # via -r requirements/source/requirements-base.in
 pyparsing==2.4.7
     # via packaging

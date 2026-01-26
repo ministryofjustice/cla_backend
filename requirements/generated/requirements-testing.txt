@@ -192,7 +192,7 @@ pycurl==7.43.0.5
     # via celery
 pyjwt==1.7.1
     # via notifications-python-client
-pyminizip==0.2.3
+pyminizip==0.2.6
     # via -r requirements/source/requirements-base.in
 pyopenssl==21.0.0
     # via urllib3

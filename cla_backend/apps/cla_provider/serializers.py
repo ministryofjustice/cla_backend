@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.fields import SerializerMethodField
 
 from cla_common.constants import FEEDBACK_ISSUE
 from cla_eventlog.serializers import LogSerializerBase
@@ -258,6 +259,25 @@ class CaseSerializer(CaseSerializerFull):
         )
 
 
+class NestedScopeTraversalSerializer(serializers.Serializer):
+    """Serializer for scope_traversal in detailed endpoint"""
+    scope_answers = JSONField(read_only=True)
+    financial_assessment_status = serializers.CharField(read_only=True)
+    created = serializers.DateTimeField(read_only=True)
+
+
+class NestedDiagnosisSerializer(serializers.Serializer):
+    """Serializer for diagnosis in detailed endpoint"""
+    nodes = SerializerMethodField()
+    category = serializers.CharField(source="category.code", read_only=True)
+
+    def get_nodes(self, obj):
+        """Extract only the key field from each node"""
+        if obj and obj.nodes:
+            return [{"key": node.get("key")} for node in obj.nodes if "key" in node]
+        return []
+
+
 class DetailedCaseSerializer(CaseSerializer):
     """
     Extended case serializer that includes all nested details
@@ -266,11 +286,21 @@ class DetailedCaseSerializer(CaseSerializer):
     personal_details = PersonalDetailsSerializerFull(read_only=True)
     adaptation_details = AdaptationDetailsSerializerBase(read_only=True)
     thirdparty_details = ThirdPartyDetailsSerializerBase(read_only=True)
+    scope_traversal = NestedScopeTraversalSerializer(read_only=True)
+    diagnosis = NestedDiagnosisSerializer(read_only=True)
+    notes_history = SerializerMethodField()
     state = serializers.CharField(read_only=True)
     state_note = serializers.CharField(read_only=True)
 
+    def get_notes_history(self, obj):
+        """Fetch all notes history for the case"""
+        from legalaid.models import CaseNotesHistory
+
+        notes = CaseNotesHistory.objects.filter(case=obj).order_by('-created')
+        return CaseNotesHistorySerializer(notes, many=True).data
+
     class Meta(CaseSerializer.Meta):
-        fields = tuple(field for field in CaseSerializer.Meta.fields if field != "eligibility_check") + ("state", "state_note")
+        fields = tuple(field for field in CaseSerializer.Meta.fields if field != "eligibility_check") + ("state", "state_note", "notes_history")
 
 
 class CaseListSerializer(CaseSerializer):

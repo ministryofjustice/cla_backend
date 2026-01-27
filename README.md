@@ -1,295 +1,329 @@
-# CLA Backend
+# 🏛️ CLA Backend
 
 [![Ministry of Justice Repository Compliance Badge](https://github-community.service.justice.gov.uk/repository-standards/api/cla_backend/badge)](https://github-community.service.justice.gov.uk/repository-standards/cla_backend)
 
-[![CircleCI](https://circleci.com/gh/ministryofjustice/cla_backend/tree/master.svg?style=svg)](https://circleci.com/gh/ministryofjustice/cla_backend/tree/master)
-[![Coverage Status](https://coveralls.io/repos/github/ministryofjustice/cla_backend/badge.svg?branch=master)](https://coveralls.io/github/ministryofjustice/cla_backend?branch=master)
+[![CircleCI](https://circleci.com/gh/ministryofjustice/cla_backend/tree/main.svg?style=svg)](https://circleci.com/gh/ministryofjustice/cla_backend/tree/main)
+[![Coverage Status](https://coveralls.io/repos/github/ministryofjustice/cla_backend/badge.svg?branch=main)](https://coveralls.io/github/ministryofjustice/cla_backend?branch=main)
 
-Backend API, part of the Civil Legal Advice product. It is used by cla_public and cla_frontend.
+> Backend API, part of the Civil Legal Advice product. It is used by `cla_public` and `cla_frontend`.
+
+## 📊 Overview
 
 It is the **data layer** for the product, containing:
 
-- cases - personal and financial details of a person wanting civil legal advice, built-up during application (cla_public), and updated by call centre operators and a specialist provider (cla_frontend)
+- **Cases** - personal and financial details of a person wanting civil legal advice, built-up during application (`cla_public`), and updated by call centre operators and a specialist provider (`cla_frontend`)
+- **Users** - call centre operators and specialist providers, with their sign-in credentials and organisation
+- **Call centre case management** - for staff rotas, to assign cases to providers, etc.
+- **Reference data** on the legal categories ('category of law' & 'matter type') and whether legal aid is available to provide Civil Legal Advice
 
-- users - call centre operators and specialist providers, with their sign-in credentials, organisation
+It has **business logic**, shared across `cla_public` and `cla_frontend`:
 
-- call centre case management - for staff rotas, to assign cases to providers etc
+- **Auth** - providing OAuth2 and authorisation (`cla_auth`)
+- **Means test** (`EligibilityChecker`)
 
-- reference data on the legal categories ('category of law' & 'matter type') and whether legal aid is available to provide Civil Legal Advice
+It also has a bit of **presentation layer**, shared across `cla_public` and `cla_frontend`:
 
-It has **business logic**, shared across cla_public and cla_frontend:
+- **Sign in** - results in an `access_token` provided to `cla_public` or `cla_frontend`
 
-- auth - providing OAuth2 and authorization (`cla_auth`)
-- means test (`EligibilityChecker`)
+## 🚀 Installation for Development
 
-It also has a bit of **presentation layer**, shared across cla_public and cla_frontend:
-
-- sign in - results in an access_token provided to cla_public or cla_frontend
-
-## Installation for development
-
-For development of CLA Backend, we use Docker Compose to run the 'development' main app container 'cla_backend' and its supporting containers: database, celery worker, rabbitmq.
+For development of CLA Backend, we use Docker Compose to run the 'development' main app container `cla_backend` and its supporting containers: database, celery worker, and RabbitMQ.
 
 Clone the repository:
 
-    git clone git@github.com:ministryofjustice/cla_backend.git
-    cd cla_backend
+```bash
+git clone git@github.com:ministryofjustice/cla_backend.git
+cd cla_backend
+```
 
 To start the containers:
 
-    ./run_local.sh
+```bash
+./run_local.sh
+```
 
-You can connect to the fox admin application from http://localhost:8010/admin and log in as cla_admin
+You can connect to the admin application from <http://localhost:8010/admin> and log in as `cla_admin`.
 
-The run_local.sh script is reliable but slow, because it rebuilds and restarts all the containers. Usually you can quickly restart just the stopped containers with:
+The `run_local.sh` script is reliable but slow, because it rebuilds and restarts all the containers. Usually you can quickly restart just the stopped containers with:
 
-    docker-compose run start_applications
+```bash
+docker-compose run start_applications
+```
 
-### Troubleshooting
+### 🔧 Troubleshooting
 
-If you get `initdb: could not create directory "/var/lib/postgresql/data/pg_wal": No space left on device` when running the containers, then it's a problem with disk space in the linux virtual machine that Docker Desktop runs containers in. You probably have old Docker images hanging around. To clear space:
+If you get `initdb: could not create directory "/var/lib/postgresql/data/pg_wal": No space left on device` when running the containers, then it's a problem with disk space in the Linux virtual machine that Docker Desktop runs containers in. You probably have old Docker images hanging around. To clear space:
 
-    docker system prune
+```bash
+docker system prune
+```
 
-### Tips for developing with docker containers
+### 💡 Tips for Developing with Docker Containers
 
-Code editing - You can edit the code on your local disk, with a local editor, as normal. (You don't have to edit the files inside the Docker container, because your local directory is mounted into container.) When you save a file, it becomes present in the container immediately, and the server restarts.
+**Code editing** - You can edit the code on your local disk, with a local editor, as normal. (You don't have to edit the files inside the Docker container, because your local directory is mounted into the container.) When you save a file, it becomes present in the container immediately, and the server restarts.
 
-Browsing the app - Point your local browser at http://localhost:8010/admin/ and log in as cla_admin. This works because Docker connects your local port 8010 to port 8000 in the container.
+**Browsing the app** - Point your local browser at <http://localhost:8010/admin/> and log in as `cla_admin`. This works because Docker connects your local port 8010 to port 8000 in the container.
 
-Log output - watch the output generated by the running app using: `docker logs cla_backend -f` or `docker attach cla_backend`
+**Log output** - Watch the output generated by the running app using:
+
+```bash
+docker logs cla_backend -f
+# or
+docker attach cla_backend
+```
 
 It's suggested to have two terminals open:
 
-1.  Run containers and 'exec' into a shell in the app container
+1. **Run containers and 'exec' into a shell in the app container**
 
-        docker-compose run start_applications && docker exec -it cla_backend bash
+   ```bash
+   docker-compose run start_applications && docker exec -it cla_backend bash
+   ```
 
-    or occasionally it won't run without first doing:
+   Or occasionally it won't run without first doing:
 
-        ./run_local.sh
+   ```bash
+   ./run_local.sh
+   ```
 
-    From the shell inside the container you can run some tests e.g.
+   From the shell inside the container you can run some tests, e.g.:
 
-        python manage.py test --settings=cla_backend.settings.circle cla_backend.libs.eligibility_calculator.tests.test_calculator.DoCfeCivilCheckTestCase
+   ```bash
+   python manage.py test --settings=cla_backend.settings.circle cla_backend.libs.eligibility_calculator.tests.test_calculator.DoCfeCivilCheckTestCase
+   ```
 
-2.  Logs and debugging
+2. **Logs and debugging**
 
-    You can see the logging output by attaching to the container:
+   You can see the logging output by attaching to the container:
 
-        docker attach cla_backend
+   ```bash
+   docker attach cla_backend
+   ```
 
-    If you added pdb breakpoints, this is where you can interact with this debugger.
+   If you added `pdb` breakpoints, this is where you can interact with this debugger.
 
 Alternatively, some editors have functionality to hook into running containers, such as VS Code's 'Dev Containers' extension.
 
-## Debugging
+## 🐛 Debugging
 
-Ensure your container is running Once you have created your docker development container as above.
+Ensure your container is running once you have created your Docker development container as above.
 
 Add `import pdb; pdb.set_trace()` as a 'breakpoint' line in the code, where you want to trigger the debugger.
 
-Now run `docker attach cla_backend` to view the output
+Now run `docker attach cla_backend` to view the output.
 
-When pdb.set_trace() is reached, you will be able to debug from the command line.
+When `pdb.set_trace()` is reached, you will be able to debug from the command line.
 
-`https://docs.python.org/3/library/pdb.html`
+[Python Debugger (pdb) Documentation](https://docs.python.org/3/library/pdb.html)
 
-## Unit/integration tests
+## 🧪 Unit/Integration Tests
 
-If you wish to limit the tests that are run you should exec into the container and run them locally
+If you wish to limit the tests that are run, you should exec into the container and run them locally:
 
-    docker exec -it cla_backend bash
+```bash
+docker exec -it cla_backend bash
+```
 
-Once you are in the development container, set the correct settings file for report tests to run and then choose your test, eg:
+Once you are in the development container, set the correct settings file for report tests to run and then choose your test, e.g.:
 
-    python manage.py test --settings=cla_backend.settings.circle cla_backend.apps.legalaid.tests.test_views.FullCaseViewSetTestCase
+```bash
+python manage.py test --settings=cla_backend.settings.circle cla_backend.apps.legalaid.tests.test_views.FullCaseViewSetTestCase
+```
 
 For example of running a test class's tests:
-`cla_backend.apps.legalaid.tests.test_views.FullCaseViewSetTestCase`
+
+```bash
+cla_backend.apps.legalaid.tests.test_views.FullCaseViewSetTestCase
+```
 
 Or to run one test:
-`cla_backend.apps.legalaid.tests.test_views.FullCaseViewSetTestCase.test_search_unicode`
+
+```bash
+cla_backend.apps.legalaid.tests.test_views.FullCaseViewSetTestCase.test_search_unicode
+```
 
 To run all tests, this could be done from within the development container (as above), or you can run the test environment:
 
-    ./run_local.sh test
+```bash
+./run_local.sh test
+```
 
-## Lint and pre-commit hooks
+## ✨ Lint and Pre-commit Hooks
 
 To lint with Black and flake8, install pre-commit hooks:
 
-```
+```bash
 virtualenv -p python2.7 env --prompt=\(cla_be\)
 . env/bin/activate
- pip install -r requirements/generated/requirements-lint.txt
+pip install -r requirements/generated/requirements-lint.txt
 pre-commit install
 ```
 
 To run them manually:
 
-```
+```bash
 pre-commit run --all-files
 ```
 
-## Releasing to production
+## 🚢 Releasing to Production
 
 Please make sure you tested on a non-production environment before merging.
 
-This process now runs entirely through CircleCI. There are manual approvals required but the process can be run at any time of the day and through working hours.
+This process now runs entirely through CircleCI. There are manual approvals required, but the process can be run at any time of the day and through working hours.
 
 1. Wait for [the Docker build to complete on CircleCI](https://circleci.com/gh/ministryofjustice/cla_backend) for the feature branch associated with the pull request.
-2. If the branch passes CircleCI then ask for the pull request to be approved then merge the pull request into the main github branch.
-3. Once the merge is complete then go to CircleCI to check jobs are progressing on the main branch. Note that there is a job called static_uat_deploy_approval - this does not need to be approved unless your change requires this.
-4. CircleCI will stop and wait for manual approval at 'staging_deploy_approval'. Proceed with approval (click on the thumb icon) if all prior jobs have successfully completed.
-5. Once the staging jobs have finished then check that the staging server is running correctly. The url will be in the slack message associated with the most recent job in cla-notifications.
-6. if staging is not working then any changes should be rolled back and the feature checked. If staging is working correctly then manually approve production_deploy_approval.
-7. Everything should pass and complete. If you haven't approved static_uat_deploy_approval then the pipeline will show on hold - this is ok.
+2. If the branch passes CircleCI, then ask for the pull request to be approved, then merge the pull request into the main GitHub branch.
+3. Once the merge is complete, then go to CircleCI to check jobs are progressing on the main branch. Note that there is a job called `static_uat_deploy_approval` - this does not need to be approved unless your change requires this.
+4. CircleCI will stop and wait for manual approval at `staging_deploy_approval`. Proceed with approval (click on the thumb icon) if all prior jobs have successfully completed.
+5. Once the staging jobs have finished, then check that the staging server is running correctly. The URL will be in the Slack message associated with the most recent job in `cla-notifications`.
+6. If staging is not working, then any changes should be rolled back and the feature checked. If staging is working correctly, then manually approve `production_deploy_approval`.
+7. Everything should pass and complete. If you haven't approved `static_uat_deploy_approval`, then the pipeline will show on hold - this is okay.
 
-## run_local.sh
+## 📦 run_local.sh
 
-run_local.sh is a wrapper for running the Docker containers for 3 different purposes on your local machine.
+`run_local.sh` is a wrapper for running the Docker containers for 3 different purposes on your local machine.
 
-There is one Dockerfile, but it contains options to create 3 variants of the Docker container, for different purposes. run_local.sh is our script to build and run the different container variants, and also run supporting containers, orchestrated with Docker Compose.
+There is one Dockerfile, but it contains options to create 3 variants of the Docker container, for different purposes. `run_local.sh` is our script to build and run the different container variants, and also run supporting containers, orchestrated with Docker Compose.
 
-### development container
+### Development Container
 
-The 'development container' has the requirements-dev installed. It serves the app with Django's built-in runserver.
+The 'development container' has the `requirements-dev` installed. It serves the app with Django's built-in `runserver`.
 
 To start the development container (with supporting containers):
 
-```
+```bash
 ./run_local.sh
 ```
 
-### test container
+### Test Container
 
-The 'test container' has requirements-dev installed. On start, it runs the unit/integration tests, with minimal log output.
+The 'test container' has `requirements-dev` installed. On start, it runs the unit/integration tests, with minimal log output.
 
 To run the tests:
 
-```
+```bash
 ./run_local.sh test
 ```
 
-### production container
+### Production Container
 
-The 'production container' is what gets run in the production environment. It serves the app with uwsgi.
+The 'production container' is what gets run in the production environment. It serves the app with uWSGI.
 
 To run the production container:
 
-```
+```bash
 ./run_local.sh production
 ```
 
-## Translations
+## 🌍 Translations
 
-| :warning: WARNING                              |
-| :--------------------------------------------- |
-| This is not usually required and/or maintained |
+> [!WARNING]
+> This is not usually required and/or maintained
 
-When making changes to text (e.g. GraphML files) translations should be updated.
-To update translations run this command from within the docker container:
+When making changes to text (e.g. GraphML files), translations should be updated.
+To update translations, run this command from within the Docker container:
 
-     ./manage.py translations update
+```bash
+./manage.py translations update
+```
 
 Using the Transifex account that has been added as a Project maintainer to the `cla_public` project,
-fetch an API token from https://www.transifex.com/user/settings/api/
+fetch an API token from <https://www.transifex.com/user/settings/api/>
 
 Create `~/.transifexrc` in the following format and insert the API token:
 
-    [https://www.transifex.com]
-    api_hostname = https://api.transifex.com
-    hostname = https://www.transifex.com
-    password = INSERT_API_TOKEN_HERE
-    username = api
+```ini
+[https://www.transifex.com]
+api_hostname = https://api.transifex.com
+hostname = https://www.transifex.com
+password = INSERT_API_TOKEN_HERE
+username = api
+```
 
 Then `./manage.py translations push` to Transifex and `./manage.py translations pull` when complete.
 
-## Scope Graphs
+## 📊 Scope Graphs
 
-| :warning: WARNING                              |
-| :--------------------------------------------- |
-| This is not usually required and/or maintained |
+> [!WARNING]
+> This is not usually required and/or maintained
 
-- Edit the .graphml files, e.g. using a tool like [yEd](http://www.yworks.com/en/products/yfiles/yed/), to change the scope diagnosis trees
+- Edit the `.graphml` files, e.g. using a tool like [yEd](http://www.yworks.com/en/products/yfiles/yed/), to change the scope diagnosis trees
 - Run Django management command `python manage.py translations update` to update translations and templated graph files
 
 See more detailed instructions in the [how-to guide](https://dsdmoj.atlassian.net/wiki/spaces/laagetaccess/pages/1005060261/Produce+diagram+of+CLA+merits+decision+tree) on Confluence (log-in required).
 
-## Installation in a virtual environment
+## 🔧 Installation in a Virtual Environment
 
-| :warning: WARNING                              |
-| :--------------------------------------------- |
-| This is not usually required and/or maintained |
+> [!WARNING]
+> This is not usually required and/or maintained
 
-This is here for completeness and will not be updated but gives instructions for creating a virtual environment
-and running django from the console.
+This is here for completeness and will not be updated, but gives instructions for creating a virtual environment
+and running Django from the console.
 
 [Installation in a virtual environment](VIRTUAL_ENV.md)
 
-## Git hooks
+## 🪝 Git Hooks
 
-Repository uses [MoJ DevSecOps hooks](https://github.com/ministryofjustice/devsecops-hooks) to ensure `pre-commit` git hook is evaluated for series of checks before pushing the changes from staging area. Engineers should ensure `pre-commit` hook is configured and activated.
+Repository uses [MoJ DevSecOps hooks](https://github.com/ministryofjustice/devsecops-hooks) to ensure `pre-commit` git hook is evaluated for a series of checks before pushing the changes from staging area. Engineers should ensure `pre-commit` hook is configured and activated.
 
-1. **Installation**:
+### Installation
 
-   Ensure [prek](https://github.com/j178/prek?tab=readme-ov-file#installation) is installed globally
+Ensure [prek](https://github.com/j178/prek?tab=readme-ov-file#installation) is installed globally.
 
-   Linux / MacOS
+**Linux / macOS:**
 
-   ```bash
-   curl --proto '=https' --tlsv1.2 -LsSf https://raw.githubusercontent.com/ministryofjustice/devsecops-hooks/e85ca6127808ef407bc1e8ff21efed0bbd32bb1a/prek/prek-installer.sh | sh
-   ```
-
-   or
-
-   ```bash
-   brew install prek
-   ```
-
-   Windows
-
-   ```bash
-   powershell -ExecutionPolicy ByPass -c "irm https://raw.githubusercontent.com/ministryofjustice/devsecops-hooks/e85ca6127808ef407bc1e8ff21efed0bbd32bb1a/prek/prek-installer.ps1 | iex"
-   ```
-
-2. **Activation**
-
-   Execute the following command in the repository directory
-
-   ```bash
-   prek install
-   ```
-
-3. **Test**
-
-   To dry-run the hook
-
-   ```bash
-   prek run
-   ```
-
-## 🔧 Configuration
-
-### Exclusion list
-
-One can exclude files and directories by adding them to `exclude` property. Exclude property accepts [regular expression](https://pre-commit.com/#regular-expressions).
-
-Ignore everything under `reports` and `docs` directories for `baseline` hook as an example.
-
-```yaml
-   repos:
-     - repo: https://github.com/ministryofjustice/devsecops-hooks
-       rev: v1.0.0
-       hooks:
-         - id: baseline
-            exclude: |
-            ^reports/|
-            ^docs/
+```bash
+curl --proto '=https' --tlsv1.2 -LsSf https://raw.githubusercontent.com/ministryofjustice/devsecops-hooks/e85ca6127808ef407bc1e8ff21efed0bbd32bb1a/prek/prek-installer.sh | sh
 ```
 
-Or one can also create a file with list of exclusions.
+Or:
+
+```bash
+brew install prek
+```
+
+**Windows:**
+
+```powershell
+powershell -ExecutionPolicy ByPass -c "irm https://raw.githubusercontent.com/ministryofjustice/devsecops-hooks/e85ca6127808ef407bc1e8ff21efed0bbd32bb1a/prek/prek-installer.ps1 | iex"
+```
+
+### Activation
+
+Execute the following command in the repository directory:
+
+```bash
+prek install
+```
+
+### Test
+
+To dry-run the hook:
+
+```bash
+prek run
+```
+
+### Configuration
+
+#### Exclusion List
+
+One can exclude files and directories by adding them to the `exclude` property. The `exclude` property accepts [regular expressions](https://pre-commit.com/#regular-expressions).
+
+Ignore everything under `reports` and `docs` directories for `baseline` hook as an example:
+
+```yaml
+repos:
+  - repo: https://github.com/ministryofjustice/devsecops-hooks
+    rev: v1.0.0
+    hooks:
+      - id: baseline
+        exclude: |
+          ^reports/|
+          ^docs/
+```
+
+Or one can also create a file with a list of exclusions:
 
 ```yaml
 repos:

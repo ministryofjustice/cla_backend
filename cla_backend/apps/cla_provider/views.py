@@ -170,9 +170,9 @@ class CaseViewSet(CLAProviderPermissionViewSetMixin, FullCaseViewSet):
         elif only_param == "closed":
             qs = qs.filter(provider_closed__isnull=False)
         elif only_param == "completed":
-            qs = qs.filter(outcome_code__in=["CLSP", "DREFER"])
+            qs = qs.filter(provider_accepted__isnull=False, provider_closed__isnull=False)
         elif only_param == "rejected":
-            qs = qs.filter(outcome_code__in=["COI", "MIS", "MIS-OOS", "MIS-MEANS"])
+            qs = qs.filter(provider_accepted__isnull=True, provider_closed__isnull=False)
 
         return qs
 

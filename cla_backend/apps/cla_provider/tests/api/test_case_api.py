@@ -165,6 +165,8 @@ class FilteredSearchCaseTestCase(BaseCaseTestCase):
             obj5 assigned to provider but marked as 'IRCB' => always ignored
             obj6 accepted by provider => accepted
             obj7 closed by provider => closed
+            obj8 rejected by provider => rejected (closed but not accepted)
+            obj9 completed by provider => completed (both accepted and closed)
         """
         super(FilteredSearchCaseTestCase, self).setUp()
 
@@ -215,13 +217,31 @@ class FilteredSearchCaseTestCase(BaseCaseTestCase):
                 provider_accepted=timezone.now(),
                 provider_closed=timezone.now(),
             ),
+            # obj8 rejected by provider => rejected (closed but not accepted)
+            make_recipe(
+                "legalaid.case",
+                reference="ref8",
+                provider=self.provider,
+                provider_viewed=timezone.now(),
+                provider_accepted=None,
+                provider_closed=timezone.now(),
+            ),
+            # obj9 completed by provider => completed (both accepted and closed)
+            make_recipe(
+                "legalaid.case",
+                reference="ref9",
+                provider=self.provider,
+                provider_viewed=timezone.now(),
+                provider_accepted=timezone.now(),
+                provider_closed=timezone.now(),
+            ),
         ]
 
     def test_all_cases(self):
         response = self.client.get(self.list_url, format="json", HTTP_AUTHORIZATION=self.get_http_authorization())
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(4, len(response.data["results"]))
-        self.assertItemsEqual([c["reference"] for c in response.data["results"]], ["ref3", "ref4", "ref6", "ref7"])
+        self.assertEqual(6, len(response.data["results"]))
+        self.assertItemsEqual([c["reference"] for c in response.data["results"]], ["ref3", "ref4", "ref6", "ref7", "ref8", "ref9"])
 
     def test_new_cases(self):
         response = self.client.get(
@@ -252,40 +272,24 @@ class FilteredSearchCaseTestCase(BaseCaseTestCase):
             u"%s?only=closed" % self.list_url, format="json", HTTP_AUTHORIZATION=self.get_http_authorization()
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(1, len(response.data["results"]))
-        self.assertItemsEqual([c["reference"] for c in response.data["results"]], ["ref7"])
+        self.assertEqual(3, len(response.data["results"]))
+        self.assertItemsEqual([c["reference"] for c in response.data["results"]], ["ref7", "ref8", "ref9"])
 
     def test_rejected_cases(self):
-        # Create rejected cases with different rejection codes
-        make_recipe("legalaid.case", reference="ref_coi", provider=self.provider, outcome_code="COI")
-        make_recipe("legalaid.case", reference="ref_mis", provider=self.provider, outcome_code="MIS")
-        make_recipe("legalaid.case", reference="ref_mis_oos", provider=self.provider, outcome_code="MIS-OOS")
-        make_recipe("legalaid.case", reference="ref_mis_means", provider=self.provider, outcome_code="MIS-MEANS")
-
         response = self.client.get(
             u"%s?only=rejected" % self.list_url, format="json", HTTP_AUTHORIZATION=self.get_http_authorization()
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(4, len(response.data["results"]))
-        self.assertItemsEqual(
-            [c["reference"] for c in response.data["results"]],
-            ["ref_coi", "ref_mis", "ref_mis_oos", "ref_mis_means"]
-        )
+        self.assertEqual(1, len(response.data["results"]))
+        self.assertItemsEqual([c["reference"] for c in response.data["results"]], ["ref8"])
 
     def test_completed_cases(self):
-        # Create completed cases with different completion codes
-        make_recipe("legalaid.case", reference="ref_clsp", provider=self.provider, outcome_code="CLSP")
-        make_recipe("legalaid.case", reference="ref_drefer", provider=self.provider, outcome_code="DREFER")
-
         response = self.client.get(
             u"%s?only=completed" % self.list_url, format="json", HTTP_AUTHORIZATION=self.get_http_authorization()
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(2, len(response.data["results"]))
-        self.assertItemsEqual(
-            [c["reference"] for c in response.data["results"]],
-            ["ref_clsp", "ref_drefer"]
-        )
+        self.assertItemsEqual([c["reference"] for c in response.data["results"]], ["ref7", "ref9"])
 
 
 class UpdateCaseTestCase(BaseUpdateCaseTestCase, BaseCaseTestCase):

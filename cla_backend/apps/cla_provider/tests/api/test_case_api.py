@@ -565,8 +565,8 @@ class CaseStateTestCase(BaseCaseTestCase):
         )
         self.assertEqual(case.state, 'accepted')
 
-    def test_case_state_closed(self):
-        """Test that a case closed by provider returns 'closed' state"""
+    def test_case_state_completed(self):
+        """Test that a case accepted and closed by provider returns 'completed' state"""
         case = make_recipe(
             "legalaid.case",
             provider=self.provider,
@@ -574,7 +574,18 @@ class CaseStateTestCase(BaseCaseTestCase):
             provider_accepted=timezone.now(),
             provider_closed=timezone.now(),
         )
-        self.assertEqual(case.state, 'closed')
+        self.assertEqual(case.state, 'completed')
+
+    def test_case_state_rejected(self):
+        """Test that a case closed without acceptance returns 'rejected' state"""
+        case = make_recipe(
+            "legalaid.case",
+            provider=self.provider,
+            provider_viewed=timezone.now(),
+            provider_accepted=None,
+            provider_closed=timezone.now(),
+        )
+        self.assertEqual(case.state, 'rejected')
 
     def test_api_returns_state_field(self):
         """Test that the detailed API endpoint includes the state field"""

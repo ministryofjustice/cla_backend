@@ -1045,13 +1045,19 @@ class Case(TimeStampedModel):
     def state(self):
         """
         Returns the current state of the case based on provider actions.
-        States: 'new', 'opened', 'accepted', 'closed', 'rejected'
+        States: 'new', 'opened', 'accepted', 'completed', 'rejected'
+
+        Logic matches CaseViewSet.get_queryset filtering:
+        - completed: accepted and closed
+        - rejected: not accepted but closed
+        - accepted: accepted but not closed
+        - opened: viewed but not accepted/closed
+        - new: not viewed, accepted, or closed
         """
-        # Check for rejection first (outcome_code takes precedence)
-        if self.outcome_code in ['COI', 'MIS', 'MIS-OOS', 'MIS-MEANS']:
+        if self.provider_closed and self.provider_accepted:
+            return 'completed'
+        elif self.provider_closed and not self.provider_accepted:
             return 'rejected'
-        elif self.provider_closed:
-            return 'closed'
         elif self.provider_accepted:
             return 'accepted'
         elif self.provider_viewed:
@@ -1073,7 +1079,7 @@ class Case(TimeStampedModel):
             'opened': ['CASE_VIEWED'],
             'accepted': ['SPOP'],
             'rejected': ['COI', 'MIS', 'MIS-OOS', 'MIS-MEANS'],
-            'closed': ['CLSP', 'DREFER', 'REOPEN']
+            'completed': ['CLSP', 'DREFER', 'REOPEN']
         }
 
         if state == 'new' or state not in code_mapping:

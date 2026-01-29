@@ -290,7 +290,7 @@ class DetailedCaseSerializer(CaseSerializer):
     diagnosis = NestedDiagnosisSerializer(read_only=True)
     notes_history = SerializerMethodField()
     state = serializers.CharField(read_only=True)
-    state_note = serializers.CharField(read_only=True)
+    state_note = LogSerializer(read_only=True)
 
     def get_notes_history(self, obj):
         """Fetch all notes history for the case"""

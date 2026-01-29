@@ -1090,7 +1090,7 @@ class Case(TimeStampedModel):
         log = Log.objects.filter(case=self).filter(
             Q(code__in=codes)
         ).order_by('-created').first()
-        return log.notes if log else None
+        return log
 
 
 class CaseNotesHistory(TimeStampedModel):

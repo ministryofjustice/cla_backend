@@ -143,45 +143,36 @@ class CaseViewSet(CLAProviderPermissionViewSetMixin, FullCaseViewSet):
             all:
                 no querystring
             new:
-                only == 'new' or filter == 'new'
+                only == 'new'
             opened:
-                only == 'opened' or filter == 'opened'
+                only == 'opened'
             accepted:
-                only == 'accepted' or filter == 'accepted'
+                only == 'accepted'
             closed:
-                only == 'closed' (all closed cases)
+                only == 'closed'
             completed:
-                only == 'completed' or filter == 'completed'
+                only == 'completed'
             rejected:
-                only == 'rejected' or filter == 'rejected'
-
-            Note: ?filter parameter is used by MCC app, ?only by existing CHS app
+                only == 'rejected'
         """
         this_provider = get_object_or_404(Staff, user=self.request.user).provider
         qs = (
             super(CaseViewSet, self).get_queryset(**kwargs).filter(provider=this_provider).exclude(outcome_code="IRCB")
         )
 
-        # MCC app uses ?filter parameter (without 'closed' option)
-        filter_param = self.request.query_params.get("filter")
-        # Existing CHS uses ?only parameter
         only_param = self.request.query_params.get("only")
-
-        param = filter_param or only_param
-
-        if param == "new":
+        if only_param == "new":
             qs = qs.filter(provider_viewed__isnull=True, provider_accepted__isnull=True, provider_closed__isnull=True)
-        elif param == "opened":
+        elif only_param == "opened":
             qs = qs.filter(provider_viewed__isnull=False, provider_accepted__isnull=True, provider_closed__isnull=True)
-        elif param == "accepted":
+        elif only_param == "accepted":
             qs = qs.filter(provider_accepted__isnull=False, provider_closed__isnull=True)
-        elif param == "completed":
-            qs = qs.filter(provider_accepted__isnull=False, provider_closed__isnull=False)
-        elif param == "rejected":
-            qs = qs.filter(provider_accepted__isnull=True, provider_closed__isnull=False)
-        # 'closed' only available with ?only parameter (legacy app)
         elif only_param == "closed":
             qs = qs.filter(provider_closed__isnull=False)
+        elif only_param == "completed":
+            qs = qs.filter(provider_accepted__isnull=False, provider_closed__isnull=False)
+        elif only_param == "rejected":
+            qs = qs.filter(provider_accepted__isnull=True, provider_closed__isnull=False)
 
         return qs
 

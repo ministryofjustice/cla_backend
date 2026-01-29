@@ -167,12 +167,12 @@ class CaseViewSet(CLAProviderPermissionViewSetMixin, FullCaseViewSet):
             qs = qs.filter(provider_viewed__isnull=False, provider_accepted__isnull=True, provider_closed__isnull=True)
         elif only_param == "accepted":
             qs = qs.filter(provider_accepted__isnull=False, provider_closed__isnull=True)
+        elif only_param == "closed":
+            qs = qs.filter(provider_closed__isnull=False)
         elif only_param == "completed":
             qs = qs.filter(provider_accepted__isnull=False, provider_closed__isnull=False)
         elif only_param == "rejected":
             qs = qs.filter(provider_accepted__isnull=True, provider_closed__isnull=False)
-        elif only_param == "closed":
-            qs = qs.filter(provider_closed__isnull=False)
 
         return qs
 

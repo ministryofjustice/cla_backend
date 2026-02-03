@@ -25,8 +25,9 @@ def get_reports_cursor():
 
 
 def set_local_time_for_query(query):
-    """ Sets time zone to local time for the current transaction """
+    """Sets time zone to local time for the current transaction"""
     return ("SET LOCAL TIME ZONE '{timezone}'; {query};").format(timezone=settings.TIME_ZONE, query=query)
+
 
 def format_postcode(value):
     if not value:
@@ -35,6 +36,7 @@ def format_postcode(value):
     if len(postcode) < 5:
         return postcode
     return "%s %s" % (postcode[:-3], postcode[-3:])
+
 
 class OBIEEExporter(object):
     basic_sql_files = [

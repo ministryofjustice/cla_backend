@@ -15,6 +15,7 @@ from django.db.utils import ConnectionDoesNotExist
 from core.utils import remember_cwd
 from legalaid.utils import diversity
 
+
 def get_reports_cursor():
     if settings.TEST_MODE:
         return connection.cursor()

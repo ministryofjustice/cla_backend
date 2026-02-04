@@ -254,6 +254,7 @@ class MIDuplicateCasesTestCase(TestCase):
             ],
         )
 
+
 class MIDemographicReportPostcodeFormattingTestCase(TestCase):
     def test_postcode_formatting_valid_uk_postcode(self):
         personal_details = make_recipe(

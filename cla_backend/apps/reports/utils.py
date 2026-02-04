@@ -1,5 +1,6 @@
 import glob
 import os
+import re
 import shutil
 import tempfile
 from datetime import date, datetime, time, timedelta
@@ -13,7 +14,6 @@ from django.db.utils import ConnectionDoesNotExist
 
 from core.utils import remember_cwd
 from legalaid.utils import diversity
-
 
 def get_reports_cursor():
     if settings.TEST_MODE:
@@ -29,13 +29,42 @@ def set_local_time_for_query(query):
     return ("SET LOCAL TIME ZONE '{timezone}'; {query};").format(timezone=settings.TIME_ZONE, query=query)
 
 
-def format_postcode(value):
-    if not value:
+def format_uk_postcode(value, return_invalid=None):
+    """
+    Normalise UK postcodes to standard display format: 'EC1A 1BB'
+
+    - Strips whitespace
+    - Validates UK postcode *shape*
+    - Uppercases
+    - Inserts a single space before the last 3 characters
+
+    return_invalid:
+      - None (default): return None for invalid non-empty values
+      - "original": return original value unchanged
+      - "stripped": return stripped+uppercased compact value
+    """
+    _UK_POSTCODE_RE = re.compile(r"^[A-Za-z]{1,2}[0-9][A-Za-z0-9]?[0-9][A-Za-z]{2}$")
+
+    if value is None:
+        return None
+
+    s = value.strip()
+    if s == "":
         return value
-    postcode = value.replace(" ", "").upper()
-    if len(postcode) < 5:
-        return postcode
-    return "%s %s" % (postcode[:-3], postcode[-3:])
+
+    compact = re.sub(r"\s+", "", s)
+
+    if not _UK_POSTCODE_RE.match(compact):
+        if return_invalid is None:
+            return None
+        if return_invalid == "original":
+            return value
+        if return_invalid == "stripped":
+            return compact.upper()
+        raise ValueError("return_invalid must be None, 'original', or 'stripped'")
+
+    pc = compact.upper()
+    return "%s %s" % (pc[:-3], pc[-3:])
 
 
 class OBIEEExporter(object):

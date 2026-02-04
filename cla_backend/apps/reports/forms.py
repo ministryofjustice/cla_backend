@@ -18,7 +18,7 @@ from reports.widgets import MonthYearWidget
 from checker.models import ReasonForContacting, CallbackTimeSlot
 
 from . import sql
-from .utils import get_reports_cursor, set_local_time_for_query, format_postcode
+from .utils import get_reports_cursor, set_local_time_for_query, format_uk_postcode
 
 
 class ConvertDateMixin(object):
@@ -460,7 +460,7 @@ class MIDemographicReport(SQLFileDateRangeReport):
             insert_value("Religion", diversity_json.get("religion"))
             insert_value("Sexual_Orientation", diversity_json.get("sexual_orientation"))
             insert_value("Disability", diversity_json.get("disability"))
-            full_row[postcode_index] = format_postcode(full_row[postcode_index])
+            full_row[postcode_index] = format_uk_postcode(full_row[postcode_index])
 
             yield full_row
 

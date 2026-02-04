@@ -518,7 +518,7 @@ class TestCallbackTimeSlotReport(TestCase):
             },
             "1400": {
                 "Date": overmorrow.strftime(date_format),
-                "Interval": "1400",
+                "Interval": u"1400",
                 "Total capacity": 1,
                 "Used capacity": 0,
                 "Remaining capacity": 1,

@@ -155,11 +155,11 @@ class ReportsDateRangeValidationWorks(TestCase):
         self.assertEqual(i.errors.keys(), ["__all__"])
         self.assertEqual(len(i.errors["__all__"]), 1)
         self.assertIn(
-            i.errors["__all__"][0],
+            i.errors[u"__all__"][0],
             [
-                "The date range (6 days, 0:00:00) should span no more than 5 working days",
-                "The date range (6 days, 1:00:00) should span no more than 5 working days",
-                "The date range (5 days, 23:00:00) should span no more than 5 working days",
+                u"The date range (6 days, 0:00:00) should span no more than 5 working days",
+                u"The date range (6 days, 1:00:00) should span no more than 5 working days",
+                u"The date range (5 days, 23:00:00) should span no more than 5 working days",
             ],
         )
 
@@ -177,7 +177,7 @@ class ReportsDateRangeValidationWorks(TestCase):
             from_.strftime("%d/%m/%Y"),
             to.strftime("%d/%m/%Y"),
         )
-        self.assertEqual(str(i.errors["__all__"][0]), error_string)
+        self.assertEqual(str(i.errors[u"__all__"][0]), error_string)
 
     def test_valid_date_range_clocks_going_forward(self):
         class T(reports.forms.DateRangeReportForm):
@@ -258,10 +258,7 @@ class MIDuplicateCasesTestCase(TestCase):
 class MIDemographicReportPostcodeFormattingTestCase(TestCase):
     def test_postcode_formatting(self):
         personal_details = make_recipe(
-            "legalaid.personal_details",
-            full_name="John Doe",
-            date_of_birth=datetime.date(1990, 1, 1),
-            postcode="ec1a1bb",
+            "legalaid.personal_details", full_name="John Doe", date_of_birth=datetime.date(1990, 1, 1), postcode="ec1a1bb"
         )
         make_recipe("legalaid.case", personal_details=personal_details)
 
@@ -481,7 +478,7 @@ class TestCallbackTimeSlotReport(TestCase):
         callbacks = {
             "0900": {
                 "Date": tomorrow.strftime(date_format),
-                "Interval": "0900",
+                "Interval": u"0900",
                 "Total capacity": 4,
                 "Used capacity": 1,
                 "Remaining capacity": 3,
@@ -489,7 +486,7 @@ class TestCallbackTimeSlotReport(TestCase):
             },
             "1000": {
                 "Date": tomorrow.strftime(date_format),
-                "Interval": "1000",
+                "Interval": u"1000",
                 "Total capacity": 9,
                 "Used capacity": 3,
                 "Remaining capacity": 6,
@@ -497,7 +494,7 @@ class TestCallbackTimeSlotReport(TestCase):
             },
             "1100": {
                 "Date": tomorrow.strftime(date_format),
-                "Interval": "1100",
+                "Interval": u"1100",
                 "Total capacity": 0,
                 "Used capacity": 0,
                 "Remaining capacity": 0,
@@ -505,7 +502,7 @@ class TestCallbackTimeSlotReport(TestCase):
             },
             "1200": {
                 "Date": tomorrow.strftime(date_format),
-                "Interval": "1200",
+                "Interval": u"1200",
                 "Total capacity": 1,
                 "Used capacity": 1,
                 "Remaining capacity": 0,
@@ -513,7 +510,7 @@ class TestCallbackTimeSlotReport(TestCase):
             },
             "1300": {
                 "Date": tomorrow.strftime(date_format),
-                "Interval": "1300",
+                "Interval": u"1300",
                 "Total capacity": 1,
                 "Used capacity": 0,
                 "Remaining capacity": 1,

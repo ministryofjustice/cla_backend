@@ -460,7 +460,7 @@ class MIDemographicReport(SQLFileDateRangeReport):
             insert_value("Religion", diversity_json.get("religion"))
             insert_value("Sexual_Orientation", diversity_json.get("sexual_orientation"))
             insert_value("Disability", diversity_json.get("disability"))
-            full_row[postcode_index] = format_uk_postcode(full_row[postcode_index])
+            full_row[postcode_index] = format_uk_postcode(full_row[postcode_index], return_invalid="original")
 
             yield full_row
 

@@ -300,7 +300,8 @@ class MIDemographicReportPostcodeFormattingTestCase(TestCase):
         self.assertEqual(len(rows), 1)
 
         postcode_index = form.get_headers().index("Postcode")
-        self.assertIsNone(rows[0][postcode_index])
+        self.assertIsNotNone(rows[0][postcode_index])
+        self.assertEqual(rows[0][postcode_index], "Invalid123")
 
     def test_postcode_formatting_empty_postcode_is_ok(self):
         personal_details = make_recipe(

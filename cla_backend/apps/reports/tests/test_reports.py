@@ -255,6 +255,79 @@ class MIDuplicateCasesTestCase(TestCase):
         )
 
 
+class MIDemographicReportPostcodeFormattingTestCase(TestCase):
+    def test_postcode_formatting_valid_uk_postcode(self):
+        personal_details = make_recipe(
+            "legalaid.personal_details",
+            full_name="John Doe",
+            date_of_birth=datetime.date(1990, 1, 1),
+            postcode="ec1a1bb",
+        )
+        make_recipe("legalaid.case", personal_details=personal_details)
+
+        form = reports.forms.MIDemographicReport(
+            data={
+                "date_from": datetime.date.today() - datetime.timedelta(days=1),
+                "date_to": datetime.date.today(),
+            }
+        )
+        self.assertTrue(form.is_valid())
+        rows = list(form.get_rows())
+        self.assertEqual(len(rows), 1)
+
+        postcode_index = form.get_headers().index("Postcode")
+        self.assertEqual(rows[0][postcode_index], "EC1A 1BB")
+        self.assertNotEqual(rows[0][postcode_index], "ec1a1bb")
+        self.assertNotEqual(rows[0][postcode_index], "EC1A1BB")
+
+    def test_postcode_formatting_invalid_postcode_returns_none(self):
+        personal_details = make_recipe(
+            "legalaid.personal_details",
+            full_name="Jane Doe",
+            date_of_birth=datetime.date(1990, 1, 1),
+            postcode="Invalid123",
+        )
+        make_recipe("legalaid.case", personal_details=personal_details)
+
+        form = reports.forms.MIDemographicReport(
+            data={
+                "date_from": datetime.date.today() - datetime.timedelta(days=1),
+                "date_to": datetime.date.today(),
+            }
+        )
+        self.assertTrue(form.is_valid())
+        rows = list(form.get_rows())
+        self.assertEqual(len(rows), 1)
+
+        postcode_index = form.get_headers().index("Postcode")
+        self.assertIsNotNone(rows[0][postcode_index])
+        self.assertEqual(rows[0][postcode_index], "Invalid123")
+
+    def test_postcode_formatting_empty_postcode_is_ok(self):
+        personal_details = make_recipe(
+            "legalaid.personal_details",
+            full_name="John Doe",
+            date_of_birth=datetime.date(1990, 1, 1),
+            postcode="",
+        )
+        make_recipe("legalaid.case", personal_details=personal_details)
+
+        form = reports.forms.MIDemographicReport(
+            data={
+                "date_from": datetime.date.today() - datetime.timedelta(days=1),
+                "date_to": datetime.date.today(),
+            }
+        )
+        self.assertTrue(form.is_valid())
+
+        rows = list(form.get_rows())
+        self.assertEqual(len(rows), 1)
+
+        postcode_index = form.get_headers().index("Postcode")
+
+        self.assertIn(rows[0][postcode_index], ("", None))
+
+
 class OBIEEExportOutputsZipTestCase(TestCase):
     def setUp(self):
         self.td = tempfile.mkdtemp()

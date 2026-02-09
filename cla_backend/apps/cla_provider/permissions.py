@@ -1,5 +1,5 @@
-from core.permissions import ClientIDPermission
+from core.permissions import IsProviderPermission
 
 
-class CLAProviderClientIDPermission(ClientIDPermission):
-    client_name = "staff"
+class CLAProviderClientIDPermission(IsProviderPermission):
+    pass

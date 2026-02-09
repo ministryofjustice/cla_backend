@@ -189,7 +189,6 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "iia425u_J_pwntnEyqBuI1xBDqOX8nZ4uC73e
 
 
 MIDDLEWARE_CLASSES = (
-    "cla_auth.entra.EntraTokenMiddleware",
     "core.middleware.request_size.RequestSizeMiddleware",
     "django.middleware.locale.LocaleMiddleware",
     "django.middleware.security.SecurityMiddleware",
@@ -204,8 +203,8 @@ MIDDLEWARE_CLASSES = (
     "django_cookies_samesite.middleware.CookiesSameSite",
 )
 AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend', # Keep default for admin
-    'cla_auth.auth_backend.TokenAuthBackend',       # Your new OBO backend
+    "django.contrib.auth.backends.ModelBackend",  # Keep default for admin
+    "cla_auth.auth_backend.TokenAuthBackend",  # Your new OBO backend
 )
 
 if not DEBUG:
@@ -375,7 +374,7 @@ if AWS_STORAGE_BUCKET_NAME:
 
 # Django rest-framework-overrides
 REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": ("oauth2_provider.ext.rest_framework.OAuth2Authentication",),
+    "DEFAULT_AUTHENTICATION_CLASSES": ("cla_auth.entra.EntraTokenMiddleware",),
     "DEFAULT_PERMISSION_CLASSES": ("core.permissions.AllowNone",),
     "DEFAULT_RENDERER_CLASSES": ("rest_framework.renderers.JSONRenderer",),
     "DEFAULT_THROTTLE_RATES": {"login": "10/sec"},
@@ -472,8 +471,8 @@ CacheAdapter.set_adapter_factory(bank_holidays_cache_adapter_factory)
 MAINTENANCE_MODE = os.environ.get("MAINTENANCE_MODE", "False") == "True"
 
 # Settings for django-session-security.
-DEFAULT_SESSION_SECURITY_WARN_AFTER = 60 * 25 # 25 minutes
-DEFAULT_SESSION_SECURITY_EXPIRE_AFTER = 60 * 30 # 30 minutes
+DEFAULT_SESSION_SECURITY_WARN_AFTER = 60 * 25  # 25 minutes
+DEFAULT_SESSION_SECURITY_EXPIRE_AFTER = 60 * 30  # 30 minutes
 SESSION_COOKIE_AGE = 1800  # 30 minutes
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True

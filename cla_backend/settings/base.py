@@ -189,6 +189,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "iia425u_J_pwntnEyqBuI1xBDqOX8nZ4uC73e
 
 
 MIDDLEWARE_CLASSES = (
+    "cla_auth.entra.EntraTokenMiddleware",
     "core.middleware.request_size.RequestSizeMiddleware",
     "django.middleware.locale.LocaleMiddleware",
     "django.middleware.security.SecurityMiddleware",
@@ -201,6 +202,10 @@ MIDDLEWARE_CLASSES = (
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "status.middleware.MaintenanceModeMiddleware",
     "django_cookies_samesite.middleware.CookiesSameSite",
+)
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend', # Keep default for admin
+    'cla_auth.auth_backend.TokenAuthBackend',       # Your new OBO backend
 )
 
 if not DEBUG:

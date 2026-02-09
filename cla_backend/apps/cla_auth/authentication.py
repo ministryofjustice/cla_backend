@@ -8,7 +8,7 @@ from django.conf import settings
 from rest_framework import exceptions, authentication
 
 
-class EntraTokenMiddleware(authentication.BaseAuthentication):
+class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
     """
     Middleware for Django 1.8 to validate Entra ID OBO tokens.
     """

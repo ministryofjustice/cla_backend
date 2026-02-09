@@ -203,8 +203,8 @@ MIDDLEWARE_CLASSES = (
     "django_cookies_samesite.middleware.CookiesSameSite",
 )
 AUTHENTICATION_BACKENDS = (
-    "django.contrib.auth.backends.ModelBackend",  # Keep default for admin
-    "cla_auth.auth_backend.TokenAuthBackend",  # Your new OBO backend
+    "django.contrib.auth.backends.ModelBackend",
+    "cla_auth.backend.EntraAccessTokenAuthenticationBackend",
 )
 
 if not DEBUG:
@@ -374,7 +374,7 @@ if AWS_STORAGE_BUCKET_NAME:
 
 # Django rest-framework-overrides
 REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": ("cla_auth.entra.EntraTokenMiddleware",),
+    "DEFAULT_AUTHENTICATION_CLASSES": ("cla_auth.authentication.EntraAccessTokenAuthentication",),
     "DEFAULT_PERMISSION_CLASSES": ("core.permissions.AllowNone",),
     "DEFAULT_RENDERER_CLASSES": ("rest_framework.renderers.JSONRenderer",),
     "DEFAULT_THROTTLE_RATES": {"login": "10/sec"},

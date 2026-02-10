@@ -256,6 +256,7 @@ class CaseSerializer(CaseSerializerFull):
             "complaint_flag",
             "gtm_anon_id",
             "scope_traversal",
+            "is_urgent",
         )
 
 

@@ -55,7 +55,7 @@ class EntraAccessTokenAuthenticationTest(TestCase):
             datetime.datetime.now() + datetime.timedelta(days=365)
         ).sign(self.private_key, hashes.SHA256(), default_backend())
         
-        # Get certificate in PEM format and extract the base64 part
+        # Get certificate in PEM format and extract the base64
         cert_pem = cert.public_bytes(serialization.Encoding.PEM).decode('utf-8')
         cert_base64 = cert_pem.replace('-----BEGIN CERTIFICATE-----\n', '').replace('\n-----END CERTIFICATE-----\n', '').replace('\n', '')
         

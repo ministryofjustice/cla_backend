@@ -1,9 +1,9 @@
+from core.permissions import ClientIDPermission
 from rest_framework.permissions import BasePermission
 
 
-class CallCentreClientIDPermission(BasePermission):
-    def has_permission(self, request, view):
-        return request.method == "OPTIONS" or (hasattr(request.user, "operator") and bool(request.user.operator))
+class CallCentreClientIDPermission(ClientIDPermission):
+    client_name = "operator"
 
 
 class OperatorManagerPermission(BasePermission):

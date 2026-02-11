@@ -9,74 +9,86 @@ from rest_framework import exceptions, authentication
 
 
 class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
-    """
-    Middleware for Django 1.8 to validate Entra ID OBO tokens.
-    """
 
     def __init__(self):
         self.tenant_id = settings.ENTRA_TENANT_ID
         self.expected_audience = settings.ENTRA_EXPECTED_AUDIENCE
-        self.discovery_url = "https://login.microsoftonline.com/%s/discovery/v2.0/keys" % self.tenant_id
+        self.discovery_url = "https://login.microsoftonline.com/%s/discovery/v2.0/keys"%self.tenant_id
 
     def authenticate_header(self, request):
-        """
-        Return a string that will be used as the value of the
-        WWW-Authenticate header in a HTTP 401 response.
-        """
         return 'Bearer realm="api"'
+    
 
-    def authenticate(self, request):
-        token = request.META.get("HTTP_BEARER")
-        try:
-            payload = self.validate_token(token)
-        except jwt.ExpiredSignatureError:
-            raise exceptions.AuthenticationFailed("Token Expired")
-        except jwt.InvalidTokenError:
-            raise exceptions.AuthenticationFailed("Invalid Token")
-        except Exception:
-            raise exceptions.AuthenticationFailed("Invalid token - validation error")
+    def _public_keys(self):
 
-        print("PAYLOAD", payload)
-        if payload:
-            # Use 'upn' or 'preferred_username' as the unique identifier
-            email = payload.get("email")
-            print("EMAIL", email)
-            if email:
-                # Authenticate using the custom backend we created earlier
-                user = authenticate(entra_id_email=email)
-                print("MIDDLEWARE USER", user)
-                if user:
-                    request.user = user
-                    # Note: We don't call login(request, user) here because
-                    # APIs usually stay stateless (don't create sessions).
-                    return user, payload
-
-        raise exceptions.AuthenticationFailed("Invalid token - could not authenticate")
-
-    def get_public_keys(self):
-        # Cache keys for 24 hours (Microsoft rotates them rarely)
         keys = cache.get("entra_public_keys")
         if not keys:
-            res = requests.get(self.discovery_url)
-            keys = res.json().get("keys")
-            cache.set("entra_public_keys", keys, 86400)
+            try:
+                response = requests.get(self.discovery_url)
+                response.raise_for_status()
+                keys = response.json().get("keys", [])
+                cache.set("entra_public_keys", keys, 86400)
+            except Exception:
+                raise exceptions.AuthenticationFailed("Failed to get the public key")
+            
         return keys
+    
 
-    def validate_token(self, token):
-        unverified_header = jwt.get_unverified_header(token)
-        kid = unverified_header.get("kid")
-        keys = self.get_public_keys()
-        key_data = next((k for k in keys if k["kid"] == kid), None)
+    def _validate_token(self, token):
+        try:
+            return self.validate_token(token)
+        except jwt.ExpiredSignatureError as e:
+            raise exceptions.AuthenticationFailed("Token has expired: %s" % e)
+        except jwt.InvalidTokenError as e:
+            raise exceptions.AuthenticationFailed("Invalid token format: %s" % e)
+        except Exception as e:
+            raise exceptions.AuthenticationFailed("Token validation failed: %s" % e)
 
-        if not key_data:
+    
+    def authenticate(self, request):
+        token = request.META.get("HTTP_BEARER")
+        if not token:
             return None
 
-        # Parse the certificate
+        try:
+            payload = self._validate_token(token)
+        except exceptions.AuthenticationFailed:
+            raise
+
+        email = payload.get("email")
+        if not email:
+            raise exceptions.AuthenticationFailed("Token missing email claim")
+
+        user = authenticate(entra_id_email=email)
+        if not user:
+            raise exceptions.AuthenticationFailed("User not found or inactive")
+
+        request.user = user
+        return user, payload
+
+
+
+    def validate_token(self, token):
+
+        unverified_header = jwt.get_unverified_header(token)
+        kid = unverified_header.get("kid")
+        keys = self._public_keys()
+        key_data = next((k for k in keys if k["kid"] == kid), None)
+
+        # retry if the the key not find first 
+        if not key_data:
+            cache.delete("entra_public_keys")
+            keys = self._public_keys()
+            key_data = next((k for k in keys if k["kid"] == kid), None)
+        
+    
+        if not key_data:
+            raise exceptions.AuthenticationFailed("Key ID not found")
+
         cert_str = "-----BEGIN CERTIFICATE-----\n%s\n-----END CERTIFICATE-----" % key_data["x5c"][0]
         cert_obj = load_pem_x509_certificate(cert_str.encode("utf-8"), default_backend())
         public_key = cert_obj.public_key()
 
-        # Verify signature and claims
         return jwt.decode(
             token,
             public_key,

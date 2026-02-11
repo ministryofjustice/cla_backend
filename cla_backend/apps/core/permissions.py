@@ -1,5 +1,5 @@
 from rest_framework.permissions import BasePermission
-
+from django.core.cache import cache
 
 class IsProviderPermission(BasePermission):
     """
@@ -16,6 +16,32 @@ class IsProviderPermission(BasePermission):
         else:
             return obj.provider == request.user.staff.provider
 
+
+class ClientIDPermission(BasePermission):
+    """
+    The request is authenticated as a user and the token used has the right scope
+    """
+
+    client_name = None
+
+    def get_client_name(self, token):
+        client = token.application
+        client_name = cache.get("cla.oauth_client_%s" % client.client_id)
+        if not client_name:
+            client_name = client.name
+            cache.set("cla.oauth_client_%s" % client.client_id, client_name)
+        return client_name
+
+    def has_permission(self, request, view):
+        token = request.auth
+
+        if not token:
+            return False
+        if hasattr(token, "application"):  # OAuth 2
+            return self.client_name == self.get_client_name(token)
+        assert False, (
+            "TokenHasReadWriteScope requires the " "`OAuth2Authentication` authentication " "class to be used."
+        )
 
 class AllowNone(BasePermission):
     """

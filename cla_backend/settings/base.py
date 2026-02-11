@@ -374,7 +374,7 @@ if AWS_STORAGE_BUCKET_NAME:
 
 # Django rest-framework-overrides
 REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": ("cla_auth.authentication.EntraAccessTokenAuthentication",),
+    "DEFAULT_AUTHENTICATION_CLASSES": ("cla_auth.authentication.EntraAccessTokenAuthentication","oauth2_provider.ext.rest_framework.OAuth2Authentication"),
     "DEFAULT_PERMISSION_CLASSES": ("core.permissions.AllowNone",),
     "DEFAULT_RENDERER_CLASSES": ("rest_framework.renderers.JSONRenderer",),
     "DEFAULT_THROTTLE_RATES": {"login": "10/sec"},

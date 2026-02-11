@@ -75,7 +75,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         keys = self._public_keys()
         key_data = next((k for k in keys if k["kid"] == kid), None)
 
-        # retry if the the key not find first 
+        # retry if the the key not find
         if not key_data:
             cache.delete("entra_public_keys")
             keys = self._public_keys()

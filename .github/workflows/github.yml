@@ -6,7 +6,7 @@
 #
 # Trigger Events:
 #   - Scheduled: Weekly on Sundays at 00:00 UTC
-#   - Manual: On pull request events to branches matching any pattern
+#   - Manual: Workflow dispatch using GitHub web UI
 #
 # Permissions:
 #   - contents: read (required to access repository information for archival checks)
@@ -35,8 +35,7 @@ on:
   schedule:
     - cron: "0 0 * * 0"
 
-  pull_request:
-    branches: ["*"]
+  workflow_dispatch:
 
 permissions: {}
 

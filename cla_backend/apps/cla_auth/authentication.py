@@ -9,15 +9,13 @@ from rest_framework import exceptions, authentication
 
 
 class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
-
     def __init__(self):
         self.tenant_id = settings.ENTRA_TENANT_ID
         self.expected_audience = settings.ENTRA_EXPECTED_AUDIENCE
-        self.discovery_url = "https://login.microsoftonline.com/%s/discovery/v2.0/keys"%self.tenant_id
+        self.discovery_url = "https://login.microsoftonline.com/%s/discovery/v2.0/keys" % self.tenant_id
 
     def authenticate_header(self, request):
         return 'Bearer realm="api"'
-    
 
     def _public_keys(self):
 
@@ -30,9 +28,8 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
                 cache.set("entra_public_keys", keys, 86400)
             except Exception:
                 raise exceptions.AuthenticationFailed("Failed to get the public key")
-            
+
         return keys
-    
 
     def _validate_token(self, token):
         try:
@@ -44,7 +41,6 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         except Exception as e:
             raise exceptions.AuthenticationFailed("Token validation failed: %s" % e)
 
-    
     def authenticate(self, request):
         token = request.META.get("HTTP_BEARER")
         if not token:
@@ -66,8 +62,6 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         request.user = user
         return user, payload
 
-
-
     def validate_token(self, token):
 
         unverified_header = jwt.get_unverified_header(token)
@@ -75,13 +69,12 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         keys = self._public_keys()
         key_data = next((k for k in keys if k["kid"] == kid), None)
 
-        # retry if the the key not find first 
+        # retry if the the key not find first
         if not key_data:
             cache.delete("entra_public_keys")
             keys = self._public_keys()
             key_data = next((k for k in keys if k["kid"] == kid), None)
-        
-    
+
         if not key_data:
             raise exceptions.AuthenticationFailed("Key ID not found")
 

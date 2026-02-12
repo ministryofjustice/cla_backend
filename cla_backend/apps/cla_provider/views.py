@@ -40,10 +40,11 @@ from legalaid.serializers import ContactResearchMethodSerializerBase
 
 from diagnosis.views import BaseDiagnosisViewSet
 
-from .models import Staff
+from .models import Staff, Provider
 from .permissions import CLAProviderClientIDPermission
 from rest_framework.filters import OrderingFilter
 from rest_framework.views import APIView
+from rest_framework import viewsets
 from .serializers import (
     EligibilityCheckSerializer,
     CaseSerializer,
@@ -59,6 +60,7 @@ from .serializers import (
     CaseNotesHistorySerializer,
     CSVUploadSerializer,
     CSVUploadDetailSerializer,
+    ProviderSerializer,
 )
 from .forms import RejectCaseForm, AcceptCaseForm, OpenCaseForm, CloseCaseForm, SplitCaseForm, ReopenCaseForm
 
@@ -379,6 +381,20 @@ class CSVUploadViewSet(CLAProviderPermissionViewSetMixin, BaseCSVUploadViewSet):
     def perform_update(self, serializer):
         self.set_provider_user(serializer)
         return super(CSVUploadViewSet, self).perform_update(serializer)
+
+
+class ProviderViewSet(CLAProviderPermissionViewSetMixin, viewsets.ReadOnlyModelViewSet):
+    """
+    ViewSet for Provider that returns provider firm name and contracted categories.
+    Only returns the provider associated with the logged-in staff member.
+    """
+    serializer_class = ProviderSerializer
+    queryset = Provider.objects.all()
+
+    def get_queryset(self):
+        """Filter to only show the provider associated with the logged-in user"""
+        this_provider = get_object_or_404(Staff, user=self.request.user).provider
+        return Provider.objects.filter(id=this_provider.id)
 
 
 class CaseNotesHistoryViewSet(CLAProviderPermissionViewSetMixin, BaseCaseNotesHistoryViewSet):

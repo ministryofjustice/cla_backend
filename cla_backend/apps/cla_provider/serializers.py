@@ -23,6 +23,7 @@ from legalaid.serializers import (
     CaseNotesHistorySerializerBase,
     CSVUploadSerializerBase,
 )
+from legalaid.models import Category
 
 from .models import Staff
 
@@ -350,13 +351,28 @@ class AdaptationDetailsSerializer(AdaptationDetailsSerializerBase):
         )
 
 
+class CategorySerializer(serializers.ModelSerializer):
+    """Serializer for Category model"""
+    class Meta:
+        model = Category
+        fields = ("code", "name", "description")
+
+
 class ProviderSerializer(ProviderSerializerBase):
+    law_category = CategorySerializer(many=True, read_only=True)
+
     class Meta(ProviderSerializerBase.Meta):
-        fields = ("name", "id")
+        fields = ("id", "name", "law_category")
+
+
+class ProviderSerializerMinimal(ProviderSerializerBase):
+    """Minimal provider serializer for nested use in user serialization"""
+    class Meta(ProviderSerializerBase.Meta):
+        fields = ("id", "name")
 
 
 class StaffSerializer(ExtendedUserSerializerBase):
-    provider = ProviderSerializer(read_only=True)
+    provider = ProviderSerializerMinimal(read_only=True)
 
     chs_user = serializers.CharField(required=False)
     chs_organisation = serializers.CharField(required=False)

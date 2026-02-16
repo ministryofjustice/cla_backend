@@ -12,6 +12,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
     def __init__(self):
         self.tenant_id = settings.ENTRA_TENANT_ID
         self.expected_audience = settings.ENTRA_EXPECTED_AUDIENCE
+        self.issuer = "https://login.microsoftonline.com/%s/v2.0" % self.tenant_id
         self.discovery_url = "https://login.microsoftonline.com/%s/discovery/v2.0/keys" % self.tenant_id
 
     def authenticate_header(self, request):
@@ -51,7 +52,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         except exceptions.AuthenticationFailed:
             raise
 
-        email = payload.get("email")
+        email = payload.get("preferred_username")
         if not email:
             raise exceptions.AuthenticationFailed("Token missing email claim")
 
@@ -81,11 +82,4 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         cert_str = "-----BEGIN CERTIFICATE-----\n%s\n-----END CERTIFICATE-----" % key_data["x5c"][0]
         cert_obj = load_pem_x509_certificate(cert_str.encode("utf-8"), default_backend())
         public_key = cert_obj.public_key()
-
-        return jwt.decode(
-            token,
-            public_key,
-            algorithms=["RS256"],
-            audience=self.expected_audience,
-            issuer="https://sts.windows.net/%s/" % self.tenant_id,
-        )
+        return jwt.decode(token, public_key, algorithms=["RS256"], audience=self.expected_audience, issuer=self.issuer)

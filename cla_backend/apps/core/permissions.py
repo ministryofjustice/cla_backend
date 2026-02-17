@@ -1,6 +1,7 @@
 from rest_framework.permissions import BasePermission
 from django.core.cache import cache
 
+
 class IsProviderPermission(BasePermission):
     """
     Check the request is being made by a provider user.
@@ -42,6 +43,7 @@ class ClientIDPermission(BasePermission):
         assert False, (
             "TokenHasReadWriteScope requires the " "`OAuth2Authentication` authentication " "class to be used."
         )
+
 
 class AllowNone(BasePermission):
     """

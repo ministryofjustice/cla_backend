@@ -46,6 +46,7 @@ coveralls==1.8.2
     # via -r requirements/source/requirements-testing.in
 cryptography==3.3.2
     # via
+    #   -r requirements/source/requirements-base.in
     #   pyopenssl
     #   urllib3
 csvkit==0.9.0
@@ -191,7 +192,9 @@ pycparser==2.21
 pycurl==7.43.0.5
     # via celery
 pyjwt==1.7.1
-    # via notifications-python-client
+    # via
+    #   -r requirements/source/requirements-base.in
+    #   notifications-python-client
 pyminizip==0.2.3
     # via -r requirements/source/requirements-base.in
 pyopenssl==21.0.0

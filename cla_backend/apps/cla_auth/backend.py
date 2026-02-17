@@ -7,9 +7,13 @@ class EntraAccessTokenAuthenticationBackend(ModelBackend):
         try:
             # Get the user or create one if they don't exist
             user = User.objects.get(email=entra_id_email, is_active=True)
+            
             return user
-        except Exception:
-            return None
+        except Exception as e:
+            return e 
+        
+           
+           
 
     def get_user(self, user_id):
         try:

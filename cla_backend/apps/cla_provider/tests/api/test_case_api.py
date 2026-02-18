@@ -534,6 +534,30 @@ class CaseStateTestCase(BaseCaseTestCase):
         reference = reference or self.resource.reference
         return reverse("cla_provider:case-detail", args=(), kwargs={"reference": reference})
 
+    def _set_case_as_opened(self):
+        self.resource.provider_viewed = timezone.now()
+        self.resource.save(update_fields=["provider_viewed", "modified"])
+
+    def _create_case_viewed_logs(self):
+        created_by = self.resource.created_by or self.user
+
+        Log.objects.create(
+            case=self.resource,
+            code="CASE_VIEWED",
+            created_by=created_by,
+            notes="Not ready for determination",
+            type=LOG_TYPES.OUTCOME,
+            level=LOG_LEVELS.HIGH,
+        )
+        Log.objects.create(
+            case=self.resource,
+            code="CASE_VIEWED",
+            created_by=created_by,
+            notes="Case viewed",
+            type=LOG_TYPES.SYSTEM,
+            level=LOG_LEVELS.MINOR,
+        )
+
     def test_case_state_new(self):
         """Test that a case with no provider actions returns 'new' state"""
         case = make_recipe(
@@ -619,25 +643,8 @@ class CaseStateTestCase(BaseCaseTestCase):
 
     def test_case_state_note_prefers_non_minor_case_viewed_log(self):
         """State note should ignore minor CASE_VIEWED logs and use the visible log entry."""
-        self.resource.provider_viewed = timezone.now()
-        self.resource.save(update_fields=["provider_viewed", "modified"])
-
-        Log.objects.create(
-            case=self.resource,
-            code="CASE_VIEWED",
-            created_by=self.resource.created_by,
-            notes="Not ready for determination",
-            type=LOG_TYPES.OUTCOME,
-            level=LOG_LEVELS.HIGH,
-        )
-        Log.objects.create(
-            case=self.resource,
-            code="CASE_VIEWED",
-            created_by=self.resource.created_by,
-            notes="Case viewed",
-            type=LOG_TYPES.SYSTEM,
-            level=LOG_LEVELS.MINOR,
-        )
+        self._set_case_as_opened()
+        self._create_case_viewed_logs()
 
         self.assertEqual(self.resource.state, "opened")
         self.assertIsNotNone(self.resource.state_note)
@@ -645,25 +652,8 @@ class CaseStateTestCase(BaseCaseTestCase):
 
     def test_detailed_endpoint_state_note_ignores_minor_case_viewed_log(self):
         """Detailed endpoint state_note should match visible logs endpoint behaviour."""
-        self.resource.provider_viewed = timezone.now()
-        self.resource.save(update_fields=["provider_viewed", "modified"])
-
-        Log.objects.create(
-            case=self.resource,
-            code="CASE_VIEWED",
-            created_by=self.resource.created_by,
-            notes="Not ready for determination",
-            type=LOG_TYPES.OUTCOME,
-            level=LOG_LEVELS.HIGH,
-        )
-        Log.objects.create(
-            case=self.resource,
-            code="CASE_VIEWED",
-            created_by=self.resource.created_by,
-            notes="Case viewed",
-            type=LOG_TYPES.SYSTEM,
-            level=LOG_LEVELS.MINOR,
-        )
+        self._set_case_as_opened()
+        self._create_case_viewed_logs()
 
         detailed_url = "{0}detailed/".format(self.get_url(self.resource.reference))
         response = self.client.get(detailed_url, HTTP_AUTHORIZATION=self.get_http_authorization())

@@ -57,6 +57,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
             raise exceptions.AuthenticationFailed("Token missing email claim")
 
         user = authenticate(entra_id_email=email)
+        print(user)
        
         if not user:
             raise exceptions.AuthenticationFailed("User not found or inactive")

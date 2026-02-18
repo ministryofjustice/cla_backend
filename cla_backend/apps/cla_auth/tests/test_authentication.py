@@ -1,4 +1,5 @@
 import jwt
+import datetime
 from mock import patch, Mock
 from django.test import TestCase, RequestFactory
 from django.contrib.auth import get_user_model
@@ -9,8 +10,6 @@ from cryptography.hazmat.backends import default_backend
 from cryptography import x509
 from cryptography.x509.oid import NameOID
 from cryptography.hazmat.primitives import hashes
-import datetime
-
 
 from cla_auth.authentication import EntraAccessTokenAuthentication
 
@@ -22,14 +21,16 @@ class EntraAccessTokenAuthenticationTest(TestCase):
         """Set up test fixtures"""
         self.factory = RequestFactory()
         self.auth = EntraAccessTokenAuthentication()
-        
+
         with self.settings(ENTRA_TENANT_ID="test-tenant-id", ENTRA_EXPECTED_AUDIENCE="test-audience"):
             self.auth = EntraAccessTokenAuthentication()
-    
+
         self.tenant_id = "test-tenant-id"
         self.issuer = "https://login.microsoftonline.com/%s/v2.0" % self.tenant_id
 
-        self.private_key = rsa.generate_private_key(public_exponent=65537, key_size=2048, backend=default_backend())
+        self.private_key = rsa.generate_private_key(
+            public_exponent=65537, key_size=2048, backend=default_backend()
+        )
 
         self.public_key = self.private_key.public_key()
 
@@ -61,7 +62,9 @@ class EntraAccessTokenAuthenticationTest(TestCase):
             .replace("\n", "")
         )
 
-        self.mock_jwks = {"keys": [{"kid": "test-kid-123", "x5c": [cert_base64], "kty": "RSA", "use": "sig"}]}
+        self.mock_jwks = {
+            "keys": [{"kid": "test-kid-123", "x5c": [cert_base64], "kty": "RSA", "use": "sig"}]
+        }
 
         self.test_user = User.objects.create_user(username="testuser", email="test@example.com")
 
@@ -75,7 +78,7 @@ class EntraAccessTokenAuthenticationTest(TestCase):
             exp = now + datetime.timedelta(hours=1)
 
         payload = {
-            "iss":  self.issuer,
+            "iss": self.issuer,
             "aud": self.auth.expected_audience,
             "exp": exp,
             "iat": now,
@@ -92,7 +95,7 @@ class EntraAccessTokenAuthenticationTest(TestCase):
     @patch("cla_auth.authentication.authenticate")
     def test_valid_token_authentication(self, mock_authenticate, mock_requests_get, mock_cache):
         """Test successful authentication with valid token"""
-       
+
         mock_cache.get.return_value = None
         mock_response = Mock()
         mock_response.json.return_value = self.mock_jwks
@@ -116,7 +119,7 @@ class EntraAccessTokenAuthenticationTest(TestCase):
     @patch("cla_auth.authentication.requests.get")
     def test_expired_token_authentication(self, mock_requests_get, mock_cache):
         """Test authentication fails with expired token"""
-       
+
         mock_cache.get.return_value = None
         mock_response = Mock()
         mock_response.json.return_value = self.mock_jwks
@@ -131,8 +134,6 @@ class EntraAccessTokenAuthenticationTest(TestCase):
         with self.assertRaises(exceptions.AuthenticationFailed):
             self.auth.authenticate(request)
 
-      
-
     def test_no_token_returns_none(self):
         """Test that missing token returns None"""
         request = self.factory.get("/")
@@ -143,17 +144,16 @@ class EntraAccessTokenAuthenticationTest(TestCase):
     @patch("cla_auth.authentication.requests.get")
     def test_token_missing_email_claim(self, mock_requests_get, mock_cache):
         """Test authentication fails when token missing email claim"""
-       
+
         mock_cache.get.return_value = None
         mock_response = Mock()
         mock_response.json.return_value = self.mock_jwks
         mock_response.raise_for_status.return_value = None
         mock_requests_get.return_value = mock_response
 
-     
         now = datetime.datetime.now()
         payload = {
-            "iss": "https://sts.windows.net/%s/" % self.auth.tenant_id,
+            "iss": self.issuer,
             "aud": self.auth.expected_audience,
             "exp": now + datetime.timedelta(hours=1),
             "iat": now,
@@ -166,17 +166,15 @@ class EntraAccessTokenAuthenticationTest(TestCase):
         request = self.factory.get("/")
         request.META["HTTP_BEARER"] = token
 
-        with self.assertRaises(exceptions.AuthenticationFailed) as context:
+        with self.assertRaises(exceptions.AuthenticationFailed):
             self.auth.authenticate(request)
-
-      
 
     @patch("cla_auth.authentication.cache")
     @patch("cla_auth.authentication.requests.get")
     @patch("cla_auth.authentication.authenticate")
     def test_user_not_found(self, mock_authenticate, mock_requests_get, mock_cache):
         """Test authentication fails when user not found"""
-       
+
         mock_cache.get.return_value = None
         mock_response = Mock()
         mock_response.json.return_value = self.mock_jwks
@@ -189,34 +187,32 @@ class EntraAccessTokenAuthenticationTest(TestCase):
         request = self.factory.get("/")
         request.META["HTTP_BEARER"] = token
 
-        with self.assertRaises(exceptions.AuthenticationFailed) as context:
+        with self.assertRaises(exceptions.AuthenticationFailed):
             self.auth.authenticate(request)
-
-        
 
     @patch("cla_auth.authentication.cache")
     @patch("cla_auth.authentication.requests.get")
     def test_invalid_signature(self, mock_requests_get, mock_cache):
         """Test authentication fails with invalid signature"""
-       
+
         mock_cache.get.return_value = None
         mock_response = Mock()
         mock_response.json.return_value = self.mock_jwks
         mock_response.raise_for_status.return_value = None
         mock_requests_get.return_value = mock_response
 
-        wrong_key = rsa.generate_private_key(public_exponent=65537, key_size=2048, backend=default_backend())
+        wrong_key = rsa.generate_private_key(
+            public_exponent=65537, key_size=2048, backend=default_backend()
+        )
 
         now = datetime.datetime.now()
         payload = {
-            "aud": "579599585850909384846894988943",
-            "iss": "https://sts.windows.net/%s/" % self.auth.tenant_id,
+            "iss": self.issuer,
             "aud": self.auth.expected_audience,
             "exp": now + datetime.timedelta(hours=1),
             "iat": now,
             "preferred_username": "test@example.com",
-            "name": "Jhon Doe [LAA]"
-            
+            "name": "John Doe [LAA]"
         }
 
         token = jwt.encode(payload, wrong_key, algorithm="RS256", headers={"kid": "test-kid-123"})
@@ -231,7 +227,7 @@ class EntraAccessTokenAuthenticationTest(TestCase):
     @patch("cla_auth.authentication.requests.get")
     def test_public_keys_cached(self, mock_requests_get, mock_cache):
         """Test that public keys are cached"""
-       
+
         mock_cache.get.return_value = None
         mock_response = Mock()
         mock_response.json.return_value = self.mock_jwks
@@ -253,13 +249,12 @@ class EntraAccessTokenAuthenticationTest(TestCase):
 
         self.assertIn("public key", str(context.exception).lower())
 
-
     @patch("cla_auth.authentication.cache")
     @patch("cla_auth.authentication.requests.get")
     @patch("cla_auth.authentication.authenticate")
-    def test_disabled_user_returns_with_warning(self, mock_authenticate, mock_requests_get, mock_cache):
+    def test_user_exist_but_disable(self, mock_authenticate, mock_requests_get, mock_cache):
         """Test that a disabled user is returned with a warning flag in the payload"""
-      
+
         mock_cache.get.return_value = None
         mock_response = Mock()
         mock_response.json.return_value = self.mock_jwks
@@ -279,29 +274,55 @@ class EntraAccessTokenAuthenticationTest(TestCase):
 
         self.assertEqual(user, disabled_user)
         self.assertFalse(user.is_active)
-
-
         mock_authenticate.assert_called_once_with(entra_id_email="test@example.com")
-    
 
+    @patch("cla_auth.authentication.cache")
+    @patch("cla_auth.authentication.requests.get")
+    @patch("cla_auth.authentication.authenticate")
+    def test_request_success_but_not_provider(self, mock_authenticate, mock_get, mock_cache):
+        """Test authentication succeeds but user is not an allowed provider"""
 
-    # def request_sucess_but_not_provider(self):
-       
-    #     now = datetime.datetime.now()
-    #     payload = {
-    #         "aud": "579599585850909384846894988943",
-    #         "iss": "https://sts.windows.net/%s/" % self.auth.tenant_id,
-    #         "aud": self.auth.expected_audience,
-    #         "exp": now + datetime.timedelta(hours=1),
-    #         "iat": now,
-    #         "preferred_username": "test@example.com",
-    #         "name": "Jhon Doe [LAA]"
-            
-    #     }
+        mock_cache.get.return_value = None
+        mock_response = Mock()
+        mock_response.json.return_value = self.mock_jwks
+        mock_response.raise_for_status.return_value = None
+        mock_get.return_value = mock_response
 
-    #     token = jwt.encode(payload, self.private_key, algorithm="RS256", headers={"kid": "test-kid-123"})
+        permission_denied_message = "You do not have permission to perform this action."
+        mock_authenticate.side_effect = exceptions.AuthenticationFailed(permission_denied_message)
 
+        token = self._create_token(expired=False)
 
+        request = self.factory.get("/")
+        request.META["HTTP_BEARER"] = token
 
-    # def request_sucess_valid_provider():
-    #     pass 
+        with self.assertRaises(exceptions.AuthenticationFailed) as ctx:
+            self.auth.authenticate(request)
+
+        self.assertEqual(str(ctx.exception.detail), permission_denied_message)
+
+    @patch("cla_auth.authentication.cache")
+    @patch("cla_auth.authentication.requests.get")
+    @patch("cla_auth.authentication.authenticate")
+    def test_request_success_valid_provider(self, mock_authenticate, mock_get, mock_cache):
+        """Test authentication succeeds and returns empty list with 200 for valid provider"""
+
+        mock_cache.get.return_value = None
+        mock_response = Mock()
+        mock_response.json.return_value = self.mock_jwks
+        mock_response.raise_for_status.return_value = None
+        mock_get.return_value = mock_response
+
+        mock_authenticate.return_value = self.test_user
+
+        token = self._create_token(expired=False)
+
+        request = self.factory.get("/")
+        request.META["HTTP_BEARER"] = token
+
+        user, payload = self.auth.authenticate(request)
+
+        self.assertEqual(user, self.test_user)
+        self.assertEqual(payload.get("preferred_username"), "test@example.com")
+        mock_authenticate.assert_called_once_with(entra_id_email="test@example.com")
+

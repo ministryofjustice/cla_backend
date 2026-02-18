@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.fields import SerializerMethodField
 
 from cla_common.constants import FEEDBACK_ISSUE
 from cla_eventlog.serializers import LogSerializerBase
@@ -22,6 +23,7 @@ from legalaid.serializers import (
     CaseNotesHistorySerializerBase,
     CSVUploadSerializerBase,
 )
+from legalaid.models import Category
 
 from .models import Staff
 
@@ -214,6 +216,7 @@ class CaseSerializer(CaseSerializerFull):
     provider_viewed = serializers.DateTimeField(read_only=True)
     provider_accepted = serializers.DateTimeField(read_only=True)
     provider_closed = serializers.DateTimeField(read_only=True)
+    provider_assigned_at = serializers.DateTimeField(read_only=True)
 
     class Meta(CaseSerializerFull.Meta):
         fields = (
@@ -227,6 +230,7 @@ class CaseSerializer(CaseSerializerFull):
             "provider_viewed",
             "provider_accepted",
             "provider_closed",
+            "provider_assigned_at",
             "notes",
             "provider_notes",
             "client_notes",
@@ -253,10 +257,58 @@ class CaseSerializer(CaseSerializerFull):
             "complaint_flag",
             "gtm_anon_id",
             "scope_traversal",
+            "is_urgent",
         )
 
 
+class NestedScopeTraversalSerializer(serializers.Serializer):
+    """Serializer for scope_traversal in detailed endpoint"""
+    scope_answers = JSONField(read_only=True)
+    financial_assessment_status = serializers.CharField(read_only=True)
+    created = serializers.DateTimeField(read_only=True)
+
+
+class NestedDiagnosisSerializer(serializers.Serializer):
+    """Serializer for diagnosis in detailed endpoint"""
+    nodes = SerializerMethodField()
+    category = serializers.CharField(source="category.code", read_only=True)
+
+    def get_nodes(self, obj):
+        """Extract only the key field from each node"""
+        if obj and obj.nodes:
+            return [{"key": node.get("key")} for node in obj.nodes if "key" in node]
+        return []
+
+
+class DetailedCaseSerializer(CaseSerializer):
+    """
+    Extended case serializer that includes all nested details
+    for the detailed endpoint
+    """
+    personal_details = PersonalDetailsSerializerFull(read_only=True)
+    adaptation_details = AdaptationDetailsSerializerBase(read_only=True)
+    thirdparty_details = ThirdPartyDetailsSerializerBase(read_only=True)
+    scope_traversal = NestedScopeTraversalSerializer(read_only=True)
+    diagnosis = NestedDiagnosisSerializer(read_only=True)
+    notes_history = SerializerMethodField()
+    state = serializers.CharField(read_only=True)
+    state_note = LogSerializer(read_only=True)
+
+    def get_notes_history(self, obj):
+        """Fetch all notes history for the case"""
+        from legalaid.models import CaseNotesHistory
+
+        notes = CaseNotesHistory.objects.filter(case=obj).order_by('-created')
+        return CaseNotesHistorySerializer(notes, many=True).data
+
+    class Meta(CaseSerializer.Meta):
+        fields = tuple(field for field in CaseSerializer.Meta.fields if field != "eligibility_check") + ("state", "state_note", "notes_history")
+
+
 class CaseListSerializer(CaseSerializer):
+    safe_to_contact = serializers.CharField(source='personal_details.safe_to_contact', read_only=True)
+    phone_number = serializers.CharField(source='personal_details.mobile_phone', read_only=True)
+
     class Meta(CaseSerializer.Meta):
         fields = (
             "reference",
@@ -277,7 +329,10 @@ class CaseListSerializer(CaseSerializer):
             "provider_viewed",
             "provider_accepted",
             "provider_closed",
+            "provider_assigned_at",
             "is_urgent",
+            "safe_to_contact",
+            "phone_number",
         )
 
 
@@ -296,13 +351,28 @@ class AdaptationDetailsSerializer(AdaptationDetailsSerializerBase):
         )
 
 
+class CategorySerializer(serializers.ModelSerializer):
+    """Serializer for Category model"""
+    class Meta:
+        model = Category
+        fields = ("code", "name", "description")
+
+
 class ProviderSerializer(ProviderSerializerBase):
+    law_category = CategorySerializer(many=True, read_only=True)
+
     class Meta(ProviderSerializerBase.Meta):
-        fields = ("name", "id")
+        fields = ("id", "name", "law_category")
+
+
+class ProviderSerializerMinimal(ProviderSerializerBase):
+    """Minimal provider serializer for nested use in user serialization"""
+    class Meta(ProviderSerializerBase.Meta):
+        fields = ("id", "name")
 
 
 class StaffSerializer(ExtendedUserSerializerBase):
-    provider = ProviderSerializer(read_only=True)
+    provider = ProviderSerializerMinimal(read_only=True)
 
     chs_user = serializers.CharField(required=False)
     chs_organisation = serializers.CharField(required=False)

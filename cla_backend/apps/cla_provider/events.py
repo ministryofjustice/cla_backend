@@ -75,6 +75,23 @@ class AcceptCaseEvent(BaseEvent):
 event_registry.register(AcceptCaseEvent)
 
 
+class OpenCaseEvent(BaseEvent):
+    key = "open_case"
+    codes = {
+        "CASE_VIEWED": {
+            "type": LOG_TYPES.OUTCOME,
+            "level": LOG_LEVELS.HIGH,
+            "selectable_by": [],
+            "description": "Case opened by provider",
+            "stops_timer": False,
+            "set_requires_action_by": REQUIRES_ACTION_BY.PROVIDER,
+        }
+    }
+
+
+event_registry.register(OpenCaseEvent)
+
+
 class CloseCaseEvent(BaseEvent):
     key = "close_case"
     codes = {

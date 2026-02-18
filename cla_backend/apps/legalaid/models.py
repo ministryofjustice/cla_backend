@@ -1072,6 +1072,7 @@ class Case(TimeStampedModel):
         Based on the current state, retrieves notes from the corresponding event log.
         """
         from django.db.models import Q
+        from cla_eventlog.constants import LOG_LEVELS
         from cla_eventlog.models import Log
 
         state = self.state
@@ -1086,9 +1087,9 @@ class Case(TimeStampedModel):
             return None
 
         codes = code_mapping[state]
-        # Use Q objects to avoid potential SQL injection from kwargs
         log = Log.objects.filter(case=self).filter(
-            Q(code__in=codes)
+            Q(code__in=codes),
+            Q(level__gt=LOG_LEVELS.MINOR)
         ).order_by('-created').first()
         return log
 

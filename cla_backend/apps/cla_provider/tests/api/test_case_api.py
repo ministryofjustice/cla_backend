@@ -20,6 +20,7 @@ from legalaid.tests.views.mixins.case_api import (
 )
 
 from cla_eventlog.models import Log
+from cla_eventlog.constants import LOG_LEVELS, LOG_TYPES
 from cla_eventlog.tests.test_views import ExplicitEventCodeViewTestCaseMixin, ImplicitEventCodeViewTestCaseMixin
 
 from cla_provider.serializers import CaseSerializer
@@ -615,3 +616,58 @@ class CaseStateTestCase(BaseCaseTestCase):
         response = self.client.get(self.get_url(self.resource.reference), HTTP_AUTHORIZATION=self.get_http_authorization())
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn('eligibility_check', response.data)
+
+    def test_case_state_note_prefers_non_minor_case_viewed_log(self):
+        """State note should ignore minor CASE_VIEWED logs and use the visible log entry."""
+        self.resource.provider_viewed = timezone.now()
+        self.resource.save(update_fields=["provider_viewed", "modified"])
+
+        Log.objects.create(
+            case=self.resource,
+            code="CASE_VIEWED",
+            created_by=self.resource.created_by,
+            notes="Not ready for determination",
+            type=LOG_TYPES.OUTCOME,
+            level=LOG_LEVELS.HIGH,
+        )
+        Log.objects.create(
+            case=self.resource,
+            code="CASE_VIEWED",
+            created_by=self.resource.created_by,
+            notes="Case viewed",
+            type=LOG_TYPES.SYSTEM,
+            level=LOG_LEVELS.MINOR,
+        )
+
+        self.assertEqual(self.resource.state, "opened")
+        self.assertIsNotNone(self.resource.state_note)
+        self.assertEqual(self.resource.state_note.notes, "Not ready for determination")
+
+    def test_detailed_endpoint_state_note_ignores_minor_case_viewed_log(self):
+        """Detailed endpoint state_note should match visible logs endpoint behaviour."""
+        self.resource.provider_viewed = timezone.now()
+        self.resource.save(update_fields=["provider_viewed", "modified"])
+
+        Log.objects.create(
+            case=self.resource,
+            code="CASE_VIEWED",
+            created_by=self.resource.created_by,
+            notes="Not ready for determination",
+            type=LOG_TYPES.OUTCOME,
+            level=LOG_LEVELS.HIGH,
+        )
+        Log.objects.create(
+            case=self.resource,
+            code="CASE_VIEWED",
+            created_by=self.resource.created_by,
+            notes="Case viewed",
+            type=LOG_TYPES.SYSTEM,
+            level=LOG_LEVELS.MINOR,
+        )
+
+        detailed_url = "{0}detailed/".format(self.get_url(self.resource.reference))
+        response = self.client.get(detailed_url, HTTP_AUTHORIZATION=self.get_http_authorization())
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["state"], "opened")
+        self.assertEqual(response.data["state_note"]["notes"], "Not ready for determination")

@@ -10,9 +10,3 @@ class EntraAccessTokenAuthenticationBackend(ModelBackend):
             return user
         except Exception as e:
             return e
-
-    def get_user(self, user_id):
-        try:
-            return User.objects.get(pk=user_id)
-        except User.DoesNotExist:
-            return None

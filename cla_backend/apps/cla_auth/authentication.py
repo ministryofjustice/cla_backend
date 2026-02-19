@@ -43,6 +43,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
             raise exceptions.AuthenticationFailed("Token validation failed: %s" % e)
 
     def authenticate(self, request):
+        # Todo: Token header needs to be HTTP_AUTHORIZATION. the value of that will be bearer token
         token = request.META.get("HTTP_BEARER")
         if not token:
             return None
@@ -57,11 +58,10 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
             raise exceptions.AuthenticationFailed("Token missing email claim")
 
         user = authenticate(entra_id_email=email)
-        print(user)
-       
         if not user:
             raise exceptions.AuthenticationFailed("User not found or inactive")
 
+        # Todo: Remove this request.user setting
         request.user = user
         return user, payload
 

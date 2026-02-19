@@ -1,10 +1,11 @@
 from model_mommy.recipe import Recipe, seq, foreign_key
+from django.contrib.auth.models import User
 from ..models import Provider, ProviderAllocation, OutOfHoursRota, Staff, Feedback, CSVUpload, WorkingDays
 
 
 provider = Recipe(Provider, name=seq("Name"))
-
-staff = Recipe(Staff)
+user_recipe = Recipe(User)
+staff = Recipe(Staff, user=foreign_key(user_recipe))
 
 outofhoursrota = Recipe(OutOfHoursRota)
 

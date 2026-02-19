@@ -1,4 +1,5 @@
 import jwt
+import json
 import datetime
 from mock import patch, Mock
 from django.test import TestCase, RequestFactory
@@ -12,11 +13,14 @@ from cryptography.x509.oid import NameOID
 from cryptography.hazmat.primitives import hashes
 
 from cla_auth.authentication import EntraAccessTokenAuthentication
+from core.tests.mommy_utils import make_recipe
+from django.core.urlresolvers import reverse
+from cla_common.constants import REQUIRES_ACTION_BY
 
 User = get_user_model()
 
 
-class EntraAccessTokenAuthenticationTest(TestCase):
+class EntraTokenGeneratorMixin(object):
     def setUp(self):
         """Set up test fixtures"""
         self.factory = RequestFactory()
@@ -28,9 +32,7 @@ class EntraAccessTokenAuthenticationTest(TestCase):
         self.tenant_id = "test-tenant-id"
         self.issuer = "https://login.microsoftonline.com/%s/v2.0" % self.tenant_id
 
-        self.private_key = rsa.generate_private_key(
-            public_exponent=65537, key_size=2048, backend=default_backend()
-        )
+        self.private_key = rsa.generate_private_key(public_exponent=65537, key_size=2048, backend=default_backend())
 
         self.public_key = self.private_key.public_key()
 
@@ -62,11 +64,11 @@ class EntraAccessTokenAuthenticationTest(TestCase):
             .replace("\n", "")
         )
 
-        self.mock_jwks = {
-            "keys": [{"kid": "test-kid-123", "x5c": [cert_base64], "kty": "RSA", "use": "sig"}]
-        }
+        self.mock_jwks = {"keys": [{"kid": "test-kid-123", "x5c": [cert_base64], "kty": "RSA", "use": "sig"}]}
+        self.test_user = self.create_user(email="test@example.com")
 
-        self.test_user = User.objects.create_user(username="testuser", email="test@example.com")
+    def create_user(self, **kwargs):
+        return User.objects.create(**kwargs)
 
     def _create_token(self, expired=False, email="test@example.com", kid="test-kid-123"):
         """Helper to create JWT tokens"""
@@ -90,6 +92,8 @@ class EntraAccessTokenAuthenticationTest(TestCase):
 
         return token
 
+
+class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
     @patch("cla_auth.authentication.cache")
     @patch("cla_auth.authentication.requests.get")
     @patch("cla_auth.authentication.authenticate")
@@ -201,9 +205,7 @@ class EntraAccessTokenAuthenticationTest(TestCase):
         mock_response.raise_for_status.return_value = None
         mock_requests_get.return_value = mock_response
 
-        wrong_key = rsa.generate_private_key(
-            public_exponent=65537, key_size=2048, backend=default_backend()
-        )
+        wrong_key = rsa.generate_private_key(public_exponent=65537, key_size=2048, backend=default_backend())
 
         now = datetime.datetime.now()
         payload = {
@@ -212,7 +214,7 @@ class EntraAccessTokenAuthenticationTest(TestCase):
             "exp": now + datetime.timedelta(hours=1),
             "iat": now,
             "preferred_username": "test@example.com",
-            "name": "John Doe [LAA]"
+            "name": "John Doe [LAA]",
         }
 
         token = jwt.encode(payload, wrong_key, algorithm="RS256", headers={"kid": "test-kid-123"})
@@ -326,3 +328,81 @@ class EntraAccessTokenAuthenticationTest(TestCase):
         self.assertEqual(payload.get("preferred_username"), "test@example.com")
         mock_authenticate.assert_called_once_with(entra_id_email="test@example.com")
 
+
+class EntraAuthorizationTestCase(EntraTokenGeneratorMixin, TestCase):
+    def setUp(self):
+        super(EntraAuthorizationTestCase, self).setUp()
+
+        # This will stay active for the duration of the test method
+        self.settings_override = self.settings(
+            ENTRA_TENANT_ID="test-tenant-id", ENTRA_EXPECTED_AUDIENCE="test-audience"
+        )
+        self.settings_override.enable()
+
+        self.public_keys_patcher = patch("cla_auth.authentication.EntraAccessTokenAuthentication._public_keys")
+        self.public_keys_mock = self.public_keys_patcher.start()
+        self.public_keys_mock.return_value = self.mock_jwks["keys"]
+
+    def tearDown(self):
+        self.public_keys_patcher.stop()
+
+    def test_user_is_not_provider(self):
+        """User is NOT a provider and trys to access a case"""
+
+        # Create a case assigned to a provider
+        case = make_recipe(
+            "legalaid.case",
+            reference="AB-00-11-22",
+            personal_details=make_recipe("legalaid.personal_details"),
+            provider=make_recipe("cla_provider.provider"),
+            requires_action_by=REQUIRES_ACTION_BY.PROVIDER,
+        )
+
+        # Try to get the details of a case with a non-provider user using the provider API
+        url = reverse("cla_provider:case-detail", kwargs=dict(reference=case.reference))
+        token = self._create_token(email=self.test_user.email)
+        headers = {"HTTP_BEARER": token}
+        response = self.client.get(url, **headers)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(
+            json.loads(response.content), {"detail": "You do not have permission to perform this action."}
+        )
+
+    def test_user_is_provider(self):
+        """User is a provider and trys to access a case that belongs to them"""
+
+        # Create a case assigned to a provider
+        user = make_recipe("cla_provider.staff", **dict(user__email="test@localhost"))
+        case = make_recipe(
+            "legalaid.case",
+            reference="AB-00-11-22",
+            personal_details=make_recipe("legalaid.personal_details"),
+            provider=user.provider,
+            requires_action_by=REQUIRES_ACTION_BY.PROVIDER,
+        )
+
+        token = self._create_token(email=user.user.email)
+        # Try to get the details of a case with a provider user using the provider API
+        url = reverse("cla_provider:case-detail", kwargs=dict(reference=case.reference))
+        headers = {"HTTP_BEARER": token}
+        response = self.client.get(url, **headers)
+        self.assertEqual(response.status_code, 200)
+
+    def test_user_is_provider_but_not_assigned_case(self):
+        """The user is a provider but the case is assigned to them."""
+
+        user = make_recipe("cla_provider.staff", **dict(user__email="test@localhost"))
+        case = make_recipe(
+            "legalaid.case",
+            reference="AB-00-11-22",
+            personal_details=make_recipe("legalaid.personal_details"),
+            provider=make_recipe("cla_provider.provider"),
+            requires_action_by=REQUIRES_ACTION_BY.PROVIDER,
+        )
+
+        token = self._create_token(email=user.user.email)
+        # Try to get the details of a case with a provider user using the provider API
+        url = reverse("cla_provider:case-detail", kwargs=dict(reference=case.reference))
+        headers = {"HTTP_BEARER": token}
+        response = self.client.get(url, **headers)
+        self.assertEqual(response.status_code, 404)

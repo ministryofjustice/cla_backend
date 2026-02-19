@@ -9,10 +9,7 @@ class EntraAccessTokenAuthenticationBackend(ModelBackend):
             user = User.objects.get(email=entra_id_email, is_active=True)
             return user
         except Exception as e:
-            return e 
-        
-           
-           
+            return e
 
     def get_user(self, user_id):
         try:

@@ -42,11 +42,13 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         except Exception as e:
             raise exceptions.AuthenticationFailed("Token validation failed: %s" % e)
 
-    def authenticate(self, request):
-        # Todo: Token header needs to be HTTP_AUTHORIZATION. the value of that will be bearer token
-        token = request.META.get("HTTP_BEARER")
+    def authenticate(self, request):       
+        token = request.META.get("HTTP_AUTHORIZATION")
         if not token:
             return None
+        
+        if not token.startswith('ey'):
+            key, token = token.split(":", 1)
 
         try:
             payload = self._validate_token(token)
@@ -60,9 +62,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         user = authenticate(entra_id_email=email)
         if not user:
             raise exceptions.AuthenticationFailed("User not found or inactive")
-
-        # Todo: Remove this request.user setting
-        request.user = user
+        
         return user, payload
 
     def validate_token(self, token):
@@ -72,7 +72,6 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         keys = self._public_keys()
         key_data = next((k for k in keys if k["kid"] == kid), None)
 
-        # retry if the the key not find
         if not key_data:
             cache.delete("entra_public_keys")
             keys = self._public_keys()

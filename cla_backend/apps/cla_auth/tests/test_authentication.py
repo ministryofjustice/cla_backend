@@ -110,7 +110,7 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
         token = self._create_token(expired=False)
 
         request = self.factory.get("/")
-        request.META["HTTP_BEARER"] = token
+        request.META["HTTP_AUTHORIZATION"] = token
 
         user, payload = self.auth.authenticate(request)
         email = payload.get("preferred_username")
@@ -133,7 +133,7 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
         token = self._create_token(expired=True)
 
         request = self.factory.get("/")
-        request.META["HTTP_BEARER"] = token
+        request.META["HTTP_AUTHORIZATION"] = token
 
         with self.assertRaises(exceptions.AuthenticationFailed):
             self.auth.authenticate(request)
@@ -168,7 +168,7 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
         token = jwt.encode(payload, self.private_key, algorithm="RS256", headers={"kid": "test-kid-123"})
 
         request = self.factory.get("/")
-        request.META["HTTP_BEARER"] = token
+        request.META["HTTP_AUTHORIZATION"] = token
 
         with self.assertRaises(exceptions.AuthenticationFailed):
             self.auth.authenticate(request)
@@ -189,7 +189,7 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
         token = self._create_token(expired=False)
 
         request = self.factory.get("/")
-        request.META["HTTP_BEARER"] = token
+        request.META["HTTP_AUTHORIZATION"] = token
 
         with self.assertRaises(exceptions.AuthenticationFailed):
             self.auth.authenticate(request)
@@ -220,7 +220,7 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
         token = jwt.encode(payload, wrong_key, algorithm="RS256", headers={"kid": "test-kid-123"})
 
         request = self.factory.get("/")
-        request.META["HTTP_BEARER"] = token
+        request.META["HTTP_AUTHORIZATION"] = token
 
         with self.assertRaises(exceptions.AuthenticationFailed):
             self.auth.authenticate(request)
@@ -270,7 +270,7 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
         token = self._create_token(expired=False)
 
         request = self.factory.get("/")
-        request.META["HTTP_BEARER"] = token
+        request.META["HTTP_AUTHORIZATION"] = token
 
         user, _ = self.auth.authenticate(request)
 
@@ -296,7 +296,7 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
         token = self._create_token(expired=False)
 
         request = self.factory.get("/")
-        request.META["HTTP_BEARER"] = token
+        request.META["HTTP_AUTHORIZATION"] = token
 
         with self.assertRaises(exceptions.AuthenticationFailed) as ctx:
             self.auth.authenticate(request)
@@ -320,7 +320,7 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
         token = self._create_token(expired=False)
 
         request = self.factory.get("/")
-        request.META["HTTP_BEARER"] = token
+        request.META["HTTP_AUTHORIZATION"] = token
 
         user, payload = self.auth.authenticate(request)
 
@@ -361,7 +361,7 @@ class EntraAuthorizationTestCase(EntraTokenGeneratorMixin, TestCase):
         # Try to get the details of a case with a non-provider user using the provider API
         url = reverse("cla_provider:case-detail", kwargs=dict(reference=case.reference))
         token = self._create_token(email=self.test_user.email)
-        headers = {"HTTP_BEARER": token}
+        headers = {"HTTP_AUTHORIZATION": token}
         response = self.client.get(url, **headers)
         self.assertEqual(response.status_code, 403)
         self.assertEqual(
@@ -384,7 +384,7 @@ class EntraAuthorizationTestCase(EntraTokenGeneratorMixin, TestCase):
         token = self._create_token(email=user.user.email)
         # Try to get the details of a case with a provider user using the provider API
         url = reverse("cla_provider:case-detail", kwargs=dict(reference=case.reference))
-        headers = {"HTTP_BEARER": token}
+        headers = {"HTTP_AUTHORIZATION": token}
         response = self.client.get(url, **headers)
         self.assertEqual(response.status_code, 200)
 
@@ -403,6 +403,6 @@ class EntraAuthorizationTestCase(EntraTokenGeneratorMixin, TestCase):
         token = self._create_token(email=user.user.email)
         # Try to get the details of a case with a provider user using the provider API
         url = reverse("cla_provider:case-detail", kwargs=dict(reference=case.reference))
-        headers = {"HTTP_BEARER": token}
+        headers = {"HTTP_AUTHORIZATION": token}
         response = self.client.get(url, **headers)
         self.assertEqual(response.status_code, 404)

@@ -202,6 +202,10 @@ MIDDLEWARE_CLASSES = (
     "status.middleware.MaintenanceModeMiddleware",
     "django_cookies_samesite.middleware.CookiesSameSite",
 )
+AUTHENTICATION_BACKENDS = (
+    "django.contrib.auth.backends.ModelBackend",
+    "cla_auth.backend.EntraAccessTokenAuthenticationBackend",
+)
 
 if not DEBUG:
     MIDDLEWARE_CLASSES += ("csp.middleware.CSPMiddleware",)
@@ -370,7 +374,10 @@ if AWS_STORAGE_BUCKET_NAME:
 
 # Django rest-framework-overrides
 REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": ("oauth2_provider.ext.rest_framework.OAuth2Authentication",),
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "cla_auth.authentication.EntraAccessTokenAuthentication",
+        "oauth2_provider.ext.rest_framework.OAuth2Authentication",
+    ),
     "DEFAULT_PERMISSION_CLASSES": ("core.permissions.AllowNone",),
     "DEFAULT_RENDERER_CLASSES": ("rest_framework.renderers.JSONRenderer",),
     "DEFAULT_THROTTLE_RATES": {"login": "10/sec"},
@@ -467,8 +474,8 @@ CacheAdapter.set_adapter_factory(bank_holidays_cache_adapter_factory)
 MAINTENANCE_MODE = os.environ.get("MAINTENANCE_MODE", "False") == "True"
 
 # Settings for django-session-security.
-DEFAULT_SESSION_SECURITY_WARN_AFTER = 60 * 25 # 25 minutes
-DEFAULT_SESSION_SECURITY_EXPIRE_AFTER = 60 * 30 # 30 minutes
+DEFAULT_SESSION_SECURITY_WARN_AFTER = 60 * 25  # 25 minutes
+DEFAULT_SESSION_SECURITY_EXPIRE_AFTER = 60 * 30  # 30 minutes
 SESSION_COOKIE_AGE = 1800  # 30 minutes
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
@@ -493,6 +500,9 @@ EDUCATION_ALLOCATION_FEATURE_FLAG = os.environ.get("EDUCATION_ALLOCATION_FEATURE
 # A notification will be sent for callback time slot if its remaining capacity drops below this threshold
 CALLBACK_CAPPING_THRESHOLD = os.environ.get("CALLBACK_CAPPING_THRESHOLD", 0)
 CALLBACK_CAPPING_THRESHOLD_NOTIFICATION = os.environ.get("CALLBACK_CAPPING_THRESHOLD_NOTIFICATION", None)
+
+ENTRA_TENANT_ID = os.environ.get("ENTRA_TENANT_ID", None)
+ENTRA_EXPECTED_AUDIENCE = os.environ.get("ENTRA_EXPECTED_AUDIENCE", None)
 
 # .local.py overrides all the common settings.
 try:

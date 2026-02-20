@@ -2,7 +2,7 @@
 """
 Test script to verify the detailed case serializer configuration
 """
-import json
+
 
 def test_serializer_fields():
     """Test that the serializers have the correct fields"""
@@ -72,6 +72,7 @@ def test_serializer_fields():
         print("[ERROR] Error: {}".format(e))
         import traceback
         traceback.print_exc()
+
 
 if __name__ == "__main__":
     test_serializer_fields()

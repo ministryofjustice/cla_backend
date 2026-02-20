@@ -51,10 +51,11 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         if not token:
             return None
 
-        # Todo: need a better way to differentiate between opaque tokens and jwt tokens
-        if not token.lower().startswith("bearer ey"):
+        # Make sure it's a JWT and not an opaque token
+        if len(token.split(".")) != 3:
             return None
 
+        # token will now be Bearer <token>, we are only interested in the token
         _, token = token.split(" ")
         if not token:
             return None

@@ -1,0 +1,61 @@
+# GitHub Repository Archival Workflow
+#
+# Purpose:
+#   Monitors and archives GitHub repositories based on configured archival policies
+#   and notifies stakeholders via GOV.UK Notify service.
+#
+# Trigger Events:
+#   - Scheduled: Weekly on Sundays at 00:00 UTC
+#   - Manual: Workflow dispatch using GitHub web UI
+#
+# Permissions:
+#   - contents: read (required to access repository information for archival checks)
+#
+# Jobs:
+#   archive:
+#     Checks repository status and initiates archival process if conditions are met.
+#     Uses the Ministry of Justice DevSecOps repository archive action to:
+#     - Evaluate repository archival eligibility based on configured days threshold
+#     - Send notification emails to specified stakeholders
+#     - Integrate with GOV.UK Notify for templated notifications
+#
+# Environment Variables Required:
+#   - LAA_ARCHIVAL_DAYS: Number of days of inactivity before archival eligibility
+#   - LAA_NOTIFICATION_EMAIL: Email address for archival notifications
+#   - ARCHIVAL_GOV_NOTIFY_TEMPLATE_ID: GOV.UK Notify template ID for notifications
+#
+# Secrets Required:
+#   - GITHUB_TOKEN: GitHub API token for repository access (auto-provided)
+#   - LAA_GOV_NOTIFY_KEY: API key for GOV.UK Notify service authentication
+
+name: GitHub 🔎
+run-name: GitHub repository check
+
+on:
+  schedule:
+    - cron: "0 0 * * 0"
+
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  archive:
+    permissions:
+      contents: read
+
+    name: Archive ⚙️
+    runs-on: ["ubuntu-latest"]
+
+    steps:
+      - name: Repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Archive
+        uses: ministryofjustice/devsecops-actions/github/repository/archive@582b43adf072ef7d15af8e33e78a6997509e25b0 # v1.3.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          archival-days: ${{ vars.LAA_ARCHIVAL_DAYS }}
+          notification-email: "${{ vars.LAA_NOTIFICATION_EMAIL }}"
+          gov-notify-key: "${{ secrets.LAA_GOV_NOTIFY_KEY }}"
+          gov-notify-template-id: "${{ vars.ARCHIVAL_GOV_NOTIFY_TEMPLATE_ID }}"

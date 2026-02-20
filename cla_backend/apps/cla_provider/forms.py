@@ -168,6 +168,10 @@ class SplitBaseCaseForm(BaseCaseLogForm):
         # #### GENERAL #####
         non_fields_errors = []
 
+        # validate case.provider == loggedin provider
+        if self.case.provider != self.request.user.staff.provider:
+            non_fields_errors.append("Only Providers assigned to the Case can split it.")
+
         # validate that category exists
         if not self.case.eligibility_check or not self.case.eligibility_check.category:
             non_fields_errors.append("The selected Case doesn't have any category associated.")

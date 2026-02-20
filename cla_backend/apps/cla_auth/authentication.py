@@ -42,12 +42,12 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         except Exception as e:
             raise exceptions.AuthenticationFailed("Token validation failed: %s" % e)
 
-    def authenticate(self, request):       
+    def authenticate(self, request):
         token = request.META.get("HTTP_AUTHORIZATION")
         if not token:
             return None
-        
-        if not token.startswith('ey'):
+
+        if not token.startswith("ey"):
             key, token = token.split(":", 1)
 
         try:
@@ -62,7 +62,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         user = authenticate(entra_id_email=email)
         if not user:
             raise exceptions.AuthenticationFailed("User not found or inactive")
-        
+
         return user, payload
 
     def validate_token(self, token):

@@ -1,3 +1,5 @@
+import logging
+
 import jwt
 import requests
 from cryptography.x509 import load_pem_x509_certificate
@@ -6,6 +8,8 @@ from django.contrib.auth import authenticate
 from django.core.cache import cache
 from django.conf import settings
 from rest_framework import exceptions, authentication
+
+logger = logging.getLogger(__name__)
 
 
 class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
@@ -67,6 +71,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         if not user:
             raise exceptions.AuthenticationFailed("User not found or inactive")
 
+        logger.info("User %s authenticated with entra token", str(user.get_username()))
         return user, payload
 
     def validate_token(self, token):

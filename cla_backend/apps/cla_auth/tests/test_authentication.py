@@ -65,7 +65,7 @@ class EntraTokenGeneratorMixin(object):
         )
 
         self.mock_jwks = {"keys": [{"kid": "test-kid-123", "x5c": [cert_base64], "kty": "RSA", "use": "sig"}]}
-        self.test_user = self.create_user(email="test@example.com")
+        self.test_user = self.create_user(email="test@example.com", username="test")
 
     def create_user(self, **kwargs):
         return User.objects.create(**kwargs)

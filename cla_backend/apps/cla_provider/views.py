@@ -240,6 +240,7 @@ class CaseViewSet(CLAProviderPermissionViewSetMixin, FullCaseViewSet):
     def mcc_split(self, request, reference=None, **kwargs):
         return self._form_action(request, Form=SplitMCCCaseForm, form_kwargs={"request": request})
 
+
 class ProviderExtract(APIView):
     permission_classes = (IsProviderPermission,)
     authentication_classes = (LegacyCHSAuthentication,)

@@ -5,7 +5,7 @@ from ..models import Provider, ProviderAllocation, OutOfHoursRota, Staff, Feedba
 
 provider = Recipe(Provider, name=seq("Name"))
 user_recipe = Recipe(User)
-staff = Recipe(Staff, user=foreign_key(user_recipe))
+staff = Recipe(Staff, user=user_recipe.make)
 
 outofhoursrota = Recipe(OutOfHoursRota)
 

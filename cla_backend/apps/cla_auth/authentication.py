@@ -47,8 +47,12 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         if not token:
             return None
 
-        if not token.startswith("ey"):
-            key, token = token.split(":", 1)
+        if not token.lower().startswith("bearer"):
+            return None
+
+        _, token = token.split(" ")
+        if not token:
+            return None
 
         try:
             payload = self._validate_token(token)

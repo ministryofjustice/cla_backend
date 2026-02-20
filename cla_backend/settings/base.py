@@ -374,7 +374,10 @@ if AWS_STORAGE_BUCKET_NAME:
 
 # Django rest-framework-overrides
 REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": ("cla_auth.authentication.EntraAccessTokenAuthentication","oauth2_provider.ext.rest_framework.OAuth2Authentication"),
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "cla_auth.authentication.EntraAccessTokenAuthentication",
+        "oauth2_provider.ext.rest_framework.OAuth2Authentication",
+    ),
     "DEFAULT_PERMISSION_CLASSES": ("core.permissions.AllowNone",),
     "DEFAULT_RENDERER_CLASSES": ("rest_framework.renderers.JSONRenderer",),
     "DEFAULT_THROTTLE_RATES": {"login": "10/sec"},
@@ -497,6 +500,9 @@ EDUCATION_ALLOCATION_FEATURE_FLAG = os.environ.get("EDUCATION_ALLOCATION_FEATURE
 # A notification will be sent for callback time slot if its remaining capacity drops below this threshold
 CALLBACK_CAPPING_THRESHOLD = os.environ.get("CALLBACK_CAPPING_THRESHOLD", 0)
 CALLBACK_CAPPING_THRESHOLD_NOTIFICATION = os.environ.get("CALLBACK_CAPPING_THRESHOLD_NOTIFICATION", None)
+
+ENTRA_TENANT_ID = os.environ.get("ENTRA_TENANT_ID", None)
+ENTRA_EXPECTED_AUDIENCE = os.environ.get("ENTRA_EXPECTED_AUDIENCE", None)
 
 # .local.py overrides all the common settings.
 try:

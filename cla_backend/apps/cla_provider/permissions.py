@@ -13,10 +13,9 @@ class CLAProviderClientIDPermission(ClientIDPermission):
         When request.auth contains an audience string matching  settings.ENTRA_EXPECTED_AUDIENCE then they have gone
         through the new entra authentication flow.
         """
-
-        audience = request.auth.get("aud".decode("utf-8"))
-
-        if audience == settings.ENTRA_EXPECTED_AUDIENCE:
-            return request.method == "OPTIONS" or (hasattr(request.user, "staff") and bool(request.user.staff))
+        if isinstance(request.auth, dict):
+            audience = request.auth.get("aud".decode("utf-8"))
+            if audience == settings.ENTRA_EXPECTED_AUDIENCE:
+                return request.method == "OPTIONS" or (hasattr(request.user, "staff") and bool(request.user.staff))
 
         return super(CLAProviderClientIDPermission, self).has_permission(request, view)

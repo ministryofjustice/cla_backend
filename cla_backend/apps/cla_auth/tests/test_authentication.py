@@ -372,16 +372,18 @@ class EntraAuthorizationTestCase(EntraTokenGeneratorMixin, TestCase):
         """User is a provider and trys to access a case that belongs to them"""
 
         # Create a case assigned to a provider
-        user = make_recipe("cla_provider.staff", **dict(user__email="test@localhost"))
+        user = User(email="test@localhost")
+        user.save()
+        staff_instance = make_recipe("cla_provider.staff", user=user)
         case = make_recipe(
             "legalaid.case",
             reference="AB-00-11-22",
             personal_details=make_recipe("legalaid.personal_details"),
-            provider=user.provider,
+            provider=staff_instance.provider,
             requires_action_by=REQUIRES_ACTION_BY.PROVIDER,
         )
 
-        token = self._create_token(email=user.user.email)
+        token = self._create_token(email=staff_instance.user.email)
         # Try to get the details of a case with a provider user using the provider API
         url = reverse("cla_provider:case-detail", kwargs=dict(reference=case.reference))
         headers = {"HTTP_AUTHORIZATION": "Bearer %s" % token}
@@ -391,7 +393,9 @@ class EntraAuthorizationTestCase(EntraTokenGeneratorMixin, TestCase):
     def test_user_is_provider_but_not_assigned_case(self):
         """The user is a provider but the case is assigned to them."""
 
-        user = make_recipe("cla_provider.staff", **dict(user__email="test@localhost"))
+        user = User(email="test@localhost")
+        user.save()
+        staff_instance = make_recipe("cla_provider.staff", user=user)
         case = make_recipe(
             "legalaid.case",
             reference="AB-00-11-22",
@@ -400,7 +404,7 @@ class EntraAuthorizationTestCase(EntraTokenGeneratorMixin, TestCase):
             requires_action_by=REQUIRES_ACTION_BY.PROVIDER,
         )
 
-        token = self._create_token(email=user.user.email)
+        token = self._create_token(email=staff_instance.user.email)
         # Try to get the details of a case with a provider user using the provider API
         url = reverse("cla_provider:case-detail", kwargs=dict(reference=case.reference))
         headers = {"HTTP_AUTHORIZATION": "Bearer %s" % token}

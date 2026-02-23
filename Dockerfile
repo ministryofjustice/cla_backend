@@ -23,8 +23,11 @@ RUN apk add --no-cache \
       linux-headers \
       postgresql-dev \
       python2-dev && \
+      ibffi-dev \
+      openssl-dev\
       python -m ensurepip --upgrade && \
       pip install -U setuptools pip==18.1 wheel
+
 
 WORKDIR /home/app
 

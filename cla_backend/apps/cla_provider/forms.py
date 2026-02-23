@@ -196,7 +196,7 @@ class SplitBaseCaseForm(BaseCaseLogForm):
         can_deal = self.can_provider_deal_with_category(category)
         if internal and not can_deal:
             self._errors["internal"] = ErrorList(
-                ["Internal can only be choosen if you can deal with the selected Category of Law."]
+                ["Internal can only be chosen if you can deal with the selected Category of Law."]
             )
             del cleaned_data["internal"]
 

@@ -263,7 +263,7 @@ class SplitCaseForm(SplitBaseCaseForm):
         # #### CATEGORY #####
         category = cleaned_data.get("category")
         if category and category == self.case.eligibility_check.category:
-            self._errors["category"] = ErrorList(["Please chose a different category or law."])
+            self._errors["category"] = ErrorList(["Please choose a different category or law."])
             cleaned_data.pop("category", None)
 
         return cleaned_data

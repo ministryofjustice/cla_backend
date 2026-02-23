@@ -242,7 +242,7 @@ class SplitBaseCaseForm(BaseCaseLogForm):
 class SplitCaseForm(SplitBaseCaseForm):
     # This cares about an `already split` case or if case is being split by `same-category`
     def clean(self):
-        cleaned_data = super().clean()
+        cleaned_data = super(SplitCaseForm, self).clean()
 
         if self._errors:
             return cleaned_data

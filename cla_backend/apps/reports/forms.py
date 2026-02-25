@@ -692,6 +692,7 @@ class MIDigitalCaseTypesExtract(SQLFileDateRangeReport):
             "date_case_created",
         ]
 
+
 class MIDigitalCaseTypesExtractWithCategory(SQLFileDateRangeReport):
     QUERY_FILE = "MIDigitalCaseTypesWithCategory.sql"
 

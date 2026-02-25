@@ -27,6 +27,7 @@ from .forms import (
     MIDuplicateCaseExtract,
     ComplaintsReport,
     MIDigitalCaseTypesExtract,
+    MIDigitalCaseTypesExtractWithCategory,
     MIProviderAllocationExtract,
     MIExtractCaseViewAuditLog,
     MIExtractComplaintViewAuditLog,
@@ -166,6 +167,10 @@ def mi_voice_extract(request):
 def mi_digital_case_type_extract(request):
     return report_view(request, MIDigitalCaseTypesExtract, "MI Digital Case Types Report")
 
+@staff_member_required
+@permission_required("legalaid.run_reports")
+def mi_digital_case_type_extract_with_category(request):
+    return report_view(request, MIDigitalCaseTypesExtractWithCategory, "MI Digital Case Types with Category Report")
 
 @staff_member_required
 @permission_required("legalaid.run_reports")

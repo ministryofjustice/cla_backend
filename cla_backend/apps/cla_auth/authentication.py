@@ -51,7 +51,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         if not token:
             return None
 
-        # Make sure it's a JWT and not an opaque token
+        # Make sure it's a JWT token and if not exit the authenticate method
         if len(token.split(".")) != 3:
             return None
 
@@ -67,7 +67,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
 
         email = payload.get("preferred_username")
         if not email:
-            raise exceptions.AuthenticationFailed("Token missing email claim")
+            raise exceptions.AuthenticationFailed("Invalid Token format")
 
         user = authenticate(entra_id_email=email)
         if not user:

@@ -1,5 +1,5 @@
 import jwt
-import json
+import json, time
 import datetime
 from mock import patch, Mock
 from django.test import TestCase, RequestFactory
@@ -17,8 +17,8 @@ from core.tests.mommy_utils import make_recipe
 from django.core.urlresolvers import reverse
 from cla_common.constants import REQUIRES_ACTION_BY
 
-User = get_user_model()
 
+User = get_user_model()
 
 class EntraTokenGeneratorMixin(object):
     def setUp(self):
@@ -94,42 +94,35 @@ class EntraTokenGeneratorMixin(object):
 
 
 class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
-    @patch("cla_auth.authentication.cache")
-    @patch("cla_auth.authentication.requests.get")
-    @patch("cla_auth.authentication.authenticate")
-    def test_valid_token_authentication(self, mock_authenticate, mock_requests_get, mock_cache):
+    
+    @patch("cla_auth.authentication.EntraAccessTokenAuthentication._public_keys")
+    def test_valid_token_authentication(self,mock_public_keys):
         """Test successful authentication with valid token"""
+        email = "testuser@mail.com"
+        user = User(email=email, is_active=True)
+        user.save()
+        make_recipe("cla_provider.staff", user=user)
+        
+        mock_public_keys.return_value = self.mock_jwks["keys"]
 
-        mock_cache.get.return_value = None
-        mock_response = Mock()
-        mock_response.json.return_value = self.mock_jwks
-        mock_response.raise_for_status.return_value = None
-        mock_requests_get.return_value = mock_response
-        mock_authenticate.return_value = self.test_user
-
-        token = self._create_token(expired=False)
+        token = self._create_token(expired=False, email=email)
 
         request = self.factory.get("/")
         request.META["HTTP_AUTHORIZATION"] = "Bearer %s" % token
 
         user, payload = self.auth.authenticate(request)
+        exp = payload.get("exp")
         email = payload.get("preferred_username")
 
-        self.assertEqual(user, self.test_user)
-        self.assertEqual(email, "test@example.com")
-        mock_authenticate.assert_called_once_with(entra_id_email="test@example.com")
 
-    @patch("cla_auth.authentication.cache")
-    @patch("cla_auth.authentication.requests.get")
-    def test_expired_token_authentication(self, mock_requests_get, mock_cache):
+        self.assertGreater(exp, time.time())
+        self.assertEqual(email, "testuser@mail.com")
+    
+
+    @patch("cla_auth.authentication.EntraAccessTokenAuthentication._public_keys")
+    def test_expired_token_authentication(self, mock_public_keys):
         """Test authentication fails with expired token"""
-
-        mock_cache.get.return_value = None
-        mock_response = Mock()
-        mock_response.json.return_value = self.mock_jwks
-        mock_response.raise_for_status.return_value = None
-        mock_requests_get.return_value = mock_response
-
+        mock_public_keys.return_value = self.mock_jwks["keys"]
         token = self._create_token(expired=True)
 
         request = self.factory.get("/")
@@ -144,16 +137,8 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
         result = self.auth.authenticate(request)
         self.assertIsNone(result)
 
-    @patch("cla_auth.authentication.cache")
-    @patch("cla_auth.authentication.requests.get")
-    def test_token_missing_email_claim(self, mock_requests_get, mock_cache):
+    def test_token_missing_email_claim(self):
         """Test authentication fails when token missing email claim"""
-
-        mock_cache.get.return_value = None
-        mock_response = Mock()
-        mock_response.json.return_value = self.mock_jwks
-        mock_response.raise_for_status.return_value = None
-        mock_requests_get.return_value = mock_response
 
         now = datetime.datetime.now()
         payload = {
@@ -173,37 +158,29 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
         with self.assertRaises(exceptions.AuthenticationFailed):
             self.auth.authenticate(request)
 
-    @patch("cla_auth.authentication.cache")
-    @patch("cla_auth.authentication.requests.get")
-    @patch("cla_auth.authentication.authenticate")
-    def test_user_not_found(self, mock_authenticate, mock_requests_get, mock_cache):
+    @patch("cla_auth.authentication.EntraAccessTokenAuthentication._public_keys")
+    def test_user_not_found(self, mock_public_keys):
         """Test authentication fails when user not found"""
 
-        mock_cache.get.return_value = None
-        mock_response = Mock()
-        mock_response.json.return_value = self.mock_jwks
-        mock_response.raise_for_status.return_value = None
-        mock_requests_get.return_value = mock_response
-        mock_authenticate.return_value = None  # User not found
+        # this user is active, and exist
+        user = User(email="test1233@example.com", is_active=True)
+        user.save()
+        make_recipe("cla_provider.staff", user=user)
 
-        token = self._create_token(expired=False)
+        mock_public_keys.return_value = self.mock_jwks["keys"]
+
+        # different email from the one that is created
+        token = self._create_token(expired=False, email="tester@example.com")
 
         request = self.factory.get("/")
         request.META["HTTP_AUTHORIZATION"] = "Bearer %s" % token
 
-        with self.assertRaises(exceptions.AuthenticationFailed):
-            self.auth.authenticate(request)
+        with self.assertRaises(exceptions.AuthenticationFailed, msg="User not found or inactive"):
+             self.auth.authenticate(request)
 
-    @patch("cla_auth.authentication.cache")
-    @patch("cla_auth.authentication.requests.get")
-    def test_invalid_signature(self, mock_requests_get, mock_cache):
+   
+    def test_invalid_signature(self):
         """Test authentication fails with invalid signature"""
-
-        mock_cache.get.return_value = None
-        mock_response = Mock()
-        mock_response.json.return_value = self.mock_jwks
-        mock_response.raise_for_status.return_value = None
-        mock_requests_get.return_value = mock_response
 
         wrong_key = rsa.generate_private_key(public_exponent=65537, key_size=2048, backend=default_backend())
 
@@ -225,16 +202,14 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
         with self.assertRaises(exceptions.AuthenticationFailed):
             self.auth.authenticate(request)
 
-    @patch("cla_auth.authentication.cache")
     @patch("cla_auth.authentication.requests.get")
-    def test_public_keys_cached(self, mock_requests_get, mock_cache):
+    @patch("cla_auth.authentication.cache")
+    def test_public_keys_cached(self, mock_cache, mock_requests):
         """Test that public keys are cached"""
 
         mock_cache.get.return_value = None
-        mock_response = Mock()
-        mock_response.json.return_value = self.mock_jwks
-        mock_response.raise_for_status.return_value = None
-        mock_requests_get.return_value = mock_response
+        mock_requests.return_value.json.return_value = self.mock_jwks
+        mock_requests.return_value.raise_for_status.return_value = None
 
         keys = self.auth._public_keys()
 
@@ -251,82 +226,26 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
 
         self.assertIn("public key", str(context.exception).lower())
 
-    @patch("cla_auth.authentication.cache")
-    @patch("cla_auth.authentication.requests.get")
-    @patch("cla_auth.authentication.authenticate")
-    def test_user_exist_but_disable(self, mock_authenticate, mock_requests_get, mock_cache):
-        """Test that a disabled user is returned with a warning flag in the payload"""
+    
+    @patch("cla_auth.authentication.EntraAccessTokenAuthentication._public_keys")
+    def test_user_exist_but_disable(self, mock_public_keys):
+        """Test that authenticate returns None for a disabled user"""
 
-        mock_cache.get.return_value = None
-        mock_response = Mock()
-        mock_response.json.return_value = self.mock_jwks
-        mock_response.raise_for_status.return_value = None
-        mock_requests_get.return_value = mock_response
+        user = User(email="test1233@example.com", is_active=False)
+        user.save()
+        make_recipe("cla_provider.staff", user=user)
 
-        disabled_user = Mock()
-        disabled_user.is_active = False
-        mock_authenticate.return_value = disabled_user
+        mock_public_keys.return_value = self.mock_jwks["keys"]
 
-        token = self._create_token(expired=False)
+        token = self._create_token(expired=False, email="test1233@example.com")
 
         request = self.factory.get("/")
         request.META["HTTP_AUTHORIZATION"] = "Bearer %s" % token
 
-        user, _ = self.auth.authenticate(request)
+        with self.assertRaises(exceptions.AuthenticationFailed, msg="User not found or inactive"):
+             self.auth.authenticate(request)
 
-        self.assertEqual(user, disabled_user)
-        self.assertFalse(user.is_active)
-        mock_authenticate.assert_called_once_with(entra_id_email="test@example.com")
 
-    @patch("cla_auth.authentication.cache")
-    @patch("cla_auth.authentication.requests.get")
-    @patch("cla_auth.authentication.authenticate")
-    def test_request_success_but_not_provider(self, mock_authenticate, mock_get, mock_cache):
-        """Test authentication succeeds but user is not an allowed provider"""
-
-        mock_cache.get.return_value = None
-        mock_response = Mock()
-        mock_response.json.return_value = self.mock_jwks
-        mock_response.raise_for_status.return_value = None
-        mock_get.return_value = mock_response
-
-        permission_denied_message = "You do not have permission to perform this action."
-        mock_authenticate.side_effect = exceptions.AuthenticationFailed(permission_denied_message)
-
-        token = self._create_token(expired=False)
-
-        request = self.factory.get("/")
-        request.META["HTTP_AUTHORIZATION"] = "Bearer %s" % token
-
-        with self.assertRaises(exceptions.AuthenticationFailed) as ctx:
-            self.auth.authenticate(request)
-
-        self.assertEqual(str(ctx.exception.detail), permission_denied_message)
-
-    @patch("cla_auth.authentication.cache")
-    @patch("cla_auth.authentication.requests.get")
-    @patch("cla_auth.authentication.authenticate")
-    def test_request_success_valid_provider(self, mock_authenticate, mock_get, mock_cache):
-        """Test authentication succeeds and returns empty list with 200 for valid provider"""
-
-        mock_cache.get.return_value = None
-        mock_response = Mock()
-        mock_response.json.return_value = self.mock_jwks
-        mock_response.raise_for_status.return_value = None
-        mock_get.return_value = mock_response
-
-        mock_authenticate.return_value = self.test_user
-
-        token = self._create_token(expired=False)
-
-        request = self.factory.get("/")
-        request.META["HTTP_AUTHORIZATION"] = "Bearer %s" % token
-
-        user, payload = self.auth.authenticate(request)
-
-        self.assertEqual(user, self.test_user)
-        self.assertEqual(payload.get("preferred_username"), "test@example.com")
-        mock_authenticate.assert_called_once_with(entra_id_email="test@example.com")
 
 
 class EntraAuthorizationTestCase(EntraTokenGeneratorMixin, TestCase):

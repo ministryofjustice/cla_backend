@@ -9,12 +9,16 @@ SELECT
   ,e.state
   ,c.outcome_code
   ,c.created
-  ,category.code
+  ,CASE
+    WHEN c.scope_traversal_id IS NOT NULL THEN s.category ->> 'code'
+    ELSE diag_category.code
+  END AS category_code
 FROM legalaid_case as c
   LEFT JOIN cla_eventlog_log as log on log.case_id = c.id and log.code = 'CASE_CREATED'
   LEFT OUTER JOIN auth_user u on u.id = c.created_by_id
   LEFT JOIN diagnosis_diagnosistraversal d on c.diagnosis_id = d.id
-  LEFT JOIN legalaid_category category on d.category_id = category.id
+  LEFT JOIN legalaid_category diag_category on d.category_id = diag_category.id
+  LEFT JOIN checker_scopetraversal s on s.id = c.scope_traversal_id
   LEFT JOIN legalaid_eligibilitycheck e on c.eligibility_check_id = e.id
     WHERE
     c.created >= %s

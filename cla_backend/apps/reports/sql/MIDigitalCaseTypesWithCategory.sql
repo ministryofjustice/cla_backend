@@ -9,7 +9,7 @@ SELECT
   ,e.state
   ,c.outcome_code
   ,c.created
-  ,category.code as category_code
+  ,category.code
 FROM legalaid_case as c
   LEFT JOIN cla_eventlog_log as log on log.case_id = c.id and log.code = 'CASE_CREATED'
   LEFT OUTER JOIN auth_user u on u.id = c.created_by_id

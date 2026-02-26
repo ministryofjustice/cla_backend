@@ -298,7 +298,7 @@ class EntraAuthorizationTestCase(EntraTokenGeneratorMixin, TestCase):
         )
 
         token = self._create_token(email=staff_instance.user.email)
-        # Try to get the details of a case with a provider user using the provider API
+        # Try to get the details for a case with a provider user using the provider API
         url = reverse("cla_provider:case-detail", kwargs=dict(reference=case.reference))
         headers = {"HTTP_AUTHORIZATION": "Bearer %s" % token}
         response = self.client.get(url, **headers)

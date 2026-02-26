@@ -1,7 +1,8 @@
 import jwt
-import json, time
+import json
+import time
 import datetime
-from mock import patch, Mock
+from mock import patch
 from django.test import TestCase, RequestFactory
 from django.contrib.auth import get_user_model
 from rest_framework import exceptions
@@ -19,6 +20,7 @@ from cla_common.constants import REQUIRES_ACTION_BY
 
 
 User = get_user_model()
+
 
 class EntraTokenGeneratorMixin(object):
     def setUp(self):
@@ -94,15 +96,14 @@ class EntraTokenGeneratorMixin(object):
 
 
 class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
-    
     @patch("cla_auth.authentication.EntraAccessTokenAuthentication._public_keys")
-    def test_valid_token_authentication(self,mock_public_keys):
+    def test_valid_token_authentication(self, mock_public_keys):
         """Test successful authentication with valid token"""
         email = "testuser@mail.com"
         user = User(email=email, is_active=True)
         user.save()
         make_recipe("cla_provider.staff", user=user)
-        
+
         mock_public_keys.return_value = self.mock_jwks["keys"]
 
         token = self._create_token(expired=False, email=email)
@@ -114,10 +115,8 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
         exp = payload.get("exp")
         email = payload.get("preferred_username")
 
-
         self.assertGreater(exp, time.time())
         self.assertEqual(email, "testuser@mail.com")
-    
 
     @patch("cla_auth.authentication.EntraAccessTokenAuthentication._public_keys")
     def test_expired_token_authentication(self, mock_public_keys):
@@ -176,9 +175,8 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
         request.META["HTTP_AUTHORIZATION"] = "Bearer %s" % token
 
         with self.assertRaises(exceptions.AuthenticationFailed, msg="User not found or inactive"):
-             self.auth.authenticate(request)
+            self.auth.authenticate(request)
 
-   
     def test_invalid_signature(self):
         """Test authentication fails with invalid signature"""
 
@@ -226,7 +224,6 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
 
         self.assertIn("public key", str(context.exception).lower())
 
-    
     @patch("cla_auth.authentication.EntraAccessTokenAuthentication._public_keys")
     def test_user_exist_but_disable(self, mock_public_keys):
         """Test that authenticate returns None for a disabled user"""
@@ -243,9 +240,7 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
         request.META["HTTP_AUTHORIZATION"] = "Bearer %s" % token
 
         with self.assertRaises(exceptions.AuthenticationFailed, msg="User not found or inactive"):
-             self.auth.authenticate(request)
-
-
+            self.auth.authenticate(request)
 
 
 class EntraAuthorizationTestCase(EntraTokenGeneratorMixin, TestCase):

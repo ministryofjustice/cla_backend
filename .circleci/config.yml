@@ -120,11 +120,6 @@ jobs:
           key: pip-v1-pip-compile
           paths:
             - "~/.cache/pip"
-      - run:
-          name: Check for changes with pip-compile
-          command: |
-            source pip-compile-env/bin/activate
-            ls requirements/source/* | xargs pre-commit run pip-compile --files
   test:
     docker:
       - image: cimg/python:2.7

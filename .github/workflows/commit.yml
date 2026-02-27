@@ -13,7 +13,7 @@
 #   - Ensures commit messages and metadata meet organizational standards
 
 name: Commit
-run-name: GitHub commit validation
+run-name: GitHub conventional and signed commit validation
 
 on:
   pull_request:

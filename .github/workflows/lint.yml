@@ -51,4 +51,4 @@ jobs:
       - name: Flake8
         shell: bash
         working-directory: ./
-        run: python -m flake8 --exit-zero cla_frontend
+        run: python -m flake8 cla_frontend

@@ -65,6 +65,59 @@ class ReportsSQLColumnsMatchHeadersTestCase(TestCase):
                     % n,
                 )
 
+class ReportMIDigitalExtractTestCase(TestCase):
+    def test_mi_digital_extract(self):
+        data = {"date_from": datetime.datetime.now(), "date_to": datetime.datetime.now()}
+        
+        for _ in range(3):
+            make_recipe("legalaid.case", source="PHONE", created=datetime.datetime.now())
+
+        for _ in range(2):
+            make_recipe("legalaid.case", source="WEB", created=datetime.datetime.now())
+
+        instance = reports.forms.MIDigitalCaseTypesExtract(data=data)
+        instance.is_valid()
+        results = instance.get_queryset()
+
+        self.assertEqual(len(results), 5)
+
+        headers = [h.lower() for h in instance.get_headers()]
+        self.assertIn("contact_type", headers)
+
+        for row in results:
+            contact_type_index = headers.index("contact_type")
+            self.assertIn(row[contact_type_index], ["PHONE", "WEB"])
+        
+class ReportMIDigitalCaseWithCategoryExtractTestCase(TestCase):
+    def test_mi_digital_case_with_category_extract(self):
+        now = datetime.datetime.now()
+        data = {"date_from": now - datetime.timedelta(days=1), "date_to": now + datetime.timedelta(days=1)}
+
+        diag_category = make_recipe("legalaid.category", code="debt")
+        scope_cat_json = {"code": "housing", "name": "Housing, homelessness, losing your home"}
+
+        diagnosis_traversal1 = make_recipe("diagnosis.diagnosis", category=diag_category)
+        diagnosis_traversal2 = make_recipe("diagnosis.diagnosis", category=diag_category)
+
+        scope_setup= make_recipe("checker.scope_traversal", category=scope_cat_json)
+
+        make_recipe("legalaid.case", diagnosis=diagnosis_traversal1, created=now, scope_traversal=None)
+        make_recipe("legalaid.case", scope_traversal=scope_setup, created=now, diagnosis=diagnosis_traversal2)
+
+        instance = reports.forms.MIDigitalCaseTypesExtractWithCategory(data=data)
+        instance.is_valid()
+        results = instance.get_queryset()
+
+        self.assertEqual(len(results), 2)
+
+        headers = [h.lower() for h in instance.get_headers()]
+        category_index = headers.index("case_category")
+
+        returned_categories = {row[category_index] for row in results}
+
+        self.assertIn("debt", returned_categories)
+        self.assertIn("housing", returned_categories)
+        self.assertNotIn("unknown", returned_categories)
 
 class ReportOrganisationColumnTestCase(TestCase):
     def test_mi_survey_dom1_extract_organisation_column(self):

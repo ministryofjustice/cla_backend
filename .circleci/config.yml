@@ -124,10 +124,7 @@ jobs:
           name: Check for changes with pip-compile
           command: |
             source pip-compile-env/bin/activate
-            pre-commit run pip-compile --files requirements-dev.in
-            pre-commit run pip-compile --files requirements-docs.in
-            pre-commit run pip-compile --files requirements-testing.in
-            pre-commit run pip-compile --files requirements-production.in
+            ls requirements/source/* | xargs pre-commit run pip-compile --files
   test:
     docker:
       - image: cimg/python:2.7

@@ -170,7 +170,7 @@ jobs:
             coverage run manage.py test --verbosity=2
             coverage report -m
             coverage html
-            # coveralls
+            coveralls
       - store_artifacts:
           path: htmlcov
           destination: coverage

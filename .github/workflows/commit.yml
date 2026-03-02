@@ -1,0 +1,34 @@
+# This workflow validates commits on pull requests using the Ministry of Justice DevSecOps commit validation action.
+#
+# Triggers:
+#   - Runs on pull requests to any branch
+#
+# Permissions:
+#   - Minimal permissions set; jobs only have read access to repository contents
+#
+# Jobs:
+#   - commit: Executes commit validation checks on the latest Ubuntu runner using the official DevSecOps commit validation action
+#
+# Purpose:
+#   - Ensures commit messages and metadata meet organizational standards
+
+name: Commit
+run-name: GitHub conventional and signed commit validation
+
+on:
+  pull_request:
+    branches: ["**"]
+
+permissions: {}
+
+jobs:
+  commit:
+    permissions:
+      contents: read
+
+    name: Validate
+    runs-on: ["ubuntu-latest"]
+
+    steps:
+      - name: Validate
+        uses: ministryofjustice/devsecops-actions/github/commit@27614b1ca989dade166b707a08f42a61b289a1ba # v1.3.0

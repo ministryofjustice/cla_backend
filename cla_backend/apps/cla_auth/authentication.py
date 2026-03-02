@@ -51,7 +51,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         if not token:
             return None
 
-        # Make sure it's a JWT token and if not exit the authenticate method
+        # Make sure it's a JWT token and if not, exit the authenticate method
         if len(token.split(".")) != 3:
             return None
 

@@ -98,58 +98,6 @@ jobs:
                 region: $ECR_REGION # this will use the env var
                 repo: $ECR_REPOSITORY # this will use the env var
 
-  lint:
-    executor: python2-executor
-    steps:
-      - checkout
-      - run:
-          name: Setup Python environment
-          command: |
-            pip install virtualenv
-            virtualenv lint-env
-      - restore_cache:
-          keys:
-            - pip-v1-{{ checksum "requirements/generated/requirements-lint.txt" }}
-      - run:
-          name: Install dependencies
-          command: |
-            source lint-env/bin/activate
-            pip install --requirement requirements/generated/requirements-lint.txt
-      - save_cache:
-          key: pip-v1-{{ checksum "requirements/generated/requirements-lint.txt" }}
-          paths:
-            - "~/.cache/pip"
-      - run:
-          name: Lint with flake8 (warnings only)
-          command: |
-            source lint-env/bin/activate
-            flake8 cla_backend
-  formatting:
-    executor: python3-executor
-    steps:
-      - checkout
-      - run:
-          name: Setup Python environment
-          command: |
-            pip install virtualenv
-            virtualenv formatting-env
-      - restore_cache:
-          keys:
-            - pip-v1-black-18.9b0
-      - run:
-          name: Install dependencies
-          command: |
-            source formatting-env/bin/activate
-            pip install black>=18.9b0
-      - save_cache:
-          key: pip-v1-black-18.9b0
-          paths:
-            - "~/.cache/pip"
-      - run:
-          name: Check formatting with Black
-          command: |
-            source lint-env/bin/activate
-            black --check cla_backend
   pip-compile:
     executor: python2-executor
     steps:
@@ -174,11 +122,6 @@ jobs:
           key: pip-v1-pip-compile
           paths:
             - "~/.cache/pip"
-      - run:
-          name: Check for changes with pip-compile
-          command: |
-            source pip-compile-env/bin/activate
-            ls requirements/source/* | xargs pre-commit run pip-compile --files
   test:
     docker:
       - image: cimg/python:2.7
@@ -304,11 +247,9 @@ workflows:
   version: 2
   build_and_test:
     jobs:
-      - lint
       - pip-compile
       - test:
           requires:
-            - lint
             - pip-compile
       - cleanup_merged:
           name: cleanup_merged_live

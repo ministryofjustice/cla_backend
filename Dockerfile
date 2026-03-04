@@ -16,15 +16,19 @@ RUN adduser -D app && \
 #  pip install -U setuptools pip==18.1 wheel -- ensures pip is at version 18
 RUN apk add --no-cache \
       build-base \
-      curl curl-dev \
+      curl \
+      curl-dev \
       git \
       libxml2-dev \
       libxslt-dev \
       linux-headers \
       postgresql-dev \
-      python2-dev && \
-      python -m ensurepip --upgrade && \
-      pip install -U setuptools pip==18.1 wheel
+      python2-dev \
+      libffi-dev \
+      openssl-dev && \
+    python -m ensurepip --upgrade && \
+    pip install -U setuptools pip==18.1 wheel
+
 
 WORKDIR /home/app
 

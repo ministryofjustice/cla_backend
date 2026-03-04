@@ -1,24 +1,35 @@
-# GitHub Actions Workflow: Lint
+# GitHub Actions Workflow: Lint and Format Checks
 #
-# Purpose: Runs linting checks on pull requests to ensure code quality and style compliance
+# Purpose:
+#   Automated linting and code formatting validation for pull requests.
+#   Ensures code quality standards are met before merging.
 #
-# Trigger: Automatically runs on all pull requests across any branch
-#
-# Permissions:
-#   - Minimal permissions set (empty root level)
-#   - Job-level read access to repository contents only
-#
-# Environment:
-#   - Runs on Ubuntu latest
-#   - Uses Python 2.7.18 slim container image
+# Triggers:
+#   - pull_request: Runs on all branch pull requests
 #
 # Jobs:
-#   lint:
-#     - Checks out the repository code
-#     - Installs linting dependencies from requirements-lint.txt
-#     - Runs Flake8 linter with exit-zero flag (reports issues without failing the workflow)
 #
-# Output: Flake8 linting report for cla_frontend package
+#   lint:
+#     - Runs flake8 style checker on Python code
+#     - Container: Python 2.7.18 (slim image)
+#     - Installs lint requirements from pip
+#     - Executes flake8 linting checks
+#
+#   format:
+#     - Validates Python code formatting standards
+#     - Runtime: Python 3.10 (via setup-python action)
+#     - Uses pre-commit framework with Black formatter
+#     - Note: Black requires Python 3.6+ (incompatible with Python 2.7)
+#     - Current: Runs Black check only (not fixing)
+#     - TODO: Uncomment "black --fix" to auto-format on pull request
+#
+# Permissions:
+#   - Minimal permissions granted (contents: read only)
+#   - No write access to repository
+#
+# Action Versions:
+#   - checkout@v6.0.1
+#   - setup-python@v6.2.0
 
 name: Lint
 run-name: Lint checks

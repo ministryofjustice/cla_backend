@@ -11,6 +11,7 @@ router.register(r"category", views.CategoryViewSet)
 router.register(r"case", views.CaseViewSet)
 router.register(r"user", views.UserViewSet, base_name="user")
 router.register(r"event", views.EventViewSet, base_name="event")
+router.register(r"provider", views.ProviderViewSet, base_name="provider")
 
 router.register(r"guidance/note", views.GuidanceNoteViewSet, base_name="guidance_note")
 router.register(r"adaptations", views.AdaptationDetailsMetadataViewSet, base_name="adaptations-metadata")

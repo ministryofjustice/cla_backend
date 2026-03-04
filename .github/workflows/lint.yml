@@ -1,10 +1,10 @@
 # GitHub Actions Workflow: Lint
-# 
+#
 # Purpose: Runs linting checks on pull requests to ensure code quality and style compliance
 #
 # Trigger: Automatically runs on all pull requests across any branch
 #
-# Permissions: 
+# Permissions:
 #   - Minimal permissions set (empty root level)
 #   - Job-level read access to repository contents only
 #
@@ -51,4 +51,9 @@ jobs:
       - name: Flake8
         shell: bash
         working-directory: ./
-        run: python -m flake8 cla_frontend
+        run: python -m flake8
+
+      - name: Black
+        shell: bash
+        working-directory: ./
+        run: pre-commit run --all-files black

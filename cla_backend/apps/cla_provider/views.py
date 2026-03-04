@@ -62,7 +62,7 @@ from .serializers import (
     CSVUploadDetailSerializer,
     ProviderSerializer,
 )
-from .forms import RejectCaseForm, AcceptCaseForm, OpenCaseForm, CloseCaseForm, SplitCaseForm, ReopenCaseForm
+from .forms import RejectCaseForm, AcceptCaseForm, OpenCaseForm, CloseCaseForm, SplitCaseForm, ReopenCaseForm, SplitMCCCaseForm
 
 logger = logging.getLogger(__name__)
 
@@ -235,6 +235,10 @@ class CaseViewSet(CLAProviderPermissionViewSetMixin, FullCaseViewSet):
     @detail_route(methods=["post"])
     def split(self, request, reference=None, **kwargs):
         return self._form_action(request, Form=SplitCaseForm, form_kwargs={"request": request})
+
+    @detail_route(methods=["post"])
+    def mcc_split(self, request, reference=None, **kwargs):
+        return self._form_action(request, Form=SplitMCCCaseForm, form_kwargs={"request": request})
 
 
 class ProviderExtract(APIView):

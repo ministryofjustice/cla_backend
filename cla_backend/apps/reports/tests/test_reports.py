@@ -322,10 +322,7 @@ class MIDemographicReportPostcodeFormattingTestCase(TestCase):
         make_recipe("legalaid.case", personal_details=personal_details)
 
         form = reports.forms.MIDemographicReport(
-            data={
-                "date_from": datetime.date.today() - datetime.timedelta(days=1),
-                "date_to": datetime.date.today(),
-            }
+            data={"date_from": datetime.date.today() - datetime.timedelta(days=1), "date_to": datetime.date.today()}
         )
         self.assertTrue(form.is_valid())
         rows = list(form.get_rows())
@@ -346,10 +343,7 @@ class MIDemographicReportPostcodeFormattingTestCase(TestCase):
         make_recipe("legalaid.case", personal_details=personal_details)
 
         form = reports.forms.MIDemographicReport(
-            data={
-                "date_from": datetime.date.today() - datetime.timedelta(days=1),
-                "date_to": datetime.date.today(),
-            }
+            data={"date_from": datetime.date.today() - datetime.timedelta(days=1), "date_to": datetime.date.today()}
         )
         self.assertTrue(form.is_valid())
         rows = list(form.get_rows())
@@ -361,18 +355,12 @@ class MIDemographicReportPostcodeFormattingTestCase(TestCase):
 
     def test_postcode_formatting_empty_postcode_is_ok(self):
         personal_details = make_recipe(
-            "legalaid.personal_details",
-            full_name="John Doe",
-            date_of_birth=datetime.date(1990, 1, 1),
-            postcode="",
+            "legalaid.personal_details", full_name="John Doe", date_of_birth=datetime.date(1990, 1, 1), postcode=""
         )
         make_recipe("legalaid.case", personal_details=personal_details)
 
         form = reports.forms.MIDemographicReport(
-            data={
-                "date_from": datetime.date.today() - datetime.timedelta(days=1),
-                "date_to": datetime.date.today(),
-            }
+            data={"date_from": datetime.date.today() - datetime.timedelta(days=1), "date_to": datetime.date.today()}
         )
         self.assertTrue(form.is_valid())
 

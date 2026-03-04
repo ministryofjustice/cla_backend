@@ -26,7 +26,9 @@ class MockView(APIView):
         return HttpResponse({"a": 1, "b": 2, "c": 3})
 
 
-urlpatterns = base_patterns + patterns("", (r"^mock_view/$", MockView.as_view(authentication_classes=[OAuth2Authentication])))
+urlpatterns = base_patterns + patterns(
+    "", (r"^mock_view/$", MockView.as_view(authentication_classes=[OAuth2Authentication]))
+)
 
 
 class CallCentreClientIDPermissionTestCase(CLAOperatorAuthBaseApiTestMixin, TestCase):
@@ -51,6 +53,8 @@ class CallCentreClientIDPermissionTestCase(CLAOperatorAuthBaseApiTestMixin, Test
             authorization_grant_type="password",
         )
         expiry_date = datetime.datetime.now() + datetime.timedelta(days=2)
-        new_token = AccessToken.objects.create(user=self.user, application=new_client, token="token2", scope=0, expires=expiry_date)
+        new_token = AccessToken.objects.create(
+            user=self.user, application=new_client, token="token2", scope=0, expires=expiry_date
+        )
         response = self.client.get("/mock_view/", HTTP_AUTHORIZATION="Bearer %s" % new_token.token)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

@@ -132,10 +132,10 @@ class CSVUploadSerializerBase(serializers.ModelSerializer):
                 cell = force_text(cell)
 
                 # 1. Sanitise HTML tags
-                cell = re.sub(r'<[^>]+>', '', cell)
+                cell = re.sub(r"<[^>]+>", "", cell)
 
                 # 2. Remove Javascript URL
-                cell = re.sub(r'javascript\s*:', '', cell, flags=re.IGNORECASE)
+                cell = re.sub(r"javascript\s*:", "", cell, flags=re.IGNORECASE)
 
                 # 3. Sanitise CSV injection
                 if cell.strip().startswith(("=", "@", "+", "-")):

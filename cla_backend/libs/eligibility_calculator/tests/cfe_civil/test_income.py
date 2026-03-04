@@ -19,42 +19,12 @@ class TestTranslateIncome(TestCase):
 
         expected = {
             "regular_transactions": [
-                {
-                    "category": "benefits",
-                    "operation": "credit",
-                    "frequency": "monthly",
-                    "amount": 800,
-                },
-                {
-                    "category": "benefits",
-                    "operation": "credit",
-                    "frequency": "monthly",
-                    "amount": 1.0,
-                },
-                {
-                    "category": "maintenance_in",
-                    "operation": "credit",
-                    "frequency": "monthly",
-                    "amount": 100,
-                },
-                {
-                    "category": "benefits",
-                    "operation": "credit",
-                    "frequency": "monthly",
-                    "amount": 2.0,
-                },
-                {
-                    "category": "friends_or_family",
-                    "operation": "credit",
-                    "frequency": "monthly",
-                    "amount": 3.0,
-                },
-                {
-                    "category": "pension",
-                    "operation": "credit",
-                    "frequency": "monthly",
-                    "amount": 4.0,
-                },
+                {"category": "benefits", "operation": "credit", "frequency": "monthly", "amount": 800},
+                {"category": "benefits", "operation": "credit", "frequency": "monthly", "amount": 1.0},
+                {"category": "maintenance_in", "operation": "credit", "frequency": "monthly", "amount": 100},
+                {"category": "benefits", "operation": "credit", "frequency": "monthly", "amount": 2.0},
+                {"category": "friends_or_family", "operation": "credit", "frequency": "monthly", "amount": 3.0},
+                {"category": "pension", "operation": "credit", "frequency": "monthly", "amount": 4.0},
             ]
         }
         self.maxDiff = None
@@ -69,20 +39,13 @@ class TestTranslateIncome(TestCase):
 
         expected = {
             "regular_transactions": [
-                {
-                    "category": "benefits",
-                    "operation": "credit",
-                    "frequency": "monthly",
-                    "amount": 800,
-                }
-            ],
+                {"category": "benefits", "operation": "credit", "frequency": "monthly", "amount": 800}
+            ]
         }
         self.assertEqual(expected, output)
 
     def test_zero_income_produces_empty_cfe_array(self):
         income = Income(benefits=0, tax_credits=0, child_benefits=0, maintenance_received=0, pension=0, other_income=0)
         output = translate_income(income)
-        expected = {
-            "regular_transactions": [],
-        }
+        expected = {"regular_transactions": []}
         self.assertEqual(expected, output)

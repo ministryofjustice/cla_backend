@@ -12,30 +12,27 @@ from oauth2_provider.models import Application
 
 class ClientDataCopyCommandTest(TestCase):
 
-    OLD_CLIENT_DATA = OrderedDict([
-        ("client_id", "test"),
-        ("redirect_uri", "http://localhost:1234"),
-        ("client_type", "test_type"),
-        ("client_secret", "test_secret"),
-        ("name", "test_name"),
-        ("user_id", 1234)])
+    OLD_CLIENT_DATA = OrderedDict(
+        [
+            ("client_id", "test"),
+            ("redirect_uri", "http://localhost:1234"),
+            ("client_type", "test_type"),
+            ("client_secret", "test_secret"),
+            ("name", "test_name"),
+            ("user_id", 1234),
+        ]
+    )
 
     def setUp(self):
         super(ClientDataCopyCommandTest, self).setUp()
         self.test_user = User.objects.create(
-            id=self.OLD_CLIENT_DATA["user_id"],
-            username="test",
-            password="test",
-            email="test@test.com")
+            id=self.OLD_CLIENT_DATA["user_id"], username="test", password="test", email="test@test.com"
+        )
         self.create_client_data()
 
     def run_management_command(self, *args, **kwargs):
         out = StringIO()
-        call_command(
-            "copy_client_data_to_new_table",
-            *args,
-            stdout=out,
-            stderr=StringIO())
+        call_command("copy_client_data_to_new_table", *args, stdout=out, stderr=StringIO())
         return out.getvalue()
 
     def assert_application_data_is_correct(self, application_model):
@@ -48,12 +45,17 @@ class ClientDataCopyCommandTest(TestCase):
         assert application_model.authorization_grant_type == "password"
 
     def create_client_data(self):
-        create_client_data_query = "CREATE TABLE oauth2_client (client_id varchar(255), redirect_uri varchar(255), " \
+        create_client_data_query = (
+            "CREATE TABLE oauth2_client (client_id varchar(255), redirect_uri varchar(255), "
             "client_type varchar(255), client_secret varchar(255), name varchar(255), user_id varchar(255))"
+        )
         with connection.cursor() as cursor:
             cursor.execute(create_client_data_query)
             cursor.execute(
-                "INSERT INTO oauth2_client VALUES ('{}', '{}', '{}', '{}', '{}', {})".format(*self.OLD_CLIENT_DATA.values()))
+                "INSERT INTO oauth2_client VALUES ('{}', '{}', '{}', '{}', '{}', {})".format(
+                    *self.OLD_CLIENT_DATA.values()
+                )
+            )
 
     def test_data_copy_handles_already_existing_data(self):
 

@@ -90,7 +90,7 @@ class TestCalculator(CalculatorTestBase):
                 },
             },
             "property_data": [
-                {"disputed": False, "main": True, "value": 20000000, "mortgage_left": 5000000, "share": 50},
+                {"disputed": False, "main": True, "value": 20000000, "mortgage_left": 5000000, "share": 50}
             ],
         }
         case_data = CaseData(**case_data_dict)
@@ -556,14 +556,7 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
         # so is likely to return an 'unknown' result
         cd = self.case_dict_with_property(10000)
         if tax_credits is None:
-            cd["you"].update(
-                {
-                    "income": dict(
-                        self_employed=self_employed,
-                        earnings=0,
-                    ),
-                }
-            )
+            cd["you"].update({"income": dict(self_employed=self_employed, earnings=0)})
         else:
             cd["you"].update(
                 {
@@ -575,7 +568,7 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
                         pension=0,
                         benefits=0,
                         other_income=0,
-                    ),
+                    )
                 }
             )
         if deductions is not None:

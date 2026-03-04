@@ -9,10 +9,7 @@ SELECT
   ,e.state
   ,c.outcome_code
   ,c.created
-  ,CASE
-    WHEN c.scope_traversal_id IS NOT NULL THEN s.category ->> 'code'
-    ELSE diag_category.code
-  END AS category_code
+  ,COALESCE(NULLIF(s.category ->> 'code', ''), diag_category.code) AS category_code
 FROM legalaid_case as c
   LEFT JOIN cla_eventlog_log as log on log.case_id = c.id and log.code = 'CASE_CREATED'
   LEFT OUTER JOIN auth_user u on u.id = c.created_by_id

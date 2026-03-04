@@ -34,6 +34,26 @@ class ClientIDPermission(BasePermission):
         return client_name
 
     def has_permission(self, request, view):
+        has_permission = self.entra_has_permission(request, view)
+        if has_permission is None:
+            return self.legacy_has_permission(request, view)
+        return has_permission
+
+    def entra_has_permission(self, request, view):
+        """
+        By the time the user has reach here they could have gone through the old oauth2 authentication flow or
+        the new entra authentication flow.
+
+        When request.auth contains an audience string matching  settings.ENTRA_EXPECTED_AUDIENCE then they have gone
+        through the new entra authentication flow.
+        """
+        if isinstance(request.auth, dict):
+            scope = request.auth.get("scp".decode("utf-8"))
+            return scope == self.scope
+
+        return None
+
+    def legacy_has_permission(self, request, view):
         token = request.auth
 
         if not token:

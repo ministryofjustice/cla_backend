@@ -24,6 +24,7 @@ class ClientIDPermission(BasePermission):
     """
 
     client_name = None
+    entra_roles = []
 
     def get_client_name(self, token):
         client = token.application
@@ -40,17 +41,14 @@ class ClientIDPermission(BasePermission):
         return has_permission
 
     def entra_has_permission(self, request, view):
-        """
-        By the time the user has reach here they could have gone through the old oauth2 authentication flow or
-        the new entra authentication flow.
-
-        When request.auth contains an audience string matching  settings.ENTRA_EXPECTED_AUDIENCE then they have gone
-        through the new entra authentication flow.
-        """
         if isinstance(request.auth, dict):
-            scope = request.auth.get("scp".decode("utf-8"))
-            return scope == self.scope
-
+            token_roles = request.auth.get("APP_ROLES")
+            if token_roles is not None:
+                if isinstance(token_roles, unicode):
+                    token_roles = token_roles.encode('utf-8')
+                if isinstance(token_roles, str):
+                    token_roles = [token_roles]
+                return set(self.entra_roles).issubset(set(token_roles))
         return None
 
     def legacy_has_permission(self, request, view):

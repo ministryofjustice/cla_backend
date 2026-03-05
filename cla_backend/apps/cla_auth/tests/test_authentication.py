@@ -12,7 +12,6 @@ from cryptography.hazmat.backends import default_backend
 from cryptography import x509
 from cryptography.x509.oid import NameOID
 from cryptography.hazmat.primitives import hashes
-
 from cla_auth.authentication import EntraAccessTokenAuthentication
 from core.tests.mommy_utils import make_recipe
 from django.core.urlresolvers import reverse
@@ -81,8 +80,20 @@ class EntraTokenGeneratorMixin(object):
         else:
             exp = now + datetime.timedelta(hours=1)
 
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            user = None
+
+        roles = []
+        if user and hasattr(user, "staff"):
+            roles = ["Civil Legal Advice - Provider"]
+        elif user and hasattr(user, "operator"):
+            roles = ["Civil Legal Advice Operator"]
+
         payload = {
             "iss": self.issuer,
+            "APP_ROLES": roles,
             "aud": self.auth.expected_audience,
             "exp": exp,
             "iat": now,
@@ -91,7 +102,6 @@ class EntraTokenGeneratorMixin(object):
         }
 
         token = jwt.encode(payload, self.private_key, algorithm="RS256", headers={"kid": kid})
-
         return token
 
 

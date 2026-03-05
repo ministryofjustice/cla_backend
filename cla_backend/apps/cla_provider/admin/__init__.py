@@ -29,14 +29,14 @@ class StaffAdmin(OneToOneUserAdmin):
 class WorkingDaysInline(admin.TabularInline):
     model = WorkingDays
     formset = WorkingDaysInlineFormset
-    template = 'admin/cla_provider/allocations/working_days_tabular_inline.html'
+    template = "admin/cla_provider/allocations/working_days_tabular_inline.html"
 
 
 class ProviderAllocationInline(nested_admin.NestedTabularInline):
     model = ProviderAllocation
     formset = ProviderAllocationInlineFormset
     inlines = [WorkingDaysInline]
-    template = 'admin/cla_provider/allocations/provider_allocation_tabular_inline.html'
+    template = "admin/cla_provider/allocations/provider_allocation_tabular_inline.html"
 
 
 class ProviderAdmin(nested_admin.NestedModelAdmin):

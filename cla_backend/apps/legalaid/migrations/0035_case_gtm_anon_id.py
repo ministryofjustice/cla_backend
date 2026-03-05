@@ -6,12 +6,8 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [('legalaid', '0034_case_callback_type')]
+    dependencies = [("legalaid", "0034_case_callback_type")]
 
     operations = [
-        migrations.AddField(
-            model_name='case',
-            name='gtm_anon_id',
-            field=models.UUIDField(null=True, blank=True),
-        )
+        migrations.AddField(model_name="case", name="gtm_anon_id", field=models.UUIDField(null=True, blank=True))
     ]

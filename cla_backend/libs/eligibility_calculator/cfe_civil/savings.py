@@ -17,13 +17,9 @@ def translate_savings(savings_data, subject_matter_of_dispute=False):
 
     non_liquid_capital = []
     non_liquid_capital.append(
-        _savings_value(
-            savings_data.asset_balance, "Valuable items worth over 500 pounds", subject_matter_of_dispute
-        )
+        _savings_value(savings_data.asset_balance, "Valuable items worth over 500 pounds", subject_matter_of_dispute)
     )
-    non_liquid_capital.append(
-        _savings_value(savings_data.credit_balance, "Credit balance", subject_matter_of_dispute)
-    )
+    non_liquid_capital.append(_savings_value(savings_data.credit_balance, "Credit balance", subject_matter_of_dispute))
 
     return {
         "capitals": {

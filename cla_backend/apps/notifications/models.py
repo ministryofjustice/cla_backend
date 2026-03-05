@@ -23,7 +23,8 @@ class ScheduleManager(models.Manager):
         return self.get_queryset().filter(
             notification__start_time__lt=now,
             notification__end_time__gt=now,
-            completed=False, retried__lt=MAX_NOTIFICATION_RETRIES
+            completed=False,
+            retried__lt=MAX_NOTIFICATION_RETRIES,
         )
 
 

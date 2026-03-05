@@ -30,10 +30,5 @@ def translate_employment(income, deductions):
     if income.self_employed:
         return {"self_employment_details": [{"income": fields}]}
     else:
-        fields.update(
-            {
-                "receiving_only_statutory_sick_or_maternity_pay": False,
-                "benefits_in_kind": 0,
-            }
-        )
+        fields.update({"receiving_only_statutory_sick_or_maternity_pay": False, "benefits_in_kind": 0})
         return {"employment_details": [{"income": fields}]}

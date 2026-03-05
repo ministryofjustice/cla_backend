@@ -23,4 +23,5 @@ def debug_task(self):
 @app.on_after_finalize.connect
 def setup_periodic_tasks(sender, **kwargs):
     from notifications.periodic_tasks import setup_periodic_tasks as notifications_setup_periodic_tasks
+
     notifications_setup_periodic_tasks(sender, **kwargs)

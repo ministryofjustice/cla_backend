@@ -139,7 +139,9 @@ class EligibilityChecker(object):
             request_data["assessment"].update(translate_under_18_passported(case_data.facts))
             request_data.update(translate_dependants(submission_date, case_data.facts))
             if "partner" in case_data.__dict__ and case_data.facts.should_aggregate_partner:
-                request_data["partner"] = EligibilityChecker._translate_partner_data(case_data.partner, submission_date)
+                request_data["partner"] = EligibilityChecker._translate_partner_data(
+                    case_data.partner, submission_date
+                )
 
         request_data.update(EligibilityChecker._translate_capital_data(case_data))
 

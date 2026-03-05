@@ -12,4 +12,5 @@ def use_vcr_cassette(f):
         cassette_name = test_dir + "/cassettes/" + f.func_name + ".yml"
         with custom_vcr.use_cassette(cassette_name):
             return f(*args, **kwargs)
+
     return wrapper

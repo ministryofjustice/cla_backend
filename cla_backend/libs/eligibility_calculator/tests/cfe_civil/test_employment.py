@@ -9,9 +9,7 @@ class TestCfeIncome(TestCase):
         income = Income(earnings=0, self_employed=False)
         deductions = Deductions(income_tax=0, national_insurance=0)
         output = translate_employment(income, deductions)
-        expected = {
-            "employment_details": [],
-        }
+        expected = {"employment_details": []}
         self.assertEqual(expected, output)
 
     def test_employment_returns_employment_details(self):
@@ -32,7 +30,7 @@ class TestCfeIncome(TestCase):
                         "student_debt_repayment": 0,
                     }
                 }
-            ],
+            ]
         }
         self.assertEqual(expected, output)
 
@@ -52,7 +50,7 @@ class TestCfeIncome(TestCase):
                         "student_debt_repayment": 0,
                     }
                 }
-            ],
+            ]
         }
         self.assertEqual(expected, output)
 
@@ -72,7 +70,7 @@ class TestCfeIncome(TestCase):
                         "student_debt_repayment": 0,
                     }
                 }
-            ],
+            ]
         }
         self.assertEqual(expected, output)
 
@@ -92,7 +90,7 @@ class TestCfeIncome(TestCase):
                         "student_debt_repayment": 0,
                     }
                 }
-            ],
+            ]
         }
         self.assertEqual(expected, output)
 

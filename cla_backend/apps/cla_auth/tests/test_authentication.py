@@ -80,12 +80,17 @@ class EntraTokenGeneratorMixin(object):
         else:
             exp = now + datetime.timedelta(hours=1)
 
-        user = User.objects.get(email=email)
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            user = None
+
         roles = []
-        if hasattr(user, "staff"):
+        if user and hasattr(user, "staff"):
             roles = ["Civil Legal Advice - Provider"]
-        elif hasattr(user, "operator"):
+        elif user and hasattr(user, "operator"):
             roles = ["Civil Legal Advice Operator"]
+
         payload = {
             "iss": self.issuer,
             "APP_ROLES": roles,
@@ -97,7 +102,6 @@ class EntraTokenGeneratorMixin(object):
         }
 
         token = jwt.encode(payload, self.private_key, algorithm="RS256", headers={"kid": kid})
-
         return token
 
 

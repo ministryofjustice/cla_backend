@@ -211,7 +211,16 @@ envVars:
       name: provider-allocation
       key: always_suggest_provider
       optional: true
-
+  ENTRA_EXPECTED_AUDIENCE:
+    secret:
+      name: sso
+      key: expected_audience
+      optional: true
+  ENTRA_TENANT_ID:
+    secret:
+      name: sso
+      key: tenant_id
+      optional: true
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little

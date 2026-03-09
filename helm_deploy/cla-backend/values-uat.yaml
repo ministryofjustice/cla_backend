@@ -8,7 +8,7 @@ image:
 replicaCount: 1
 
 localPostgres:
-  enabled: true
+  enabled: false
 
 queueWorkers:
   enabled: false
@@ -25,22 +25,27 @@ metabase:
 envVars:
   DEBUG:
     value: "False"
-  DB_PASSWORD:
-    value: "thisisapassword"
-    secret: ~
-  DB_USER:
-    value: "postgres"
-    secret: ~
-  DB_NAME:
-    value: "cla_backend"
-    secret: ~
   DB_HOST:
     secret:
-      optional: true
+      name: mcc-integration-database-14
+      key: host
   DB_PORT:
     secret:
+      name:  mcc-integration-database-14
       key: port
       optional: true
+  DB_NAME:
+    secret:
+      name:  mcc-integration-database-14
+      key: name
+  DB_USER:
+    secret:
+      name: mcc-integration-database-14
+      key: user
+  DB_PASSWORD:
+    secret:
+      name:  mcc-integration-database-14
+      key: password
   REPLICA_DB_HOST:
     secret:
       optional: true

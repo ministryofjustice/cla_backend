@@ -48,7 +48,7 @@ class ClientIDPermission(BasePermission):
                     token_roles = token_roles.encode('utf-8')
                 if isinstance(token_roles, str):
                     token_roles = [token_roles]
-                return set(self.entra_roles).issubset(set(token_roles))
+                return all(role in self.entra_roles for role in token_roles)
         return None
 
     def legacy_has_permission(self, request, view):

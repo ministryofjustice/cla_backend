@@ -4,7 +4,7 @@ from rest_framework.permissions import BasePermission
 
 class CallCentreClientIDPermission(ClientIDPermission):
     client_name = "operator"
-    entra_roles = ["Civil Legal Advice Operator"]
+    entra_roles = ["Civil Legal Advice Operator", "Civil Legal Advice - Helpline Operator"]
 
 
 class OperatorManagerPermission(BasePermission):

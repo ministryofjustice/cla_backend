@@ -259,14 +259,14 @@ workflows:
       - build:
           name: build_push_application
           image: app
-#          requires:
-#            - test
+          requires:
+            - test
           context: laa-cla-backend
       - build:
           name: build_push_database_migration
           image: database-migration
-#          requires:
-#            - test
+          requires:
+            - test
           context: laa-cla-backend
       - behave:
           requires:

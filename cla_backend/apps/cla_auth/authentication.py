@@ -1,7 +1,4 @@
-import logging
-
-import jwt
-import requests
+import jwt,requests, logging
 from cryptography.x509 import load_pem_x509_certificate
 from cryptography.hazmat.backends import default_backend
 from django.contrib.auth import authenticate

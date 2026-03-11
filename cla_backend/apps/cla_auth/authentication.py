@@ -6,7 +6,32 @@ from django.core.cache import cache
 from django.conf import settings
 from rest_framework import exceptions, authentication
 
+from cla_backend.apps.call_centre.models import Operator
+from cla_backend.apps.cla_provider.models import Provider, Staff
+
 logger = logging.getLogger(__name__)
+
+
+# cla_backend/apps/call_centre/models.py. creating an opeartor and same for operator manager
+
+# cla_backend/apps/cla_provider/models.py. I need to create a provider first and firm name in the token and staff as well and lets keep false bool arg
+
+     # except User.DoesNotExist:
+
+        #     # Create new user
+        #     user = User.objects.create_user(
+        #         username=entra_id_email,
+        #         email=entra_id_email,
+        #         password=None
+        #     )
+
+        #     user.date_joined = timezone.now()
+        #     user.save()
+
+        #     return user
+
+
+
 
 
 class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
@@ -18,6 +43,53 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
 
     def authenticate_header(self, request):
         return 'Bearer realm="api"'
+    
+
+    def _create_operator(self, payload):
+        
+        operator = Operator (
+            organisation= "", 
+            is_manager= "",
+            is_cla_superuser=""
+        )
+
+
+    def create_operator_manager(self, payload):
+        
+        
+        operator = Operator (
+            organisation= "", 
+            is_manager= "",
+            is_cla_superuser=""
+        )
+
+    def _create_provider(self, payload):
+
+        NAME = payload.get("FIRM_NAME", None),
+        LAW_CATEGORY= payload.get("LAA_ACCOUNTS", None)
+        ACTIVE=True
+        SHORT_CODE = payload.get("FIRM_CODE", None)
+     
+
+        provider = Provider (
+            name= NAME,
+            opening_hours=None, 
+            law_category = LAW_CATEGORY,
+            active=ACTIVE,
+            short_code =SHORT_CODE,
+            telephone_frontdoor= None, 
+            telephone_backdoor=None,
+            email_address =None
+        )
+
+        Staff(
+            user = "",
+            provider = provider, 
+            is_manager=False
+
+        )
+
+
 
     def _public_keys(self):
 
@@ -42,18 +114,13 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
             raise exceptions.AuthenticationFailed("Invalid token format: %s" % e)
         except Exception as e:
             raise exceptions.AuthenticationFailed("Token validation failed: %s" % e)
+        
+
+
 
     def authenticate(self, request):
         token = request.META.get("HTTP_AUTHORIZATION")
-        if not token:
-            return None
-
-        # Make sure it's a JWT token and if not, exit the authenticate method
-        if len(token.split(".")) != 3:
-            return None
-
-        # token will now be Bearer <token>, we are only interested in the token
-        _, token = token.split(" ")
+    
         if not token:
             return None
 
@@ -68,7 +135,31 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
 
         user = authenticate(entra_id_email=email)
         if not user:
-            raise exceptions.AuthenticationFailed("User not found or inactive")
+            user_role = payload.get("APP_ROLES")
+
+        if not user_role:
+            raise exceptions.AuthenticationFailed(
+                "Invalid token: missing required field 'APP_ROLES'"
+            )
+
+        ROLE_OPERATOR_MANAGER = "Civil Legal Advice Operator Manager"
+        ROLE_OPERATOR = "Civil Legal Advice Operator"
+        ROLE_PROVIDER = "Civil Legal Advice - Provider"
+
+        role_handlers = {
+            ROLE_OPERATOR_MANAGER: self.create_operator_manager,
+            ROLE_OPERATOR: self._create_operator,
+            ROLE_PROVIDER: self._create_provider,
+        }
+
+        register_user = role_handlers.get(user_role)
+
+        if not register_user:
+            raise exceptions.AuthenticationFailed(
+                f"Invalid token: unsupported role '{user_role}'"
+            )
+        
+        user = register_user(payload)
 
         logger.info("User %s authenticated with entra token", str(user.get_username()))
         return user, payload

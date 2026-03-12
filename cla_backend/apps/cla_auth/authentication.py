@@ -22,22 +22,24 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
     def authenticate_header(self, request):
         return 'Bearer realm="api"'
     
+    def _decode(self,value):
+        if value:    
+            value.encode('utf-8')
+            return value.decode('utf-8')
+        
+        return value
+    
 
     def _create_operator(self, payload):
-        
-        user = payload.get("user", None)
-        organisation = payload.get("organisation", None)
-        is_manager = payload.get("is_manager", None)
-        is_cla_superuser = payload.get("is_cla_superuser", None)
+
+        user = payload.get("USER_EMAIL", None).encode('utf-8')
+        organisation = str(payload.get("FIRM_NAME", ""))
+        is_manager = payload.get("is_manager", False)
+        is_cla_superuser = payload.get("is_cla_superuser", False)
 
         if user is None:
-            raise ValueError("user is required")
+            return None
 
-        if is_manager is None:
-            is_manager = False
-
-        if is_cla_superuser is None:
-            is_cla_superuser = False
 
         create_operator = Operator(
             user = user, 
@@ -47,6 +49,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         )
 
         status = create_operator.save()
+
 
         return True if status else False 
 
@@ -58,8 +61,10 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         is_manager = payload.get("is_manager", None)
         is_cla_superuser = payload.get("is_cla_superuser", None)
 
+       
+
         if user is None:
-            raise ValueError("user is required")
+           return None
 
         if is_manager is None:
             is_manager = False
@@ -86,7 +91,9 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         LAW_CATEGORY= payload.get("LAA_ACCOUNTS", None)
         ACTIVE=True
         SHORT_CODE = payload.get("FIRM_CODE", None)
-     
+
+        if USER or NAME or LAW_CATEGORY or SHORT_CODE is None:
+            return None
 
         provider = Provider (
             name= NAME,
@@ -141,66 +148,57 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         if not token:
             return None
 
-        try:
-            payload = self._validate_token(token)
-        except exceptions.AuthenticationFailed:
-            raise
-        
-        print(payload)
-        email = payload.get("preferred_username")
+        payload = self._validate_token(token)
+ 
+        email = payload.get('preferred_username')
         if not email:
             raise exceptions.AuthenticationFailed("Invalid Token format")
 
-        user = authenticate(entra_id_email=email)
-        if not user:
-            user_role = payload.get("APP_ROLES")
-
-        print("This is the user role\n",user_role)
-
-        if not user_role:
-            raise exceptions.AuthenticationFailed(
-                "Invalid token: missing required field APP_ROLES"
-            )
-
-        ROLE_OPERATOR_MANAGER = "Civil Legal Advice Operator Manager"
-        ROLE_OPERATOR = "Civil Legal Advice Operator"
-        ROLE_PROVIDER = "Civil Legal Advice - Provider"
-
-        role_handlers = {
-            ROLE_OPERATOR_MANAGER: self.create_operator_manager,
-            ROLE_OPERATOR: self._create_operator,
-            ROLE_PROVIDER: self._create_provider,
-        }
-
-        register_user = role_handlers.get(user_role)
-
-        if not register_user:
-            raise exceptions.AuthenticationFailed(
-                "Invalid token: unsupported role {user_role}"
-            )
+        try:
+            user = authenticate(entra_id_email=email)
+            logger.info("User %s authenticated with entra token", str(user.get_username()))
+            return user, payload
         
-        user = register_user(payload)
+        except Exception:
+            user_role = payload.get("APP_ROLES", None)
+            if not user_role:
+                raise exceptions.AuthenticationFailed(
+                    "Invalid token: missing required field APP_ROLES"
+                )
 
-     
-        def _authenticate(payload, attempt=1, max_attempts=2):
-            login = authenticate(payload) 
+            ROLE_OPERATOR_MANAGER = "Civil Legal Advice Operator Manager"
+            ROLE_OPERATOR = "Civil Legal Advice Access"
+            ROLE_PROVIDER = "Civil Legal Advice - Provider"
 
-            if login:
-                return login
+            if user_role == ROLE_OPERATOR_MANAGER:
+                _user = self._create_operator_manager(payload)
+                raise exceptions.AuthenticationFailed(
+                    "Invalid token: Incorrect App role provided!"
+                )
+               
+            elif user_role == ROLE_OPERATOR:
+                _user =  self._create_operator(payload)
 
-            if attempt >= max_attempts:
-                raise Exception("Authentication failed after retries")
+                if not _user:
+                
+                    raise exceptions.AuthenticationFailed(
+                        "Invalid token: Incorrect App role provided!"
+                    ) 
+                
+            elif user_role == ROLE_PROVIDER:
+               _user =  self._create_operator_manager(payload)
+               
+               if not _user:
+                   raise exceptions.AuthenticationFailed(
+                    "Invalid token: Incorrect App role provided!"
+                )
+                
+            else:
+                raise exceptions.AuthenticationFailed(
+                    "Invalid token: Incorrect App role provided!"
+                )
 
-            return authenticate(payload, attempt + 1, max_attempts)
-    
-        auth = _authenticate(payload)
 
-        if not auth:
-            raise exceptions.AuthenticationFailed("Invalid Token format")
-
-
-        logger.info("User %s authenticated with entra token", str(user.get_username()))
-        return user, payload
 
     def validate_token(self, token):
 

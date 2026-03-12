@@ -6,32 +6,10 @@ from django.core.cache import cache
 from django.conf import settings
 from rest_framework import exceptions, authentication
 
-from cla_backend.apps.call_centre.models import Operator
-from cla_backend.apps.cla_provider.models import Provider, Staff
+from call_centre.models import Operator
+from cla_provider.models import Provider, Staff
 
 logger = logging.getLogger(__name__)
-
-
-# cla_backend/apps/call_centre/models.py. creating an opeartor and same for operator manager
-
-# cla_backend/apps/cla_provider/models.py. I need to create a provider first and firm name in the token and staff as well and lets keep false bool arg
-
-     # except User.DoesNotExist:
-
-        #     # Create new user
-        #     user = User.objects.create_user(
-        #         username=entra_id_email,
-        #         email=entra_id_email,
-        #         password=None
-        #     )
-
-        #     user.date_joined = timezone.now()
-        #     user.save()
-
-        #     return user
-
-
-
 
 
 class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
@@ -47,24 +25,63 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
 
     def _create_operator(self, payload):
         
-        operator = Operator (
-            organisation= "", 
-            is_manager= "",
-            is_cla_superuser=""
+        user = payload.get("user", None)
+        organisation = payload.get("organisation", None)
+        is_manager = payload.get("is_manager", None)
+        is_cla_superuser = payload.get("is_cla_superuser", None)
+
+        if user is None:
+            raise ValueError("user is required")
+
+        if is_manager is None:
+            is_manager = False
+
+        if is_cla_superuser is None:
+            is_cla_superuser = False
+
+        create_operator = Operator(
+            user = user, 
+            organisation= organisation, 
+            is_manager= is_manager, 
+            is_cla_superuser= is_cla_superuser
         )
 
+        status = create_operator.save()
 
-    def create_operator_manager(self, payload):
+        return True if status else False 
+
+
+    def _create_operator_manager(self, payload):
         
-        
-        operator = Operator (
-            organisation= "", 
-            is_manager= "",
-            is_cla_superuser=""
+        user = payload.get("user", None)
+        organisation = payload.get("organisation", None)
+        is_manager = payload.get("is_manager", None)
+        is_cla_superuser = payload.get("is_cla_superuser", None)
+
+        if user is None:
+            raise ValueError("user is required")
+
+        if is_manager is None:
+            is_manager = False
+
+        if is_cla_superuser is None:
+            is_cla_superuser = False
+
+        create_operator = Operator(
+            user = user, 
+            organisation= organisation, 
+            is_manager= is_manager, 
+            is_cla_superuser= is_cla_superuser
         )
+
+        status = create_operator.save()
+
+        return True if status else False 
+
 
     def _create_provider(self, payload):
 
+        USER = payload.get("USER_EMAIL", None)
         NAME = payload.get("FIRM_NAME", None),
         LAW_CATEGORY= payload.get("LAA_ACCOUNTS", None)
         ACTIVE=True
@@ -82,13 +99,15 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
             email_address =None
         )
 
-        Staff(
-            user = "",
-            provider = provider, 
-            is_manager=False
+        if provider:
 
-        )
+            create_provider = Staff(
+                user = USER,
+                provider = provider, 
+                is_manager=False
+            )
 
+            return True if create_provider else False
 
 
     def _public_keys(self):
@@ -116,8 +135,6 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
             raise exceptions.AuthenticationFailed("Token validation failed: %s" % e)
         
 
-
-
     def authenticate(self, request):
         token = request.META.get("HTTP_AUTHORIZATION")
     
@@ -128,7 +145,8 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
             payload = self._validate_token(token)
         except exceptions.AuthenticationFailed:
             raise
-
+        
+        print(payload)
         email = payload.get("preferred_username")
         if not email:
             raise exceptions.AuthenticationFailed("Invalid Token format")
@@ -137,9 +155,11 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         if not user:
             user_role = payload.get("APP_ROLES")
 
+        print("This is the user role\n",user_role)
+
         if not user_role:
             raise exceptions.AuthenticationFailed(
-                "Invalid token: missing required field 'APP_ROLES'"
+                "Invalid token: missing required field APP_ROLES"
             )
 
         ROLE_OPERATOR_MANAGER = "Civil Legal Advice Operator Manager"
@@ -156,10 +176,28 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
 
         if not register_user:
             raise exceptions.AuthenticationFailed(
-                f"Invalid token: unsupported role '{user_role}'"
+                "Invalid token: unsupported role {user_role}"
             )
         
         user = register_user(payload)
+
+     
+        def _authenticate(payload, attempt=1, max_attempts=2):
+            login = authenticate(payload) 
+
+            if login:
+                return login
+
+            if attempt >= max_attempts:
+                raise Exception("Authentication failed after retries")
+
+            return authenticate(payload, attempt + 1, max_attempts)
+    
+        auth = _authenticate(payload)
+
+        if not auth:
+            raise exceptions.AuthenticationFailed("Invalid Token format")
+
 
         logger.info("User %s authenticated with entra token", str(user.get_username()))
         return user, payload

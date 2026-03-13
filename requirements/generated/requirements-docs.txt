@@ -184,7 +184,7 @@ pycurl==7.43.0.5
     # via celery
 pygments==2.5.2
     # via sphinx
-pyjwt==1.7.1
+pyjwt==2.12.0
     # via
     #   -r requirements/source/requirements-base.in
     #   notifications-python-client

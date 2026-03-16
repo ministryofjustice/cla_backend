@@ -20,7 +20,7 @@ executors:
       - image: cimg/python:2.7
   python3-executor:
     docker:
-      - image: cimg/python:3.7
+      - image: cimg/python:3.10
 
 
 # ------------------

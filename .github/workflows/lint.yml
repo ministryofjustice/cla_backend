@@ -11,7 +11,7 @@
 #
 #   lint:
 #     - Runs flake8 style checker on Python code
-#     - Container: Python 2.7.18 (slim image)
+#     - Container: Python 3.10
 #     - Installs lint requirements from pip
 #     - Executes flake8 linting checks
 #
@@ -48,7 +48,7 @@ jobs:
     name: Lint
     runs-on: ["ubuntu-latest"]
     container:
-      image: python:2.7.18-slim
+      image: python:3.10
 
     steps:
       - name: Repository

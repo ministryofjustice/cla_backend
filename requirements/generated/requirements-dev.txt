@@ -235,7 +235,7 @@ pyjwt==1.7.1
     #   notifications-python-client
 pyminizip==0.2.3
     # via -r requirements/source/requirements-base.in
-pyopenssl==21.0.0
+pyopenssl==26.0.0
     # via urllib3
 pyparsing==2.4.7
     # via packaging

@@ -5,21 +5,23 @@ from django.contrib.auth import authenticate
 from django.core.cache import cache
 from django.conf import settings
 from rest_framework import exceptions, authentication
+from functools import wraps
 
 from django.contrib.auth.models import User
-from call_centre.models import Operator, Organisation
+from call_centre.models import Operator
 from cla_provider.models import Provider, Staff
+
 
 logger = logging.getLogger(__name__)
 
-
-"""
-HGS HAVE OPERATORS - 
-OPERATOR AND MANAGER 
-
-LAW FIRM HAVE STAFF THAT COMES IN 
-STAFF 
-"""
+def logging(func):
+    @wraps(func)  
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except Exception as e:
+            raise exceptions.AuthenticationFailed("Failed to validate user: %s" % str(e)) 
+    return wrapper
 
 
 class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
@@ -31,87 +33,82 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
 
     def authenticate_header(self, request):
         return 'Bearer realm="api"'
-      
-
-    def _create_operator(self, payload, manager):
-        
-        _user_email = payload.get("USER_EMAIL", None)
-        _organisation = payload.get("FIRM_NAME", None)
     
+    
+    def authenticate_user(self, email):
+        try:
+            user = authenticate(entra_id_email=email)
+            return user
+        except Exception:
+            return None 
 
-        if _user_email is None:
+      
+    @logging 
+    def _create_operator(self, payload, manager=False):
+        print("This is what suppose to be hitting")
+        
+        user_email = payload.get("USER_EMAIL", None)
+        if user_email is None:
            return None
 
-        user_class = User(
-            username= _user_email, 
-            email=_user_email, 
-            password="test", # passwords should be store as string
+        user_instance = User(
+            username= user_email, 
+            email=user_email, 
+            password="test",
             is_active=True,
             is_staff=True
-            
         )
-        user_class.save()
-
-        organisation_instance = Organisation(
-            organisation=_organisation
-        )
+        user_instance.save()
 
         create_operator = Operator(
-            user = user_class, 
-            organisation= organisation_instance, 
-            is_manager= True, 
-    
+            user = user_instance, 
+            organisation= None, 
+            is_manager= manager, 
         )
     
-        status = create_operator.save()
+        create_operator.save()
+        return user_instance if user_instance else None
 
-        return True if status else False 
-
-
+    @logging
     def _create_provider(self, payload):
 
-        _user_email = payload.get("USER_EMAIL", None)
-        NAME = payload.get("FIRM_NAME", None),
-        LAW_CATEGORY= payload.get("LAA_ACCOUNTS", None)
-        ACTIVE=True
-      
+        user_email = payload.get("USER_EMAIL", None)
+        firm_name = payload.get("FIRM_NAME",None)
 
-        if _user_email or NAME  is None:
+        if not firm_name:
             return None
+       
+        provider = Provider.objects.active().get(name=firm_name)
+        if not provider:
+            return None 
+       
+        user = self.authenticate_user(user_email)
+        if user and user.email != user_email:
 
-        provider = Provider (
-            name= NAME,
-            opening_hours=None, 
-            law_category = LAW_CATEGORY,
-            active=ACTIVE,
-            short_code =None,
-            telephone_frontdoor= None, 
-            telephone_backdoor=None,
-            email_address =None
-        )
+            user_instance = User(
+                username= user_email, 
+                email=user_email, 
+                password="test",
+                is_active=True,
+                is_staff=True
+                
+            )
+            user_instance.save()
 
-        provider.save()
-        # create user instance
-        user_class = User(
-            username=_user_email, 
-            email=_user_email, 
-            password=None,
-            is_active=True
-        )
-    
+        else:
+            user_instance = user 
+
         if provider:
 
-            create_provider = Staff(
-                user = user_class,
+            create_staff = Staff(
+                user = user_instance,
                 provider = provider, 
                 is_manager=False
             )
+            create_staff.save()
 
-            create_provider.save()
-
-            return True if create_provider else False
-        
-        return False
+        return user_instance if user_instance else None 
+    
 
     def _public_keys(self):
 
@@ -138,68 +135,6 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
             raise exceptions.AuthenticationFailed("Token validation failed: %s" % e)
         
 
-    def authenticate(self, request):
-        token = request.META.get("HTTP_AUTHORIZATION")
-    
-        if not token:
-            return None
-
-        payload = self._validate_token(token)
- 
-        email = payload.get('preferred_username', None)
-        if not email:
-            raise exceptions.AuthenticationFailed("Invalid Token format")
-
-        try:
-            user = authenticate(entra_id_email=email)
-            logger.info("User %s authenticated with entra token", str(user.get_username()))
-            return user, payload
-        
-        except Exception:
-            user_role = payload.get("APP_ROLES", None)
-            if not user_role:
-                raise exceptions.AuthenticationFailed(
-                    "Invalid token: missing required field APP_ROLES"
-                )
-            
-            
-            # HGS EMPLOYEES (OPERATOR/OPERATOR MANAGER)
-            ROLE_OPERATOR_MANAGER = "Civil Legal Advice Operator Manager"
-            ROLE_OPERATOR = "Civil Legal Advice Access"
-
-            # LAW FIRM STAFF 
-            ROLE_PROVIDER = "Civil Legal Advice - Provider"
-
-            if user_role == ROLE_OPERATOR_MANAGER or user_role == ROLE_OPERATOR:
-
-                manager = True if ROLE_OPERATOR_MANAGER else False
-        
-                _user = self._create_operator(payload, manager)
-                
-                if not _user:
-                    raise exceptions.AuthenticationFailed(
-                    "Invalid token: Incorrect App role provided!"
-                )
-
-                return _user, payload
-
-            elif user_role == ROLE_PROVIDER:
-                _user =  self._create_operator_manager(payload)
-               
-                if not _user:
-                   raise exceptions.AuthenticationFailed(
-                    "Invalid token: Incorrect App role provided!"
-                )
-                
-                return _user, payload
-                
-            else:
-                raise exceptions.AuthenticationFailed(
-                    "Invalid token: Incorrect App role provided!"
-                )
-
-
-
     def validate_token(self, token):
 
         unverified_header = jwt.get_unverified_header(token)
@@ -219,3 +154,47 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         cert_obj = load_pem_x509_certificate(cert_str.encode("utf-8"), default_backend())
         public_key = cert_obj.public_key()
         return jwt.decode(token, public_key, algorithms=["RS256"], audience=self.expected_audience, issuer=self.issuer)
+    
+
+    def authenticate(self, request):
+        token = request.META.get("HTTP_AUTHORIZATION")
+        if not token:
+            return None
+
+        payload = self._validate_token(token)
+        email = payload.get('USER_EMAIL', None)
+
+        if not email:
+            raise exceptions.AuthenticationFailed("Invalid Token format, email is missing from Token!")
+
+        user = self.authenticate_user(email)
+
+        if user and user.email == email:
+            return user, payload
+
+        user_role = payload.get("APP_ROLES")
+        if not user_role:
+            raise exceptions.AuthenticationFailed("Invalid token: missing required field APP_ROLES")
+
+        # Handle roles
+        ROLE_OPERATOR_MANAGER = "Civil Legaator Manager"
+        ROLE_OPERATOR = "Civil Legal Advice Access"
+        ROLE_PROVIDER = "Civil Legal Advice - Provider"
+
+        if user_role in [ROLE_OPERATOR_MANAGER, ROLE_OPERATOR]:
+            manager = False == ROLE_OPERATOR_MANAGER
+            user = self._create_operator(payload, manager)
+            
+            if not user:
+                raise exceptions.AuthenticationFailed("Invalid token: Incorrect App role provided!")
+            return user, payload
+
+        if user_role == ROLE_PROVIDER:
+            user = self._create_provider(payload)
+            
+            if not user:
+                raise exceptions.AuthenticationFailed("Invalid token: Incorrect App role provided!")
+            return user, payload
+
+        
+        raise exceptions.AuthenticationFailed("Invalid token: Incorrect App role provided!")

@@ -90,7 +90,11 @@ class EntraTokenGeneratorMixin(object):
             "sub": "test-subject",
         }
 
-        token = jwt.encode(payload, self.private_key, algorithm="RS256", headers={"kid": kid})
+
+        token = jwt.encode(payload, self.private_key, algorithm="ç", headers={
+            "typ":" JWT", 
+            "alg": "RS256",
+            "kid": kid})
 
         return token
 
@@ -324,3 +328,63 @@ class EntraAuthorizationTestCase(EntraTokenGeneratorMixin, TestCase):
         headers = {"HTTP_AUTHORIZATION": "Bearer %s" % token}
         response = self.client.get(url, **headers)
         self.assertEqual(response.status_code, 404)
+
+
+
+class EntraAuthorizationNewUserTestCase:
+
+    def setUp(self):
+        super(EntraAuthorizationTestCase, self).setUp()
+
+        # This will stay active for the duration of the test method
+        self.settings_override = self.settings(
+            ENTRA_TENANT_ID="test-tenant-id", ENTRA_EXPECTED_AUDIENCE="test-audience"
+        )
+        self.settings_override.enable()
+
+        self.public_keys_patcher = patch("cla_auth.authentication.EntraAccessTokenAuthentication._public_keys")
+        self.public_keys_mock = self.public_keys_patcher.start()
+        self.public_keys_mock.return_value = self.mock_jwks["keys"]
+
+
+    def _create_token(self, expired=False, email="test@example.com", kid="test-kid-123"):
+        """Helper to create JWT tokens"""
+        now = datetime.datetime.now()
+
+        if expired:
+            exp = now - datetime.timedelta(hours=1)
+        else:
+            exp = now + datetime.timedelta(hours=1)
+
+        payload = {
+            "iss": self.issuer,
+            "aud": self.auth.expected_audience,
+            "exp": exp,
+            "iat": now,
+            "preferred_username": email,
+            "sub": "test-subject",
+        }
+
+
+        token = jwt.encode(payload, self.private_key, algorithm="ç", headers={
+            "typ":" JWT", 
+            "alg": "RS256",
+            "kid": kid})
+
+        return token
+    
+
+    def tearDown(self):
+        self.public_keys_patcher.stop()
+
+
+
+    def test_new_operator():
+        pass 
+
+
+    def test_new_operator_manager():
+        pass 
+
+    def test_new_provider():
+        pass 

@@ -45,7 +45,6 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
       
     @logging 
     def _create_operator(self, payload, manager=False):
-        print("This is what suppose to be hitting")
         
         user_email = payload.get("USER_EMAIL", None)
         if user_email is None:
@@ -59,6 +58,8 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
             is_staff=True
         )
         user_instance.save()
+        user_instance.refresh_from_db()
+        print(user_instance.is_staff) 
 
         create_operator = Operator(
             user = user_instance, 
@@ -81,22 +82,19 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         provider = Provider.objects.active().get(name=firm_name)
         if not provider:
             return None 
+        
        
-        user = self.authenticate_user(user_email)
-        if user and user.email != user_email:
-
-            user_instance = User(
-                username= user_email, 
-                email=user_email, 
+        user_instance = User(
+                username = user_email, 
+                email = user_email, 
                 password="test",
+                is_staff=True, # 
                 is_active=True,
-                is_staff=True
-                
+               
             )
-            user_instance.save()
-
-        else:
-            user_instance = user 
+        user_instance.save()
+        user_instance.refresh_from_db()
+        print(user_instance.is_staff) 
 
         if provider:
 
@@ -157,6 +155,9 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
     
 
     def authenticate(self, request):
+        
+        # add back the code for the beaer
+        
         token = request.META.get("HTTP_AUTHORIZATION")
         if not token:
             return None
@@ -177,9 +178,10 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
             raise exceptions.AuthenticationFailed("Invalid token: missing required field APP_ROLES")
 
         # Handle roles
-        ROLE_OPERATOR_MANAGER = "Civil Legaator Manager"
+        ROLE_OPERATOR_MANAGER = "Civil Legal Advice Operator"
         ROLE_OPERATOR = "Civil Legal Advice Access"
-        ROLE_PROVIDER = "Civil Legal Advice - Provider"
+        ROLE_PROVIDER = "Civil Legal Advice - Provider" # inconsistency in naming 
+
 
         if user_role in [ROLE_OPERATOR_MANAGER, ROLE_OPERATOR]:
             manager = False == ROLE_OPERATOR_MANAGER

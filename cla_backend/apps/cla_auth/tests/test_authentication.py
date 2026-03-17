@@ -22,6 +22,11 @@ from cla_common.constants import REQUIRES_ACTION_BY
 User = get_user_model()
 
 
+ROLE_OPERATOR_MANAGER = "Civil Legaator Manager"
+ROLE_OPERATOR = "Civil Legal Advice Access"
+ROLE_PROVIDER = "Civil Legal Advice - Provider"
+
+
 class EntraTokenGeneratorMixin(object):
     def setUp(self):
         """Set up test fixtures"""
@@ -72,7 +77,7 @@ class EntraTokenGeneratorMixin(object):
     def create_user(self, **kwargs):
         return User.objects.create(**kwargs)
 
-    def _create_token(self, expired=False, email="test@example.com", kid="test-kid-123"):
+    def _create_token(self, app_roles=ROLE_OPERATOR, expired=False, email="test@example.com", kid="test-kid-123"):
         """Helper to create JWT tokens"""
         now = datetime.datetime.now()
 
@@ -88,10 +93,16 @@ class EntraTokenGeneratorMixin(object):
             "iat": now,
             "preferred_username": email,
             "sub": "test-subject",
+            "name": "Full Name",
+            "APP_ROLES": app_roles, 
+            "FIRM_CODE":  00000,
+            "FIRM_NAME": "THE FIRM NAME LTD", 
+            "LAA_ACCOUNTS": 0000000, 
+            "USER_EMAIL":email, 
         }
 
 
-        token = jwt.encode(payload, self.private_key, algorithm="ç", headers={
+        token = jwt.encode(payload, self.private_key, algorithm="RS256", headers={
             "typ":" JWT", 
             "alg": "RS256",
             "kid": kid})
@@ -161,25 +172,6 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
         with self.assertRaises(exceptions.AuthenticationFailed):
             self.auth.authenticate(request)
 
-    @patch("cla_auth.authentication.EntraAccessTokenAuthentication._public_keys")
-    def test_user_not_found(self, mock_public_keys):
-        """Test authentication fails when user not found"""
-
-        # this user is active, and exist
-        user = User(email="test1233@example.com", is_active=True)
-        user.save()
-        make_recipe("cla_provider.staff", user=user)
-
-        mock_public_keys.return_value = self.mock_jwks["keys"]
-
-        # different email from the one that is created
-        token = self._create_token(expired=False, email="tester@example.com")
-
-        request = self.factory.get("/")
-        request.META["HTTP_AUTHORIZATION"] = "Bearer %s" % token
-
-        with self.assertRaises(exceptions.AuthenticationFailed, msg="User not found or inactive"):
-            self.auth.authenticate(request)
 
     def test_invalid_signature(self):
         """Test authentication fails with invalid signature"""
@@ -245,6 +237,28 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
 
         with self.assertRaises(exceptions.AuthenticationFailed, msg="User not found or inactive"):
             self.auth.authenticate(request)
+
+    
+
+    @patch("cla_auth.authentication.EntraAccessTokenAuthentication._public_keys")
+    def test_new_user_create_authenicate_user(self, mock_public_keys):
+        """Test authentication fails when user not found"""
+
+        mock_public_keys.return_value = self.mock_jwks["keys"]
+
+        # different email from the one that is created
+        token = self._create_token(expired=False)
+
+        request = self.factory.get("/")
+        request.META["HTTP_AUTHORIZATION"] = token
+
+        user, payload = self.auth.authenticate(token)
+      
+
+
+
+
+    
 
 
 class EntraAuthorizationTestCase(EntraTokenGeneratorMixin, TestCase):
@@ -331,60 +345,3 @@ class EntraAuthorizationTestCase(EntraTokenGeneratorMixin, TestCase):
 
 
 
-class EntraAuthorizationNewUserTestCase:
-
-    def setUp(self):
-        super(EntraAuthorizationTestCase, self).setUp()
-
-        # This will stay active for the duration of the test method
-        self.settings_override = self.settings(
-            ENTRA_TENANT_ID="test-tenant-id", ENTRA_EXPECTED_AUDIENCE="test-audience"
-        )
-        self.settings_override.enable()
-
-        self.public_keys_patcher = patch("cla_auth.authentication.EntraAccessTokenAuthentication._public_keys")
-        self.public_keys_mock = self.public_keys_patcher.start()
-        self.public_keys_mock.return_value = self.mock_jwks["keys"]
-
-
-    def _create_token(self, expired=False, email="test@example.com", kid="test-kid-123"):
-        """Helper to create JWT tokens"""
-        now = datetime.datetime.now()
-
-        if expired:
-            exp = now - datetime.timedelta(hours=1)
-        else:
-            exp = now + datetime.timedelta(hours=1)
-
-        payload = {
-            "iss": self.issuer,
-            "aud": self.auth.expected_audience,
-            "exp": exp,
-            "iat": now,
-            "preferred_username": email,
-            "sub": "test-subject",
-        }
-
-
-        token = jwt.encode(payload, self.private_key, algorithm="ç", headers={
-            "typ":" JWT", 
-            "alg": "RS256",
-            "kid": kid})
-
-        return token
-    
-
-    def tearDown(self):
-        self.public_keys_patcher.stop()
-
-
-
-    def test_new_operator():
-        pass 
-
-
-    def test_new_operator_manager():
-        pass 
-
-    def test_new_provider():
-        pass 

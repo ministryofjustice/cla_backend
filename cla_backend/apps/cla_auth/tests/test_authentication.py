@@ -17,14 +17,9 @@ from cla_auth.authentication import EntraAccessTokenAuthentication
 from core.tests.mommy_utils import make_recipe
 from django.core.urlresolvers import reverse
 from cla_common.constants import REQUIRES_ACTION_BY
-
+from cla_auth.constants import OPERATOR_ROLE, OPERATOR_MANAGER_ROLE, PROVIDER_ROLE
 
 User = get_user_model()
-
-
-ROLE_OPERATOR_MANAGER = "Civil Legaator Manager"
-ROLE_OPERATOR = "Civil Legal Advice Access"
-ROLE_PROVIDER = "Civil Legal Advice - Provider"
 
 
 class EntraTokenGeneratorMixin(object):
@@ -77,7 +72,7 @@ class EntraTokenGeneratorMixin(object):
     def create_user(self, **kwargs):
         return User.objects.create(**kwargs)
 
-    def _create_token(self, app_roles=ROLE_OPERATOR, expired=False, email="test@example.com", kid="test-kid-123"):
+    def _create_token(self, expired=False, email="test@example.com", kid="test-kid-123"):
         """Helper to create JWT tokens"""
         now = datetime.datetime.now()
 
@@ -85,6 +80,17 @@ class EntraTokenGeneratorMixin(object):
             exp = now - datetime.timedelta(hours=1)
         else:
             exp = now + datetime.timedelta(hours=1)
+
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            user = None
+
+        app_roles = []
+        if user and hasattr(user, "staff"):
+            app_roles = [PROVIDER_ROLE]
+        elif user and hasattr(user, "operator"):
+            app_roles = [OPERATOR_ROLE]
 
         payload = {
             "iss": self.issuer,
@@ -94,16 +100,16 @@ class EntraTokenGeneratorMixin(object):
             "preferred_username": email,
             "sub": "test-subject",
             "name": "Full Name",
-            "APP_ROLES": app_roles, 
+            "APP_ROLES": app_roles,
             "FIRM_CODE":  00000,
-            "FIRM_NAME": "THE FIRM NAME LTD", 
-            "LAA_ACCOUNTS": 0000000, 
-            "USER_EMAIL":email, 
+            "FIRM_NAME": "THE FIRM NAME LTD",
+            "LAA_ACCOUNTS": 0000000,
+            "USER_EMAIL":email,
         }
 
 
         token = jwt.encode(payload, self.private_key, algorithm="RS256", headers={
-            "typ":" JWT", 
+            "typ":" JWT",
             "alg": "RS256",
             "kid": kid})
 
@@ -238,7 +244,7 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
         with self.assertRaises(exceptions.AuthenticationFailed, msg="User not found or inactive"):
             self.auth.authenticate(request)
 
-    
+
 
     @patch("cla_auth.authentication.EntraAccessTokenAuthentication._public_keys")
     def test_new_user_create_authenicate_user(self, mock_public_keys):
@@ -250,15 +256,10 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
         token = self._create_token(expired=False)
 
         request = self.factory.get("/")
-        request.META["HTTP_AUTHORIZATION"] = token
+        request.META["HTTP_AUTHORIZATION"] = "Bearer %s" %token
 
-        user, payload = self.auth.authenticate(token)
-      
+        user, payload = self.auth.authenticate(request)
 
-
-
-
-    
 
 
 class EntraAuthorizationTestCase(EntraTokenGeneratorMixin, TestCase):

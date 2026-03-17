@@ -41,10 +41,11 @@ class ClientIDPermission(BasePermission):
         return has_permission
 
     def entra_has_permission(self, request, view):
-
         if isinstance(request.auth, dict):
             token_roles = request.auth.get("APP_ROLES")
-            if token_roles is not None:
+            if not token_roles:
+                return False
+            if token_roles:
                 if isinstance(token_roles, unicode):
                     token_roles = token_roles.encode('utf-8')
                 if isinstance(token_roles, str):

@@ -71,7 +71,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
 
         provider = Provider.objects.active().get(name=firm_name)
 
-        if not provider:
+        if provider != firm_name:
             return None
 
         user = User(

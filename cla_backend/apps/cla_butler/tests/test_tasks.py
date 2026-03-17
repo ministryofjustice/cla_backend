@@ -329,7 +329,7 @@ class DiversityDataCheckTaskTestCase(CreateSampleDiversityData, TestCase):
         failure_messages = list(
             DiversityDataCheck.objects.filter(action=ACTION.CHECK, status=STATUS.FAIL).values_list("detail", flat=True)
         )
-        expected_failure_messages = [u"Something went wrong"] * 5
+        expected_failure_messages = ["Something went wrong"] * 5
         self.assertEqual(success_count, 5)
         self.assertEqual(failure_count, 5)
         self.assertEqual(failure_messages, expected_failure_messages)

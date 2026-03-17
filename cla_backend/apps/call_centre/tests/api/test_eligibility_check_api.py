@@ -91,8 +91,8 @@ class EligibilityCheckTestCase(CLAOperatorAuthBaseApiTestMixin, NestedEligibilit
 
     def test_check_validate_disregards(self):
         """
-               Make sure that the disregards does not allow fields that have not been created
-               """
+        Make sure that the disregards does not allow fields that have not been created
+        """
         disregard_defined = {"disregards": {"criminal_injuries": "true"}}
 
         disregard_not_defined = {"disregards": {"no_disregard_defined": "true"}}
@@ -111,7 +111,7 @@ class EligibilityCheckTestCase(CLAOperatorAuthBaseApiTestMixin, NestedEligibilit
             format="json",
             HTTP_AUTHORIZATION=self.get_http_authorization(),
         )
-        expected_bad = {"disregards": [u"Fields no_disregard_defined not recognised"]}
+        expected_bad = {"disregards": ["Fields no_disregard_defined not recognised"]}
         self.assertEqual(response.data, expected_bad)
 
     def test_create_with_finances_and_check_log(self):

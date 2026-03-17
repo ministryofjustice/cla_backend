@@ -221,7 +221,7 @@ class CreateCaseTestCase(BaseCaseTestCase):
     def test_case_serializer_with_eligibility_check_reference(self):
         eligibility_check = make_recipe("legalaid.eligibility_check")
 
-        data = {u"eligibility_check": eligibility_check.reference}
+        data = {"eligibility_check": eligibility_check.reference}
         serializer = CaseSerializer(data=data)
         self.assertTrue(serializer.is_valid())
         self.assertDictEqual(serializer.errors, {})
@@ -230,15 +230,15 @@ class CreateCaseTestCase(BaseCaseTestCase):
         personal_details = make_recipe(
             "legalaid.personal_details",
             **{
-                u"full_name": u"John Doe",
-                u"home_phone": u"9876543210",
-                u"mobile_phone": u"0123456789",
-                u"postcode": u"SW1H 9AJ",
-                u"street": u"102 Petty France",
-                u"title": u"MR",
+                "full_name": "John Doe",
+                "home_phone": "9876543210",
+                "mobile_phone": "0123456789",
+                "postcode": "SW1H 9AJ",
+                "street": "102 Petty France",
+                "title": "MR",
             }
         )
-        data = {u"personal_details": unicode(personal_details.reference)}
+        data = {"personal_details": unicode(personal_details.reference)}
 
         serializer = CaseSerializer(data=data)
         self.assertTrue(serializer.is_valid())
@@ -247,7 +247,7 @@ class CreateCaseTestCase(BaseCaseTestCase):
     def test_case_serializer_with_media_code(self):
         media_code = make_recipe("legalaid.media_code")
 
-        data = {u"media_code": media_code.code}
+        data = {"media_code": media_code.code}
         serializer = CaseSerializer(data=data)
         self.assertTrue(serializer.is_valid())
         self.assertDictEqual(serializer.errors, {})
@@ -554,7 +554,7 @@ class SuspendCaseTestCase(ExplicitEventCodeViewTestCaseMixin, MockGovNotifyMailB
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertDictEqual(
-            response.data, {"event_code": [u"You can only use RDSP if the case is assigned to a specialist"]}
+            response.data, {"event_code": ["You can only use RDSP if the case is assigned to a specialist"]}
         )
         self.assertEqual(Log.objects.count(), 0)
 
@@ -590,7 +590,7 @@ class SuspendCaseTestCase(ExplicitEventCodeViewTestCaseMixin, MockGovNotifyMailB
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertDictEqual(
-            response.data, {"event_code": [u"You can only use SAME if the client has received alternative help"]}
+            response.data, {"event_code": ["You can only use SAME if the client has received alternative help"]}
         )
         self.assertEqual(Log.objects.count(), 0)
 
@@ -759,7 +759,7 @@ class FilteredSearchCaseTestCase(BaseCaseTestCase):
 
     def getAndAssertValidResponse(self, filter_name, expected):
         response = self.client.get(
-            u"%s?only=%s" % (self.list_url, filter_name),
+            "%s?only=%s" % (self.list_url, filter_name),
             format="json",
             HTTP_AUTHORIZATION=self.get_http_authorization(),
         )
@@ -815,7 +815,7 @@ class FutureCallbacksCaseTestCase(BaseCaseTestCase):
 class SearchForPersonalDetailsTestCase(BaseCaseTestCase):
     def make_resource(self, **kwargs):
         """
-            Specifying case.personal_details == None by default
+        Specifying case.personal_details == None by default
         """
         kwargs["personal_details"] = None
         return super(SearchForPersonalDetailsTestCase, self).make_resource(**kwargs)
@@ -842,7 +842,7 @@ class SearchForPersonalDetailsTestCase(BaseCaseTestCase):
 
     def get_search_for_pd_url(self, person_q, case_reference=None):
         case_reference = case_reference or self.resource.reference
-        return u"%s?person_q=%s" % (
+        return "%s?person_q=%s" % (
             reverse("call_centre:case-search-for-personal-details", args=(), kwargs={"reference": case_reference}),
             person_q,
         )

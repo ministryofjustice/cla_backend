@@ -58,7 +58,7 @@ class Timer(models.Model):
     running_objects = RunningTimerManager()
 
     def __unicode__(self):
-        return u"Timer created at %s" % self.created
+        return "Timer created at %s" % self.created
 
     @classmethod
     def start(cls, user):
@@ -74,11 +74,11 @@ class Timer(models.Model):
 
     def stop(self, cancelled=False):
         if self.is_stopped():
-            raise ValueError(u"The timer has already been stopped")
+            raise ValueError("The timer has already been stopped")
 
         last_log = self.log_set.order_by("created").last()  # get last log
         if not last_log and not cancelled:
-            raise ValueError(u"You can't stop a timer without a log")
+            raise ValueError("You can't stop a timer without a log")
 
         # stop and update this model
         self.stopped = postgres_now()
@@ -100,7 +100,7 @@ class Timer(models.Model):
                     a.stopped is not null and a.linked_case_id = %s""",
                 [self.linked_case.id],
             )
-            total_billable_time, = cursor.fetchone()
+            (total_billable_time,) = cursor.fetchone()
             if total_billable_time:
                 self.linked_case.billable_time = total_billable_time
                 self.linked_case.save(update_fields=["billable_time"])

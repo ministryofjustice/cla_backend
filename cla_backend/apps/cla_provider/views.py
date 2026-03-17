@@ -211,7 +211,7 @@ class ProviderExtract(APIView):
     permission_classes = (IsProviderPermission,)
     authentication_classes = (LegacyCHSAuthentication,)
 
-    http_method_names = [u"post", "options"]
+    http_method_names = ["post", "options"]
 
     def options(self, request):
         """

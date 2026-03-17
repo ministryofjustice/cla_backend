@@ -42,7 +42,6 @@ from timer.models import Timer
 from legalaid.utils import diversity
 from cla_butler.models import DiversityDataCheck, ACTION, STATUS
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -98,8 +97,8 @@ class DeleteOldData(Task):
         return (
             Case.objects.filter(modified__lte=two_weeks)
             .filter(personal_details_id__exact=None)
-            .filter(notes__exact=u"")
-            .filter(provider_notes__exact=u"")
+            .filter(notes__exact="")
+            .filter(provider_notes__exact="")
         )
 
     def _delete_logs(self, qs):
@@ -235,10 +234,10 @@ class DeleteOldData(Task):
 
     @transaction.atomic
     def cleanup_historic_casearchive(self):
-        """ Removes all Archived Cases that not been modified in over 3 years.
-            No fields in this model have a relationship to any other model so we don't need to cascade delete anything.
+        """Removes all Archived Cases that not been modified in over 3 years.
+        No fields in this model have a relationship to any other model so we don't need to cascade delete anything.
 
-            This is an atomic transaction to ensure changes are rolled back if an exception occurs.
+        This is an atomic transaction to ensure changes are rolled back if an exception occurs.
         """
         three_years_ago = self.now - relativedelta(years=3)
         archived_cases = CaseArchived.objects.filter(modified__lte=three_years_ago)

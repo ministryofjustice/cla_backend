@@ -179,15 +179,15 @@ class CaseTestCase(BaseCaseTestCase):
 
         errors = response.data
         self.assertItemsEqual(errors.keys(), ["eligibility_check", "personal_details"])
-        self.assertEqual(errors["eligibility_check"], [u"Object with reference=%s does not exist." % invalid_uuid])
+        self.assertEqual(errors["eligibility_check"], ["Object with reference=%s does not exist." % invalid_uuid])
         self.assertDictEqual(
             errors["personal_details"],
             {
-                "title": [u"Ensure this field has no more than 20 characters."],
-                "postcode": [u"Ensure this field has no more than 12 characters."],
-                "street": [u"Ensure this field has no more than 255 characters."],
-                "mobile_phone": [u"Ensure this field has no more than 20 characters."],
-                "home_phone": [u"Ensure this field has no more than 20 characters."],
+                "title": ["Ensure this field has no more than 20 characters."],
+                "postcode": ["Ensure this field has no more than 12 characters."],
+                "street": ["Ensure this field has no more than 255 characters."],
+                "mobile_phone": ["Ensure this field has no more than 20 characters."],
+                "home_phone": ["Ensure this field has no more than 20 characters."],
             },
         )
 
@@ -209,20 +209,20 @@ class CaseTestCase(BaseCaseTestCase):
         response = self.client.post(self.list_url, data=data, format="json")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertDictEqual(
-            response.data, {"eligibility_check": [u"Case with this Eligibility check already exists."]}
+            response.data, {"eligibility_check": ["Case with this Eligibility check already exists."]}
         )
 
     def test_case_serializer_with_dupe_eligibility_check_reference(self):
         case = make_recipe("legalaid.case")
 
         data = {
-            u"eligibility_check": case.eligibility_check.reference,
-            u"personal_details": self.get_personal_details_default_post_data(),
+            "eligibility_check": case.eligibility_check.reference,
+            "personal_details": self.get_personal_details_default_post_data(),
         }
         serializer = CaseSerializer(data=data)
         self.assertFalse(serializer.is_valid())
         self.assertDictEqual(
-            serializer.errors, {"eligibility_check": [u"Case with this Eligibility check already exists."]}
+            serializer.errors, {"eligibility_check": ["Case with this Eligibility check already exists."]}
         )
 
 
@@ -269,7 +269,7 @@ class AdaptationCaseTestCase(BaseCaseTestCase):
             self.assertIsNone(response.data["adaptation_details"]["language"])
 
     def test_adaptation_details_empty_string(self):
-        self.test_adaptations_language(u"")
+        self.test_adaptations_language("")
 
     def test_adaptation_details_language_missing(self):
         self.test_adaptations_language()

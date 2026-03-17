@@ -49,16 +49,16 @@ class TimerTestCase(TestCase):
     @mock.patch("timer.models.postgres_now")
     def test_billable_time_with_2_stopped_timers(self, mocked_now):
         """
-            DB:
-                timer1: on case A, by user A, stopped
-                timer2: on case A, by user A, stopped by this test
-                timer3: on case A, by user B, stopped
-                timer4: on case A, by user B, running (should be ignored)
-                timer5: on case B, by user A, stopped (should be ignored)
-                timer6: on no case, by user A, cancelled (should be ignored)
+        DB:
+            timer1: on case A, by user A, stopped
+            timer2: on case A, by user A, stopped by this test
+            timer3: on case A, by user B, stopped
+            timer4: on case A, by user B, running (should be ignored)
+            timer5: on case B, by user A, stopped (should be ignored)
+            timer6: on no case, by user A, cancelled (should be ignored)
 
-            Expected:
-                case A.billable_time == timer1 + timer2 + timer3
+        Expected:
+            case A.billable_time == timer1 + timer2 + timer3
         """
 
         def build_datetime(date_str):

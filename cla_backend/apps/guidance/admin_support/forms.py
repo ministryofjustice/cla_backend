@@ -5,7 +5,6 @@ import markdown
 from core.admin.fields import MarkdownAdminField, DEFAULT_MARKDOWN_WHITELIST
 from ..models import Note
 
-
 markdown_whitelist = DEFAULT_MARKDOWN_WHITELIST
 markdown_whitelist["tags"].extend(["h1", "h2", "h3", "a", "em", "table", "tr", "th", "td", "tbody", "thead"])
 markdown_whitelist["attributes"].extend(["id"])
@@ -19,7 +18,7 @@ class NoteModelForm(forms.ModelForm):
     """
 
     raw_body = MarkdownAdminField(
-        label=u"Body", required=False, markdown_whitelist=markdown_whitelist, extensions=EXTENSIONS
+        label="Body", required=False, markdown_whitelist=markdown_whitelist, extensions=EXTENSIONS
     )
 
     class Meta(object):

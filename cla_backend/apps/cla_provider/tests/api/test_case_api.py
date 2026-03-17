@@ -157,13 +157,13 @@ class SearchCaseTestCase(BaseSearchCaseAPIMixin, BaseCaseTestCase):
 class FilteredSearchCaseTestCase(BaseCaseTestCase):
     def setUp(self):
         """
-            obj1 on operator queue => always ignored
-            obj2 assigned to different provider => always ignored
-            obj3 assigned to provider => new
-            obj4 assigned and opened by provider => opened
-            obj5 assigned to provider but marked as 'IRCB' => always ignored
-            obj6 accepted by provider => accepted
-            obj7 closed by provider => closed
+        obj1 on operator queue => always ignored
+        obj2 assigned to different provider => always ignored
+        obj3 assigned to provider => new
+        obj4 assigned and opened by provider => opened
+        obj5 assigned to provider but marked as 'IRCB' => always ignored
+        obj6 accepted by provider => accepted
+        obj7 closed by provider => closed
         """
         super(FilteredSearchCaseTestCase, self).setUp()
 
@@ -224,7 +224,7 @@ class FilteredSearchCaseTestCase(BaseCaseTestCase):
 
     def test_new_cases(self):
         response = self.client.get(
-            u"%s?only=new" % self.list_url, format="json", HTTP_AUTHORIZATION=self.get_http_authorization()
+            "%s?only=new" % self.list_url, format="json", HTTP_AUTHORIZATION=self.get_http_authorization()
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(1, len(response.data["results"]))
@@ -232,7 +232,7 @@ class FilteredSearchCaseTestCase(BaseCaseTestCase):
 
     def test_opened_cases(self):
         response = self.client.get(
-            u"%s?only=opened" % self.list_url, format="json", HTTP_AUTHORIZATION=self.get_http_authorization()
+            "%s?only=opened" % self.list_url, format="json", HTTP_AUTHORIZATION=self.get_http_authorization()
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(1, len(response.data["results"]))
@@ -240,7 +240,7 @@ class FilteredSearchCaseTestCase(BaseCaseTestCase):
 
     def test_accepted_cases(self):
         response = self.client.get(
-            u"%s?only=accepted" % self.list_url, format="json", HTTP_AUTHORIZATION=self.get_http_authorization()
+            "%s?only=accepted" % self.list_url, format="json", HTTP_AUTHORIZATION=self.get_http_authorization()
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(1, len(response.data["results"]))
@@ -248,7 +248,7 @@ class FilteredSearchCaseTestCase(BaseCaseTestCase):
 
     def test_closed_cases(self):
         response = self.client.get(
-            u"%s?only=closed" % self.list_url, format="json", HTTP_AUTHORIZATION=self.get_http_authorization()
+            "%s?only=closed" % self.list_url, format="json", HTTP_AUTHORIZATION=self.get_http_authorization()
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(1, len(response.data["results"]))
@@ -391,7 +391,7 @@ class ReopenCaseTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertDictEqual(response.data, {"__all__": [u"You can't reopen this case as it's still open"]})
+        self.assertDictEqual(response.data, {"__all__": ["You can't reopen this case as it's still open"]})
 
         # still no log
         self.assertEqual(Log.objects.count(), 0)
@@ -403,7 +403,7 @@ class ReopenCaseTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
         response = self.client.post(self.url, data={}, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertDictEqual(response.data, {"notes": [u"This field is required."]})
+        self.assertDictEqual(response.data, {"notes": ["This field is required."]})
 
         # still no log
         self.assertEqual(Log.objects.count(), 0)

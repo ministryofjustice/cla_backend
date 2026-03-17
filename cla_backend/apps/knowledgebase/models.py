@@ -47,7 +47,7 @@ class ArticleCategoryMatrix(TimeStampedModel):
     preferred_signpost = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return u"%s - %s" % (self.article.__unicode__(), self.article_category.__unicode__())
+        return "%s - %s" % (self.article.__unicode__(), self.article_category.__unicode__())
 
     class Meta(object):
         verbose_name_plural = "Article category matrices"

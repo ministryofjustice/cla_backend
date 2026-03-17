@@ -53,7 +53,7 @@ class SearchComplaintTestCase(
 
     def setUp(self):
         super(CLAOperatorAuthBaseApiTestMixin, self).setUp()
-        self.list_dashboard_url = u"%s?dashboard=True&page_size=20" % reverse(
+        self.list_dashboard_url = "%s?dashboard=True&page_size=20" % reverse(
             "%s:%s-list" % (self.API_URL_NAMESPACE, self.API_URL_BASE_NAME)
         )
         self.complaints = [

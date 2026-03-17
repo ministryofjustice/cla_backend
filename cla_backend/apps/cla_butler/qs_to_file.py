@@ -16,7 +16,6 @@ from jsonfield import JSONField
 from cla_common.money_interval.fields import MoneyIntervalField
 from cla_common.money_interval.models import MoneyInterval
 
-
 logger = logging.getLogger(__name__)
 
 

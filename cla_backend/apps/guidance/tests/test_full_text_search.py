@@ -21,32 +21,32 @@ class FullTextSearchTestCase(CLAOperatorAuthBaseApiTestMixin, TestCase):
     def test_search_results_are_same_as_lunr(self):
         search_results = self._get_search_results("Debt Prompts")
         self.assertEqual(len(search_results), 3)
-        titles = [u"Debt Prompts", u"Housing Prompts", u"Zero income prompts"]
+        titles = ["Debt Prompts", "Housing Prompts", "Zero income prompts"]
         self.assertTitlesEqual(search_results, titles)
 
         search_results = self._get_search_results("prompt")
         self.assertEqual(len(search_results), 14)
         titles = [
-            u"Debt Prompts",
-            u"Discrimination Prompts",
-            u"Domestic violence prompts",
-            u"Discrimination in education",
-            u"Education prompts",
-            u"Family Prompts",
-            u"Handling gender reassignment discrimination cases",
-            u"Special Educational Needs",
-            u"Homelessness",
-            u"Housing Prompts",
-            u"Opening Call",
-            u"Welfare Benefit Prompts",
-            u"Zero income prompts",
-            u"Disregard prompts",
+            "Debt Prompts",
+            "Discrimination Prompts",
+            "Domestic violence prompts",
+            "Discrimination in education",
+            "Education prompts",
+            "Family Prompts",
+            "Handling gender reassignment discrimination cases",
+            "Special Educational Needs",
+            "Homelessness",
+            "Housing Prompts",
+            "Opening Call",
+            "Welfare Benefit Prompts",
+            "Zero income prompts",
+            "Disregard prompts",
         ]
         self.assertTitlesEqual(search_results, titles)
 
         search_results = self._get_search_results("Homelessness")
         self.assertEqual(len(search_results), 3)
-        titles = [u"Homelessness", u"Homelessness", u"Housing Prompts"]
+        titles = ["Homelessness", "Homelessness", "Housing Prompts"]
         self.assertTitlesEqual(search_results, titles)
 
     def test_api_endpoint(self):

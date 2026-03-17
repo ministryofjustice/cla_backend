@@ -6,7 +6,6 @@ from django.utils import timezone
 
 from legalaid.models import PersonalDetails
 
-
 _dev_public_key = os.path.join(os.path.dirname(__file__), "keys", "diversity_dev_public.key")
 _dev_private_key = os.path.join(os.path.dirname(__file__), "keys", "diversity_dev_private.key")
 
@@ -63,7 +62,5 @@ def reencrypt(personal_details_pk, previous_private_key, previous_passphrase):
     pgp_pub_decrypt(diversity, dearmor(%s), %s),
     dearmor(%s))
     WHERE id = %s
-    """.format(
-        table_name=PersonalDetails._meta.db_table
-    )
+    """.format(table_name=PersonalDetails._meta.db_table)
     cursor.execute(sql, [previous_private_key, previous_passphrase, get_public_key(), personal_details_pk])

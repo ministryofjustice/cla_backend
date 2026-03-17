@@ -16,11 +16,11 @@ def report_links():
     def replace_abbrev(full_name):
         names = full_name.split()
         names = [abbrevs.sub(lambda n: n.group(1).upper(), name) for name in names]
-        return u" ".join(names)
+        return " ".join(names)
 
     def report_link(x):
         return {
-            "name": replace_abbrev(title(x.name.replace(u"_", u" "))),
+            "name": replace_abbrev(title(x.name.replace("_", " "))),
             "url": reverse("reports:{0}".format(x.name)),
         }
 

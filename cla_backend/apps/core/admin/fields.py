@@ -5,7 +5,6 @@ from django.utils.translation import ugettext_lazy as _
 import markdown
 from pagedown.widgets import AdminPagedownWidget
 
-
 DEFAULT_MARKDOWN_WHITELIST = {"tags": ["strong", "b", "ul", "li", "ol", "p"], "attributes": [], "styles": []}
 
 
@@ -48,7 +47,7 @@ class MarkdownAdminField(forms.CharField):
 
         if html_value != bleached_html:
             raise exceptions.ValidationError(
-                u"%s%s"
-                % (_(u"One or more tags not allowed. Allowed tags: "), ", ".join(self.markdown_whitelist["tags"]))
+                "%s%s"
+                % (_("One or more tags not allowed. Allowed tags: "), ", ".join(self.markdown_whitelist["tags"]))
             )
         return value

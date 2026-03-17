@@ -18,7 +18,6 @@ from core.tests.mommy_utils import make_recipe
 from django.core.urlresolvers import reverse
 from cla_common.constants import REQUIRES_ACTION_BY
 
-
 User = get_user_model()
 
 
@@ -40,11 +39,11 @@ class EntraTokenGeneratorMixin(object):
 
         subject = issuer = x509.Name(
             [
-                x509.NameAttribute(NameOID.COUNTRY_NAME, u"US"),
-                x509.NameAttribute(NameOID.STATE_OR_PROVINCE_NAME, u"CA"),
-                x509.NameAttribute(NameOID.LOCALITY_NAME, u"San Francisco"),
-                x509.NameAttribute(NameOID.ORGANIZATION_NAME, u"Test"),
-                x509.NameAttribute(NameOID.COMMON_NAME, u"test.com"),
+                x509.NameAttribute(NameOID.COUNTRY_NAME, "US"),
+                x509.NameAttribute(NameOID.STATE_OR_PROVINCE_NAME, "CA"),
+                x509.NameAttribute(NameOID.LOCALITY_NAME, "San Francisco"),
+                x509.NameAttribute(NameOID.ORGANIZATION_NAME, "Test"),
+                x509.NameAttribute(NameOID.COMMON_NAME, "test.com"),
             ]
         )
 
@@ -145,7 +144,7 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
             "aud": self.auth.expected_audience,
             "exp": now + datetime.timedelta(hours=1),
             "iat": now,
-            "sub": "test-subject"
+            "sub": "test-subject",
             # No email claim
         }
 

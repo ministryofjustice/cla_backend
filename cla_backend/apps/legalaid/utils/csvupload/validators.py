@@ -44,7 +44,7 @@ date_pattern = re.compile("^[0-9]{1,2}/[0-9]{1,2}/[0-9]{4}$")
 def validate_decimal(val):
     if val:
         try:
-            val = val.replace(u",", u"")
+            val = val.replace(",", "")
             val = Decimal(val)
             return val
         except (ValueError, InvalidOperation) as ve:
@@ -188,7 +188,7 @@ def excel_col_name(col):  # col is 1 based
     excel_col = ""
     div = col
     while div:
-        (div, mod) = divmod(div - 1, 26)  # will return (x, 0 .. 25)
+        div, mod = divmod(div - 1, 26)  # will return (x, 0 .. 25)
         excel_col = chr(mod + 65) + excel_col
     return excel_col
 
@@ -225,7 +225,7 @@ validators = {
     "Disbursements": [validate_decimal],
     "Travel Costs": [validate_decimal],
     "Determination": [validate_in(get_determination_codes(CONTRACT_THIRTEEN))],
-    "Suitable for Telephone Advice": [validate_in({u"Y", u"N"})],
+    "Suitable for Telephone Advice": [validate_in({"Y", "N"})],
     "Exceptional Cases (ref)": [validate_regex(r"\d{7}[a-z]{2}", re.I)],
     "Exempted Reason Code": [validate_in(EXEMPTION_CODES)],
     "Adjustments / Adaptations": [validate_in(SERVICE_ADAPTATIONS)],
@@ -313,7 +313,7 @@ for field in original_field_order:
 
 # Slightly amend our validators for 2013 contracts when the new CONTRACT_2018_ENABLED field order applies and take copy.
 contract_2013_validators_for_new_field_order = OrderedDict()
-validators.update({"Fixed Fee Amount": [], "Fixed Fee Code": [validate_in([u"NA"])]})
+validators.update({"Fixed Fee Amount": [], "Fixed Fee Code": [validate_in(["NA"])]})
 for field in new_field_order_when_contract_2018_enabled:
     contract_2013_validators_for_new_field_order[field] = deepcopy(validators[field])
 
@@ -472,11 +472,11 @@ class ProviderCSVValidator(object):
         time_spent = cleaned_data.get("Time Spent", 0)
         validate_present(code, message="Eligibility Code field is required because no determination was specified")
         # check time spent
-        if code in {u"S", u"W", u"X", u"Z"} and time_spent > 132:
+        if code in {"S", "W", "X", "Z"} and time_spent > 132:
             raise serializers.ValidationError(
-                u"The eligibility code (%s) you have entered is not valid with "
-                u"the time spent (%s) on this case, please review the "
-                u"eligibility code." % (code, time_spent)
+                "The eligibility code (%s) you have entered is not valid with "
+                "the time spent (%s) on this case, please review the "
+                "eligibility code." % (code, time_spent)
             )
 
     @staticmethod
@@ -504,14 +504,14 @@ class ProviderCSVValidator(object):
 
         return PREFIX_CATEGORY_LOOKUP[list(prefixes)[0]]
 
-    @depends_on("Age Range", check=value_not_equal(u"U"))
+    @depends_on("Age Range", check=value_not_equal("U"))
     def _validate_dob_present(self, cleaned_data):
         validate_present(cleaned_data.get("DOB"), "A date of birth is required unless" " Age range is set to 'U'")
 
     @depends_on("Determination", check=value_is_truthy)
     def _validate_time_spent(self, cleaned_data, category):
         MAX_TIME_ALLOWED = 18
-        if category == u"discrimination":
+        if category == "discrimination":
             MAX_TIME_ALLOWED = 42
 
         time_spent_in_minutes = cleaned_data.get("Time Spent", 0)
@@ -525,7 +525,7 @@ class ProviderCSVValidator(object):
     @depends_on("Exempted Code Reason", check=value_is_truthy)
     @depends_on("Determination", check=value_is_falsey)
     def _validate_exemption(self, cleaned_data, category):
-        exempt_categories = {u"debt", u"discrimination", u"education"}
+        exempt_categories = {"debt", "discrimination", "education"}
         if cleaned_data.get("Date Opened") > datetime.datetime(2013, 4, 1) and category in exempt_categories:
             validate_present(
                 cleaned_data.get("Exempted Code Reason", cleaned_data.get("CLA Reference Number")),
@@ -539,7 +539,7 @@ class ProviderCSVValidator(object):
 
     def _validate_telephone_or_online_advice(self, cleaned_data, category):
         ta = cleaned_data.get("Telephone / Online")
-        if category not in {u"education", u"discrimination"} and ta == u"FF":
+        if category not in {"education", "discrimination"} and ta == "FF":
             raise serializers.ValidationError(
                 "code FF only valid for Telephone Advice/Online Advice field if "
                 "category is Education or Discrimination"
@@ -564,7 +564,7 @@ class ProviderCSVValidator(object):
     @depends_on("Determination", check=value_is_truthy)
     def _validate_determination_dvca_is_family(self, cleaned_data, category):
         determination = cleaned_data.get("Determination")
-        if determination == u"DVCA" and category != u"family":
+        if determination == "DVCA" and category != "family":
             raise serializers.ValidationError("Category (%s) must be Family if Determination is DVCA" % category)
 
     def _validate_determination_fixed_fee_has_determination_code(self, cleaned_data):
@@ -598,7 +598,7 @@ class ProviderCSVValidator(object):
 
     @staticmethod
     def _validate_df_fixed_fee_amount(cleaned_data):
-        fixed_fee_code_is_df = cleaned_data.get("Fixed Fee Code") == u"DF"
+        fixed_fee_code_is_df = cleaned_data.get("Fixed Fee Code") == "DF"
         fixed_fee_amount = cleaned_data.get("Fixed Fee Amount")
 
         if fixed_fee_code_is_df and fixed_fee_amount > 40:
@@ -608,7 +608,7 @@ class ProviderCSVValidator(object):
         MAX_TIME_ALLOWED = 132
         time_spent_in_minutes = cleaned_data.get("Time Spent", 0)
         fixed_fee_code = cleaned_data.get("Fixed Fee Code")
-        if fixed_fee_code == u"LF" and time_spent_in_minutes > MAX_TIME_ALLOWED:
+        if fixed_fee_code == "LF" and time_spent_in_minutes > MAX_TIME_ALLOWED:
             raise serializers.ValidationError(
                 "The Fixed Fee code you have entered is not valid with time spent on the case"
             )
@@ -619,7 +619,7 @@ class ProviderCSVValidator(object):
         time_spent_in_minutes = cleaned_data.get("Time Spent", 0)
         fixed_fee_code = cleaned_data.get("Fixed Fee Code")
         time_spent_in_bounds = MIN_TIME_ALLOWED <= time_spent_in_minutes <= MAX_TIME_ALLOWED
-        if fixed_fee_code == u"HF" and not time_spent_in_bounds:
+        if fixed_fee_code == "HF" and not time_spent_in_bounds:
             raise serializers.ValidationError(
                 "The Fixed Fee code you have entered is not valid with time spent on the case"
             )
@@ -628,14 +628,14 @@ class ProviderCSVValidator(object):
         MIN_TIME_ALLOWED = 900
         time_spent_in_minutes = cleaned_data.get("Time Spent", 0)
         fixed_fee_code = cleaned_data.get("Fixed Fee Code")
-        if fixed_fee_code == u"HR" and time_spent_in_minutes < MIN_TIME_ALLOWED:
+        if fixed_fee_code == "HR" and time_spent_in_minutes < MIN_TIME_ALLOWED:
             raise serializers.ValidationError(
                 "The Fixed Fee code you have entered is not valid with time spent on the case"
             )
 
     def _validate_hwfm_fixed_fee_mt1_code(self, cleaned_data):
-        fixed_fee_code_is_hm = cleaned_data.get("Fixed Fee Code") == u"HM"
-        mt1_is_famy = cleaned_data.get("Matter Type 1") == u"FAMY"
+        fixed_fee_code_is_hm = cleaned_data.get("Fixed Fee Code") == "HM"
+        mt1_is_famy = cleaned_data.get("Matter Type 1") == "FAMY"
         if fixed_fee_code_is_hm and not mt1_is_famy:
             raise serializers.ValidationError(
                 "The Fixed Fee code you have entered is not valid with the Matter Type 1 Code entered"
@@ -643,7 +643,7 @@ class ProviderCSVValidator(object):
 
     @staticmethod
     def _validate_mt1_fee_codes(cleaned_data):
-        mt1_fee_code_mapping = {u"MSCB": u"MR", u"FAMY": u"HM"}
+        mt1_fee_code_mapping = {"MSCB": "MR", "FAMY": "HM"}
         mt1 = cleaned_data.get("Matter Type 1")
         expected_fee_code = mt1_fee_code_mapping.get(mt1)
         fixed_fee_code = cleaned_data.get("Fixed Fee Code")
@@ -658,13 +658,13 @@ class ProviderCSVValidator(object):
         code = cleaned_data.get("Eligibility Code")
         fixed_fee_code = cleaned_data.get("Fixed Fee Code")
         validate_present(code, message="Eligibility Code field is required because no determination was specified")
-        if fixed_fee_code == u"LF" and code not in {u"S", u"T", u"V", u"W", u"X", u"Z"}:
+        if fixed_fee_code == "LF" and code not in {"S", "T", "V", "W", "X", "Z"}:
             raise serializers.ValidationError(
-                u"The Fixed Fee code you have entered is not valid with the Eligibility Code entered"
+                "The Fixed Fee code you have entered is not valid with the Eligibility Code entered"
             )
-        if fixed_fee_code == u"HF" and code not in {u"T", u"V"}:
+        if fixed_fee_code == "HF" and code not in {"T", "V"}:
             raise serializers.ValidationError(
-                u"The Fixed Fee code you have entered is not valid with the Eligibility Code entered"
+                "The Fixed Fee code you have entered is not valid with the Eligibility Code entered"
             )
 
     @staticmethod
@@ -672,7 +672,7 @@ class ProviderCSVValidator(object):
         signposting_or_referral = cleaned_data.get("Signposting / Referral")
         if signposting_or_referral and signposting_or_referral not in contract_2018_signposting_codes:
             raise serializers.ValidationError(
-                u"The Signposting / Referral code you have entered is invalid. Please enter a valid code."
+                "The Signposting / Referral code you have entered is invalid. Please enter a valid code."
             )
 
     @staticmethod
@@ -682,7 +682,7 @@ class ProviderCSVValidator(object):
         signposting_code = cleaned_data.get("Signposting / Referral")
         if signposting_code_required and not signposting_code:
             raise serializers.ValidationError(
-                u"A Signposting / Referral reason code must be entered for matters with outcome code {}.".format(
+                "A Signposting / Referral reason code must be entered for matters with outcome code {}.".format(
                     outcome_code
                 )
             )

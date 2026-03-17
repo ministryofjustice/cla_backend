@@ -62,7 +62,7 @@ class AdaptationsDetailsAPIMixin(NestedSimpleResourceAPIMixin):
         response = method_callable(url, data, HTTP_AUTHORIZATION=self.get_http_authorization())
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-        expected_errors = {"language": [u"Select a valid choice. sdfsdf is not one of the available choices."]}
+        expected_errors = {"language": ["Select a valid choice. sdfsdf is not one of the available choices."]}
 
         errors = response.data
         self.assertItemsEqual(errors.keys(), expected_errors.keys())

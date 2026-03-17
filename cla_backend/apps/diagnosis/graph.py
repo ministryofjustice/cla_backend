@@ -63,10 +63,10 @@ class GraphImporter(object):
             if data_type in internationalised_keys and text:
                 if text in skipped_values:
                     continue
-                elif u'"' in text or len(text.splitlines()) > 1:
-                    data_element.text = u"{%% blocktrans %%}%s{%% endblocktrans %%}" % text
+                elif '"' in text or len(text.splitlines()) > 1:
+                    data_element.text = "{%% blocktrans %%}%s{%% endblocktrans %%}" % text
                 else:
-                    data_element.text = u'{%% trans "%s" %%}' % text
+                    data_element.text = '{%% trans "%s" %%}' % text
 
         if not output_path:
             output_path = "%s.tpl" % self.file_path
@@ -75,7 +75,7 @@ class GraphImporter(object):
             graph_str = etree.tostring(
                 self.doc, encoding="UTF-8", xml_declaration=True, standalone=False, pretty_print=True
             )
-            output.write(u"{% load i18n %}".encode("utf-8"))
+            output.write("{% load i18n %}".encode("utf-8"))
             output.write(graph_str)
 
     def process(self, is_templated=settings.DIAGNOSES_USE_TEMPLATES):
@@ -140,7 +140,7 @@ class GraphImporter(object):
     @staticmethod
     def _get_text(a_node, is_templated, translate=True):
         if is_templated and a_node.text and "{%" in a_node.text:
-            tpl = engines["django"].from_string(u"{%% load i18n %%}%s" % a_node.text)
+            tpl = engines["django"].from_string("{%% load i18n %%}%s" % a_node.text)
             if translate:
                 return lazy(lambda: tpl.render({}), text_type)()
             with translation.override("en"):

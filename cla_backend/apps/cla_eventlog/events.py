@@ -5,7 +5,6 @@ from cla_eventlog.constants import LOG_TYPES
 
 from timer.utils import get_timer
 
-
 # These are util functions that help Events set the right value of
 #   `set_requires_action_by` quickly.
 # Choose one of them if you want something else than a simple single value

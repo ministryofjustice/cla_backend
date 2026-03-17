@@ -121,7 +121,7 @@ jobs:
       - run:
           name: Check formatting with Black
           command: |
-            source lint-env/bin/activate
+            source formatting-env/bin/activate
             black --check cla_backend
   pip-compile:
     executor: python2-executor

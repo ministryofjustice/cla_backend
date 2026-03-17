@@ -153,7 +153,7 @@ To run all tests, this could be done from within the development container (as a
 To lint with Black and flake8, install pre-commit hooks:
 
 ```bash
-virtualenv -p python3.10 env --prompt=\(cla_be\)
+virtualenv -p python2.7 env --prompt=\(cla_be\)
 . env/bin/activate
 pip install -r requirements/generated/requirements-lint.txt
 pre-commit install

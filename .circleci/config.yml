@@ -97,7 +97,32 @@ jobs:
                 tag: database-migration
                 region: $ECR_REGION # this will use the env var
                 repo: $ECR_REPOSITORY # this will use the env var
-
+  formatting:
+    executor: python3-executor
+    steps:
+      - checkout
+      - run:
+          name: Setup Python environment
+          command: |
+            pip install virtualenv
+            virtualenv formatting-env
+      - restore_cache:
+          keys:
+            - pip-v1-black-18.9b0
+      - run:
+          name: Install dependencies
+          command: |
+            source formatting-env/bin/activate
+            pip install black>=18.9b0
+      - save_cache:
+          key: pip-v1-black-18.9b0
+          paths:
+            - "~/.cache/pip"
+      - run:
+          name: Check formatting with Black
+          command: |
+            source lint-env/bin/activate
+            black --check cla_backend
   pip-compile:
     executor: python2-executor
     steps:
@@ -251,6 +276,7 @@ workflows:
       - test:
           requires:
             - pip-compile
+            - formatting
       - cleanup_merged:
           name: cleanup_merged_live
           context:

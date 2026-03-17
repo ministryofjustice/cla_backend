@@ -273,6 +273,7 @@ workflows:
   build_and_test:
     jobs:
       - pip-compile
+      - formatting
       - test:
           requires:
             - pip-compile

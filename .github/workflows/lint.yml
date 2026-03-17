@@ -11,7 +11,7 @@
 #
 #   lint:
 #     - Runs flake8 style checker on Python code
-#     - Container: Python 2.7.18 (slim image)
+#     - Container: Python 2.7.18-slim
 #     - Installs lint requirements from pip
 #     - Executes flake8 linting checks
 #

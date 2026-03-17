@@ -16,8 +16,6 @@ OPERATOR_MANAGER_ROLE = "Civil Legal Advice Operator"
 PROVIDER_ROLE = "Civil Legal Advice - Provider"
 
 
-
-
 logger = logging.getLogger(__name__)
 
 def logging(func):

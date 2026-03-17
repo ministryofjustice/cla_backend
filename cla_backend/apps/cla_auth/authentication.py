@@ -11,16 +11,18 @@ from django.contrib.auth.models import User
 from call_centre.models import Operator
 from cla_provider.models import Provider, Staff
 
+from cla_auth.constants import OPERATOR_ROLE, OPERATOR_MANAGER_ROLE, PROVIDER_ROLE
+
 
 logger = logging.getLogger(__name__)
 
 def logging(func):
-    @wraps(func)  
+    @wraps(func)
     def wrapper(*args, **kwargs):
         try:
             return func(*args, **kwargs)
         except Exception as e:
-            raise exceptions.AuthenticationFailed("Failed to validate user: %s" % str(e)) 
+            raise exceptions.AuthenticationFailed("Failed to validate user: %s" % str(e))
     return wrapper
 
 
@@ -33,80 +35,101 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
 
     def authenticate_header(self, request):
         return 'Bearer realm="api"'
-    
-    
-    def authenticate_user(self, email):
+
+
+    def get_or_create_user(self, payload):
+        email = payload.get('USER_EMAIL', None)
+        if not email:
+            raise exceptions.AuthenticationFailed("Invalid Token format, email is missing from Token!")
+
+        user = None
         try:
             user = authenticate(entra_id_email=email)
-            return user
         except Exception:
-            return None 
+            pass
 
-      
-    @logging 
-    def _create_operator(self, payload, manager=False):
-        
+        if user:
+            return user
+
+        user_roles = payload["APP_ROLES"]
+        if isinstance(user_roles, unicode):
+            user_roles = user_roles.encode('utf-8')
+        if isinstance(user_roles, str):
+            user_roles = [user_roles]
+
+        if not user_roles:
+            raise exceptions.AuthenticationFailed("Invalid token: missing required field APP_ROLES")
+
+        is_manager = OPERATOR_MANAGER_ROLE in user_roles
+        if OPERATOR_ROLE in user_roles or OPERATOR_MANAGER_ROLE in user_roles:
+            user = self._create_operator(payload, is_manager=is_manager)
+            if not user:
+                raise exceptions.AuthenticationFailed("Invalid token: Incorrect App role provided!")
+            return user
+
+        if PROVIDER_ROLE in user_roles:
+            user = self._create_provider(payload)
+            if not user:
+                raise exceptions.AuthenticationFailed("Invalid token: Incorrect App role provided!")
+            return user
+
+        return None
+
+
+    @logging
+    def _create_operator(self, payload, is_manager=False):
         user_email = payload.get("USER_EMAIL", None)
         if user_email is None:
            return None
 
-        user_instance = User(
-            username= user_email, 
-            email=user_email, 
-            password="test",
+        user = User(
+            username= user_email,
+            email=user_email,
             is_active=True,
-            is_staff=True
+            is_staff=False, # This will be overridden in call_centre.models.Operator.save
         )
-        user_instance.save()
-        user_instance.refresh_from_db()
-        print(user_instance.is_staff) 
+        # We don't want this user to be able to log in using a username and password
+        user.set_unusable_password()
+        user.save()
 
-        create_operator = Operator(
-            user = user_instance, 
-            organisation= None, 
-            is_manager= manager, 
+        operator = Operator(
+            user = user,
+            is_manager= is_manager,
         )
-    
-        create_operator.save()
-        return user_instance if user_instance else None
+
+        operator.save()
+        return operator.user
 
     @logging
     def _create_provider(self, payload):
-
         user_email = payload.get("USER_EMAIL", None)
         firm_name = payload.get("FIRM_NAME",None)
-
         if not firm_name:
             return None
-       
+
         provider = Provider.objects.active().get(name=firm_name)
         if not provider:
-            return None 
-        
-       
-        user_instance = User(
-                username = user_email, 
-                email = user_email, 
-                password="test",
-                is_staff=True, # 
-                is_active=True,
-               
-            )
-        user_instance.save()
-        user_instance.refresh_from_db()
-        print(user_instance.is_staff) 
+            return None
 
-        if provider:
+        user = User(
+            username = user_email,
+            email = user_email,
+            is_staff=False,
+            is_active=True,
+        )
+        # We don't want this user to be able to login using a username and password
+        user.set_unusable_password()
+        user.save()
 
-            create_staff = Staff(
-                user = user_instance,
-                provider = provider, 
-                is_manager=False
-            )
-            create_staff.save()
+        staff = Staff(
+            user=user,
+            provider=provider,
+            is_manager=False
+        )
+        staff.save()
 
-        return user_instance if user_instance else None 
-    
+        return staff.user
+
 
     def _public_keys(self):
 
@@ -131,7 +154,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
             raise exceptions.AuthenticationFailed("Invalid token format: %s" % e)
         except Exception as e:
             raise exceptions.AuthenticationFailed("Token validation failed: %s" % e)
-        
+
 
     def validate_token(self, token):
 
@@ -152,51 +175,29 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         cert_obj = load_pem_x509_certificate(cert_str.encode("utf-8"), default_backend())
         public_key = cert_obj.public_key()
         return jwt.decode(token, public_key, algorithms=["RS256"], audience=self.expected_audience, issuer=self.issuer)
-    
+
 
     def authenticate(self, request):
-        
-        # add back the code for the beaer
-        
+
         token = request.META.get("HTTP_AUTHORIZATION")
         if not token:
             return None
 
+        # Make sure it's a JWT token and if not, exit the authenticate method
+        if len(token.split(".")) != 3:
+            return None
+
+        # token will now be Bearer <token>, we are only interested in the token
+        _, token = token.split(" ")
+        if not token:
+            return None
+
         payload = self._validate_token(token)
-        email = payload.get('USER_EMAIL', None)
+        user = self.get_or_create_user(payload)
 
-        if not email:
-            raise exceptions.AuthenticationFailed("Invalid Token format, email is missing from Token!")
+        if not user:
+            raise exceptions.AuthenticationFailed("Invalid token: Incorrect App role provided!")
 
-        user = self.authenticate_user(email)
-
-        if user and user.email == email:
-            return user, payload
-
-        user_role = payload.get("APP_ROLES")
-        if not user_role:
-            raise exceptions.AuthenticationFailed("Invalid token: missing required field APP_ROLES")
-
-        # Handle roles
-        ROLE_OPERATOR_MANAGER = "Civil Legal Advice Operator"
-        ROLE_OPERATOR = "Civil Legal Advice Access"
-        ROLE_PROVIDER = "Civil Legal Advice - Provider" # inconsistency in naming 
+        return user, payload
 
 
-        if user_role in [ROLE_OPERATOR_MANAGER, ROLE_OPERATOR]:
-            manager = False == ROLE_OPERATOR_MANAGER
-            user = self._create_operator(payload, manager)
-            
-            if not user:
-                raise exceptions.AuthenticationFailed("Invalid token: Incorrect App role provided!")
-            return user, payload
-
-        if user_role == ROLE_PROVIDER:
-            user = self._create_provider(payload)
-            
-            if not user:
-                raise exceptions.AuthenticationFailed("Invalid token: Incorrect App role provided!")
-            return user, payload
-
-        
-        raise exceptions.AuthenticationFailed("Invalid token: Incorrect App role provided!")

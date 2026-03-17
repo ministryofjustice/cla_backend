@@ -11,7 +11,11 @@ from django.contrib.auth.models import User
 from call_centre.models import Operator
 from cla_provider.models import Provider, Staff
 
-from cla_auth.constants import OPERATOR_ROLE, OPERATOR_MANAGER_ROLE, PROVIDER_ROLE
+OPERATOR_ROLE = "Civil Legal Advice Access"
+OPERATOR_MANAGER_ROLE = "Civil Legal Advice Operator"
+PROVIDER_ROLE = "Civil Legal Advice - Provider"
+
+
 
 
 logger = logging.getLogger(__name__)
@@ -35,46 +39,6 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
 
     def authenticate_header(self, request):
         return 'Bearer realm="api"'
-
-
-    def get_or_create_user(self, payload):
-        email = payload.get('USER_EMAIL', None)
-        if not email:
-            raise exceptions.AuthenticationFailed("Invalid Token format, email is missing from Token!")
-
-        user = None
-        try:
-            user = authenticate(entra_id_email=email)
-        except Exception:
-            pass
-
-        if user:
-            return user
-
-        user_roles = payload["APP_ROLES"]
-        if isinstance(user_roles, unicode):
-            user_roles = user_roles.encode('utf-8')
-        if isinstance(user_roles, str):
-            user_roles = [user_roles]
-
-        if not user_roles:
-            raise exceptions.AuthenticationFailed("Invalid token: missing required field APP_ROLES")
-
-        is_manager = OPERATOR_MANAGER_ROLE in user_roles
-        if OPERATOR_ROLE in user_roles or OPERATOR_MANAGER_ROLE in user_roles:
-            user = self._create_operator(payload, is_manager=is_manager)
-            if not user:
-                raise exceptions.AuthenticationFailed("Invalid token: Incorrect App role provided!")
-            return user
-
-        if PROVIDER_ROLE in user_roles:
-            user = self._create_provider(payload)
-            if not user:
-                raise exceptions.AuthenticationFailed("Invalid token: Incorrect App role provided!")
-            return user
-
-        return None
-
 
     @logging
     def _create_operator(self, payload, is_manager=False):
@@ -108,6 +72,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
             return None
 
         provider = Provider.objects.active().get(name=firm_name)
+
         if not provider:
             return None
 
@@ -175,6 +140,43 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         cert_obj = load_pem_x509_certificate(cert_str.encode("utf-8"), default_backend())
         public_key = cert_obj.public_key()
         return jwt.decode(token, public_key, algorithms=["RS256"], audience=self.expected_audience, issuer=self.issuer)
+    
+    def get_or_create_user(self, payload):
+
+        email = payload.get('USER_EMAIL', None)
+        if not email:
+            raise exceptions.AuthenticationFailed("Invalid Token format, email is missing from Token!")
+
+        user = None
+        try:
+            user = authenticate(entra_id_email=email)
+        except Exception:
+            pass
+
+        if user:
+            return user
+
+        user_roles = payload.get("APP_ROLES").decode('utf-8')
+     
+        if not user_roles:
+            raise exceptions.AuthenticationFailed("Invalid token: missing required field APP_ROLES")
+
+        is_manager = True if OPERATOR_MANAGER_ROLE in user_roles else False 
+
+        if OPERATOR_ROLE in user_roles or OPERATOR_MANAGER_ROLE in user_roles:
+            user = self._create_operator(payload, is_manager=is_manager)
+            if not user:
+                raise exceptions.AuthenticationFailed("Invalid token: Incorrect App role provided!")
+            return user
+
+        if PROVIDER_ROLE in user_roles:
+            user = self._create_provider(payload)
+
+            if not user:
+                raise exceptions.AuthenticationFailed("Invalid token: Incorrect App role provided!")
+            return user
+
+        return None
 
 
     def authenticate(self, request):

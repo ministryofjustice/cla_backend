@@ -1,3 +1,5 @@
+
+
 import jwt
 import json
 import time
@@ -17,9 +19,15 @@ from cla_auth.authentication import EntraAccessTokenAuthentication
 from core.tests.mommy_utils import make_recipe
 from django.core.urlresolvers import reverse
 from cla_common.constants import REQUIRES_ACTION_BY
-from cla_auth.constants import OPERATOR_ROLE, OPERATOR_MANAGER_ROLE, PROVIDER_ROLE
+from call_centre.models import Operator
+from cla_provider.models import Provider, Staff
 
 User = get_user_model()
+
+OPERATOR_ROLE = "Civil Legal Advice Access"
+OPERATOR_MANAGER_ROLE = "Civil Legal Advice Operator"
+PROVIDER_ROLE = "Civil Legal Advice - Provider"
+
 
 
 class EntraTokenGeneratorMixin(object):
@@ -72,7 +80,7 @@ class EntraTokenGeneratorMixin(object):
     def create_user(self, **kwargs):
         return User.objects.create(**kwargs)
 
-    def _create_token(self, expired=False, email="test@example.com", kid="test-kid-123"):
+    def _create_token(self,firm_name="frm_name", app_roles=OPERATOR_ROLE, expired=False, email="test@example.com", kid="test-kid-123"):
         """Helper to create JWT tokens"""
         now = datetime.datetime.now()
 
@@ -80,17 +88,6 @@ class EntraTokenGeneratorMixin(object):
             exp = now - datetime.timedelta(hours=1)
         else:
             exp = now + datetime.timedelta(hours=1)
-
-        try:
-            user = User.objects.get(email=email)
-        except User.DoesNotExist:
-            user = None
-
-        app_roles = []
-        if user and hasattr(user, "staff"):
-            app_roles = [PROVIDER_ROLE]
-        elif user and hasattr(user, "operator"):
-            app_roles = [OPERATOR_ROLE]
 
         payload = {
             "iss": self.issuer,
@@ -100,16 +97,16 @@ class EntraTokenGeneratorMixin(object):
             "preferred_username": email,
             "sub": "test-subject",
             "name": "Full Name",
-            "APP_ROLES": app_roles,
+            "APP_ROLES": app_roles, 
             "FIRM_CODE":  00000,
-            "FIRM_NAME": "THE FIRM NAME LTD",
-            "LAA_ACCOUNTS": 0000000,
-            "USER_EMAIL":email,
+            "FIRM_NAME": firm_name, 
+            "LAA_ACCOUNTS": 0000000, 
+            "USER_EMAIL":email, 
         }
 
 
         token = jwt.encode(payload, self.private_key, algorithm="RS256", headers={
-            "typ":" JWT",
+            "typ":" JWT", 
             "alg": "RS256",
             "kid": kid})
 
@@ -238,27 +235,123 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
 
         token = self._create_token(expired=False, email="test1233@example.com")
 
+        response = self.client.get("/", HTTP_AUTHORIZATION="Bearer %s" % token)
+        self.assertEqual(response.status_code, 404)
+
+    
+    
+    @patch("cla_auth.authentication.EntraAccessTokenAuthentication._public_keys")
+    def test_create_operator_user_success(self, mock_public_keys):
+        mock_public_keys.return_value = self.mock_jwks["keys"]
+
+        # Create provider that matches token
+        provider = make_recipe("cla_provider.provider", name="THE FIRM NAME LTD", active=True)
+
+        email = "provider@test.com"
+
+        token = self._create_token(
+            app_roles=OPERATOR_ROLE,
+            email=email
+        )
+
         request = self.factory.get("/")
         request.META["HTTP_AUTHORIZATION"] = "Bearer %s" % token
 
-        with self.assertRaises(exceptions.AuthenticationFailed, msg="User not found or inactive"):
-            self.auth.authenticate(request)
+        user, payload = self.auth.authenticate(request)
 
+        self.assertIsNotNone(user)
+        self.assertEqual(user.email, email)
+
+    
+    @patch("cla_auth.authentication.EntraAccessTokenAuthentication._public_keys")
+    def test_create_operator_manager_success(self, mock_public_keys):
+        mock_public_keys.return_value = self.mock_jwks["keys"]
+
+        # Create provider that matches token
+        provider = make_recipe("cla_provider.provider", name="THE FIRM NAME LTD", active=True)
+
+        email = "provider@test.com"
+
+        token = self._create_token(
+            app_roles=OPERATOR_MANAGER_ROLE,
+            email=email
+        )
+
+        request = self.factory.get("/")
+        request.META["HTTP_AUTHORIZATION"] = "Bearer %s" % token
+
+        user, payload = self.auth.authenticate(request)
+
+        self.assertIsNotNone(user)
+        self.assertEqual(user.email, email)
 
 
     @patch("cla_auth.authentication.EntraAccessTokenAuthentication._public_keys")
-    def test_new_user_create_authenicate_user(self, mock_public_keys):
-        """Test authentication fails when user not found"""
-
+    def test_create_provider_success(self, mock_public_keys):
         mock_public_keys.return_value = self.mock_jwks["keys"]
 
-        # different email from the one that is created
-        token = self._create_token(expired=False)
+        # Create provider that matches token
+        provider = make_recipe("cla_provider.provider", name="THE FIRM NAME LTD", active=True)
+
+        email = "provider@test.com"
+
+        token = self._create_token(
+            app_roles=PROVIDER_ROLE,
+            email=email
+        )
 
         request = self.factory.get("/")
-        request.META["HTTP_AUTHORIZATION"] = "Bearer %s" %token
+        request.META["HTTP_AUTHORIZATION"] = "Bearer %s" % token
 
         user, payload = self.auth.authenticate(request)
+
+        self.assertIsNotNone(user)
+        self.assertEqual(user.email, email)
+       
+       
+    
+
+
+    @patch("cla_auth.authentication.EntraAccessTokenAuthentication._public_keys")
+    def test_create_provider_user_invalid_firm(self, mock_public_keys):
+        mock_public_keys.return_value = self.mock_jwks["keys"]
+
+        token = self._create_token(
+            app_roles=PROVIDER_ROLE,
+            email="badprovider@test.com"
+        )
+
+        request = self.factory.get("/")
+        request.META["HTTP_AUTHORIZATION"] = "Bearer %s" % token
+
+        with self.assertRaises(exceptions.AuthenticationFailed) as ctx:
+            self.auth.authenticate(request)
+
+
+    
+    @patch("cla_auth.authentication.EntraAccessTokenAuthentication._public_keys")
+    def test_create_provider_missing_firm_name(self, mock_public_keys):
+        mock_public_keys.return_value = self.mock_jwks["keys"]
+
+        now = datetime.datetime.now()
+
+        payload = {
+            "iss": self.issuer,
+            "aud": self.auth.expected_audience,
+            "exp": now + datetime.timedelta(hours=1),
+            "iat": now,
+            "USER_EMAIL": "nofirm@test.com",
+            "APP_ROLES": PROVIDER_ROLE,
+            # Missing FIRM_NAME
+        }
+
+        token = jwt.encode(payload, self.private_key, algorithm="RS256", headers={"kid": "test-kid-123"})
+
+        request = self.factory.get("/")
+        request.META["HTTP_AUTHORIZATION"] = "Bearer %s" % token
+
+        with self.assertRaises(exceptions.AuthenticationFailed):
+            self.auth.authenticate(request)
 
 
 
@@ -308,6 +401,10 @@ class EntraAuthorizationTestCase(EntraTokenGeneratorMixin, TestCase):
         user = User(email="test@localhost")
         user.save()
         staff_instance = make_recipe("cla_provider.staff", user=user)
+        firm_name = "THE FIRM NAME LTD"
+
+        provider = make_recipe("cla_provider.provider", name=firm_name, active=True)
+
         case = make_recipe(
             "legalaid.case",
             reference="AB-00-11-22",
@@ -316,7 +413,7 @@ class EntraAuthorizationTestCase(EntraTokenGeneratorMixin, TestCase):
             requires_action_by=REQUIRES_ACTION_BY.PROVIDER,
         )
 
-        token = self._create_token(email=staff_instance.user.email)
+        token = self._create_token(firm_name=firm_name, app_roles=OPERATOR_ROLE, email=staff_instance.user.email)
         # Try to get the details for a case with a provider user using the provider API
         url = reverse("cla_provider:case-detail", kwargs=dict(reference=case.reference))
         headers = {"HTTP_AUTHORIZATION": "Bearer %s" % token}
@@ -342,7 +439,8 @@ class EntraAuthorizationTestCase(EntraTokenGeneratorMixin, TestCase):
         url = reverse("cla_provider:case-detail", kwargs=dict(reference=case.reference))
         headers = {"HTTP_AUTHORIZATION": "Bearer %s" % token}
         response = self.client.get(url, **headers)
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 403)
+
 
 
 

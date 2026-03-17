@@ -19,9 +19,6 @@ def report_links():
         return " ".join(names)
 
     def report_link(x):
-        return {
-            "name": replace_abbrev(title(x.name.replace("_", " "))),
-            "url": reverse("reports:{0}".format(x.name)),
-        }
+        return {"name": replace_abbrev(title(x.name.replace("_", " "))), "url": reverse("reports:{0}".format(x.name))}
 
     return map(report_link, urlpatterns)

@@ -751,12 +751,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_for_debt_outcome_code_DAA_is_valid(self):
-        test_values = {
-            "Matter Type 1": "DPDE",
-            "Matter Type 2": "DVAL",
-            "Stage Reached": "DA",
-            "Outcome Code": "DAA",
-        }
+        test_values = {"Matter Type 1": "DPDE", "Matter Type 2": "DVAL", "Stage Reached": "DA", "Outcome Code": "DAA"}
         self._test_generated_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
@@ -809,32 +804,17 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_housing_outcome_code_haa_is_valid(self):
-        test_values = {
-            "Matter Type 1": "HRNT",
-            "Matter Type 2": "HPRI",
-            "Stage Reached": "HA",
-            "Outcome Code": "HAA",
-        }
+        test_values = {"Matter Type 1": "HRNT", "Matter Type 2": "HPRI", "Stage Reached": "HA", "Outcome Code": "HAA"}
         self._test_generated_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_housing_outcome_code_hac_is_valid(self):
-        test_values = {
-            "Matter Type 1": "HRNT",
-            "Matter Type 2": "HPRI",
-            "Stage Reached": "HA",
-            "Outcome Code": "HAC",
-        }
+        test_values = {"Matter Type 1": "HRNT", "Matter Type 2": "HPRI", "Stage Reached": "HA", "Outcome Code": "HAC"}
         self._test_generated_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_housing_outcome_code_hab_is_valid(self):
-        test_values = {
-            "Matter Type 1": "HRNT",
-            "Matter Type 2": "HPRI",
-            "Stage Reached": "HA",
-            "Outcome Code": "HAB",
-        }
+        test_values = {"Matter Type 1": "HRNT", "Matter Type 2": "HPRI", "Stage Reached": "HA", "Outcome Code": "HAB"}
         self._test_generated_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
@@ -1102,12 +1082,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_eligibility_codes_with_lf_fixed_fee(self):
         lf_eligibility_codes = {"S", "T", "V", "W", "X", "Z"}
-        test_values = {
-            "Matter Type 1": "DTOT",
-            "Matter Type 2": "DOTH",
-            "Stage Reached": "DB",
-            "Fixed Fee Code": "LF",
-        }
+        test_values = {"Matter Type 1": "DTOT", "Matter Type 2": "DOTH", "Stage Reached": "DB", "Fixed Fee Code": "LF"}
         for eligibility_code in lf_eligibility_codes:
             test_values["Eligibility Code"] = eligibility_code
             self._test_generated_contract_row_validates(override=test_values)

@@ -1,18 +1,4 @@
-SERVICE_ADAPTATIONS = {
-    "CBI",
-    "LLI",
-    "BSL",
-    "MIN",
-    "TYP",
-    "SWC",
-    "OAD",
-    "TPC",
-    "TAF",
-    "FRS",
-    "NAR",
-    "OTH",
-    "MAR",
-}
+SERVICE_ADAPTATIONS = {"CBI", "LLI", "BSL", "MIN", "TYP", "SWC", "OAD", "TPC", "TAF", "FRS", "NAR", "OTH", "MAR"}
 
 EXEMPTION_CODES = {"ECHI", "EDET", "EPRE"}
 

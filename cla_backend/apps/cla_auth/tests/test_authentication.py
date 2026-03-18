@@ -1,4 +1,6 @@
-import jwt, json, time, datetime
+import jwt
+import time
+import datetime
 from mock import patch
 from django.test import TestCase, RequestFactory
 from django.contrib.auth import get_user_model
@@ -15,10 +17,10 @@ from core.tests.mommy_utils import make_recipe
 from django.core.urlresolvers import reverse
 from cla_common.constants import REQUIRES_ACTION_BY
 
+from cla_auth.constants import OPERATOR_ROLE, OPERATOR_MANAGER_ROLE, PROVIDER_ROLE
+
 
 User = get_user_model()
-
-from cla_auth.constants import OPERATOR_ROLE,OPERATOR_MANAGER_ROLE, PROVIDER_ROLE
 
 
 class EntraTokenGeneratorMixin(object):
@@ -312,7 +314,6 @@ class EntraAuthorizationTestCase(EntraTokenGeneratorMixin, TestCase):
             provider=make_recipe("cla_provider.provider"),
             requires_action_by=REQUIRES_ACTION_BY.PROVIDER,
         )
-
         token = self._create_token(email=staff_instance.user.email)
         url = reverse("cla_provider:case-detail", kwargs=dict(reference=case.reference))
         headers = {"HTTP_AUTHORIZATION": "Bearer %s" % token}

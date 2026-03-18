@@ -1,4 +1,6 @@
-import jwt,requests, logging
+import jwt
+import requests
+import logging
 from cryptography.x509 import load_pem_x509_certificate
 from cryptography.hazmat.backends import default_backend
 from django.contrib.auth import authenticate
@@ -11,9 +13,10 @@ from django.contrib.auth.models import User
 from call_centre.models import Operator
 from cla_provider.models import Provider, Staff
 
-from cla_auth.constants import OPERATOR_ROLE,OPERATOR_MANAGER_ROLE, PROVIDER_ROLE
+from cla_auth.constants import OPERATOR_ROLE, OPERATOR_MANAGER_ROLE, PROVIDER_ROLE
 
 logger = logging.getLogger(__name__)
+
 
 def logging(func):
     @wraps(func)
@@ -39,13 +42,13 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
     def _create_operator(self, payload, is_manager=False):
         user_email = payload.get("USER_EMAIL", None)
         if user_email is None:
-           return None
+            return None
 
         user = User(
-            username= user_email,
-            email=user_email,
-            is_active=True,
-            is_staff=False, # This will be overridden in call_centre.models.Operator.save
+            username = user_email,
+            email = user_email,
+            is_active = True,
+            is_staff = False,  # This will be overridden in call_centre.models.Operator.save
         )
         # We don't want this user to be able to log in using a username and password
         user.set_unusable_password()

@@ -42,9 +42,25 @@ host: 'localhost'
 ingress:
   enabled: true
   annotations: {}
+  className: modsec
+  domain: cloud-platform.service.justice.gov.uk
   cluster:
     name: ~
     weight: ~
+  modSecurity:
+    enabled: true
+    snippet: |
+      SecRuleEngine On
+      SecDefaultAction "phase:2,pass,log,tag:github_team=laa-get-access"
+      # Default is only GET HEAD POST OPTIONS so need to include PATCH etc.
+      SecAction "id:900200,phase:1,nolog,pass,t:none,setvar:tx.allowed_methods=GET HEAD POST OPTIONS PATCH DELETE"
+      # Missing User Agent Header
+      SecRuleRemoveById 920320
+      # This rule is triggering false positives when trying to save guidance notes that contain markdown.
+      # See LGA-3333 for more details.
+      SecRuleRemoveById 933210
+      # This rule is triggering false positives when trying to upload CSV files
+      SecRuleRemoveById 932130
   whitelist:
     # HGS
     - 84.43.86.100/32
@@ -57,6 +73,7 @@ localPostgres:
 metabase:
   enabled: true
   host: "cla-dashboard"
+  ingressClassName: ~
 
 queueWorkers:
   enabled: true

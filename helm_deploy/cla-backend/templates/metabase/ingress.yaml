@@ -1,6 +1,7 @@
 {{- if .Values.ingress.enabled -}}
 {{- if .Values.metabase.enabled -}}
 {{- $fullName := include "cla-backend.fullname" . -}}
+{{- $ingressHost := include "cla-backend.ingressHost" (dict "host" .Values.metabase.host "domain" (include "cla-backend.ingressDomain" .)) -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -17,11 +18,14 @@ metadata:
     {{- toYaml . | nindent 4 }}
     {{- end }}
 spec:
+  {{- if .Values.metabase.ingressClassName }}
+  ingressClassName: {{ .Values.metabase.ingressClassName | quote }}
+  {{- end }}
   tls:
     - hosts:
-        - "{{ .Values.metabase.host }}.cloud-platform.service.justice.gov.uk"
+        - "{{ $ingressHost }}"
   rules:
-    - host: "{{ .Values.metabase.host }}.cloud-platform.service.justice.gov.uk"
+    - host: "{{ $ingressHost }}"
       http:
         paths:
           - path: "/"

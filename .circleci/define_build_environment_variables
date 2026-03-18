@@ -11,12 +11,21 @@ export short_sha="$(git rev-parse --short=7 $CIRCLE_SHA1)"
 export IMAGE_TAG="$CLEANED_BRANCH_NAME.$short_sha"
 export ECR_DEPLOY_IMAGE="$DOCKER_REPOSITORY:$IMAGE_TAG"
 
-if [ $DYNAMIC_HOSTNAME = true ]; then
+build_beta_release_host() {
+  service_name=${1%%.*}
+  printf '%s.beta.cloud-platform.service.justice.gov.uk' "$service_name"
+}
+
+if [ "$DYNAMIC_HOSTNAME" = true ]; then
   export RELEASE_NAME=${CLEANED_BRANCH_NAME}
   export RELEASE_HOST=${RELEASE_NAME}-${HOST}
 else
   export RELEASE_NAME=cla-backend
   export RELEASE_HOST=${HOST}
+fi
+
+if [ -n "$NAMESPACE" ] && [ "$NAMESPACE" != "production" ]; then
+  export RELEASE_HOST=$(build_beta_release_host "$RELEASE_HOST")
 fi
 
 if [ "$CIRCLE_BRANCH" == "main" ]; then

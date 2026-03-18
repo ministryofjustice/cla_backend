@@ -13,9 +13,14 @@ localPostgres:
 metabase:
   enabled: false
   host: "cla-dashboard-training"
+  ingressClassName: beta
 
 ingress:
   enabled: true
+  className: beta
+  domain: beta.cloud-platform.service.justice.gov.uk
+  modSecurity:
+    enabled: false
   whitelist_additional:
     - 52.49.175.131/32
 

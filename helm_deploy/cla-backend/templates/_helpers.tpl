@@ -16,6 +16,18 @@ Expand the name of the chart.
 {{ join "," .Values.ingress.whitelist }},{{- .Values.pingdomIPs }}{{ include "cla-backend.whitelist_additional" . }},{{- .Values.sharedIPRangesLAA }}
 {{- end -}}
 
+{{- define "cla-backend.ingressDomain" -}}
+{{- default "cloud-platform.service.justice.gov.uk" .Values.ingress.domain -}}
+{{- end -}}
+
+{{- define "cla-backend.ingressHost" -}}
+{{- if contains "." .host -}}
+{{- .host -}}
+{{- else -}}
+{{- printf "%s.%s" .host .domain -}}
+{{- end -}}
+{{- end -}}
+
 {{/*
 Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).

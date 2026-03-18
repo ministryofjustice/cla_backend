@@ -17,7 +17,7 @@ executors:
       - image: ministryofjustice/cloud-platform-tools:2.1
   python2-executor:
     docker:
-      - image: cimg/python:2.7
+      - image: cimg/python:2.7.18
 
 
 # ------------------

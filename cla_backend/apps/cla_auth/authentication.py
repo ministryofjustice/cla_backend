@@ -11,10 +11,7 @@ from django.contrib.auth.models import User
 from call_centre.models import Operator
 from cla_provider.models import Provider, Staff
 
-OPERATOR_ROLE = "Civil Legal Advice Access"
-OPERATOR_MANAGER_ROLE = "Civil Legal Advice Operator"
-PROVIDER_ROLE = "Civil Legal Advice - Provider"
-
+from cla_auth.constants import OPERATOR_ROLE,OPERATOR_MANAGER_ROLE, PROVIDER_ROLE
 
 logger = logging.getLogger(__name__)
 
@@ -66,12 +63,13 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
     def _create_provider(self, payload):
         user_email = payload.get("USER_EMAIL", None)
         firm_name = payload.get("FIRM_NAME",None)
+        
         if not firm_name:
             return None
 
-        provider = Provider.objects.active().get(name=firm_name)
-
-        if provider != firm_name:
+        try:
+            provider = Provider.objects.active().get(name=firm_name)
+        except Exception:
             return None
 
         user = User(
@@ -154,7 +152,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         if user:
             return user
 
-        user_roles = payload.get("APP_ROLES").decode('utf-8')
+        user_roles = payload.get("APP_ROLES")
      
         if not user_roles:
             raise exceptions.AuthenticationFailed("Invalid token: missing required field APP_ROLES")
@@ -188,7 +186,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
             return None
 
         # token will now be Bearer <token>, we are only interested in the token
-        _, token = token.split(" ")
+        _, token = token.split(" ",1)
         if not token:
             return None
 

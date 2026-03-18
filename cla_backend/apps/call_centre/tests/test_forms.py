@@ -295,10 +295,10 @@ class ProviderAllocationFormTestCase(TestCase):
             form.errors,
             {
                 "__all__": [
-                    u"Category of matter type 1: {category1} must match category of matter type 2: {category2}".format(
+                    "Category of matter type 1: {category1} must match category of matter type 2: {category2}".format(
                         category1=category.name, category2=other_category.name
                     ),
-                    u"Category of Matter Types: {category1}, {category2} must match category of case: {case_category}".format(
+                    "Category of Matter Types: {category1}, {category2} must match category of case: {case_category}".format(
                         category1=category.name, category2=other_category.name, case_category=category.name
                     ),
                 ]
@@ -429,37 +429,37 @@ class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin, CallCentreFixedOperat
             self.assertEqual(Log.objects.count(), 0)
 
         # required datetime
-        _test(case, None, u"This field is required.")
+        _test(case, None, "This field is required.")
 
         # invalid format
-        _test(case, now_utc.strftime("%Y/%m/%d %H:%M"), u"Enter a valid date/time.")
+        _test(case, now_utc.strftime("%Y/%m/%d %H:%M"), "Enter a valid date/time.")
 
         # datetime in the past, beyond the current window
         _test(
             case,
             self._strftime(now_utc - datetime.timedelta(minutes=35)),
-            u"Specify a date not in the current half hour.",
+            "Specify a date not in the current half hour.",
         )
 
         # Sat at 12.31
         sat = now_utc.replace(day=14, hour=12, minute=31, second=0, microsecond=0)
 
-        _test(case, self._strftime(sat), u"Specify a date within working hours.")
+        _test(case, self._strftime(sat), "Specify a date within working hours.")
 
         # Sun at 10am
         sun = now_utc.replace(day=15, hour=10, minute=0, second=0, microsecond=0)
 
-        _test(case, self._strftime(sun), u"Specify a date within working hours.")
+        _test(case, self._strftime(sun), "Specify a date within working hours.")
 
         # Mon at 8.59
         mon = now_utc.replace(day=16, hour=8, minute=59, second=0, microsecond=0)
 
-        _test(case, self._strftime(mon), u"Specify a date within working hours.")
+        _test(case, self._strftime(mon), "Specify a date within working hours.")
 
         # Mon at 20.01
         mon = now_utc.replace(day=16, hour=20, minute=1, second=0, microsecond=0)
 
-        _test(case, self._strftime(mon), u"Specify a date within working hours.")
+        _test(case, self._strftime(mon), "Specify a date within working hours.")
 
     @mock.patch("call_centre.forms.timezone.now")
     def test_valid_datetime(self, mocked_now):
@@ -490,7 +490,7 @@ class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin, CallCentreFixedOperat
 
         self.assertFalse(form.is_valid())
         self.assertItemsEqual(form.errors.keys(), ["__all__"])
-        self.assertItemsEqual(form.errors["__all__"], [u"Reached max number of callbacks allowed"])
+        self.assertItemsEqual(form.errors["__all__"], ["Reached max number of callbacks allowed"])
 
     @mock.patch("django.utils.timezone.now")
     def test_callback_SMS_sla_date_from_case_creation_date(self, mocked_now):
@@ -577,7 +577,7 @@ class StopCallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
         self.assertFalse(form.is_valid())
         self.assertItemsEqual(form.errors.keys(), ["action"])
         self.assertItemsEqual(
-            form.errors["action"], [u"Select a valid choice. invalid is not one of the available choices."]
+            form.errors["action"], ["Select a valid choice. invalid is not one of the available choices."]
         )
 
         self.assertEqual(Log.objects.count(), 0)
@@ -589,7 +589,7 @@ class StopCallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
 
         self.assertFalse(form.is_valid())
         self.assertItemsEqual(form.errors.keys(), ["__all__"])
-        self.assertItemsEqual(form.errors["__all__"], [u"Cannot cancel callback without a previous CBx"])
+        self.assertItemsEqual(form.errors["__all__"], ["Cannot cancel callback without a previous CBx"])
 
     def test_CALLBACK_COMPLETE_not_allowed_wihout_prev_CBx(self):
         case = make_recipe("legalaid.case", callback_attempt=0)
@@ -598,4 +598,4 @@ class StopCallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
 
         self.assertFalse(form.is_valid())
         self.assertItemsEqual(form.errors.keys(), ["__all__"])
-        self.assertItemsEqual(form.errors["__all__"], [u"Cannot mark callback as complete without previous CBx"])
+        self.assertItemsEqual(form.errors["__all__"], ["Cannot mark callback as complete without previous CBx"])

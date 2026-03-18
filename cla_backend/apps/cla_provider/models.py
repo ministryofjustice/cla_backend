@@ -43,7 +43,7 @@ class Provider(TimeStampedModel):
     objects = ProviderManager()
 
     def __unicode__(self):
-        return u"%s" % self.name
+        return "%s" % self.name
 
 
 class WorkingDays(models.Model):
@@ -65,7 +65,7 @@ class WorkingDays(models.Model):
         verbose_name_plural = "Working Days"
 
     def is_working_today(self):
-        """ Returns if the provider allocation is allocated to work today.s
+        """Returns if the provider allocation is allocated to work today.s
 
         Returns:
             Boolean: Is the provider working today
@@ -75,7 +75,7 @@ class WorkingDays(models.Model):
         return self.is_working_on_day(current_day)
 
     def is_working_on_day(self, day):
-        """ Takes in a day of the week as a string and returns if the provider works on that day
+        """Takes in a day of the week as a string and returns if the provider works on that day
 
         Args:
             day (str): Day of the week as a string. E.g. "Monday"
@@ -108,8 +108,7 @@ class WorkingDays(models.Model):
 
 
 def get_current_day_as_string():
-    """ Returns the current day of the week as a lower case string.
-    """
+    """Returns the current day of the week as a lower case string."""
     week = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
     day_index = datetime.now().weekday()
 
@@ -161,7 +160,7 @@ class ProviderAllocation(TimeStampedModel):
     objects = ProviderAllocationManager()
 
     def __unicode__(self):
-        return u"%s provides %s" % (self.provider, self.category)
+        return "%s provides %s" % (self.provider, self.category)
 
 
 class ProviderPreAllocationManager(models.Manager):
@@ -262,7 +261,7 @@ class OutOfHoursRota(TimeStampedModel):
     objects = OutOfHoursRotaManager()
 
     def __unicode__(self):
-        return u"%s provides out of hours service for %s between %s - %s" % (
+        return "%s provides out of hours service for %s between %s - %s" % (
             self.provider,
             self.category.code,
             self.start_date,
@@ -277,7 +276,7 @@ class OutOfHoursRota(TimeStampedModel):
         # is not able to provide.
         if self.category not in self.provider.law_category.all():
             raise ValidationError(
-                _(u"Provider {provider} doesn't offer help for {category}").format(
+                _("Provider {provider} doesn't offer help for {category}").format(
                     provider=self.provider, category=self.category
                 )
             )
@@ -289,7 +288,7 @@ class OutOfHoursRota(TimeStampedModel):
             overlapping = overlapping.exclude(pk=self.pk)
 
         if overlapping:
-            raise ValidationError(_(u"Overlapping rota allocation not allowed"))
+            raise ValidationError(_("Overlapping rota allocation not allowed"))
 
 
 class Feedback(TimeStampedModel):

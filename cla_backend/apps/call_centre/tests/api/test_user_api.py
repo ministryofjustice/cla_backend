@@ -12,10 +12,10 @@ class UserTestCase(CLAOperatorAuthBaseApiTestMixin, UserAPIMixin, APITestCase):
     def assertUserEqual(self, data):
         self.assertDictContainsSubset(
             {
-                "username": u"john",
-                "first_name": u"",
-                "last_name": u"",
-                "email": u"lennon@thebeatles.com",
+                "username": "john",
+                "first_name": "",
+                "last_name": "",
+                "email": "lennon@thebeatles.com",
                 "is_manager": False,
                 "is_cla_superuser": False,
             },

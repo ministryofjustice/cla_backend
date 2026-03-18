@@ -31,7 +31,7 @@ extensions += ["docs.swag"]
 # -- General configuration -----------------------------------------------------
 
 # General information about the project.
-project = u"Civil Legal Aid Backend (API Server)"
+project = "Civil Legal Aid Backend (API Server)"
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

@@ -190,14 +190,14 @@ class ReasonForContacting(TimeStampedModel):
     @property
     def reason_categories(self):
         if self.reasons.count():
-            return u", ".join(map(unicode, self.reasons.all()))
-        return u"(No categories specified)"
+            return ", ".join(map(unicode, self.reasons.all()))
+        return "(No categories specified)"
 
     def __unicode__(self):
         reason_count = self.reasons.count()
-        description = u"%d reasons" % reason_count if reason_count else u"No reasons specified"
+        description = "%d reasons" % reason_count if reason_count else "No reasons specified"
         if self.case:
-            return description + u" (Case: %s)" % self.case.reference
+            return description + " (Case: %s)" % self.case.reference
         return description
 
 
@@ -290,19 +290,19 @@ class CallbackTimeSlot(TimeStampedModel):
 
     @staticmethod
     def get_remaining_capacity_by_range(capacity, start_dt, end_dt):
-        """ Gets a count of the remaining callback slots for callbacks booked via the webform for a given period of time.
-            Excludes callbacks requested for a third party.
+        """Gets a count of the remaining callback slots for callbacks booked via the webform for a given period of time.
+        Excludes callbacks requested for a third party.
 
-            Only includes cases with an outcome code of CB1, i.e. First callback attempt is yet to occur.
+        Only includes cases with an outcome code of CB1, i.e. First callback attempt is yet to occur.
 
-            Args:
-                capacity (int): The capacity for a given time slot
-                start_dt (datetime.datetime): Start of time range
-                end_dt (datetime.datetime): End of time range
+        Args:
+            capacity (int): The capacity for a given time slot
+            start_dt (datetime.datetime): Start of time range
+            end_dt (datetime.datetime): End of time range
 
-            Returns:
-                list[datetime.datetime]: List of requested callback times.
-            """
+        Returns:
+            list[datetime.datetime]: List of requested callback times.
+        """
         from legalaid.models import Case
 
         # otherwise this will match cases that have a requires_action_at of the end date(don't want it to be inclusive)
@@ -321,7 +321,7 @@ class CallbackTimeSlot(TimeStampedModel):
 
 
 class ScopeTraversal(CloneModelMixin, TimeStampedModel):
-    """ Stores the information about the users journey through Check if you can get Legal Aid. """
+    """Stores the information about the users journey through Check if you can get Legal Aid."""
 
     class Analytics:
         _allow_analytics = True

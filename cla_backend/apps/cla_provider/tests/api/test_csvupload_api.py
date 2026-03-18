@@ -93,221 +93,221 @@ class CSVUploadTestCase(CSVUploadAPIMixin, CLAProviderAuthBaseApiTestMixin, APIT
 class ProviderCSVValidatorTestCase(unittest.TestCase):
     def setUp(self):
         contract_2013_format_data = v.contract_2013_validators_for_original_field_order.copy()
-        contract_2013_format_data["CLA Reference Number"] = u"3333333"
-        contract_2013_format_data["Client Ref"] = u"0001"
-        contract_2013_format_data["Account Number"] = u"2B222B"
-        contract_2013_format_data["First Name"] = u"A N Other"
-        contract_2013_format_data["Surname"] = u"Corgi"
-        contract_2013_format_data["DOB"] = u"02/01/2014"
-        contract_2013_format_data["Age Range"] = u"E"
-        contract_2013_format_data["Gender"] = u"M"
-        contract_2013_format_data["Ethnicity"] = u"1"
-        contract_2013_format_data["Unused1"] = u""
-        contract_2013_format_data["Unused2"] = u""
-        contract_2013_format_data["Postcode"] = u"SW1A 1AA"
-        contract_2013_format_data["Eligibility Code"] = u"X"
-        contract_2013_format_data["Matter Type 1"] = u""
-        contract_2013_format_data["Matter Type 2"] = u""
-        contract_2013_format_data["Stage Reached"] = u""
-        contract_2013_format_data["Outcome Code"] = u""
-        contract_2013_format_data["Unused3"] = u""
-        contract_2013_format_data["Date Opened"] = u"01/01/2014"
-        contract_2013_format_data["Date Closed"] = u"01/01/2015"
-        contract_2013_format_data["Time Spent"] = u"99"
-        contract_2013_format_data["Case Costs"] = u"99.5"
-        contract_2013_format_data["Unused4"] = u""
-        contract_2013_format_data["Disability Code"] = u"ILL"
-        contract_2013_format_data["Disbursements"] = u"0"
-        contract_2013_format_data["Travel Costs"] = u"0"
-        contract_2013_format_data["Determination"] = u""
-        contract_2013_format_data["Suitable for Telephone Advice"] = u"N"
-        contract_2013_format_data["Exceptional Cases (ref)"] = u""
-        contract_2013_format_data["Exempted Reason Code"] = u""
-        contract_2013_format_data["Adjustments / Adaptations"] = u"NAR"
-        contract_2013_format_data["Signposting / Referral"] = u""
-        contract_2013_format_data["Media Code"] = u"DK"
-        contract_2013_format_data["Telephone / Online"] = u"TA"
+        contract_2013_format_data["CLA Reference Number"] = "3333333"
+        contract_2013_format_data["Client Ref"] = "0001"
+        contract_2013_format_data["Account Number"] = "2B222B"
+        contract_2013_format_data["First Name"] = "A N Other"
+        contract_2013_format_data["Surname"] = "Corgi"
+        contract_2013_format_data["DOB"] = "02/01/2014"
+        contract_2013_format_data["Age Range"] = "E"
+        contract_2013_format_data["Gender"] = "M"
+        contract_2013_format_data["Ethnicity"] = "1"
+        contract_2013_format_data["Unused1"] = ""
+        contract_2013_format_data["Unused2"] = ""
+        contract_2013_format_data["Postcode"] = "SW1A 1AA"
+        contract_2013_format_data["Eligibility Code"] = "X"
+        contract_2013_format_data["Matter Type 1"] = ""
+        contract_2013_format_data["Matter Type 2"] = ""
+        contract_2013_format_data["Stage Reached"] = ""
+        contract_2013_format_data["Outcome Code"] = ""
+        contract_2013_format_data["Unused3"] = ""
+        contract_2013_format_data["Date Opened"] = "01/01/2014"
+        contract_2013_format_data["Date Closed"] = "01/01/2015"
+        contract_2013_format_data["Time Spent"] = "99"
+        contract_2013_format_data["Case Costs"] = "99.5"
+        contract_2013_format_data["Unused4"] = ""
+        contract_2013_format_data["Disability Code"] = "ILL"
+        contract_2013_format_data["Disbursements"] = "0"
+        contract_2013_format_data["Travel Costs"] = "0"
+        contract_2013_format_data["Determination"] = ""
+        contract_2013_format_data["Suitable for Telephone Advice"] = "N"
+        contract_2013_format_data["Exceptional Cases (ref)"] = ""
+        contract_2013_format_data["Exempted Reason Code"] = ""
+        contract_2013_format_data["Adjustments / Adaptations"] = "NAR"
+        contract_2013_format_data["Signposting / Referral"] = ""
+        contract_2013_format_data["Media Code"] = "DK"
+        contract_2013_format_data["Telephone / Online"] = "TA"
         self.contract_2013_data = contract_2013_format_data
 
         contract_2018_format_data = v.contract_2018_validators_for_new_field_order.copy()
-        contract_2018_format_data["CLA Reference Number"] = u"3333333"
-        contract_2018_format_data["Client Ref"] = u"0001"
-        contract_2018_format_data["Account Number"] = u"2B222B"
-        contract_2018_format_data["First Name"] = u"A N Other"
-        contract_2018_format_data["Surname"] = u"Corgi"
-        contract_2018_format_data["DOB"] = u"02/01/2014"
-        contract_2018_format_data["Age Range"] = u"E"
-        contract_2018_format_data["Gender"] = u"M"
-        contract_2018_format_data["Ethnicity"] = u"1"
-        contract_2018_format_data["Postcode"] = u"SW1A 1AA"
-        contract_2018_format_data["Eligibility Code"] = u"X"
-        contract_2018_format_data["Matter Type 1"] = u""
-        contract_2018_format_data["Matter Type 2"] = u""
-        contract_2018_format_data["Stage Reached"] = u""
-        contract_2018_format_data["Outcome Code"] = u""
-        contract_2018_format_data["Date Opened"] = u"01/09/2018"
-        contract_2018_format_data["Date Closed"] = u"01/10/2018"
-        contract_2018_format_data["Time Spent"] = u"18"
-        contract_2018_format_data["Case Costs"] = u"99.5"
-        contract_2018_format_data["Fixed Fee Amount"] = u"65"
-        contract_2018_format_data["Fixed Fee Code"] = u"LF"
-        contract_2018_format_data["Disability Code"] = u"ILL"
-        contract_2018_format_data["Disbursements"] = u"0"
-        contract_2018_format_data["Travel Costs"] = u"0"
-        contract_2018_format_data["Determination"] = u""
-        contract_2018_format_data["Suitable for Telephone Advice"] = u"N"
-        contract_2018_format_data["Exceptional Cases (ref)"] = u""
-        contract_2018_format_data["Exempted Reason Code"] = u""
-        contract_2018_format_data["Adjustments / Adaptations"] = u"NAR"
-        contract_2018_format_data["Signposting / Referral"] = u""
-        contract_2018_format_data["Media Code"] = u"DK"
-        contract_2018_format_data["Telephone / Online"] = u"TA"
+        contract_2018_format_data["CLA Reference Number"] = "3333333"
+        contract_2018_format_data["Client Ref"] = "0001"
+        contract_2018_format_data["Account Number"] = "2B222B"
+        contract_2018_format_data["First Name"] = "A N Other"
+        contract_2018_format_data["Surname"] = "Corgi"
+        contract_2018_format_data["DOB"] = "02/01/2014"
+        contract_2018_format_data["Age Range"] = "E"
+        contract_2018_format_data["Gender"] = "M"
+        contract_2018_format_data["Ethnicity"] = "1"
+        contract_2018_format_data["Postcode"] = "SW1A 1AA"
+        contract_2018_format_data["Eligibility Code"] = "X"
+        contract_2018_format_data["Matter Type 1"] = ""
+        contract_2018_format_data["Matter Type 2"] = ""
+        contract_2018_format_data["Stage Reached"] = ""
+        contract_2018_format_data["Outcome Code"] = ""
+        contract_2018_format_data["Date Opened"] = "01/09/2018"
+        contract_2018_format_data["Date Closed"] = "01/10/2018"
+        contract_2018_format_data["Time Spent"] = "18"
+        contract_2018_format_data["Case Costs"] = "99.5"
+        contract_2018_format_data["Fixed Fee Amount"] = "65"
+        contract_2018_format_data["Fixed Fee Code"] = "LF"
+        contract_2018_format_data["Disability Code"] = "ILL"
+        contract_2018_format_data["Disbursements"] = "0"
+        contract_2018_format_data["Travel Costs"] = "0"
+        contract_2018_format_data["Determination"] = ""
+        contract_2018_format_data["Suitable for Telephone Advice"] = "N"
+        contract_2018_format_data["Exceptional Cases (ref)"] = ""
+        contract_2018_format_data["Exempted Reason Code"] = ""
+        contract_2018_format_data["Adjustments / Adaptations"] = "NAR"
+        contract_2018_format_data["Signposting / Referral"] = ""
+        contract_2018_format_data["Media Code"] = "DK"
+        contract_2018_format_data["Telephone / Online"] = "TA"
         self.contract_2018_data = contract_2018_format_data
 
     @staticmethod
     def get_provider_csv_validator(data=None):
         data_in_2013_format = [
             [
-                u"3333333",
-                u"0001",
-                u"2B222B",
-                u"A N Other",
-                u"Corgi",
-                u"02/01/2014",
-                u"E",
-                u"M",
-                u"1",
-                u"",
-                u"",
-                u"SW1A 1AA",
-                u"X",
-                u"EPRO",
-                u"ESOS",
-                u"EA",
-                u"EB",
-                u"",
-                u"01/01/2014",
-                u"01/01/2015",
-                u"99",
-                u"99.5",
-                u"",
-                u"ILL",
-                u"0",
-                u"0",
-                u"",
-                u"N",
-                u"",
-                u"",
-                u"NAR",
-                u"",
-                u"DK",
-                u"TA",
+                "3333333",
+                "0001",
+                "2B222B",
+                "A N Other",
+                "Corgi",
+                "02/01/2014",
+                "E",
+                "M",
+                "1",
+                "",
+                "",
+                "SW1A 1AA",
+                "X",
+                "EPRO",
+                "ESOS",
+                "EA",
+                "EB",
+                "",
+                "01/01/2014",
+                "01/01/2015",
+                "99",
+                "99.5",
+                "",
+                "ILL",
+                "0",
+                "0",
+                "",
+                "N",
+                "",
+                "",
+                "NAR",
+                "",
+                "DK",
+                "TA",
             ],
             [
-                u"2222222",
-                u"0000",
-                u"1A111A",
-                u"A",
-                u"Corgi",
-                u"01/01/2014",
-                u"D",
-                u"F",
-                u"1",
-                u"",
-                u"",
-                u"SW1A 1AA",
-                u"",
-                u"EPRO",
-                u"ESOS",
-                u"",
-                u"",
-                u"",
-                u"",
-                u"",
-                u"18",
-                u"99.5",
-                u"",
-                u"MOB",
-                u"",
-                u"",
-                u"FINI",
-                u"",
-                u"",
-                u"",
-                u"NAR",
-                u"",
-                u"",
-                u"TA",
+                "2222222",
+                "0000",
+                "1A111A",
+                "A",
+                "Corgi",
+                "01/01/2014",
+                "D",
+                "F",
+                "1",
+                "",
+                "",
+                "SW1A 1AA",
+                "",
+                "EPRO",
+                "ESOS",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "18",
+                "99.5",
+                "",
+                "MOB",
+                "",
+                "",
+                "FINI",
+                "",
+                "",
+                "",
+                "NAR",
+                "",
+                "",
+                "TA",
             ],
         ]
         data_in_2018_format = [
             [
-                u"3333333",
-                u"0001",
-                u"2B222B",
-                u"A N Other",
-                u"Corgi",
-                u"02/01/2014",
-                u"E",
-                u"M",
-                u"1",
-                u"SW1A 1AA",
-                u"X",
-                u"EPRO",
-                u"ESOS",
-                u"EA",
-                u"EB",
-                u"01/01/2014",
-                u"01/01/2015",
-                u"99",
-                u"99.5",
-                u"",
-                u"NA",
-                u"ILL",
-                u"0",
-                u"0",
-                u"",
-                u"N",
-                u"",
-                u"",
-                u"NAR",
-                u"",
-                u"DK",
-                u"TA",
+                "3333333",
+                "0001",
+                "2B222B",
+                "A N Other",
+                "Corgi",
+                "02/01/2014",
+                "E",
+                "M",
+                "1",
+                "SW1A 1AA",
+                "X",
+                "EPRO",
+                "ESOS",
+                "EA",
+                "EB",
+                "01/01/2014",
+                "01/01/2015",
+                "99",
+                "99.5",
+                "",
+                "NA",
+                "ILL",
+                "0",
+                "0",
+                "",
+                "N",
+                "",
+                "",
+                "NAR",
+                "",
+                "DK",
+                "TA",
             ],
             [
-                u"2222222",
-                u"0000",
-                u"1A111A",
-                u"A",
-                u"Corgi",
-                u"01/01/2014",
-                u"D",
-                u"F",
-                u"1",
-                u"SW1A 1AA",
-                u"",
-                u"EPRO",
-                u"ESOS",
-                u"",
-                u"",
-                u"",
-                u"",
-                u"18",
-                u"99.5",
-                u"",
-                u"NA",
-                u"MOB",
-                u"",
-                u"",
-                u"FINI",
-                u"",
-                u"",
-                u"",
-                u"NAR",
-                u"",
-                u"",
-                u"TA",
+                "2222222",
+                "0000",
+                "1A111A",
+                "A",
+                "Corgi",
+                "01/01/2014",
+                "D",
+                "F",
+                "1",
+                "SW1A 1AA",
+                "",
+                "EPRO",
+                "ESOS",
+                "",
+                "",
+                "",
+                "",
+                "18",
+                "99.5",
+                "",
+                "NA",
+                "MOB",
+                "",
+                "",
+                "FINI",
+                "",
+                "",
+                "",
+                "NAR",
+                "",
+                "",
+                "TA",
             ],
         ]
         if data is None:
@@ -318,73 +318,73 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
     def get_dummy_cleaned_data_copy():
         data_in_2013_format = {
             "DOB": datetime.datetime(2014, 1, 2, 0, 0),
-            "Media Code": u"DK",
-            "Exempted Reason Code": u"",
-            "Telephone / Online": u"TA",
-            "First Name": u"A N Other",
-            "Unused1": u"",
-            "Stage Reached": u"EB",
-            "Unused3": u"",
-            "Unused2": u"",
-            "Matter Type 1": u"EPRO",
-            "Matter Type 2": u"ESOS",
-            "Exceptional Cases (ref)": u"",
+            "Media Code": "DK",
+            "Exempted Reason Code": "",
+            "Telephone / Online": "TA",
+            "First Name": "A N Other",
+            "Unused1": "",
+            "Stage Reached": "EB",
+            "Unused3": "",
+            "Unused2": "",
+            "Matter Type 1": "EPRO",
+            "Matter Type 2": "ESOS",
+            "Exceptional Cases (ref)": "",
             "Time Spent": 99,
             "CLA Reference Number": 3333333,
-            "Client Ref": u"0001",
-            "Determination": u"",
+            "Client Ref": "0001",
+            "Determination": "",
             "Travel Costs": Decimal("0"),
-            "Outcome Code": u"EB",
+            "Outcome Code": "EB",
             "Date Opened": datetime.datetime(2014, 1, 1, 0, 0),
-            "Signposting / Referral": u"",
-            "Eligibility Code": u"X",
-            "Gender": u"M",
+            "Signposting / Referral": "",
+            "Eligibility Code": "X",
+            "Gender": "M",
             "Case Costs": Decimal("99.5"),
             "Disbursements": Decimal("0"),
-            "Disability Code": u"ILL",
-            "Suitable for Telephone Advice": u"N",
-            "Adjustments / Adaptations": u"",
+            "Disability Code": "ILL",
+            "Suitable for Telephone Advice": "N",
+            "Adjustments / Adaptations": "",
             "Date Closed": datetime.datetime(2014, 1, 2, 0, 0),
-            "Age Range": u"E",
-            "Surname": u"Corgi",
-            "Account Number": u"2B222B",
-            "Unused4": u"",
-            "Postcode": u"SW1A 1AA",
-            "Ethnicity": u"1",
+            "Age Range": "E",
+            "Surname": "Corgi",
+            "Account Number": "2B222B",
+            "Unused4": "",
+            "Postcode": "SW1A 1AA",
+            "Ethnicity": "1",
         }
         data_in_2018_format = {
             "DOB": datetime.datetime(2014, 1, 2, 0, 0),
-            "Media Code": u"DK",
-            "Exempted Reason Code": u"",
-            "Telephone / Online": u"TA",
-            "First Name": u"A N Other",
-            "Stage Reached": u"EB",
-            "Matter Type 1": u"EPRO",
-            "Matter Type 2": u"ESOS",
-            "Exceptional Cases (ref)": u"",
+            "Media Code": "DK",
+            "Exempted Reason Code": "",
+            "Telephone / Online": "TA",
+            "First Name": "A N Other",
+            "Stage Reached": "EB",
+            "Matter Type 1": "EPRO",
+            "Matter Type 2": "ESOS",
+            "Exceptional Cases (ref)": "",
             "Time Spent": 99,
             "CLA Reference Number": 3333333,
-            "Client Ref": u"0001",
-            "Determination": u"",
+            "Client Ref": "0001",
+            "Determination": "",
             "Travel Costs": Decimal("0"),
-            "Outcome Code": u"EB",
+            "Outcome Code": "EB",
             "Date Opened": datetime.datetime(2014, 1, 1, 0, 0),
-            "Signposting / Referral": u"",
-            "Eligibility Code": u"X",
-            "Gender": u"M",
+            "Signposting / Referral": "",
+            "Eligibility Code": "X",
+            "Gender": "M",
             "Case Costs": Decimal("99.5"),
             "Disbursements": Decimal("0"),
-            "Disability Code": u"ILL",
-            "Suitable for Telephone Advice": u"N",
-            "Adjustments / Adaptations": u"",
+            "Disability Code": "ILL",
+            "Suitable for Telephone Advice": "N",
+            "Adjustments / Adaptations": "",
             "Date Closed": datetime.datetime(2014, 1, 2, 0, 0),
-            "Age Range": u"E",
-            "Surname": u"Corgi",
-            "Account Number": u"2B222B",
-            "Postcode": u"SW1A 1AA",
-            "Ethnicity": u"1",
-            "Fixed Fee Amount": u"LF",
-            "Fixed Fee Code": u"65",
+            "Age Range": "E",
+            "Surname": "Corgi",
+            "Account Number": "2B222B",
+            "Postcode": "SW1A 1AA",
+            "Ethnicity": "1",
+            "Fixed Fee Amount": "LF",
+            "Fixed Fee Code": "65",
         }
         data = data_in_2018_format if settings.CONTRACT_2018_ENABLED else data_in_2013_format
         return data.copy()
@@ -418,12 +418,12 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
 
     def test_closed_date_after_opened_date_invariant(self):
         test_values = {
-            "Matter Type 1": u"EADM",
-            "Matter Type 2": u"ESOS",
-            "Stage Reached": u"EB",
-            "Outcome Code": u"EB",
-            "Date Opened": u"02/01/2014",
-            "Date Closed": u"01/01/2014",
+            "Matter Type 1": "EADM",
+            "Matter Type 2": "ESOS",
+            "Stage Reached": "EB",
+            "Outcome Code": "EB",
+            "Date Opened": "02/01/2014",
+            "Date Closed": "01/01/2014",
         }
         data = [self._generate_contract_data_row(override=test_values)]
         validator = self.get_provider_csv_validator(data)
@@ -432,11 +432,11 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
 
     def test_invalid_account_number(self):
         test_values = {
-            "Account Number": u"22222B",
-            "Matter Type 1": u"EPRO",
-            "Matter Type 2": u"ESOS",
-            "Stage Reached": u"EB",
-            "Outcome Code": u"EB",
+            "Account Number": "22222B",
+            "Matter Type 1": "EPRO",
+            "Matter Type 2": "ESOS",
+            "Stage Reached": "EB",
+            "Outcome Code": "EB",
         }
         data = [self._generate_contract_data_row(override=test_values)]
         validator = self.get_provider_csv_validator(data)
@@ -445,11 +445,11 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
 
     def test_service_adapation_validation_valid(self):
         test_values = {
-            "Matter Type 1": u"EPRO",
-            "Matter Type 2": u"ESOS",
-            "Stage Reached": u"EB",
-            "Outcome Code": u"EB",
-            "Adjustments / Adaptations": u"LOL",
+            "Matter Type 1": "EPRO",
+            "Matter Type 2": "ESOS",
+            "Stage Reached": "EB",
+            "Outcome Code": "EB",
+            "Adjustments / Adaptations": "LOL",
         }
         data = [self._generate_contract_data_row(override=test_values)]
         validator = self.get_provider_csv_validator(data)
@@ -459,12 +459,12 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
     @override_settings(CONTRACT_2018_ENABLED=False)
     def test_allowed_no_outcome_code_and_dates_if_determination_code_2013(self):
         test_values = {
-            "Matter Type 1": u"EPRO",
-            "Matter Type 2": u"ESOS",
-            "Date Opened": u"",
-            "Date Closed": u"",
-            "Time Spent": u"18",
-            "Determination": u"FINI",
+            "Matter Type 1": "EPRO",
+            "Matter Type 2": "ESOS",
+            "Date Opened": "",
+            "Date Closed": "",
+            "Time Spent": "18",
+            "Determination": "FINI",
         }
         data = [self._generate_contract_data_row(override=test_values)]
         validator = self.get_provider_csv_validator(data)
@@ -476,13 +476,13 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_allowed_no_outcome_code_and_dates_if_determination_code_2018(self):
         test_values = {
-            "Matter Type 1": u"EPRO",
-            "Matter Type 2": u"ESOS",
-            "Date Opened": u"",
-            "Date Closed": u"",
-            "Fixed Fee Code": u"NA",
-            "Time Spent": u"18",
-            "Determination": u"FINI",
+            "Matter Type 1": "EPRO",
+            "Matter Type 2": "ESOS",
+            "Date Opened": "",
+            "Date Closed": "",
+            "Fixed Fee Code": "NA",
+            "Time Spent": "18",
+            "Determination": "FINI",
         }
         data = [self._generate_contract_data_row(override=test_values)]
         validator = self.get_provider_csv_validator(data)
@@ -494,7 +494,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
     def test_service_adapation_validation_required(self):
         validator = self.get_provider_csv_validator()
         cleaned_data = self.get_dummy_cleaned_data_copy()
-        cleaned_data["Adjustments / Adaptations "] = u""
+        cleaned_data["Adjustments / Adaptations "] = ""
         with self.assertRaisesRegexp(serializers.ValidationError, r"Adjustments / Adaptations field is required"):
             validator._validate_service_adaptation(cleaned_data)
 
@@ -503,7 +503,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
         validator = self.get_provider_csv_validator()
         cleaned_data = self.get_dummy_cleaned_data_copy()
         validator._validate_eligibility_code_against_time_spent(cleaned_data)
-        cleaned_data["Eligibility Code"] = u""
+        cleaned_data["Eligibility Code"] = ""
         with self.assertRaisesRegexp(serializers.ValidationError, r"Eligibility Code field is required"):
             validator._validate_eligibility_code_against_time_spent(cleaned_data)
 
@@ -512,17 +512,17 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
         validator = self.get_provider_csv_validator()
         cleaned_data = self.get_dummy_cleaned_data_copy()
         validator._validate_eligibility_code_against_time_spent(cleaned_data)
-        cleaned_data["Telephone / Online"] = u"FF"
-        validator._validate_telephone_or_online_advice(cleaned_data, u"education")
-        validator._validate_telephone_or_online_advice(cleaned_data, u"discrimination")
+        cleaned_data["Telephone / Online"] = "FF"
+        validator._validate_telephone_or_online_advice(cleaned_data, "education")
+        validator._validate_telephone_or_online_advice(cleaned_data, "discrimination")
         with self.assertRaisesRegexp(serializers.ValidationError, r".*code FF only valid for.*"):
-            validator._validate_telephone_or_online_advice(cleaned_data, u"ssss")
+            validator._validate_telephone_or_online_advice(cleaned_data, "ssss")
 
     @override_settings(CONTRACT_2018_ENABLED=False)
     def test_eligibility_code_validation_time_spent_less_than_132(self):
         validator = self.get_provider_csv_validator()
         cleaned_data = self.get_dummy_cleaned_data_copy()
-        cleaned_data["Eligibility Code"] = u"S"
+        cleaned_data["Eligibility Code"] = "S"
         validator._validate_eligibility_code_against_time_spent(cleaned_data)
         cleaned_data["Time Spent"] = 999
         with self.assertRaisesRegexp(
@@ -534,7 +534,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
     def test_validation_time_spent_less_than_18(self):
         validator = self.get_provider_csv_validator()
         cleaned_data = self.get_dummy_cleaned_data_copy()
-        cleaned_data["Eligibility Code"] = u"S"
+        cleaned_data["Eligibility Code"] = "S"
         cleaned_data["Determination"] = False
         validator._validate_eligibility_code_against_time_spent(cleaned_data)
         cleaned_data["Time Spent"] = 999
@@ -548,7 +548,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
         validator = self.get_provider_csv_validator()
         cleaned_data = self.get_dummy_cleaned_data_copy()
         validator._validate_eligibility_code_against_time_spent(cleaned_data)
-        cleaned_data["Eligibility Code"] = u""
+        cleaned_data["Eligibility Code"] = ""
         with self.assertRaisesRegexp(serializers.ValidationError, r"Eligibility Code field is required"):
             validator._validate_eligibility_code_against_time_spent(cleaned_data)
 
@@ -557,17 +557,17 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
         validator = self.get_provider_csv_validator()
         cleaned_data = self.get_dummy_cleaned_data_copy()
         validator._validate_eligibility_code_against_time_spent(cleaned_data)
-        cleaned_data["Telephone / Online"] = u"FF"
-        validator._validate_telephone_or_online_advice(cleaned_data, u"education")
-        validator._validate_telephone_or_online_advice(cleaned_data, u"discrimination")
+        cleaned_data["Telephone / Online"] = "FF"
+        validator._validate_telephone_or_online_advice(cleaned_data, "education")
+        validator._validate_telephone_or_online_advice(cleaned_data, "discrimination")
         with self.assertRaisesRegexp(serializers.ValidationError, r".*code FF only valid for.*"):
-            validator._validate_telephone_or_online_advice(cleaned_data, u"ssss")
+            validator._validate_telephone_or_online_advice(cleaned_data, "ssss")
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_eligibility_code_validation_time_spent_less_than_132_2018(self):
         validator = self.get_provider_csv_validator()
         cleaned_data = self.get_dummy_cleaned_data_copy()
-        cleaned_data["Eligibility Code"] = u"S"
+        cleaned_data["Eligibility Code"] = "S"
         validator._validate_eligibility_code_against_time_spent(cleaned_data)
         cleaned_data["Time Spent"] = 999
         with self.assertRaisesRegexp(
@@ -579,7 +579,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
     def test_validation_time_spent_less_than_18_2018(self):
         validator = self.get_provider_csv_validator()
         cleaned_data = self.get_dummy_cleaned_data_copy()
-        cleaned_data["Eligibility Code"] = u"S"
+        cleaned_data["Eligibility Code"] = "S"
         cleaned_data["Determination"] = False
         validator._validate_eligibility_code_against_time_spent(cleaned_data)
         cleaned_data["Time Spent"] = 999
@@ -591,66 +591,66 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
     def test_validation_time_spent_more_than_18_with_determination_not_valid(self):
         validator = self.get_provider_csv_validator()
         cleaned_data = self.get_dummy_cleaned_data_copy()
-        cleaned_data["Eligibility Code"] = u"S"
+        cleaned_data["Eligibility Code"] = "S"
         cleaned_data["Determination"] = True
         cleaned_data["Time Spent"] = 12
-        validator._validate_time_spent(cleaned_data, u"welfare")
+        validator._validate_time_spent(cleaned_data, "welfare")
         cleaned_data["Time Spent"] = 999
         with self.assertRaisesRegexp(
             serializers.ValidationError, "[u'Time spent (999) must not be greater than 42 minutes']"
         ):
-            validator._validate_time_spent(cleaned_data, u"discrimination")
+            validator._validate_time_spent(cleaned_data, "discrimination")
 
         with self.assertRaisesRegexp(
             serializers.ValidationError, "[u'Time spent (999) must not be greater than 18 minutes']"
         ):
-            validator._validate_time_spent(cleaned_data, u"welfare")
+            validator._validate_time_spent(cleaned_data, "welfare")
 
         cleaned_data["Time Spent"] = 9
         with self.assertRaisesRegexp(serializers.ValidationError, "[u'Time spent (9) must be in 6 minute intervals']"):
-            validator._validate_time_spent(cleaned_data, u"welfare")
+            validator._validate_time_spent(cleaned_data, "welfare")
 
     def test_validation_exemption_code_or_cla_ref_required(self):
         validator = self.get_provider_csv_validator()
         cleaned_data = self.get_dummy_cleaned_data_copy()
         cleaned_data["Date Opened"] = datetime.datetime(2014, 1, 1)
-        cleaned_data["Exempted Code Reason"] = u"aa"
+        cleaned_data["Exempted Code Reason"] = "aa"
         cleaned_data["Determination"] = False
-        validator._validate_exemption(cleaned_data, u"debt")
+        validator._validate_exemption(cleaned_data, "debt")
         cleaned_data["Date Opened"] = datetime.datetime(2014, 1, 2)
 
         with self.assertRaisesRegexp(
             serializers.ValidationError,
             "[u'An Exemption Reason can only be entered for Debt, Discrimination and Education matter]",
         ):
-            validator._validate_exemption(cleaned_data, u"welfare")
+            validator._validate_exemption(cleaned_data, "welfare")
 
-        cleaned_data["Exempted Code Reason"] = u""
-        cleaned_data["CLA Reference Number"] = u""
+        cleaned_data["Exempted Code Reason"] = ""
+        cleaned_data["CLA Reference Number"] = ""
         cleaned_data["Date Opened"] = datetime.datetime(2011, 1, 1)
-        cleaned_data["Exceptional Cases (ref)"] = u"foo"
+        cleaned_data["Exceptional Cases (ref)"] = "foo"
 
-        validator._validate_exemption(cleaned_data, u"debt")
-        cleaned_data["Exempted Code Reason"] = u"aa"
+        validator._validate_exemption(cleaned_data, "debt")
+        cleaned_data["Exempted Code Reason"] = "aa"
         with self.assertRaisesRegexp(
             serializers.ValidationError,
             "[u'An Exemption Reason can only be entered for Debt, Discrimination and Education matter]",
         ):
-            validator._validate_exemption(cleaned_data, u"welfare")
+            validator._validate_exemption(cleaned_data, "welfare")
 
     def test_category_consistency_validation(self):
         validator = self.get_provider_csv_validator()
         cleaned_data = self.get_dummy_cleaned_data_copy()
-        cleaned_data["Matter Type 1"] = u"S"
-        cleaned_data["Matter Type 2"] = u"P"
+        cleaned_data["Matter Type 1"] = "S"
+        cleaned_data["Matter Type 2"] = "P"
         with self.assertRaisesRegexp(serializers.ValidationError, r"fields must be of the same category"):
             validator._validate_category_consistency(cleaned_data)
 
     def test_staged_reached_validate_required_mt1s(self):
         validator = self.get_provider_csv_validator()
         cleaned_data = self.get_dummy_cleaned_data_copy()
-        cleaned_data["Matter Type 1"] = u"DMCA"
-        cleaned_data["Stage Reached"] = u""
+        cleaned_data["Matter Type 1"] = "DMCA"
+        cleaned_data["Stage Reached"] = ""
         with self.assertRaisesRegexp(
             serializers.ValidationError, r".*is required because Matter Type 1: DMCA was specified.*"
         ):
@@ -659,7 +659,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
     def test_staged_reached_validate_not_allowed_mt1s(self):
         validator = self.get_provider_csv_validator()
         cleaned_data = self.get_dummy_cleaned_data_copy()
-        cleaned_data["Matter Type 1"] = u"WBAA"
+        cleaned_data["Matter Type 1"] = "WBAA"
         with self.assertRaisesRegexp(
             serializers.ValidationError, r".*is not allowed because Matter Type 1: WBAA was specified.*"
         ):
@@ -752,182 +752,182 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_for_debt_outcome_code_DAA_is_valid(self):
         test_values = {
-            "Matter Type 1": u"DPDE",
-            "Matter Type 2": u"DVAL",
-            "Stage Reached": u"DA",
-            "Outcome Code": u"DAA",
+            "Matter Type 1": "DPDE",
+            "Matter Type 2": "DVAL",
+            "Stage Reached": "DA",
+            "Outcome Code": "DAA",
         }
         self._test_generated_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_for_family_outcome_code_FAA_is_valid(self):
-        test_values = {"Matter Type 1": u"FAMA", "Matter Type 2": u"FADV", "Outcome Code": u"FAA"}
+        test_values = {"Matter Type 1": "FAMA", "Matter Type 2": "FADV", "Outcome Code": "FAA"}
         self._test_generated_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_for_family_outcome_code_FAB_is_valid(self):
-        test_values = {"Matter Type 1": u"FAMA", "Matter Type 2": u"FADV", "Outcome Code": u"FAB"}
+        test_values = {"Matter Type 1": "FAMA", "Matter Type 2": "FADV", "Outcome Code": "FAB"}
         self._test_generated_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_for_family_outcome_code_FAC_is_valid(self):
-        test_values = {"Matter Type 1": u"FAMA", "Matter Type 2": u"FADV", "Outcome Code": u"FAC"}
+        test_values = {"Matter Type 1": "FAMA", "Matter Type 2": "FADV", "Outcome Code": "FAC"}
         self._test_generated_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_discrimination_outcome_code_QAA_is_valid(self):
         test_values = {
-            "Matter Type 1": u"QPRO",
-            "Matter Type 2": u"QAGE",
-            "Stage Reached": u"QA",
-            "Outcome Code": u"QAA",
-            "Fixed Fee Code": u"NA",
+            "Matter Type 1": "QPRO",
+            "Matter Type 2": "QAGE",
+            "Stage Reached": "QA",
+            "Outcome Code": "QAA",
+            "Fixed Fee Code": "NA",
         }
         self._test_generated_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_fafa_determination_code_is_valid(self):
         test_values = {
-            "Matter Type 1": u"EPRO",
-            "Matter Type 2": u"ESOS",
-            "Stage Reached": u"EA",
-            "Determination": u"FAFA",
-            "Fixed Fee Code": u"NA",
+            "Matter Type 1": "EPRO",
+            "Matter Type 2": "ESOS",
+            "Stage Reached": "EA",
+            "Determination": "FAFA",
+            "Fixed Fee Code": "NA",
         }
         self._test_generated_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_exem_determination_code_is_valid(self):
         test_values = {
-            "Matter Type 1": u"EPRO",
-            "Matter Type 2": u"ESOS",
-            "Stage Reached": u"EA",
-            "Determination": u"EXEM",
-            "Fixed Fee Code": u"NA",
+            "Matter Type 1": "EPRO",
+            "Matter Type 2": "ESOS",
+            "Stage Reached": "EA",
+            "Determination": "EXEM",
+            "Fixed Fee Code": "NA",
         }
         self._test_generated_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_housing_outcome_code_haa_is_valid(self):
         test_values = {
-            "Matter Type 1": u"HRNT",
-            "Matter Type 2": u"HPRI",
-            "Stage Reached": u"HA",
-            "Outcome Code": u"HAA",
+            "Matter Type 1": "HRNT",
+            "Matter Type 2": "HPRI",
+            "Stage Reached": "HA",
+            "Outcome Code": "HAA",
         }
         self._test_generated_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_housing_outcome_code_hac_is_valid(self):
         test_values = {
-            "Matter Type 1": u"HRNT",
-            "Matter Type 2": u"HPRI",
-            "Stage Reached": u"HA",
-            "Outcome Code": u"HAC",
+            "Matter Type 1": "HRNT",
+            "Matter Type 2": "HPRI",
+            "Stage Reached": "HA",
+            "Outcome Code": "HAC",
         }
         self._test_generated_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_housing_outcome_code_hab_is_valid(self):
         test_values = {
-            "Matter Type 1": u"HRNT",
-            "Matter Type 2": u"HPRI",
-            "Stage Reached": u"HA",
-            "Outcome Code": u"HAB",
+            "Matter Type 1": "HRNT",
+            "Matter Type 2": "HPRI",
+            "Stage Reached": "HA",
+            "Outcome Code": "HAB",
         }
         self._test_generated_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_education_outcome_code_eaa_is_valid(self):
         test_values = {
-            "Matter Type 1": u"EPRO",
-            "Matter Type 2": u"ESOS",
-            "Stage Reached": u"EA",
-            "Outcome Code": u"EAA",
-            "Fixed Fee Code": u"NA",
+            "Matter Type 1": "EPRO",
+            "Matter Type 2": "ESOS",
+            "Stage Reached": "EA",
+            "Outcome Code": "EAA",
+            "Fixed Fee Code": "NA",
         }
         self._test_generated_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_education_matter_type1_code_edjr_is_valid(self):
         test_values = {
-            "Matter Type 1": u"EDJR",
-            "Matter Type 2": u"ENUR",
-            "Stage Reached": u"EA",
-            "Outcome Code": u"EZ",
-            "Fixed Fee Code": u"NA",
+            "Matter Type 1": "EDJR",
+            "Matter Type 2": "ENUR",
+            "Stage Reached": "EA",
+            "Outcome Code": "EZ",
+            "Fixed Fee Code": "NA",
         }
         self._test_generated_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_invalid_outcome_code(self):
         test_values = {
-            "Matter Type 1": u"EPRO",
-            "Matter Type 2": u"ESOS",
-            "Stage Reached": u"EA",
-            "Outcome Code": u"INVALID",
-            "Fixed Fee Code": u"NA",
+            "Matter Type 1": "EPRO",
+            "Matter Type 2": "ESOS",
+            "Stage Reached": "EA",
+            "Outcome Code": "INVALID",
+            "Fixed Fee Code": "NA",
         }
-        expected_error = u"Row: 1 - You have not selected a valid Outcome Code."
+        expected_error = "Row: 1 - You have not selected a valid Outcome Code."
         self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_fixed_fee_amount_present(self):
         test_values = {
-            "Matter Type 1": u"DMAP",
-            "Matter Type 2": u"DOTH",
-            "Stage Reached": u"DB",
-            "Fixed Fee Amount": u"130",
-            "Fixed Fee Code": u"LF",
+            "Matter Type 1": "DMAP",
+            "Matter Type 2": "DOTH",
+            "Stage Reached": "DB",
+            "Fixed Fee Amount": "130",
+            "Fixed Fee Code": "LF",
         }
         self._test_generated_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_fixed_fee_amount_missing(self):
         test_values = {
-            "Matter Type 1": u"DMAP",
-            "Matter Type 2": u"DOTH",
-            "Stage Reached": u"DB",
-            "Fixed Fee Amount": u"",
-            "Fixed Fee Code": u"HF",
+            "Matter Type 1": "DMAP",
+            "Matter Type 2": "DOTH",
+            "Stage Reached": "DB",
+            "Fixed Fee Amount": "",
+            "Fixed Fee Code": "HF",
         }
-        expected_error = u"Row: 1 - Fixed Fee Amount must be entered for Fixed Fee Code (HF)"
+        expected_error = "Row: 1 - Fixed Fee Amount must be entered for Fixed Fee Code (HF)"
         self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_lower_fixed_fee_time_spent(self):
         test_values = {
-            "Matter Type 1": u"DTOT",
-            "Matter Type 2": u"DOTH",
-            "Stage Reached": u"DB",
-            "Fixed Fee Amount": u"65",
-            "Fixed Fee Code": u"LF",
-            "Time Spent": u"132",
+            "Matter Type 1": "DTOT",
+            "Matter Type 2": "DOTH",
+            "Stage Reached": "DB",
+            "Fixed Fee Amount": "65",
+            "Fixed Fee Code": "LF",
+            "Time Spent": "132",
         }
         self._test_generated_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_lower_fixed_fee_excess_time_spent(self):
         test_values = {
-            "Matter Type 1": u"DTOT",
-            "Matter Type 2": u"DOTH",
-            "Stage Reached": u"DB",
-            "Fixed Fee Amount": u"65",
-            "Fixed Fee Code": u"LF",
-            "Time Spent": u"133",
+            "Matter Type 1": "DTOT",
+            "Matter Type 2": "DOTH",
+            "Stage Reached": "DB",
+            "Fixed Fee Amount": "65",
+            "Fixed Fee Code": "LF",
+            "Time Spent": "133",
         }
-        expected_error = u"Row: 1 - The Fixed Fee code you have entered is not valid with time spent on the case"
+        expected_error = "Row: 1 - The Fixed Fee code you have entered is not valid with time spent on the case"
         self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_higher_fixed_fee_time_spent_bounds(self):
         test_values = {
-            "Eligibility Code": u"V",
-            "Matter Type 1": u"DMAP",
-            "Matter Type 2": u"DOTH",
-            "Stage Reached": u"DB",
-            "Fixed Fee Amount": u"130",
-            "Fixed Fee Code": u"HF",
+            "Eligibility Code": "V",
+            "Matter Type 1": "DMAP",
+            "Matter Type 2": "DOTH",
+            "Stage Reached": "DB",
+            "Fixed Fee Amount": "130",
+            "Fixed Fee Code": "HF",
         }
         lower_bound = "133"
         upper_bound = "899"
@@ -938,110 +938,110 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_higher_fixed_fee_excess_time_spent(self):
         test_values = {
-            "Eligibility Code": u"V",
-            "Matter Type 1": u"DMAP",
-            "Matter Type 2": u"DOTH",
-            "Stage Reached": u"DB",
-            "Fixed Fee Amount": u"130",
-            "Fixed Fee Code": u"HF",
-            "Time Spent": u"900",
+            "Eligibility Code": "V",
+            "Matter Type 1": "DMAP",
+            "Matter Type 2": "DOTH",
+            "Stage Reached": "DB",
+            "Fixed Fee Amount": "130",
+            "Fixed Fee Code": "HF",
+            "Time Spent": "900",
         }
-        expected_error = u"Row: 1 - The Fixed Fee code you have entered is not valid with time spent on the case"
+        expected_error = "Row: 1 - The Fixed Fee code you have entered is not valid with time spent on the case"
         self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_higher_fixed_fee_insufficient_time_spent(self):
         test_values = {
-            "Eligibility Code": u"V",
-            "Matter Type 1": u"DMAP",
-            "Matter Type 2": u"DOTH",
-            "Stage Reached": u"DB",
-            "Fixed Fee Amount": u"130",
-            "Fixed Fee Code": u"HF",
-            "Time Spent": u"132",
+            "Eligibility Code": "V",
+            "Matter Type 1": "DMAP",
+            "Matter Type 2": "DOTH",
+            "Stage Reached": "DB",
+            "Fixed Fee Amount": "130",
+            "Fixed Fee Code": "HF",
+            "Time Spent": "132",
         }
-        expected_error = u"Row: 1 - The Fixed Fee code you have entered is not valid with time spent on the case"
+        expected_error = "Row: 1 - The Fixed Fee code you have entered is not valid with time spent on the case"
         self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_hourly_rate_fixed_fee_time_spent(self):
         test_values = {
-            "Matter Type 1": u"DTOT",
-            "Matter Type 2": u"DOTH",
-            "Stage Reached": u"DB",
-            "Fixed Fee Code": u"HR",
-            "Time Spent": u"900",
+            "Matter Type 1": "DTOT",
+            "Matter Type 2": "DOTH",
+            "Stage Reached": "DB",
+            "Fixed Fee Code": "HR",
+            "Time Spent": "900",
         }
         self._test_generated_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_hourly_rate_fixed_fee_insufficient_time_spent(self):
         test_values = {
-            "Matter Type 1": u"DTOT",
-            "Matter Type 2": u"DOTH",
-            "Stage Reached": u"DB",
-            "Fixed Fee Code": u"HR",
-            "Time Spent": u"899",
+            "Matter Type 1": "DTOT",
+            "Matter Type 2": "DOTH",
+            "Stage Reached": "DB",
+            "Fixed Fee Code": "HR",
+            "Time Spent": "899",
         }
-        expected_error = u"Row: 1 - The Fixed Fee code you have entered is not valid with time spent on the case"
+        expected_error = "Row: 1 - The Fixed Fee code you have entered is not valid with time spent on the case"
         self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_fixed_fee_code_df_is_valid(self):
         test_values = {
-            "Eligibility Code": u"V",
-            "Matter Type 1": u"HRNT",
-            "Matter Type 2": u"HPRI",
-            "Stage Reached": u"HA",
-            "Fixed Fee Code": u"DF",
-            "Fixed Fee Amount": u"40.0",
-            "Determination": u"FINI",
+            "Eligibility Code": "V",
+            "Matter Type 1": "HRNT",
+            "Matter Type 2": "HPRI",
+            "Stage Reached": "HA",
+            "Fixed Fee Code": "DF",
+            "Fixed Fee Amount": "40.0",
+            "Determination": "FINI",
         }
         self._test_generated_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_df_fixed_fee_amount_is_valid(self):
         test_values = {
-            "Eligibility Code": u"V",
-            "Matter Type 1": u"HRNT",
-            "Matter Type 2": u"HPRI",
-            "Stage Reached": u"HA",
-            "Fixed Fee Code": u"DF",
-            "Determination": u"FINI",
+            "Eligibility Code": "V",
+            "Matter Type 1": "HRNT",
+            "Matter Type 2": "HPRI",
+            "Stage Reached": "HA",
+            "Fixed Fee Code": "DF",
+            "Determination": "FINI",
         }
         valid_amounts = [0, 0.50, 10, 20.50, 40]
         for amount in valid_amounts:
-            test_values["Fixed Fee Amount"] = u"{}".format(amount)
+            test_values["Fixed Fee Amount"] = "{}".format(amount)
             self._test_generated_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_df_fixed_fee_amount_invalid(self):
         test_values = {
-            "Eligibility Code": u"V",
-            "Matter Type 1": u"HRNT",
-            "Matter Type 2": u"HPRI",
-            "Stage Reached": u"HA",
-            "Fixed Fee Code": u"DF",
-            "Determination": u"FINI",
+            "Eligibility Code": "V",
+            "Matter Type 1": "HRNT",
+            "Matter Type 2": "HPRI",
+            "Stage Reached": "HA",
+            "Fixed Fee Code": "DF",
+            "Determination": "FINI",
         }
         invalid_amounts = [40.01, 100]
         for amount in invalid_amounts:
-            test_values["Fixed Fee Amount"] = u"{}".format(amount)
-            expected_error = u"Row: 1 - The value you have entered exceeds the Fixed Fee"
+            test_values["Fixed Fee Amount"] = "{}".format(amount)
+            expected_error = "Row: 1 - The value you have entered exceeds the Fixed Fee"
             self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_df_fixed_fee_negative_amount_fails(self):
         test_values = {
-            "Eligibility Code": u"V",
-            "Matter Type 1": u"HRNT",
-            "Matter Type 2": u"HPRI",
-            "Stage Reached": u"HA",
-            "Fixed Fee Code": u"DF",
-            "Fixed Fee Amount": u"-1",
-            "Determination": u"FINI",
+            "Eligibility Code": "V",
+            "Matter Type 1": "HRNT",
+            "Matter Type 2": "HPRI",
+            "Stage Reached": "HA",
+            "Fixed Fee Code": "DF",
+            "Fixed Fee Amount": "-1",
+            "Determination": "FINI",
         }
-        expected_error = u"Row: 1 Field (20 / T): Fixed Fee Amount - Field must be >= 0"
+        expected_error = "Row: 1 Field (20 / T): Fixed Fee Amount - Field must be >= 0"
         self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
 
     # TODO enable when Matter Type 1 MSCB added
@@ -1053,60 +1053,60 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_hwfm_rate_fixed_fee(self):
         test_values = {
-            "Eligibility Code": u"V",
-            "Matter Type 1": u"FAMY",
-            "Matter Type 2": u"FMEC",
-            "Fixed Fee Amount": u"119.6",
-            "Fixed Fee Code": u"HM",
+            "Eligibility Code": "V",
+            "Matter Type 1": "FAMY",
+            "Matter Type 2": "FMEC",
+            "Fixed Fee Amount": "119.6",
+            "Fixed Fee Code": "HM",
         }
         self._test_generated_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_hwfm_rate_fixed_fee_mt1_incorrect(self):
         test_values = {
-            "Eligibility Code": u"V",
-            "Matter Type 1": u"FAMZ",
-            "Matter Type 2": u"FMEC",
-            "Fixed Fee Amount": u"119.6",
-            "Fixed Fee Code": u"HM",
+            "Eligibility Code": "V",
+            "Matter Type 1": "FAMZ",
+            "Matter Type 2": "FMEC",
+            "Fixed Fee Amount": "119.6",
+            "Fixed Fee Code": "HM",
         }
         expected_error = (
-            u"Row: 1 - The Fixed Fee code you have entered is not valid with the Matter Type 1 Code entered"
+            "Row: 1 - The Fixed Fee code you have entered is not valid with the Matter Type 1 Code entered"
         )
         self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_mt1_fixed_fee_code_mismatch(self):
         test_values = {
-            "Matter Type 1": u"FAMY",
-            "Matter Type 2": u"FMEC",
-            "Fixed Fee Amount": u"119.6",
-            "Fixed Fee Code": u"LF",
+            "Matter Type 1": "FAMY",
+            "Matter Type 2": "FMEC",
+            "Fixed Fee Amount": "119.6",
+            "Fixed Fee Code": "LF",
         }
-        expected_error = u"Row: 1 - The HM fee code should be used where Matter Type 1 Code - FAMY is used"
+        expected_error = "Row: 1 - The HM fee code should be used where Matter Type 1 Code - FAMY is used"
         self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_hourly_rate_hr_fixed_fee_code(self):
         test_values = {
-            "Eligibility Code": u"V",
-            "Matter Type 1": u"DMAP",
-            "Matter Type 2": u"DOTH",
-            "Stage Reached": u"DB",
-            "Fixed Fee Amount": u"119.6",
-            "Fixed Fee Code": u"HR",
-            "Time Spent": u"900",
+            "Eligibility Code": "V",
+            "Matter Type 1": "DMAP",
+            "Matter Type 2": "DOTH",
+            "Stage Reached": "DB",
+            "Fixed Fee Amount": "119.6",
+            "Fixed Fee Code": "HR",
+            "Time Spent": "900",
         }
         self._test_generated_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_eligibility_codes_with_lf_fixed_fee(self):
-        lf_eligibility_codes = {u"S", u"T", u"V", u"W", u"X", u"Z"}
+        lf_eligibility_codes = {"S", "T", "V", "W", "X", "Z"}
         test_values = {
-            "Matter Type 1": u"DTOT",
-            "Matter Type 2": u"DOTH",
-            "Stage Reached": u"DB",
-            "Fixed Fee Code": u"LF",
+            "Matter Type 1": "DTOT",
+            "Matter Type 2": "DOTH",
+            "Stage Reached": "DB",
+            "Fixed Fee Code": "LF",
         }
         for eligibility_code in lf_eligibility_codes:
             test_values["Eligibility Code"] = eligibility_code
@@ -1114,31 +1114,31 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_eligibility_codes_missing_lf_fixed_fee(self):
-        lf_eligibility_codes = {u"S", u"W", u"X", u"Z"}
+        lf_eligibility_codes = {"S", "W", "X", "Z"}
         test_values = {
-            "Matter Type 1": u"DTOT",
-            "Matter Type 2": u"DOTH",
-            "Stage Reached": u"DB",
-            "Fixed Fee Amount": u"65",
-            "Fixed Fee Code": u"HF",
-            "Time Spent": u"133",
+            "Matter Type 1": "DTOT",
+            "Matter Type 2": "DOTH",
+            "Stage Reached": "DB",
+            "Fixed Fee Amount": "65",
+            "Fixed Fee Code": "HF",
+            "Time Spent": "133",
         }
         for eligibility_code in lf_eligibility_codes:
             test_values["Eligibility Code"] = eligibility_code
             expected_error = (
-                u"Row: 1 - The Fixed Fee code you have entered is not valid with the Eligibility Code entered"
+                "Row: 1 - The Fixed Fee code you have entered is not valid with the Eligibility Code entered"
             )
             self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_eligibility_codes_with_hf_fixed_fee(self):
-        hf_eligibility_codes = {u"T", u"V"}
+        hf_eligibility_codes = {"T", "V"}
         test_values = {
-            "Matter Type 1": u"DTOT",
-            "Matter Type 2": u"DOTH",
-            "Stage Reached": u"DB",
-            "Fixed Fee Code": u"HF",
-            "Time Spent": u"133",
+            "Matter Type 1": "DTOT",
+            "Matter Type 2": "DOTH",
+            "Stage Reached": "DB",
+            "Fixed Fee Code": "HF",
+            "Time Spent": "133",
         }
         for eligibility_code in hf_eligibility_codes:
             test_values["Eligibility Code"] = eligibility_code
@@ -1146,64 +1146,64 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_eligibility_codes_missing_hf_fixed_fee(self):
-        lf_eligibility_codes = {u"S", u"W", u"X", u"Z"}
+        lf_eligibility_codes = {"S", "W", "X", "Z"}
         test_values = {
-            "Matter Type 1": u"DTOT",
-            "Matter Type 2": u"DOTH",
-            "Stage Reached": u"DB",
-            "Fixed Fee Amount": u"65",
-            "Fixed Fee Code": u"HF",
-            "Time Spent": u"133",
+            "Matter Type 1": "DTOT",
+            "Matter Type 2": "DOTH",
+            "Stage Reached": "DB",
+            "Fixed Fee Amount": "65",
+            "Fixed Fee Code": "HF",
+            "Time Spent": "133",
         }
         for eligibility_code in lf_eligibility_codes:
             test_values["Eligibility Code"] = eligibility_code
             expected_error = (
-                u"Row: 1 - The Fixed Fee code you have entered is not valid with the Eligibility Code entered"
+                "Row: 1 - The Fixed Fee code you have entered is not valid with the Eligibility Code entered"
             )
             self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_fixed_fee_invalid_error_message(self):
         test_values = {
-            "Matter Type 1": u"DTOT",
-            "Matter Type 2": u"DOTH",
-            "Stage Reached": u"DB",
-            "Fixed Fee Code": u"NA",
-            "Time Spent": u"133",
+            "Matter Type 1": "DTOT",
+            "Matter Type 2": "DOTH",
+            "Stage Reached": "DB",
+            "Fixed Fee Code": "NA",
+            "Time Spent": "133",
         }
-        expected_error = u"Row: 1 - The Fixed Fee code you have entered is not valid for this case"
+        expected_error = "Row: 1 - The Fixed Fee code you have entered is not valid for this case"
         self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_discrimination_eligibility_codes(self):
-        code = u"S"
-        time = u"135"
+        code = "S"
+        time = "135"
         test_values = {
-            "Matter Type 1": u"QPRO",
-            "Matter Type 2": u"QAGE",
-            "Stage Reached": u"QA",
-            "Fixed Fee Code": u"NA",
+            "Matter Type 1": "QPRO",
+            "Matter Type 2": "QAGE",
+            "Stage Reached": "QA",
+            "Fixed Fee Code": "NA",
             "Eligibility Code": code,
             "Time Spent": time,
         }
-        expected_error = u"Row: 1 - The eligibility code ({code}) you have entered is not valid with the time spent ({time}) on this case, please review the eligibility code.".format(
+        expected_error = "Row: 1 - The eligibility code ({code}) you have entered is not valid with the time spent ({time}) on this case, please review the eligibility code.".format(
             code=code, time=time
         )
         self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_education_eligibility_codes(self):
-        code = u"Z"
-        time = u"135"
+        code = "Z"
+        time = "135"
         test_values = {
-            "Matter Type 1": u"ESEN",
-            "Matter Type 2": u"ECOL",
-            "Stage Reached": u"ED",
-            "Fixed Fee Code": u"NA",
+            "Matter Type 1": "ESEN",
+            "Matter Type 2": "ECOL",
+            "Stage Reached": "ED",
+            "Fixed Fee Code": "NA",
             "Eligibility Code": code,
             "Time Spent": time,
         }
-        expected_error = u"Row: 1 - The eligibility code ({code}) you have entered is not valid with the time spent ({time}) on this case, please review the eligibility code.".format(
+        expected_error = "Row: 1 - The eligibility code ({code}) you have entered is not valid with the time spent ({time}) on this case, please review the eligibility code.".format(
             code=code, time=time
         )
         self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
@@ -1211,117 +1211,117 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_discrimination_fixed_fee_invalid_error_message(self):
         test_values = {
-            "Matter Type 1": u"HHOM",
-            "Matter Type 2": u"HHLS",
-            "Stage Reached": u"HB",
-            "Fixed Fee Amount": u"130",
-            "Fixed Fee Code": u"HF",
-            "Time Spent": u"90",
-            "Date Opened": u"24/07/2018",
-            "Date Closed": u"17/01/2019",
+            "Matter Type 1": "HHOM",
+            "Matter Type 2": "HHLS",
+            "Stage Reached": "HB",
+            "Fixed Fee Amount": "130",
+            "Fixed Fee Code": "HF",
+            "Time Spent": "90",
+            "Date Opened": "24/07/2018",
+            "Date Closed": "17/01/2019",
         }
-        expected_error = u"Row: 1 - Fixed Fee Code NA must be entered for 2013 cases (pre-01/09/18), 2018 Discrimination cases or 2018 Education cases"
+        expected_error = "Row: 1 - Fixed Fee Code NA must be entered for 2013 cases (pre-01/09/18), 2018 Discrimination cases or 2018 Education cases"
         self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_education_fixed_fee_invalid_error_message(self):
         test_values = {
-            "Matter Type 1": u"ESEN",
-            "Matter Type 2": u"ENUR",
-            "Stage Reached": u"EA",
-            "Fixed Fee Amount": u"130",
-            "Fixed Fee Code": u"HF",
-            "Time Spent": u"90",
-            "Date Opened": u"24/09/2018",
-            "Date Closed": u"17/01/2019",
+            "Matter Type 1": "ESEN",
+            "Matter Type 2": "ENUR",
+            "Stage Reached": "EA",
+            "Fixed Fee Amount": "130",
+            "Fixed Fee Code": "HF",
+            "Time Spent": "90",
+            "Date Opened": "24/09/2018",
+            "Date Closed": "17/01/2019",
         }
-        expected_error = u"Row: 1 - Fixed Fee Code NA must be entered for 2013 cases (pre-01/09/18), 2018 Discrimination cases or 2018 Education cases"
+        expected_error = "Row: 1 - Fixed Fee Code NA must be entered for 2013 cases (pre-01/09/18), 2018 Discrimination cases or 2018 Education cases"
         self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_signposting_code(self):
         test_values = {
-            "Matter Type 1": u"EPRO",
-            "Matter Type 2": u"ESOS",
-            "Stage Reached": u"EA",
-            "Signposting / Referral": u"OOSC",
-            "Fixed Fee Code": u"NA",
+            "Matter Type 1": "EPRO",
+            "Matter Type 2": "ESOS",
+            "Stage Reached": "EA",
+            "Signposting / Referral": "OOSC",
+            "Fixed Fee Code": "NA",
         }
         self._test_generated_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_signposting_lrep_code(self):
         test_values = {
-            "Matter Type 1": u"EPRO",
-            "Matter Type 2": u"ESOS",
-            "Stage Reached": u"EA",
-            "Signposting / Referral": u"LREP",
-            "Fixed Fee Code": u"NA",
+            "Matter Type 1": "EPRO",
+            "Matter Type 2": "ESOS",
+            "Stage Reached": "EA",
+            "Signposting / Referral": "LREP",
+            "Fixed Fee Code": "NA",
         }
         self._test_generated_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_signposting_code_invalid(self):
         test_values = {
-            "Matter Type 1": u"EPRO",
-            "Matter Type 2": u"ESOS",
-            "Stage Reached": u"EA",
-            "Signposting / Referral": u"FOO",
-            "Fixed Fee Code": u"NA",
+            "Matter Type 1": "EPRO",
+            "Matter Type 2": "ESOS",
+            "Stage Reached": "EA",
+            "Signposting / Referral": "FOO",
+            "Fixed Fee Code": "NA",
         }
         expected_error = (
-            u"Row: 1 - The Signposting / Referral code you have entered is invalid. Please enter a valid code."
+            "Row: 1 - The Signposting / Referral code you have entered is invalid. Please enter a valid code."
         )
         self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_signposting_code_present_for_outcome_codes(self):
         test_values = {
-            "Matter Type 1": u"EPRO",
-            "Matter Type 2": u"ESOS",
-            "Stage Reached": u"EB",
-            "Outcome Code": u"EU",
-            "Signposting / Referral": u"OOSC",
-            "Fixed Fee Code": u"NA",
+            "Matter Type 1": "EPRO",
+            "Matter Type 2": "ESOS",
+            "Stage Reached": "EB",
+            "Outcome Code": "EU",
+            "Signposting / Referral": "OOSC",
+            "Fixed Fee Code": "NA",
         }
         self._test_generated_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_signposting_code_missing_for_outcome_codes(self):
         test_values = {
-            "Matter Type 1": u"EPRO",
-            "Matter Type 2": u"ESOS",
-            "Stage Reached": u"EB",
-            "Outcome Code": u"EV",
-            "Signposting / Referral": u"",
+            "Matter Type 1": "EPRO",
+            "Matter Type 2": "ESOS",
+            "Stage Reached": "EB",
+            "Outcome Code": "EV",
+            "Signposting / Referral": "",
         }
         expected_error = (
-            u"Row: 1 - A Signposting / Referral reason code must be entered for matters with outcome code EV."
+            "Row: 1 - A Signposting / Referral reason code must be entered for matters with outcome code EV."
         )
         self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_df_fixed_fee_has_determination_code(self):
         test_values = {
-            "Eligibility Code": u"V",
-            "Matter Type 1": u"DTOT",
-            "Matter Type 2": u"DOTH",
-            "Fixed Fee Code": u"DF",
-            "Fixed Fee Amount": u"40.0",
-            "Determination": u"FINI",
+            "Eligibility Code": "V",
+            "Matter Type 1": "DTOT",
+            "Matter Type 2": "DOTH",
+            "Fixed Fee Code": "DF",
+            "Fixed Fee Amount": "40.0",
+            "Determination": "FINI",
         }
         self._test_generated_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_df_fixed_fee_missing_determination_code(self):
         test_values = {
-            "Eligibility Code": u"V",
-            "Matter Type 1": u"DTOT",
-            "Matter Type 2": u"DOTH",
-            "Stage Reached": u"DB",
-            "Fixed Fee Code": u"DF",
+            "Eligibility Code": "V",
+            "Matter Type 1": "DTOT",
+            "Matter Type 2": "DOTH",
+            "Stage Reached": "DB",
+            "Fixed Fee Code": "DF",
         }
-        expected_error = u"Row: 1 - The Fixed Fee code you have entered is not valid with Determination Code entered"
+        expected_error = "Row: 1 - The Fixed Fee code you have entered is not valid with Determination Code entered"
         self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
 
 

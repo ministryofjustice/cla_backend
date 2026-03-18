@@ -28,7 +28,6 @@ from cla_eventlog.forms import BaseCaseLogForm, EventSpecificLogForm
 from cla_provider.models import Provider
 from cla_provider.helpers import notify_case_RDSPed
 
-
 operator_hours = OpeningHours(**OPERATOR_HOURS)
 
 
@@ -58,7 +57,7 @@ class ProviderAllocationForm(BaseCaseLogForm):
         cleaned_data = super(ProviderAllocationForm, self).clean()
         nfe = []
         if not self.providers:
-            nfe.append(_(u"There is no provider specified in " u"the system to handle cases of this law category."))
+            nfe.append(_("There is no provider specified in " "the system to handle cases of this law category."))
             del self._errors["provider"]
 
         if (self.case.matter_type1 and self.case.matter_type2) and (
@@ -66,7 +65,7 @@ class ProviderAllocationForm(BaseCaseLogForm):
         ):
             nfe.append(
                 _(
-                    u"Category of matter type 1: {category1} must match category of matter type 2: {category2}".format(
+                    "Category of matter type 1: {category1} must match category of matter type 2: {category2}".format(
                         category1=self.case.matter_type1.category.name, category2=self.case.matter_type2.category.name
                     )
                 )
@@ -80,8 +79,8 @@ class ProviderAllocationForm(BaseCaseLogForm):
                 if case_category != mt1_category or case_category != mt2_category:
                     nfe.append(
                         _(
-                            u"Category of Matter Types: {category1}, {category2} must match category of case: "
-                            u"{case_category}".format(
+                            "Category of Matter Types: {category1}, {category2} must match category of case: "
+                            "{case_category}".format(
                                 category1=mt1_category.name,
                                 category2=mt2_category.name,
                                 case_category=case_category.name,
@@ -94,7 +93,7 @@ class ProviderAllocationForm(BaseCaseLogForm):
         return cleaned_data
 
     def get_notes(self):
-        return u"Assigned to {provider}. {notes}".format(
+        return "Assigned to {provider}. {notes}".format(
             provider=self.cleaned_data["provider_obj"].name, notes=self.cleaned_data["notes"] or ""
         )
 

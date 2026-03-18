@@ -19,7 +19,6 @@ from cla_common.constants import REQUIRES_ACTION_BY
 
 from cla_auth.constants import OPERATOR_ROLE, OPERATOR_MANAGER_ROLE, PROVIDER_ROLE
 
-
 User = get_user_model()
 
 
@@ -40,11 +39,11 @@ class EntraTokenGeneratorMixin(object):
 
         subject = issuer = x509.Name(
             [
-                x509.NameAttribute(NameOID.COUNTRY_NAME, u"US"),
-                x509.NameAttribute(NameOID.STATE_OR_PROVINCE_NAME, u"CA"),
-                x509.NameAttribute(NameOID.LOCALITY_NAME, u"San Francisco"),
-                x509.NameAttribute(NameOID.ORGANIZATION_NAME, u"Test"),
-                x509.NameAttribute(NameOID.COMMON_NAME, u"test.com"),
+                x509.NameAttribute(NameOID.COUNTRY_NAME, "US"),
+                x509.NameAttribute(NameOID.STATE_OR_PROVINCE_NAME, "CA"),
+                x509.NameAttribute(NameOID.LOCALITY_NAME, "San Francisco"),
+                x509.NameAttribute(NameOID.ORGANIZATION_NAME, "Test"),
+                x509.NameAttribute(NameOID.COMMON_NAME, "test.com"),
             ]
         )
 
@@ -72,7 +71,14 @@ class EntraTokenGeneratorMixin(object):
     def create_user(self, **kwargs):
         return User.objects.create(**kwargs)
 
-    def _create_token(self, firm_name="THE FIRM NAME LTD", app_roles=OPERATOR_ROLE, expired=False, email="test@example.com", kid="test-kid-123"):
+    def _create_token(
+        self,
+        firm_name="THE FIRM NAME LTD",
+        app_roles=OPERATOR_ROLE,
+        expired=False,
+        email="test@example.com",
+        kid="test-kid-123",
+    ):
         """Helper to create JWT tokens"""
         now = datetime.datetime.now()
 
@@ -96,11 +102,9 @@ class EntraTokenGeneratorMixin(object):
             "USER_EMAIL": email,
         }
 
-        token = jwt.encode(payload, self.private_key, algorithm="RS256", headers={
-            "typ": "JWT",
-            "alg": "RS256",
-            "kid": kid
-        })
+        token = jwt.encode(
+            payload, self.private_key, algorithm="RS256", headers={"typ": "JWT", "alg": "RS256", "kid": kid}
+        )
 
         return token
 
@@ -154,7 +158,7 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
             "aud": self.auth.expected_audience,
             "exp": now + datetime.timedelta(hours=1),
             "iat": now,
-            "sub": "test-subject"
+            "sub": "test-subject",
             # No email claim
         }
 
@@ -230,11 +234,7 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
         mock_public_keys.return_value = self.mock_jwks["keys"]
 
         email = "provider@test.com"
-        token = self._create_token(
-            firm_name="THE FIRM NAME LTD",
-            app_roles=OPERATOR_MANAGER_ROLE,
-            email=email
-        )
+        token = self._create_token(firm_name="THE FIRM NAME LTD", app_roles=OPERATOR_MANAGER_ROLE, email=email)
 
         request = self.factory.get("/")
         request.META["HTTP_AUTHORIZATION"] = "Bearer %s" % token

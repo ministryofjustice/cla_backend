@@ -12,7 +12,7 @@ PG_USER_PASSWORD = os.environ.get("ANALYTICS_DB_PASSWORD")
 
 
 def get_all_non_restricted_models(models):
-    """ Gets all non-restricted fields and the model they belong to.
+    """Gets all non-restricted fields and the model they belong to.
 
     Args:
         List[django.Model]: List of models to check through
@@ -30,7 +30,7 @@ def get_all_non_restricted_models(models):
 
 
 def get_all_non_restricted_columns(model):
-    """ Gets all non restricted columns from the relevant django model.
+    """Gets all non restricted columns from the relevant django model.
     Columns are non-restricted if the model has Analytics._allow_analytics set to True and the columns are not listed in Analytics._PII.
 
     Args:

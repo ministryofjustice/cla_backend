@@ -47,7 +47,7 @@ class ClientIDPermission(BasePermission):
                 return False
             if token_roles:
                 if isinstance(token_roles, unicode):
-                    token_roles = token_roles.encode('utf-8')
+                    token_roles = token_roles.encode("utf-8")
                 if isinstance(token_roles, str):
                     token_roles = [token_roles]
                 return all(role in self.entra_roles for role in token_roles)

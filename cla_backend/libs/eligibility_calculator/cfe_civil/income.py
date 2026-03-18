@@ -1,6 +1,5 @@
 from cla_backend.libs.eligibility_calculator.cfe_civil.conversions import pence_to_pounds
 
-
 INCOME_CATEGORY_TO_REGULAR_TRANSACTION = {
     "tax_credits": "benefits",
     "maintenance_received": "maintenance_in",

@@ -83,7 +83,7 @@ CALL_CENTER_HOURS = CheckerOpeningHours(**OPERATOR_HOURS)
 
 
 def get_list_callback_times(start_dt, end_dt):
-    """ Gets a list of requested callback times made via the web form within the given range.
+    """Gets a list of requested callback times made via the web form within the given range.
         Excludes callbacks requested for a third party.
 
         Only includes cases with an outcome code of CB1, i.e. First callback attempt is yet to occur.

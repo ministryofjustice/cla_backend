@@ -44,7 +44,7 @@ class Log(TimeStampedModel):
         ordering = ("-created",)
 
     def __unicode__(self):
-        return u"%s - %s:%s" % (self.case, self.type, self.code)
+        return "%s - %s:%s" % (self.case, self.type, self.code)
 
     def is_consecutive_outcome_today(self):
         """LGA-125 Debounce consecutive outcome codes since start of today"""
@@ -94,7 +94,7 @@ class ComplaintLog(Log):
         proxy = True
 
     def __unicode__(self):
-        return u"%s: %s - %s:%s" % (self.complaint, self.case, self.type, self.code)
+        return "%s: %s - %s:%s" % (self.complaint, self.case, self.type, self.code)
 
     @property
     def complaint(self):

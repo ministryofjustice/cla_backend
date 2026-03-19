@@ -170,30 +170,27 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
     def get_user_group(self, user, app_role):
         user_group_mapping = {
             OPERATOR_MANAGER_ROLE: "Operator Managers",
-            OPERATOR_ROLE: "LAA Caseworker",
-            PROVIDER_ROLE: "CLA Superusers",
         }
 
-        expected_group = user_group_mapping.get(app_role)
         user_group = user.groups.values_list("name", flat=True).first()
-
-        return True if expected_group == user_group else None
+        for role in app_role:
+            expected_group = user_group_mapping.get(role)
+            if expected_group == user_group:
+                return True
+        return None
 
     def change_user_group(self, app_role, user):
         user_group_mapping = {
             OPERATOR_MANAGER_ROLE: "Operator Managers",
-            OPERATOR_ROLE: "LAA Caseworker",
-            PROVIDER_ROLE: "CLA Superusers",
         }
 
-        expected_group = user_group_mapping.get(app_role)
-        if not expected_group:
-            raise exceptions.AuthenticationFailed("Invalid app role")
-
         try:
-            group = Group.objects.get(name=expected_group)
             user.groups.clear()
-            user.groups.add(group)
+            for role in app_role:
+                expected_group = user_group_mapping.get(role)
+                if expected_group is not None:
+                    group = Group.objects.get(name=expected_group)
+                    user.groups.add(group)
             return True
         except Exception:
             return None

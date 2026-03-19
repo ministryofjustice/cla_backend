@@ -430,7 +430,6 @@ class FullCaseViewSet(
         Search terms are set by a ?search=... query parameter,
         and may be comma and/or whitespace delimited.
         """
-       
         params = self.request.query_params.get("search", u"")
         return params.replace(u",", u" ").split()
 

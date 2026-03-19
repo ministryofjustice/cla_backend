@@ -139,7 +139,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
             raise exceptions.AuthenticationFailed("Invalid Token format, email is missing from Token!")
 
         user = None
-        app_role = payload.get("APP_ROLES")
+        app_role = payload["APP_ROLES"] if isinstance(payload["APP_ROLES"], list) else [payload["APP_ROLES"]]
 
         if not app_role:
             raise exceptions.AuthenticationFailed("Invalid token: missing required field APP_ROLES")

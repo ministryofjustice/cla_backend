@@ -81,9 +81,12 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
             provider = Provider.objects.active().get(name=firm_name)
         except Exception:
             return None
+        
+        chars = "abcdefghijklmnopqrstuvwxyz"
+        generate_user_name = "cla_" + "".join(random.choice(chars) for _ in range(6)).lower()
 
         user = User(
-            username=user_email,
+            username=generate_user_name,
             email=user_email,
             is_staff=False,
             is_active=True,

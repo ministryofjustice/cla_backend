@@ -430,8 +430,8 @@ class FullCaseViewSet(
         Search terms are set by a ?search=... query parameter,
         and may be comma and/or whitespace delimited.
         """
-        params = self.request.query_params.get("search", u"")
-        return params.replace(u",", u" ").split()
+        params = self.request.query_params.get("search", "")
+        return params.replace(",", " ").split()
 
     def get_temporary_view_name(self):
         return "case_search_view_{}".format(get_random_string())
@@ -488,7 +488,7 @@ class FullCaseViewSet(
                 )
             )
             for _ in range(number_of_placeholders):
-                params.append(u"%%%s%%" % search_term)
+                params.append("%%%s%%" % search_term)
 
         subquery = " INTERSECT ".join(unions)
 

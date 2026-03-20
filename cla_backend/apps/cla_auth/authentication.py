@@ -1,7 +1,7 @@
 import jwt
 import requests
 import logging
-import random 
+import random
 from cryptography.x509 import load_pem_x509_certificate
 from cryptography.hazmat.backends import default_backend
 from django.contrib.auth import authenticate
@@ -46,12 +46,10 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         if user_email is None:
             return None
 
-        
-        # random generate name 
+        # random generate name
         chars = "abcdefghijklmnopqrstuvwxyz"
         generate_user_name = "cla_" + "".join(random.choice(chars) for _ in range(6)).lower()
-      
-      
+
         user = User(
             username=generate_user_name,
             email=user_email,
@@ -81,7 +79,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
             provider = Provider.objects.active().get(name=firm_name)
         except Exception:
             return None
-        
+
         chars = "abcdefghijklmnopqrstuvwxyz"
         generate_user_name = "cla_" + "".join(random.choice(chars) for _ in range(6)).lower()
 
@@ -150,7 +148,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
 
         user = None
         app_role = payload["APP_ROLES"] if isinstance(payload["APP_ROLES"], list) else [payload["APP_ROLES"]]
-    
+
         if not app_role:
             raise exceptions.AuthenticationFailed("Invalid token: missing required field APP_ROLES")
 

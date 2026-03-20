@@ -1,6 +1,7 @@
 import jwt
 import requests
 import logging
+import random 
 from cryptography.x509 import load_pem_x509_certificate
 from cryptography.hazmat.backends import default_backend
 from django.contrib.auth import authenticate
@@ -13,7 +14,7 @@ from django.contrib.auth.models import User, Group
 from call_centre.models import Operator
 from cla_provider.models import Provider, Staff
 
-from cla_auth.constants import OPERATOR_ROLE, OPERATOR_MANAGER_ROLE, PROVIDER_ROLE
+from cla_auth.constants import OPERATOR_ROLE, OPERATOR_MANAGER_ROLE, PROVIDER_ROLE, MCC_OPERATOR
 
 logger = logging.getLogger(__name__)
 
@@ -23,8 +24,8 @@ def logging(func):
     def wrapper(*args, **kwargs):
         try:
             return func(*args, **kwargs)
-        except Exception as e:
-            raise exceptions.AuthenticationFailed("Failed to validate user: %s", str(e))
+        except Exception:
+            raise exceptions.AuthenticationFailed("Failed to validate user")
 
     return wrapper
 
@@ -45,8 +46,14 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         if user_email is None:
             return None
 
+        
+        # random generate name 
+        chars = "abcdefghijklmnopqrstuvwxyz"
+        generate_user_name = "cla_" + "".join(random.choice(chars) for _ in range(6)).lower()
+      
+      
         user = User(
-            username=user_email,
+            username=generate_user_name,
             email=user_email,
             is_active=True,
             is_staff=False,  # This will be overridden in call_centre.models.Operator.save
@@ -140,7 +147,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
 
         user = None
         app_role = payload["APP_ROLES"] if isinstance(payload["APP_ROLES"], list) else [payload["APP_ROLES"]]
-
+    
         if not app_role:
             raise exceptions.AuthenticationFailed("Invalid token: missing required field APP_ROLES")
 
@@ -154,7 +161,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
 
         is_manager = True if OPERATOR_MANAGER_ROLE in app_role else False
 
-        if OPERATOR_ROLE in app_role or OPERATOR_MANAGER_ROLE in app_role:
+        if OPERATOR_ROLE in app_role or OPERATOR_MANAGER_ROLE in app_role or MCC_OPERATOR in app_role:
             user = self._create_operator(payload, is_manager=is_manager)
             if not user:
                 raise exceptions.AuthenticationFailed("Invalid token: Incorrect App role provided!")

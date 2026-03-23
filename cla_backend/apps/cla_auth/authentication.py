@@ -1,7 +1,6 @@
 import jwt
 import requests
 import logging
-import random
 from cryptography.x509 import load_pem_x509_certificate
 from cryptography.hazmat.backends import default_backend
 from django.contrib.auth import authenticate
@@ -40,18 +39,37 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
     def authenticate_header(self, request):
         return 'Bearer realm="api"'
 
+    def get_unique_username(self, payload):
+        """Generate a unique username from the email address"""
+        email = payload['USER_EMAIL']
+        email_parts = email.split('@')
+        if len(email_parts) != 2:
+            raise exceptions.AuthenticationFailed("Invalid email address")
+        # Username is 30 characters, we will use the last 3 characters for uniqueness
+        username = email.split('@')[0][0:27]
+        users = User.objects.filter(username=username)
+        if users.count() == 0:
+            return username
+
+        # Generate the username with a numerical suffix
+        counter = 1
+        base_username = username
+        while True:
+            username = base_username + str(counter)
+            users = User.objects.filter(username=username)
+            if users.count() == 0:
+                return username
+            counter += 1
+
+
     @logging
     def _create_operator(self, payload, is_manager=False):
         user_email = payload.get("USER_EMAIL", None)
         if user_email is None:
             return None
 
-        # random generate name
-        chars = "abcdefghijklmnopqrstuvwxyz"
-        generate_user_name = "cla_" + "".join(random.choice(chars) for _ in range(6)).lower()
-
         user = User(
-            username=generate_user_name,
+            username=self.get_unique_username(payload),
             email=user_email,
             is_active=True,
             is_staff=False,  # This will be overridden in call_centre.models.Operator.save
@@ -80,11 +98,8 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         except Exception:
             return None
 
-        chars = "abcdefghijklmnopqrstuvwxyz"
-        generate_user_name = "cla_" + "".join(random.choice(chars) for _ in range(6)).lower()
-
         user = User(
-            username=generate_user_name,
+            username=self.get_unique_username(payload),
             email=user_email,
             is_staff=False,
             is_active=True,
@@ -205,6 +220,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
 
     def authenticate(self, request, retried=False):
         token = request.META.get("HTTP_AUTHORIZATION")
+
         if not token:
             return None
 

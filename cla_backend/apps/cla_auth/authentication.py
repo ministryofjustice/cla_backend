@@ -112,10 +112,8 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
                 response.raise_for_status()
                 keys = response.json().get("keys", [])
                 cache.set("entra_public_keys", keys, 86400)
-            except Exception as e:
-                raise exceptions.AuthenticationFailed(
-                    "Failed to fetch public keys"
-                )
+            except Exception:
+                raise exceptions.AuthenticationFailed("Failed to fetch public keys")
 
         return keys
 

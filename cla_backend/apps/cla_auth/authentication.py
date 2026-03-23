@@ -69,9 +69,8 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
                 operator.save()
 
             return operator.user
-        except Exception as e:
-            logger.error("Failed to create operator for email %s: %s" % (user_email, e))
-            raise exceptions.AuthenticationFailed("Failed to create operator for email %s: %s" % (user_email, e))
+        except Exception:
+            return None
 
     def _create_provider(self, payload):
         user_email = payload.get("USER_EMAIL")
@@ -102,10 +101,8 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
 
             return staff.user
 
-        except Exception as e:
-            raise exceptions.AuthenticationFailed(
-                "Cannot find provider: error looking up firm '%s': %s" % (firm_name, e)
-            )
+        except Exception:
+            return None
 
     def _public_keys(self):
         keys = cache.get("entra_public_keys")

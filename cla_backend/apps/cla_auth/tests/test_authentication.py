@@ -17,14 +17,13 @@ from core.tests.mommy_utils import make_recipe
 from django.core.urlresolvers import reverse
 from cla_common.constants import REQUIRES_ACTION_BY
 
-from cla_auth.constants import OPERATOR_ROLE, OPERATOR_MANAGER_ROLE, PROVIDER_ROLE
+from cla_auth.constants import OPERATOR_ROLE, OPERATOR_MANAGER_ROLE, PROVIDER_ROLE, PROVIDER_MCC_ROLE
 
 User = get_user_model()
 
 
 class EntraTokenGeneratorMixin(object):
     def setUp(self):
-        """Set up test fixtures"""
         self.factory = RequestFactory()
         self.auth = EntraAccessTokenAuthentication()
 
@@ -113,9 +112,10 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
 
     @patch("cla_auth.authentication.EntraAccessTokenAuthentication._public_keys")
     def test_valid_token_authentication(self, mock_public_keys):
-        """Test successful authentication with valid token"""
+
         email = "testuser@mail.com"
         user = User(email=email, is_active=True)
+
         user.save()
         make_recipe("cla_provider.staff", user=user)
 
@@ -134,7 +134,7 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
 
     @patch("cla_auth.authentication.EntraAccessTokenAuthentication._public_keys")
     def test_expired_token_authentication(self, mock_public_keys):
-        """Test authentication fails with expired token"""
+       
         mock_public_keys.return_value = self.mock_jwks["keys"]
         token = self._create_token(expired=True)
 
@@ -145,13 +145,13 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
             self.auth.authenticate(request)
 
     def test_no_token_returns_none(self):
-        """Test that missing token returns None"""
+      
         request = self.factory.get("/")
         result = self.auth.authenticate(request)
         self.assertIsNone(result)
 
     def test_token_missing_email_claim(self):
-        """Test authentication fails when token missing email claim"""
+       
         now = datetime.datetime.now()
         payload = {
             "iss": self.issuer,
@@ -229,20 +229,48 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
         self.assertEqual(response.status_code, 404)
 
     @patch("cla_auth.authentication.EntraAccessTokenAuthentication._public_keys")
-    def test_create_operator_manager_success(self, mock_public_keys):
+    def test_create_operator_success(self, mock_public_keys):
         """Test successful creation of an operator manager"""
         mock_public_keys.return_value = self.mock_jwks["keys"]
 
         email = "provider@test.com"
-        token = self._create_token(firm_name="THE FIRM NAME LTD", app_roles=OPERATOR_MANAGER_ROLE, email=email)
+        providers= [OPERATOR_ROLE, OPERATOR_MANAGER_ROLE]
 
-        request = self.factory.get("/")
-        request.META["HTTP_AUTHORIZATION"] = "Bearer %s" % token
+        for operator in providers:
+            token = self._create_token(firm_name="THE FIRM NAME LTD", app_roles=operator, email=email)
 
-        user, _ = self.auth.authenticate(request)
+            request = self.factory.get("/")
+            request.META["HTTP_AUTHORIZATION"] = "Bearer %s" % token
 
-        self.assertIsNotNone(user)
-        self.assertEqual(user.email, email)
+            user, _ = self.auth.authenticate(request)
+
+            self.assertIsNotNone(user)
+            self.assertEqual(user.email, email)
+
+
+    
+    @patch("cla_auth.authentication.EntraAccessTokenAuthentication._public_keys")
+    def test_create_operator_success(self, mock_public_keys):
+        """Test successful creation of an operator manager"""
+        mock_public_keys.return_value = self.mock_jwks["keys"]
+        provider_name = "TEST FIRM 123A"
+        provider = make_recipe("cla_provider.provider", name=provider_name, active=True)
+
+        email = "provider@test.com"
+        providers= [PROVIDER_ROLE, PROVIDER_MCC_ROLE]
+
+        for provider in providers:
+            token = self._create_token(firm_name=provider_name, app_roles=provider, email=email)
+
+            request = self.factory.get("/")
+            request.META["HTTP_AUTHORIZATION"] = "Bearer %s" % token
+
+            user, _ = self.auth.authenticate(request)
+
+            self.assertIsNotNone(user)
+            self.assertEqual(user.email, email)
+
+
 
     @patch("cla_auth.authentication.EntraAccessTokenAuthentication._public_keys")
     def test_create_provider_missing_firm_name(self, mock_public_keys):
@@ -267,6 +295,9 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
 
         with self.assertRaises(exceptions.AuthenticationFailed):
             self.auth.authenticate(request)
+
+
+    
 
 
 class EntraAuthorizationTestCase(EntraTokenGeneratorMixin, TestCase):

@@ -76,16 +76,16 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         user_email = payload.get("USER_EMAIL")
         firm_name = payload.get("FIRM_NAME")
 
-        if not user_email:
-            raise exceptions.AuthenticationFailed("Cannot create provider: USER_EMAIL missing from token payload")
-
-        if not firm_name:
-            raise exceptions.AuthenticationFailed("Cannot create provider: FIRM_NAME missing from token payload")
+        if not user_email and not firm_name:
+            return None
+        
+        try:
+             provider = Provider.objects.active().get(name=firm_name)
+        except Exception:
+            return None
 
         try:
-            provider = Provider.objects.active().get(name=firm_name)
             user_name = self.get_unique_username(payload)
-
             with transaction.atomic():
                 user = User(
                     username=user_name,

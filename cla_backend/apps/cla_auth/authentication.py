@@ -177,7 +177,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
             user = self._create_provider(payload)
             return app_role, user
 
-        raise exceptions.AuthenticationFailed("No matching role found in APP_ROLES: %s" % app_role)
+        return app_role, None
 
     def get_user_group(self, user, app_role):
         user_group_mapping = {

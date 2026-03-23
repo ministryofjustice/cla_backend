@@ -53,7 +53,6 @@ class ClientIDPermission(BasePermission):
                 return all(role in self.entra_roles for role in token_roles)
         return None
 
-
     def legacy_has_permission(self, request, view):
         token = request.auth
 

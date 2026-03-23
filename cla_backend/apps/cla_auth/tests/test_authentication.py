@@ -39,11 +39,11 @@ class EntraTokenGeneratorMixin(object):
 
         subject = issuer = x509.Name(
             [
-                x509.NameAttribute(NameOID.COUNTRY_NAME, u"US"),
-                x509.NameAttribute(NameOID.STATE_OR_PROVINCE_NAME, u"CA"),
-                x509.NameAttribute(NameOID.LOCALITY_NAME, u"San Francisco"),
-                x509.NameAttribute(NameOID.ORGANIZATION_NAME, u"Test"),
-                x509.NameAttribute(NameOID.COMMON_NAME, u"test.com"),
+                x509.NameAttribute(NameOID.COUNTRY_NAME, "US"),
+                x509.NameAttribute(NameOID.STATE_OR_PROVINCE_NAME, "CA"),
+                x509.NameAttribute(NameOID.LOCALITY_NAME, "San Francisco"),
+                x509.NameAttribute(NameOID.ORGANIZATION_NAME, "Test"),
+                x509.NameAttribute(NameOID.COMMON_NAME, "test.com"),
             ]
         )
 

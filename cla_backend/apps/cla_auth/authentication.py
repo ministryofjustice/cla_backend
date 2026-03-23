@@ -114,7 +114,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
                 cache.set("entra_public_keys", keys, 86400)
             except Exception as e:
                 raise exceptions.AuthenticationFailed(
-                    "Failed to fetch public keys from %s: %s" % (self.discovery_url, e)
+                    "Failed to fetch public keys"
                 )
 
         return keys
@@ -161,8 +161,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
 
         try:
             user = authenticate(entra_id_email=email)
-        except Exception as e:
-            logger.warning("Authentication lookup failed for email %s: %s" % (email, e))
+        except Exception:
             user = None
 
         if user:

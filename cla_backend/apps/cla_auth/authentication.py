@@ -33,7 +33,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         email = payload["USER_EMAIL"]
         validate_email(email)
 
-        max_length = 27
+        max_length = 30
         base = email.split("@")[0][:max_length].lower()
 
         if not User.objects.filter(username=base).exists():

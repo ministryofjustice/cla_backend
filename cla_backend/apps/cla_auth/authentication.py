@@ -41,7 +41,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
 
         for counter in range(1, 100):
             suffix = str(counter)
-            username = base[:max_length - len(suffix)] + suffix
+            username = base[: max_length - len(suffix)] + suffix
             if not User.objects.filter(username=username).exists():
                 return username
 
@@ -78,9 +78,9 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
 
         if not user_email and not firm_name:
             return None
-        
+
         try:
-             provider = Provider.objects.active().get(name=firm_name)
+            provider = Provider.objects.active().get(name=firm_name)
         except Exception:
             return None
 

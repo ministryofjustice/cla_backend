@@ -38,11 +38,11 @@ class EntraTokenGeneratorMixin(object):
 
         subject = issuer = x509.Name(
             [
-                x509.NameAttribute(NameOID.COUNTRY_NAME, u"US"),
-                x509.NameAttribute(NameOID.STATE_OR_PROVINCE_NAME, u"CA"),
-                x509.NameAttribute(NameOID.LOCALITY_NAME, u"San Francisco"),
-                x509.NameAttribute(NameOID.ORGANIZATION_NAME, u"Test"),
-                x509.NameAttribute(NameOID.COMMON_NAME, u"test.com"),
+                x509.NameAttribute(NameOID.COUNTRY_NAME, "US"),
+                x509.NameAttribute(NameOID.STATE_OR_PROVINCE_NAME, "CA"),
+                x509.NameAttribute(NameOID.LOCALITY_NAME, "San Francisco"),
+                x509.NameAttribute(NameOID.ORGANIZATION_NAME, "Test"),
+                x509.NameAttribute(NameOID.COMMON_NAME, "test.com"),
             ]
         )
 
@@ -134,7 +134,7 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
 
     @patch("cla_auth.authentication.EntraAccessTokenAuthentication._public_keys")
     def test_expired_token_authentication(self, mock_public_keys):
-       
+
         mock_public_keys.return_value = self.mock_jwks["keys"]
         token = self._create_token(expired=True)
 
@@ -145,13 +145,13 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
             self.auth.authenticate(request)
 
     def test_no_token_returns_none(self):
-      
+
         request = self.factory.get("/")
         result = self.auth.authenticate(request)
         self.assertIsNone(result)
 
     def test_token_missing_email_claim(self):
-       
+
         now = datetime.datetime.now()
         payload = {
             "iss": self.issuer,
@@ -234,7 +234,7 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
         mock_public_keys.return_value = self.mock_jwks["keys"]
 
         email = "provider@test.com"
-        providers= [OPERATOR_ROLE, OPERATOR_MANAGER_ROLE]
+        providers = [OPERATOR_ROLE, OPERATOR_MANAGER_ROLE]
 
         for operator in providers:
             token = self._create_token(firm_name="THE FIRM NAME LTD", app_roles=operator, email=email)
@@ -247,17 +247,16 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
             self.assertIsNotNone(user)
             self.assertEqual(user.email, email)
 
-
-    
     @patch("cla_auth.authentication.EntraAccessTokenAuthentication._public_keys")
-    def test_create_operator_success(self, mock_public_keys):
+    def test_create_provider_user_success(self, mock_public_keys):
         """Test successful creation of an operator manager"""
         mock_public_keys.return_value = self.mock_jwks["keys"]
+
         provider_name = "TEST FIRM 123A"
         provider = make_recipe("cla_provider.provider", name=provider_name, active=True)
 
         email = "provider@test.com"
-        providers= [PROVIDER_ROLE, PROVIDER_MCC_ROLE]
+        providers = [PROVIDER_ROLE, PROVIDER_MCC_ROLE]
 
         for provider in providers:
             token = self._create_token(firm_name=provider_name, app_roles=provider, email=email)
@@ -269,8 +268,6 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
 
             self.assertIsNotNone(user)
             self.assertEqual(user.email, email)
-
-
 
     @patch("cla_auth.authentication.EntraAccessTokenAuthentication._public_keys")
     def test_create_provider_missing_firm_name(self, mock_public_keys):
@@ -295,9 +292,6 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
 
         with self.assertRaises(exceptions.AuthenticationFailed):
             self.auth.authenticate(request)
-
-
-    
 
 
 class EntraAuthorizationTestCase(EntraTokenGeneratorMixin, TestCase):

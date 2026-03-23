@@ -41,7 +41,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
 
         for counter in range(1, 100):
             suffix = str(counter)
-            username = base[: max_length - len(suffix)] + suffix
+            username = base[:max_length - len(suffix)] + suffix
             if not User.objects.filter(username=username).exists():
                 return username
 

@@ -103,7 +103,7 @@ class DiagnosisSerializer(ClaModelSerializer):
                 except Category.DoesNotExist:
                     # this should never happen as we unit test the diagnosis graph
                     logger.warning(
-                        "Category %s for diagnosis node id=%s not a valid option" % (category_code, node_id)
+                        u"Category %s for diagnosis node id=%s not a valid option" % (category_code, node_id)
                     )
             return None
 
@@ -114,7 +114,7 @@ class DiagnosisSerializer(ClaModelSerializer):
                 except MatterType.DoesNotExist:
                     # this should never happen as we unit test the diagnosis graph
                     logger.warning(
-                        "MatterType %s for diagnosis node id=%s not a valid option" % (matter_type_code, node_id)
+                        u"MatterType %s for diagnosis node id=%s not a valid option" % (matter_type_code, node_id)
                     )
             return None
 

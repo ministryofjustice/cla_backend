@@ -149,11 +149,11 @@ class BaseComplaintViewSet(
 
     def post_save(self, obj, created=False):
         if created:
-            description = "Original expressions of dissatisfaction:\n%s\n\n%s" % (
-                "\n".join(map(lambda desc: "- %s" % desc, obj.eod.get_category_descriptions(include_severity=True))),
+            description = u"Original expressions of dissatisfaction:\n%s\n\n%s" % (
+                u"\n".join(map(lambda desc: "- %s" % desc, obj.eod.get_category_descriptions(include_severity=True))),
                 obj.eod.notes,
             )
-            notes = "Complaint created.\n\n{description}".format(description=description.strip()).strip()
+            notes = u"Complaint created.\n\n{description}".format(description=description.strip()).strip()
 
             event = event_registry.get_event("complaint")()
             event.process(
@@ -167,7 +167,7 @@ class BaseComplaintViewSet(
             event.process(
                 obj.eod.case,
                 created_by=self.request.user,
-                notes="Complaint owner set to %s" % (obj.owner.get_full_name() or obj.owner.username),
+                notes=u"Complaint owner set to %s" % (obj.owner.get_full_name() or obj.owner.username),
                 complaint=obj,
                 code="OWNER_SET",
             )
@@ -192,12 +192,12 @@ class BaseComplaintViewSet(
             )
 
         last_closed = closed_logs.order_by("-created").first()
-        notes = "Complaint reopened.\nOriginally {action_name} {closed_date} by {closed_by}.".format(
+        notes = u"Complaint reopened.\nOriginally {action_name} {closed_date} by {closed_by}.".format(
             action_name="voided" if last_closed.code == "COMPLAINT_VOID" else "closed",
             closed_date=last_closed.created.strftime("%d/%m/%Y %H:%M"),
             closed_by=last_closed.created_by.username,
         )
-        notes += "\n\n" + last_closed.notes
+        notes += u"\n\n" + last_closed.notes
 
         event = event_registry.get_event("complaint")()
         event.process(

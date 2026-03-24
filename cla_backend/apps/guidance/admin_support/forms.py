@@ -18,7 +18,7 @@ class NoteModelForm(forms.ModelForm):
     """
 
     raw_body = MarkdownAdminField(
-        label="Body", required=False, markdown_whitelist=markdown_whitelist, extensions=EXTENSIONS
+        label=u"Body", required=False, markdown_whitelist=markdown_whitelist, extensions=EXTENSIONS
     )
 
     class Meta(object):

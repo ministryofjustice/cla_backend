@@ -76,7 +76,7 @@ class Complaint(TimeStampedModel):
         super(Complaint, self).__init__(*args, **kwargs)
 
     def __unicode__(self):
-        return "Complaint on case %s" % self.eod.case
+        return u"Complaint on case %s" % self.eod.case
 
     @property
     def case(self):

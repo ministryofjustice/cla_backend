@@ -47,7 +47,7 @@ class ProviderAdmin(nested_admin.NestedModelAdmin):
     list_display = ["name", "law_categories", "active"]
 
     def law_categories(self, obj):
-        return ", ".join(obj.providerallocation_set.values_list("category__code", flat=True))
+        return u", ".join(obj.providerallocation_set.values_list("category__code", flat=True))
 
 
 admin.site.register(Provider, ProviderAdmin)

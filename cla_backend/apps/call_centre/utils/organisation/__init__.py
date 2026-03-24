@@ -44,7 +44,7 @@ class CaseOrganisationAssignCurrentOrganisationMixin(object):
         case.save(update_fields=["organisation"])
 
         # Create event log if the case is being updated
-        notes = "Case organisation set to {organisation}".format(organisation=organisation)
+        notes = u"Case organisation set to {organisation}".format(organisation=organisation)
         event = event_registry.get_event("case")()
         event.process(case, created_by=user, notes=notes, complaint=case, code="CASE_ORGANISATION_SET")
 

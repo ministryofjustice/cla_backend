@@ -111,7 +111,7 @@ class EligibilityCheckTestCase(CLAOperatorAuthBaseApiTestMixin, NestedEligibilit
             format="json",
             HTTP_AUTHORIZATION=self.get_http_authorization(),
         )
-        expected_bad = {"disregards": ["Fields no_disregard_defined not recognised"]}
+        expected_bad = {"disregards": [u"Fields no_disregard_defined not recognised"]}
         self.assertEqual(response.data, expected_bad)
 
     def test_create_with_finances_and_check_log(self):

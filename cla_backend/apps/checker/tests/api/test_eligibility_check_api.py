@@ -39,7 +39,7 @@ class EligibilityCheckTestCase(EligibilityCheckAPIMixin, CLACheckerAuthBaseApiTe
         case.eligibility_check = self.resource
         case.save()
 
-        case_ref_url = "%s%s" % (self.detail_url, "case_ref/")
+        case_ref_url = "%s%s" % (self.detail_url, u"case_ref/")
 
         response = self.client.get(case_ref_url, format="json", HTTP_AUTHORIZATION=self.get_http_authorization())
 

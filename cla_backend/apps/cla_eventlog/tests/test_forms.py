@@ -52,7 +52,7 @@ class BaseCaseLogFormTestCaseMixin(object):
         self.assertFalse(form.is_valid())
 
         self.assertEqual(len(form.errors), 1)
-        self.assertItemsEqual(form.errors["notes"], ["Ensure this value has at most 5000 characters (it has 5001)."])
+        self.assertItemsEqual(form.errors["notes"], [u"Ensure this value has at most 5000 characters (it has 5001)."])
 
         # nothing has changed
         case = Case.objects.get(pk=case.pk)
@@ -80,4 +80,4 @@ class EventSpecificLogFormTestCaseMixin(BaseCaseLogFormTestCaseMixin):
 
         self.assertFalse(form.is_valid())
 
-        self.assertItemsEqual(form.errors, {"event_code": ["Invalid choice"]})
+        self.assertItemsEqual(form.errors, {"event_code": [u"Invalid choice"]})

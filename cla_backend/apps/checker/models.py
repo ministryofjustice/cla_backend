@@ -190,14 +190,14 @@ class ReasonForContacting(TimeStampedModel):
     @property
     def reason_categories(self):
         if self.reasons.count():
-            return ", ".join(map(unicode, self.reasons.all()))
-        return "(No categories specified)"
+            return u", ".join(map(unicode, self.reasons.all()))
+        return u"(No categories specified)"
 
     def __unicode__(self):
         reason_count = self.reasons.count()
-        description = "%d reasons" % reason_count if reason_count else "No reasons specified"
+        description = u"%d reasons" % reason_count if reason_count else "No reasons specified"
         if self.case:
-            return description + " (Case: %s)" % self.case.reference
+            return description + u" (Case: %s)" % self.case.reference
         return description
 
 

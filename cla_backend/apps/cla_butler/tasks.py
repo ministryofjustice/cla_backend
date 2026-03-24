@@ -97,8 +97,8 @@ class DeleteOldData(Task):
         return (
             Case.objects.filter(modified__lte=two_weeks)
             .filter(personal_details_id__exact=None)
-            .filter(notes__exact="")
-            .filter(provider_notes__exact="")
+            .filter(notes__exact=u"")
+            .filter(provider_notes__exact=u"")
         )
 
     def _delete_logs(self, qs):

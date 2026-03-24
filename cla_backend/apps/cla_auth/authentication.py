@@ -76,7 +76,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         user_email = payload.get("USER_EMAIL")
         firm_name = payload.get("FIRM_NAME")
 
-        if not user_email and not firm_name:
+        if not user_email or not firm_name:
             return None
 
         try:

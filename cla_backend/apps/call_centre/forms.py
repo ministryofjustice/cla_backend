@@ -57,7 +57,7 @@ class ProviderAllocationForm(BaseCaseLogForm):
         cleaned_data = super(ProviderAllocationForm, self).clean()
         nfe = []
         if not self.providers:
-            nfe.append(_(u"There is no provider specified in " "the system to handle cases of this law category."))
+            nfe.append(_(u"There is no provider specified in " u"the system to handle cases of this law category."))
             del self._errors["provider"]
 
         if (self.case.matter_type1 and self.case.matter_type2) and (
@@ -80,7 +80,7 @@ class ProviderAllocationForm(BaseCaseLogForm):
                     nfe.append(
                         _(
                             u"Category of Matter Types: {category1}, {category2} must match category of case: "
-                            "{case_category}".format(
+                            u"{case_category}".format(
                                 category1=mt1_category.name,
                                 category2=mt2_category.name,
                                 case_category=case_category.name,

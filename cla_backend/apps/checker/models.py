@@ -195,7 +195,7 @@ class ReasonForContacting(TimeStampedModel):
 
     def __unicode__(self):
         reason_count = self.reasons.count()
-        description = u"%d reasons" % reason_count if reason_count else "No reasons specified"
+        description = u"%d reasons" % reason_count if reason_count else u"No reasons specified"
         if self.case:
             return description + u" (Case: %s)" % self.case.reference
         return description

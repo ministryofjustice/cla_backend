@@ -230,12 +230,12 @@ class CreateCaseTestCase(BaseCaseTestCase):
         personal_details = make_recipe(
             "legalaid.personal_details",
             **{
-                u"full_name": "John Doe",
-                u"home_phone": "9876543210",
-                u"mobile_phone": "0123456789",
-                u"postcode": "SW1H 9AJ",
-                u"street": "102 Petty France",
-                u"title": "MR",
+                u"full_name": u"John Doe",
+                u"home_phone": u"9876543210",
+                u"mobile_phone": u"0123456789",
+                u"postcode": u"SW1H 9AJ",
+                u"street": u"102 Petty France",
+                u"title": u"MR",
             }
         )
         data = {u"personal_details": unicode(personal_details.reference)}

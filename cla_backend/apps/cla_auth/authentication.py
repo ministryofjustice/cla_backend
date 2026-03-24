@@ -177,7 +177,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
 
         return app_role, None
 
-    def get_user_group(self, user, app_role):
+    def user_has_role(self, user, app_role):
         user_group_mapping = {
             OPERATOR_MANAGER_ROLE: "Operator Managers",
         }
@@ -229,7 +229,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         if not user:
             raise exceptions.AuthenticationFailed("Could not find or create user for token payload")
 
-        if not self.get_user_group(user, app_role):
+        if not self.user_has_role(user, app_role):
             if retried:
                 raise exceptions.AuthenticationFailed(
                     "User %s group does not match expected role %s after update" % (user.email, app_role)

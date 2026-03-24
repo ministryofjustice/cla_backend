@@ -9,10 +9,10 @@ class BetweenDictTestCase(unittest.TestCase):
 
     def test_direct_get(self):
         for i in range(0, 6):
-            self.assertEqual(self.bd[i], 1, "get(%s) - %s != 1" % (i, self.bd[i]))
+            self.assertEqual(self.bd[i], 1, u"get(%s) - %s != 1" % (i, self.bd[i]))
 
         for i in range(6, 10):
-            self.assertEqual(self.bd[i], 2, "get(%s) - %s != 2" % (i, self.bd[i]))
+            self.assertEqual(self.bd[i], 2, u"get(%s) - %s != 2" % (i, self.bd[i]))
 
         self.assertRaises(KeyError, lambda: self.bd[10])
         self.assertRaises(KeyError, lambda: self.bd[-1])
@@ -22,20 +22,20 @@ class BetweenDictTestCase(unittest.TestCase):
         gapped_bd = BetweenDict({(0, 6): 1, (11, 13): 2})
 
         for i in range(0, 6):
-            self.assertEqual(gapped_bd[i], 1, "get(%s) - %s != 1" % (i, gapped_bd[i]))
+            self.assertEqual(gapped_bd[i], 1, u"get(%s) - %s != 1" % (i, gapped_bd[i]))
 
         for i in range(6, 11):
             self.assertRaises(KeyError, lambda: gapped_bd[i])
 
         for i in range(11, 13):
-            self.assertEqual(gapped_bd[i], 2, "get(%s) - %s != 2" % (i, gapped_bd[i]))
+            self.assertEqual(gapped_bd[i], 2, u"get(%s) - %s != 2" % (i, gapped_bd[i]))
 
     def test_get_with_default(self):
         for i in range(0, 6):
-            self.assertEqual(self.bd.get(i), 1, "get(%s) - %s != 1" % (i, self.bd[i]))
+            self.assertEqual(self.bd.get(i), 1, u"get(%s) - %s != 1" % (i, self.bd[i]))
 
         for i in range(6, 10):
-            self.assertEqual(self.bd.get(i), 2, "get(%s) - %s != 2" % (i, self.bd[i]))
+            self.assertEqual(self.bd.get(i), 2, u"get(%s) - %s != 2" % (i, self.bd[i]))
 
         self.assertEqual(self.bd.get(10, 90), 90)
         self.assertEqual(self.bd.get(-1, 90), 90)

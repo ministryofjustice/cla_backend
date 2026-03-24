@@ -469,7 +469,7 @@ class CaseSerializerBase(PartialUpdateExcludeReadonlySerializerMixin, ClaModelSe
     def validate(self, attrs):
         attrs = super(CaseSerializerBase, self).validate(attrs)
         if attrs.get("exempt_user") and not attrs.get("exempt_user_reason"):
-            raise ValidationError({"exempt_user_reason": ["A reason is required if client is exempt."]})
+            raise ValidationError({u"exempt_user_reason": [u"A reason is required if client is exempt."]})
         return attrs
 
     class Meta(object):

@@ -236,7 +236,7 @@ class SuspendCaseEvent(BaseEvent):
             "type": LOG_TYPES.OUTCOME,
             "level": LOG_LEVELS.HIGH,
             "selectable_by": [LOG_ROLES.OPERATOR],
-            "description": "Don't transfer / COI identifier",
+            "description": u"Don't transfer / COI identifier",
             "stops_timer": True,
             "order": 130,
             "set_requires_action_by": None_if_owned_by_op_or_op_manager,

@@ -44,7 +44,7 @@ date_pattern = re.compile("^[0-9]{1,2}/[0-9]{1,2}/[0-9]{4}$")
 def validate_decimal(val):
     if val:
         try:
-            val = val.replace(",", "")
+            val = val.replace(u",", u"")
             val = Decimal(val)
             return val
         except (ValueError, InvalidOperation) as ve:

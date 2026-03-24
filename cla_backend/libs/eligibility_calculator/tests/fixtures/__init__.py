@@ -1,7 +1,7 @@
 import copy
 
 case_data_dict = {
-    "category": "blah blah",
+    "category": u"blah blah",
     "facts": {
         "is_you_or_your_partner_over_60": False,
         "on_passported_benefits": False,

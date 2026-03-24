@@ -488,7 +488,7 @@ class FullCaseViewSet(
                 )
             )
             for _ in range(number_of_placeholders):
-                params.append("%%%s%%" % search_term)
+               params.append(u"%{}%".format(search_term))
 
         subquery = " INTERSECT ".join(unions)
 
@@ -638,7 +638,7 @@ class BaseCSVUploadViewSet(
             raise ConflictException("Upload already exists for given month. Try overwriting.")
 
     def update(self, request, *args, **kwargs):
-        if request.method.upper() == "PATCH":
+        if request.method.upper() == u"PATCH":
             # Don't allow PATCH because they should DELETE+POST or PUT
             return self.http_method_not_allowed(request, *args, **kwargs)
         return super(BaseCSVUploadViewSet, self).update(request, *args, **kwargs)

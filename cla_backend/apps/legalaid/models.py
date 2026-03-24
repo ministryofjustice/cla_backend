@@ -57,7 +57,7 @@ logger = logging.getLogger(__name__)
 def _make_reference():
     from django.utils.crypto import get_random_string
 
-    return "%s-%s-%s" % (
+    return u"%s-%s-%s" % (
         # exclude B8G6I1l0OQDS5Z2
         get_random_string(length=2, allowed_chars="ACEFHJKMNPRTUVWXY3479"),
         get_random_string(length=4, allowed_chars="123456789"),
@@ -86,7 +86,7 @@ class Category(TimeStampedModel):
         verbose_name_plural = "categories"
 
     def __unicode__(self):
-        return "%s" % self.name
+        return u"%s" % self.name
 
 
 class Savings(CloneModelMixin, TimeStampedModel):
@@ -135,7 +135,7 @@ class ContactResearchMethod(CloneModelMixin, TimeStampedModel):
     reference = UUIDField(auto=True, unique=True)
 
     def __unicode__(self):
-        return "%s" % self.method
+        return u"%s" % self.method
 
 
 class PersonalDetails(CloneModelMixin, TimeStampedModel):
@@ -194,13 +194,13 @@ class PersonalDetails(CloneModelMixin, TimeStampedModel):
         verbose_name_plural = "personal details"
 
     def __unicode__(self):
-        return "%s" % self.full_name
+        return u"%s" % self.full_name
 
     def _set_search_field(self):
         search_field = ""
 
         def add_string(s1, s2):
-            return "%s###%s" % (s1, s2)
+            return u"%s###%s" % (s1, s2)
 
         if self.postcode:
             search_field = add_string(search_field, self.postcode.replace(" ", ""))
@@ -264,7 +264,7 @@ class ThirdPartyDetails(CloneModelMixin, TimeStampedModel):
         verbose_name_plural = "third party details"
 
     def __unicode__(self):
-        return "%s" % self.personal_details.full_name
+        return u"%s" % self.personal_details.full_name
 
 
 class AdaptationDetails(CloneModelMixin, TimeStampedModel):
@@ -309,7 +309,7 @@ class EODDetails(TimeStampedModel):
         verbose_name_plural = "EOD details"
 
     def __unicode__(self):
-        return "EOD on case %s" % self.case
+        return u"EOD on case %s" % self.case
 
     @classmethod
     def get_eod_stats(cls):
@@ -455,7 +455,7 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin):
         ordering = ("-created",)
 
     def __unicode__(self):
-        return "EligibilityCheck(%s)" % self.reference
+        return u"EligibilityCheck(%s)" % self.reference
 
     def get_dependencies(self):
         deps = {"category", "you__income", "you__savings", "you__deductions"}
@@ -667,7 +667,8 @@ class MatterType(TimeStampedModel):
     level = models.PositiveSmallIntegerField(choices=MATTER_TYPE_LEVELS.CHOICES, validators=[MaxValueValidator(2)])
 
     def __unicode__(self):
-        return "MatterType{} ({}): {} - {}".format(
+       
+        return u"MatterType{} ({}): {} - {}".format(
             self.get_level_display(), self.category.code, self.code, self.description
         )
 
@@ -785,11 +786,11 @@ class Case(TimeStampedModel):
     class Meta(object):
         ordering = ("-created",)
         permissions = (
-            ("run_reports", "Can run reports"),
-            ("run_obiee_reports", "Can run OBIEE reports"),
-            ("run_complaints_report", "Can run complaints report"),
+            ("run_reports", u"Can run reports"),
+            ("run_obiee_reports", u"Can run OBIEE reports"),
+            ("run_complaints_report", u"Can run complaints report"),
             # Used to give internal users access to reports that should not be used without the appropriate context.
-            ("run_internal_reports", "Can run internal reports"),
+            ("run_internal_reports", u"Can run internal reports"),
         )
 
     def __unicode__(self):
@@ -988,7 +989,7 @@ class Case(TimeStampedModel):
         else:
             if self.locked_by != user:
                 logger.warning(
-                    "User %s tried to lock case %s locked already by %s" % (user, self.reference, self.locked_by)
+                    u"User %s tried to lock case %s locked already by %s" % (user, self.reference, self.locked_by)
                 )
 
         return False
@@ -1028,7 +1029,7 @@ class Case(TimeStampedModel):
             return None
         end_time = self.requires_action_at + datetime.timedelta(minutes=30)
         if self.callback_window_type == CALLBACK_WINDOW_TYPES.HALF_HOUR_WINDOW:
-            return "{start} - {end}".format(
+            return u"{start} - {end}".format(
                 start=date_filter(localtime(self.requires_action_at), "g:iA"),
                 end=date_filter(localtime(end_time), "g:iA"),
             )

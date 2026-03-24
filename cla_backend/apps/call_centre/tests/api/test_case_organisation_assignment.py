@@ -20,7 +20,7 @@ class OrganisationCaseAssignmentTestCase(BaseCaseTestCase, FullCaseAPIMixin):
         # Assign operator organisation as the case organisation when a case is created
 
         organisations = [self.foo_org, self.bar_org, None]
-        url = reverse("%s:case-list" % self.API_URL_NAMESPACE)
+        url = reverse(u"%s:case-list" % self.API_URL_NAMESPACE)
         for organisation in organisations:
             self.operator.organisation = organisation
             self.operator.save()
@@ -40,7 +40,7 @@ class OrganisationCaseAssignmentTestCase(BaseCaseTestCase, FullCaseAPIMixin):
         case = make_recipe("legalaid.case", organisation=None)
         self.assertIsNone(case.organisation)
 
-        url = reverse("%s:case-detail" % self.API_URL_NAMESPACE, args=(), kwargs={"reference": case.reference})
+        url = reverse(u"%s:case-detail" % self.API_URL_NAMESPACE, args=(), kwargs={"reference": case.reference})
         data = {"notes": "This is a test", "provider_notes": ""}
         response = self.client.patch(url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
         self._assert_case_organisation_updated(case, self.foo_org, response)
@@ -55,7 +55,7 @@ class OrganisationCaseAssignmentTestCase(BaseCaseTestCase, FullCaseAPIMixin):
         case = make_recipe("legalaid.case", organisation=None)
         self.assertIsNone(case.organisation)
 
-        url = reverse("%s:case-suspend" % self.API_URL_NAMESPACE, args=(), kwargs={"reference": case.reference})
+        url = reverse(u"%s:case-suspend" % self.API_URL_NAMESPACE, args=(), kwargs={"reference": case.reference})
         data = {"notes": "", "event_code": "INSUF"}
         response = self.client.post(url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
         self.assertEqual(status.HTTP_204_NO_CONTENT, response.status_code)
@@ -72,7 +72,7 @@ class OrganisationCaseAssignmentTestCase(BaseCaseTestCase, FullCaseAPIMixin):
         self.assertIsNone(case.organisation)
 
         url = reverse(
-            "%s:case-assign-alternative-help" % self.API_URL_NAMESPACE, args=(), kwargs={"reference": case.reference}
+            u"%s:case-assign-alternative-help" % self.API_URL_NAMESPACE, args=(), kwargs={"reference": case.reference}
         )
         data = {"notes": "", "event_code": "IRKB", "selected_providers": [article.id]}
         response = self.client.post(url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
@@ -88,7 +88,7 @@ class OrganisationCaseAssignmentTestCase(BaseCaseTestCase, FullCaseAPIMixin):
         case = make_recipe("legalaid.case", organisation=None)
         self.assertIsNone(case.organisation)
 
-        url = reverse("%s:case-decline-help" % self.API_URL_NAMESPACE, args=(), kwargs={"reference": case.reference})
+        url = reverse(u"%s:case-decline-help" % self.API_URL_NAMESPACE, args=(), kwargs={"reference": case.reference})
         data = {"notes": "", "event_code": "DECL"}
         response = self.client.post(url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
         self.assertEqual(status.HTTP_204_NO_CONTENT, response.status_code)
@@ -105,7 +105,7 @@ class OrganisationCaseAssignmentTestCase(BaseCaseTestCase, FullCaseAPIMixin):
         self.assertIsNone(case.organisation)
 
         url = reverse(
-            "%s:eoddetails-detail" % self.API_URL_NAMESPACE, args=(), kwargs={"case_reference": case.reference}
+            u"%s:eoddetails-detail" % self.API_URL_NAMESPACE, args=(), kwargs={"case_reference": case.reference}
         )
         data = {
             "case_reference": case.reference,
@@ -138,7 +138,7 @@ class OrganisationCaseAssignmentTestCase(BaseCaseTestCase, FullCaseAPIMixin):
         self.assertIsNone(case.organisation)
 
         data = {"eod": str(eod.reference), "description": "This is a description"}
-        url = reverse("%s:complaints-list" % self.API_URL_NAMESPACE)
+        url = reverse(u"%s:complaints-list" % self.API_URL_NAMESPACE)
         response = self.client.post(url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
         self._assert_case_organisation_updated(case, self.foo_org, response)
@@ -170,7 +170,7 @@ class OrganisationCaseAssignmentTestCase(BaseCaseTestCase, FullCaseAPIMixin):
         self.operator.save()
 
         url = reverse(
-            "%s:adaptationdetails-detail" % self.API_URL_NAMESPACE, args=(), kwargs={"case_reference": case.reference}
+            u"%s:adaptationdetails-detail" % self.API_URL_NAMESPACE, args=(), kwargs={"case_reference": case.reference}
         )
         response = self.client.post(url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
@@ -186,13 +186,13 @@ class OrganisationCaseAssignmentTestCase(BaseCaseTestCase, FullCaseAPIMixin):
         self.operator.save()
 
         url = reverse(
-            "%s:personaldetails-detail" % self.API_URL_NAMESPACE, args=(), kwargs={"case_reference": case.reference}
+            u"%s:personaldetails-detail" % self.API_URL_NAMESPACE, args=(), kwargs={"case_reference": case.reference}
         )
         response = self.client.post(url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
         self._assert_case_organisation_updated(case, self.foo_org)
 
-        url = reverse("%s:case-detail" % self.API_URL_NAMESPACE, args=(), kwargs={"reference": case.reference})
+        url = reverse(u"%s:case-detail" % self.API_URL_NAMESPACE, args=(), kwargs={"reference": case.reference})
         data = {"notes": "This is a test", "provider_notes": "", "organisation_name": ""}
         response = self.client.patch(url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
         self.assertEqual(status.HTTP_200_OK, response.status_code)
@@ -213,7 +213,7 @@ class OrganisationCaseAssignmentTestCase(BaseCaseTestCase, FullCaseAPIMixin):
         self.operator.save()
 
         url = reverse(
-            "%s:thirdpartydetails-detail" % self.API_URL_NAMESPACE, args=(), kwargs={"case_reference": case.reference}
+            u"%s:thirdpartydetails-detail" % self.API_URL_NAMESPACE, args=(), kwargs={"case_reference": case.reference}
         )
         response = self.client.post(url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
@@ -240,7 +240,7 @@ class OrganisationCaseAssignmentTestCase(BaseCaseTestCase, FullCaseAPIMixin):
         self.operator.save()
 
         url = reverse(
-            "%s:thirdpartydetails-detail" % self.API_URL_NAMESPACE, args=(), kwargs={"case_reference": case.reference}
+            u"%s:thirdpartydetails-detail" % self.API_URL_NAMESPACE, args=(), kwargs={"case_reference": case.reference}
         )
         response = self.client.patch(url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
         self.assertEqual(status.HTTP_200_OK, response.status_code)
@@ -257,7 +257,7 @@ class OrganisationCaseAssignmentTestCase(BaseCaseTestCase, FullCaseAPIMixin):
         self.operator.save()
 
         url = reverse(
-            "%s:diagnosis-detail" % self.API_URL_NAMESPACE, args=(), kwargs={"case_reference": case.reference}
+            u"%s:diagnosis-detail" % self.API_URL_NAMESPACE, args=(), kwargs={"case_reference": case.reference}
         )
         response = self.client.post(url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
@@ -274,14 +274,14 @@ class OrganisationCaseAssignmentTestCase(BaseCaseTestCase, FullCaseAPIMixin):
         self.operator.save()
 
         url = reverse(
-            "%s:personaldetails-detail" % self.API_URL_NAMESPACE, args=(), kwargs={"case_reference": case.reference}
+            u"%s:personaldetails-detail" % self.API_URL_NAMESPACE, args=(), kwargs={"case_reference": case.reference}
         )
         response = self.client.post(url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
         self._assert_case_organisation_updated(case, None, check_status_log=False)
 
         # Update the case
-        url = reverse("%s:case-detail" % self.API_URL_NAMESPACE, args=(), kwargs={"reference": case.reference})
+        url = reverse(u"%s:case-detail" % self.API_URL_NAMESPACE, args=(), kwargs={"reference": case.reference})
         data = {"notes": "This is a test", "provider_notes": "", "organisation_name": ""}
         response = self.client.patch(url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
         self.assertEqual(status.HTTP_200_OK, response.status_code)

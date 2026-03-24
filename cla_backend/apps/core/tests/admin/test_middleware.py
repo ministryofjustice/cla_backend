@@ -62,7 +62,6 @@ class TestClaSessionSecurityMiddleware(unittest.TestCase):
 
 
 class TestScenario(object):
-
     def __init__(self, test_url, mock_call_expected):
         self.test_url = test_url
         self.mock_call_expected = mock_call_expected

@@ -101,13 +101,13 @@ def check_table_data():
         os.environ["SOURCE_DB_USER"],
         os.environ["SOURCE_DB_PASSWORD"],
         os.environ["SOURCE_DB_HOST"],
-        os.environ["SOURCE_DB_NAME"]
+        os.environ["SOURCE_DB_NAME"],
     )
     target_db = connection_string_template.format(
         os.environ["TARGET_DB_USER"],
         os.environ["TARGET_DB_PASSWORD"],
         os.environ["TARGET_DB_HOST"],
-        os.environ["TARGET_DB_NAME"]
+        os.environ["TARGET_DB_NAME"],
     )
 
     pg_diff_tool = DBDiff(source_db, target_db, chunk_size=100000)

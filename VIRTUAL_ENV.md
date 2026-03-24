@@ -49,7 +49,7 @@ pip install virtualenv
 
 Create the python environment:
 ```
-virtualenv -p python2.7 env --prompt=cla_be
+virtualenv -p python2.7.18 env --prompt=cla_be
 ```
 
 Activate the python environment - Linux and Mac:

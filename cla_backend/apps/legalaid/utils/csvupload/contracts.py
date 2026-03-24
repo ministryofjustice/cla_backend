@@ -13,7 +13,7 @@ CONTRACT_THIRTEEN_END_DATE = datetime(year=2018, month=9, day=1)
 CONTRACT_EIGHTEEN_START_DATE = CONTRACT_THIRTEEN_END_DATE
 
 contract_2013_determination_codes = {u"OOSC", u"OSPF", u"CHNM", u"FINI", u"DVCA"}
-contract_2018_determination_codes = copy(contract_2013_determination_codes) | {u"FAFA", u"EXEM"}
+contract_2018_determination_codes = copy(contract_2013_determination_codes) | {"FAFA", "EXEM"}
 contract_2018_signposting_codes = {u"OOSC", u"TANA", u"OSPF", u"CHNM", u"FINI", u"FREP", u"LREP"}
 contract_2018_fixed_fee_codes = {u"DF", u"HF", u"LF", u"MR", u"HM", u"NA", u"HR"}
 

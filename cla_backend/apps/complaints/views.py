@@ -150,7 +150,7 @@ class BaseComplaintViewSet(
     def post_save(self, obj, created=False):
         if created:
             description = u"Original expressions of dissatisfaction:\n%s\n\n%s" % (
-                u"\n".join(map(lambda desc: "- %s" % desc, obj.eod.get_category_descriptions(include_severity=True))),
+                u"\n".join(map(lambda desc: u"- %s" % desc, obj.eod.get_category_descriptions(include_severity=True))),
                 obj.eod.notes,
             )
             notes = u"Complaint created.\n\n{description}".format(description=description.strip()).strip()

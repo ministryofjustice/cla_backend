@@ -30,15 +30,15 @@ class Command(BaseCommand):
         cases = Case.objects.filter(provider_assigned_at__gte=dt)
         count = cases.count()
 
-        self.stdout.write("{count} cases assigned since {dt}.".format(count=count, dt=dt))
+        self.stdout.write(u"{count} cases assigned since {dt}.".format(count=count, dt=dt))
         if not count:
             return
 
         self.group_cases(cases)
 
-        self.stdout.write("{count} cases already had the correct value.".format(count=len(self.unchanged)))
-        self.stdout.write("{count} cases will be changed to `True`.".format(count=len(self.change_to_true)))
-        self.stdout.write("{count} cases will be changed to `False`.".format(count=len(self.change_to_false)))
+        self.stdout.write(u"{count} cases already had the correct value.".format(count=len(self.unchanged)))
+        self.stdout.write(u"{count} cases will be changed to `True`.".format(count=len(self.change_to_true)))
+        self.stdout.write(u"{count} cases will be changed to `False`.".format(count=len(self.change_to_false)))
 
         try:
             commit = options["commit"] == "commit"
@@ -50,11 +50,11 @@ class Command(BaseCommand):
             number_changed_to_false = Case.objects.filter(pk__in=self.change_to_false).update(
                 assigned_out_of_hours=False
             )
-            self.stdout.write("Making changes")
-            self.stdout.write("  {count} cases changed to `True`.".format(count=number_changed_to_true))
-            self.stdout.write("  {count} cases changed to `False`.".format(count=number_changed_to_false))
+            self.stdout.write(u"Making changes")
+            self.stdout.write(u"  {count} cases changed to `True`.".format(count=number_changed_to_true))
+            self.stdout.write(u"  {count} cases changed to `False`.".format(count=number_changed_to_false))
         else:
-            self.stdout.write("Not making changes (add 'commit' to make changes)")
+            self.stdout.write(u"Not making changes (add 'commit' to make changes)")
 
     def group_cases(self, cases):
         for case in cases:

@@ -67,15 +67,15 @@ class ThirdPartyDetailsApiMixin(NestedSimpleResourceAPIMixin):
 
         expected_errors = {
             "personal_details": {
-                "full_name": ["Ensure this field has no more than 400 characters."],
-                "home_phone": ["Ensure this field has no more than 20 characters."],
-                "mobile_phone": ["Ensure this field has no more than 20 characters."],
-                "postcode": ["Ensure this field has no more than 12 characters."],
-                "street": ["Ensure this field has no more than 255 characters."],
-                "title": ["Ensure this field has no more than 20 characters."],
+                "full_name": [u"Ensure this field has no more than 400 characters."],
+                "home_phone": [u"Ensure this field has no more than 20 characters."],
+                "mobile_phone": [u"Ensure this field has no more than 20 characters."],
+                "postcode": [u"Ensure this field has no more than 12 characters."],
+                "street": [u"Ensure this field has no more than 255 characters."],
+                "title": [u"Ensure this field has no more than 20 characters."],
             },
-            "reason": ['"XXXXXXXXX" is not a valid choice.'],
-            "personal_relationship": ['"XXXXXXXXX" is not a valid choice.'],
+            "reason": [u'"XXXXXXXXX" is not a valid choice.'],
+            "personal_relationship": [u'"XXXXXXXXX" is not a valid choice.'],
         }
 
         errors = response.data

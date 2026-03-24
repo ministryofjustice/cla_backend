@@ -48,7 +48,7 @@ debt_category_spec = {
 }
 discrimination_category_spec = {
     "OUTCOME_CODES": {
-       u"QA",
+        u"QA",
         u"QB",
         u"QC",
         u"QD",

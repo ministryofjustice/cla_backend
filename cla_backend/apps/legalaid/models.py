@@ -197,7 +197,7 @@ class PersonalDetails(CloneModelMixin, TimeStampedModel):
         return u"%s" % self.full_name
 
     def _set_search_field(self):
-        search_field = ""
+        search_field = u""
 
         def add_string(s1, s2):
             return u"%s###%s" % (s1, s2)
@@ -328,7 +328,7 @@ class EODDetails(TimeStampedModel):
 
     def get_category_descriptions(self, include_severity=False):
         mapper = (
-            (lambda cat: unicode(cat) + (" (Major)" if cat.is_major else " (Minor)")) if include_severity else unicode
+            (lambda cat: unicode(cat) + (u" (Major)" if cat.is_major else " (Minor)")) if include_severity else unicode
         )
         return list(map(mapper, self.categories.all()))
 
@@ -667,7 +667,7 @@ class MatterType(TimeStampedModel):
     level = models.PositiveSmallIntegerField(choices=MATTER_TYPE_LEVELS.CHOICES, validators=[MaxValueValidator(2)])
 
     def __unicode__(self):
-       
+
         return u"MatterType{} ({}): {} - {}".format(
             self.get_level_display(), self.category.code, self.code, self.description
         )

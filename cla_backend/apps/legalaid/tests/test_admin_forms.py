@@ -17,14 +17,14 @@ class CategoryModelFormTestCase(TestCase):
         form.save()
 
         self.assertEqual(category.raw_description, data["raw_description"])
-        self.assertEqual(category.description, "<p><strong>strong</strong></p>")
+        self.assertEqual(category.description, u"<p><strong>strong</strong></p>")
 
     def test_save_empty(self):
-        category = category_recipe.make(raw_description="**strong**", description="<p><strong>strong</strong></p>")
+        category = category_recipe.make(raw_description=u"**strong**", description=u"<p><strong>strong</strong></p>")
         data = {"name": "Name", "order": 0, "code": "code", "raw_description": ""}
         form = CategoryModelForm(instance=category, data=data)
         self.assertTrue(form.is_valid())
         form.save()
 
-        self.assertEqual(category.raw_description, "")
-        self.assertEqual(category.description, "")
+        self.assertEqual(category.raw_description, u"")
+        self.assertEqual(category.description, u"")

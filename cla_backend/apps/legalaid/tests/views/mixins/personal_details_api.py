@@ -65,12 +65,12 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
         expected_errors = {
-            "title": ["Ensure this value has at most 20 characters (it has 21)."],
-            "full_name": ["Ensure this value has at most 400 characters (it has 456)."],
-            "postcode": ["Ensure this value has at most 12 characters (it has 13)."],
-            "street": ["Ensure this value has at most 255 characters (it has 256)."],
-            "mobile_phone": ["Ensure this value has at most 20 characters (it has 21)."],
-            "home_phone": ["Ensure this value has at most 20 characters (it has 21)."],
+            "title": [u"Ensure this value has at most 20 characters (it has 21)."],
+            "full_name": [u"Ensure this value has at most 400 characters (it has 456)."],
+            "postcode": [u"Ensure this value has at most 12 characters (it has 13)."],
+            "street": [u"Ensure this value has at most 255 characters (it has 256)."],
+            "mobile_phone": [u"Ensure this value has at most 20 characters (it has 21)."],
+            "home_phone": [u"Ensure this value has at most 20 characters (it has 21)."],
         }
 
         self.maxDiff = None

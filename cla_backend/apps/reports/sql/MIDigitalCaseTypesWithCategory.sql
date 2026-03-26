@@ -18,13 +18,7 @@ SELECT
   ,pd.email
   ,ad.bsl_webcam
   ,COALESCE(ad.notes != '', false) AS "other_comms_needs"
-  ,CASE
-    WHEN u.username = 'web'
-     AND c.callback_type IS NULL
-     AND c.thirdparty_details_id IS NULL
-     AND ad.notes != ''
-    THEN ad.notes
-  END AS other_comms_notes
+  ,NULLIF(ad.notes, '') AS other_comms_notes
 FROM legalaid_case as c
   LEFT JOIN cla_eventlog_log as log on log.case_id = c.id and log.code = 'CASE_CREATED'
   LEFT OUTER JOIN auth_user u on u.id = c.created_by_id

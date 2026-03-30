@@ -3,7 +3,6 @@ from django.conf import settings
 from moj_irat.views import HealthcheckView
 from . import views
 
-
 urlpatterns = patterns(
     "",
     url(r"^$", views.status),

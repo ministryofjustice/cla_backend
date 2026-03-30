@@ -225,18 +225,14 @@ class CaseViewSet(
             qs = qs.filter(source=CASE_SOURCE.PHONE)
 
         if this_operator.is_cla_superuser_or_manager:
-            qs = qs.extra(
-                select={
-                    "complaint_count": """
+            qs = qs.extra(select={"complaint_count": """
                     SELECT COUNT(complaints_complaint.id)
                     FROM complaints_complaint
                     JOIN legalaid_eoddetails
                         ON complaints_complaint.eod_id = legalaid_eoddetails.id
                     WHERE legalaid_case.id = legalaid_eoddetails.case_id
                         AND complaints_complaint.resolved IS NULL
-                """
-                }
-            )
+                """})
         else:
             qs = qs.extra(select={"complaint_count": "SELECT NULL"})
 
@@ -402,17 +398,17 @@ class CaseViewSet(
     @detail_route(methods=["get"])
     def search_for_personal_details(self, request, reference=None, **kwargs):
         """
-            You can only call this endpoint if the case doesn't have any
-            personal_details record attached.
-            This is by design as it feels slighly more secure than allowing
-            clients to use a dedicated endpoint that they can call whenever
-            they want.
+        You can only call this endpoint if the case doesn't have any
+        personal_details record attached.
+        This is by design as it feels slighly more secure than allowing
+        clients to use a dedicated endpoint that they can call whenever
+        they want.
 
-            If things change in the future, feel free to add a dedicated
-            endpoint for this though.
+        If things change in the future, feel free to add a dedicated
+        endpoint for this though.
 
-            Should return just ('reference', 'full_name', 'postcode', 'dob')
-            and should NOT include vulnerable users.
+        Should return just ('reference', 'full_name', 'postcode', 'dob')
+        and should NOT include vulnerable users.
         """
         obj = self.get_object()
         if obj.personal_details:

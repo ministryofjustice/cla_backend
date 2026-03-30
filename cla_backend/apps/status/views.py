@@ -8,7 +8,6 @@ from django.views.generic import TemplateView
 from cla_common.smoketest import smoketest
 from moj_irat.views import PingJsonView as BasePingJsonView
 
-
 logger = logging.getLogger(__name__)
 
 

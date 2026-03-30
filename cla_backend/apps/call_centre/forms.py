@@ -28,7 +28,6 @@ from cla_eventlog.forms import BaseCaseLogForm, EventSpecificLogForm
 from cla_provider.models import Provider
 from cla_provider.helpers import notify_case_RDSPed
 
-
 operator_hours = OpeningHours(**OPERATOR_HOURS)
 
 

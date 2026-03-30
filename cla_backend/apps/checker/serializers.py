@@ -109,7 +109,7 @@ class PersonSerializer(PersonSerializerBase):
 
 class PartnerPersonSerializer(PersonSerializer):
     """
-        Like PersonSerializer but without child_benefits
+    Like PersonSerializer but without child_benefits
     """
 
     income = PartnerIncomeSerializer(required=False, allow_null=True)
@@ -173,7 +173,7 @@ class AdaptationDetailsSerializer(AdaptationDetailsSerializerBase):
 
 
 class ScopeTraversalSerializer(serializers.ModelSerializer):
-    """ Can optionally be included when creating a Case via the checker case API route."""
+    """Can optionally be included when creating a Case via the checker case API route."""
 
     scope_answers = JSONField(required=False, allow_null=True)
     category = JSONField(required=False, allow_null=True)

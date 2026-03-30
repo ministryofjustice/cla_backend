@@ -79,18 +79,18 @@ class EntraTokenGeneratorMixin(object):
         kid="test-kid-123",
     ):
         """Helper to create JWT tokens"""
-        now = datetime.datetime.now()
 
+        now_epoch = int(time.time())
         if expired:
-            exp = now - datetime.timedelta(hours=1)
+            exp = now_epoch - 3600
         else:
-            exp = now + datetime.timedelta(hours=1)
+            exp = now_epoch + 3600
 
         payload = {
             "iss": self.issuer,
             "aud": self.auth.expected_audience,
             "exp": exp,
-            "iat": now,
+            "iat": now_epoch,
             "preferred_username": email,
             "sub": "test-subject",
             "name": "Full Name",

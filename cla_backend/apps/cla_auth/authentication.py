@@ -144,7 +144,13 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         cert_str = "-----BEGIN CERTIFICATE-----\n%s\n-----END CERTIFICATE-----" % key_data["x5c"][0]
         cert_obj = load_pem_x509_certificate(cert_str.encode("utf-8"), default_backend())
         public_key = cert_obj.public_key()
-        return jwt.decode(token, public_key, algorithms=["RS256"], audience=self.expected_audience, issuer=self.issuer)
+        return jwt.decode(
+            token,
+            public_key,
+            algorithms=["RS256"],
+            audience=self.expected_audience,
+            issuer=self.issuer
+        )
 
     def get_or_create_user(self, payload):
         email = payload.get("USER_EMAIL")

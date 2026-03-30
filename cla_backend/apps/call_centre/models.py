@@ -6,7 +6,6 @@ from model_utils.models import TimeStampedModel
 
 from .signals import log_operator_created, log_operator_modified
 
-
 OP_MANAGER_GROUP_NAME = "Operator Managers"
 LAA_CASEWORKER_GROUP_NAME = "LAA Caseworker"
 CLA_SUPERUSER_GROUP_NAME = "CLA Superusers"

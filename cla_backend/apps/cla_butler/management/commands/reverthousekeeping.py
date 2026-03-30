@@ -28,7 +28,6 @@ from legalaid.models import (
 )
 from timer.models import Timer
 
-
 MODELS = [
     Deductions,
     Income,

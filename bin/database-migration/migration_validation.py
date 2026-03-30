@@ -33,63 +33,50 @@ def get_source_db_cursor():
 
 
 def get_all_tables(cursor):
-    cursor.execute(
-        """
+    cursor.execute("""
         SELECT table_name
         FROM information_schema.tables
         WHERE table_schema = 'public'
         ORDER BY table_name;
-        """
-    )
+        """)
 
     return cursor.fetchall()
 
 
 def get_row_count(cursor, table_name):
-    cursor.execute(
-        """
+    cursor.execute("""
         SELECT COUNT(*)
         FROM %s
-        """
-        % table_name
-    )
+        """ % table_name)
     return cursor.fetchone()[0]
 
 
 def get_database_sequences(cursor):
-    cursor.execute(
-        """
+    cursor.execute("""
         SELECT relname sequence_name
         FROM pg_class
         WHERE relkind = 'S'
-        """
-    )
+        """)
     return cursor.fetchall()
 
 
 def get_current_sequence_value(cursor, sequence):
-    cursor.execute(
-        """
+    cursor.execute("""
         SELECT last_value
         FROM %s
-        """
-        % sequence
-    )
+        """ % sequence)
 
     return cursor.fetchone()
 
 
 def get_last_row(cursor, table_name):
     keys = {"django_session": "session_key"}
-    cursor.execute(
-        """
+    cursor.execute("""
         SELECT *
         FROM %s
         ORDER BY %s desc
         LIMIT 1
-        """
-        % (table_name, keys.get(table_name, "id"))
-    )
+        """ % (table_name, keys.get(table_name, "id")))
     return cursor.fetchone()
 
 

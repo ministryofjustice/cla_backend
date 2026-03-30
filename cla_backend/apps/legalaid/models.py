@@ -328,9 +328,7 @@ class EODDetails(TimeStampedModel):
 
     def get_category_descriptions(self, include_severity=False):
         mapper = (
-            (lambda cat: unicode(cat) + (u" (Major)" if cat.is_major else u" (Minor)"))
-            if include_severity
-            else unicode
+            (lambda cat: unicode(cat) + (u" (Major)" if cat.is_major else u" (Minor)")) if include_severity else unicode
         )
         return list(map(mapper, self.categories.all()))
 
@@ -669,6 +667,7 @@ class MatterType(TimeStampedModel):
     level = models.PositiveSmallIntegerField(choices=MATTER_TYPE_LEVELS.CHOICES, validators=[MaxValueValidator(2)])
 
     def __unicode__(self):
+
         return u"MatterType{} ({}): {} - {}".format(
             self.get_level_display(), self.category.code, self.code, self.description
         )

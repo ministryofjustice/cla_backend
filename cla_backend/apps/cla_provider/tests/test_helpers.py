@@ -643,7 +643,7 @@ class TestGetValidEducationProviders(TestCase):
         "cla_provider.helpers.ProviderDistributionHelper.get_distribution", return_value=provider_distribution_1
     )
     def test_provider_over_capacity_on_a_thursday(self, _):
-        """ If a provider is over capacity on a Thursday then the case should go to face to face.
+        """If a provider is over capacity on a Thursday then the case should go to face to face.
         In this situation, the provider is invalid and the operator will manually assign the case.
         """
         provider = make_recipe(self.provider_model, active=True, id=1)
@@ -668,7 +668,7 @@ class TestGetValidEducationProviders(TestCase):
         "cla_provider.helpers.ProviderDistributionHelper.get_distribution", return_value=provider_distribution_2
     )
     def test_provider_under_capacity_on_a_thursday(self, _):
-        """ If a provider is over capacity on a Thursday then the case should go to face to face.
+        """If a provider is over capacity on a Thursday then the case should go to face to face.
         In this situation, the provider is invalid and the operator will manually assign the case.
         """
         provider = make_recipe(self.provider_model, active=True, id=1)
@@ -693,8 +693,7 @@ class TestGetValidEducationProviders(TestCase):
         "cla_provider.helpers.ProviderDistributionHelper.get_distribution", return_value=provider_distribution_1
     )
     def test_provider_over_capacity_on_a_wednesday(self, _):
-        """ If a provider is over capacity on a Wednesday they should still be a valid provider.
-        """
+        """If a provider is over capacity on a Wednesday they should still be a valid provider."""
         provider = make_recipe("cla_provider.provider", active=True, id=1)
 
         provider_allocation = make_recipe(

@@ -11,7 +11,6 @@ from cla_common.call_centre_availability import (
 )
 from cla_common.constants import OPERATOR_HOURS
 
-
 operator_hours = OpeningHours(**OPERATOR_HOURS)
 
 

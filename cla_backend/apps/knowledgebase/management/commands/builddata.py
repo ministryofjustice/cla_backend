@@ -1,4 +1,4 @@
-""""
+""" "
 usage-
 ./manage.py builddata load_knowledgebase_csv ~/Documents/Scratch/knowledgebase.csv
 
@@ -8,6 +8,7 @@ you can then load the fixture with-
 ./manage.py loaddata cla_backend/apps/knowledgebase/fixtures/kb_from_spreadsheet.json
 
 """
+
 from django.core.management.base import BaseCommand
 import os
 import sys

@@ -55,7 +55,7 @@ def get_default_case_data(**kwargs):
     defaults = copy.deepcopy(case_data_dict)
     if len(kwargs):
         keys_vals = sorted([(kw.split("__"), v) for kw, v in kwargs.items()], key=lambda x: len(x[0]))
-        for (k, v) in keys_vals:
+        for k, v in keys_vals:
             level = defaults
             for i in range(0, len(k)):
                 if k[0 : i + 1] == k:

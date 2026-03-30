@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 from django.db import models, migrations
 from django.utils.text import slugify
 
-
 note_names = {
     1: "ASBOs and ASBIs",
     2: "child_abuse",

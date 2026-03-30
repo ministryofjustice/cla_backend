@@ -4,7 +4,6 @@ from django.db.models import Q
 from legalaid.models import PersonalDetails
 from extended_choices import Choices
 
-
 STATUS = Choices(
     # constant, db_id, friendly string
     ("OK", "ok", "OK"),

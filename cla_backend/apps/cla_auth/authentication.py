@@ -155,10 +155,12 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
     def get_or_create_user(self, payload):
         email = payload.get("USER_EMAIL")
         if not email:
+            logger.error("Token payload is missing USER_EMAIL", exc_info=True)
             raise exceptions.AuthenticationFailed("Token payload is missing USER_EMAIL")
 
         raw_roles = payload.get("APP_ROLES")
         if not raw_roles:
+            logger.error("ENTRA: Token payload is missing APP_ROLES", exc_info=True)
             raise exceptions.AuthenticationFailed("Token payload is missing APP_ROLES")
 
         app_role = raw_roles if isinstance(raw_roles, list) else [raw_roles]
@@ -213,7 +215,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
                     user.groups.add(group)
             return True
         except Exception as e:
-            logger.error("Failed to update groups for user %s: %s" % (user.email, e))
+            logger.error("ENTRA: Failed to update groups for user %s: %s" % (user.email, e), exc_info=True)
             return None
 
     def authenticate(self, request, retried=False):
@@ -233,15 +235,18 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         app_role, user = self.get_or_create_user(payload)
 
         if not user:
+            logger.error("ENTRA: Could not find or create user for token payload", exc_info=True)
             raise exceptions.AuthenticationFailed("Could not find or create user for token payload")
 
         if not self.user_has_role(user, app_role):
             if retried:
+                logger.error("ENTRA: User %s group does not match expected role %s after update" % (user.email, app_role), exc_info=True)
                 raise exceptions.AuthenticationFailed(
                     "User %s group does not match expected role %s after update" % (user.email, app_role)
                 )
             change_app_role = self.change_user_group(app_role, user)
             if not change_app_role:
+                logger.error("ENTRA: Failed to update group for user %s with roles %s" % (user.email, app_role), exc_info=True)
                 raise exceptions.AuthenticationFailed(
                     "Failed to update group for user %s with roles %s" % (user.email, app_role)
                 )

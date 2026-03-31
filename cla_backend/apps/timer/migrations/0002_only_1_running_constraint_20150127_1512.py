@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 
 from django.db import migrations
 
-
 sql = """
 CREATE UNIQUE INDEX timer_single_running
     ON timer_timer (created_by_id)

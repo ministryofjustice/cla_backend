@@ -709,6 +709,11 @@ class MIDigitalCaseTypesExtractWithCategory(SQLFileDateRangeReport):
             "last_code_used",
             "date_case_created",
             "case_category",
+            "callback_type",
+            "email",
+            "bsl_required",
+            "other_comms_needs",
+            "other_comms_notes"
         ]
 
 

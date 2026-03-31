@@ -5,7 +5,6 @@ from reports.models import Export
 from django.utils import timezone
 from dateutil.relativedelta import relativedelta
 
-
 logger = logging.getLogger(__name__)
 
 

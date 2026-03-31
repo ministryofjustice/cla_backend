@@ -6,7 +6,6 @@ from core import routers as core_routers
 
 from . import views
 
-
 router = routers.DefaultRouter()
 adv_router = AdvancedSimpleRouter()
 router.register(r"category", views.CategoryViewSet)

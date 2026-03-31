@@ -4,7 +4,6 @@ from model_mommy.recipe import Recipe, foreign_key
 
 from ..models import Complaint, Category
 
-
 category = Recipe(Category)
 
 complaint = Recipe(Complaint, eod=foreign_key(eod_details), category=foreign_key(category))

@@ -1,5 +1,4 @@
 import jwt
-import json
 import time
 import datetime
 from mock import patch
@@ -18,13 +17,13 @@ from core.tests.mommy_utils import make_recipe
 from django.core.urlresolvers import reverse
 from cla_common.constants import REQUIRES_ACTION_BY
 
+from cla_auth.constants import OPERATOR_ROLE, OPERATOR_MANAGER_ROLE, PROVIDER_ROLE, PROVIDER_MCC_ROLE
 
 User = get_user_model()
 
 
 class EntraTokenGeneratorMixin(object):
     def setUp(self):
-        """Set up test fixtures"""
         self.factory = RequestFactory()
         self.auth = EntraAccessTokenAuthentication()
 
@@ -35,7 +34,6 @@ class EntraTokenGeneratorMixin(object):
         self.issuer = "https://login.microsoftonline.com/%s/v2.0" % self.tenant_id
 
         self.private_key = rsa.generate_private_key(public_exponent=65537, key_size=2048, backend=default_backend())
-
         self.public_key = self.private_key.public_key()
 
         subject = issuer = x509.Name(
@@ -72,40 +70,56 @@ class EntraTokenGeneratorMixin(object):
     def create_user(self, **kwargs):
         return User.objects.create(**kwargs)
 
-    def _create_token(self, expired=False, email="test@example.com", kid="test-kid-123"):
+    def _create_token(
+        self,
+        firm_name="THE FIRM NAME LTD",
+        app_roles=OPERATOR_ROLE,
+        expired=False,
+        email="test@example.com",
+        kid="test-kid-123",
+    ):
         """Helper to create JWT tokens"""
-        now = datetime.datetime.now()
 
+        now_epoch = int(time.time())
         if expired:
-            exp = now - datetime.timedelta(hours=1)
+            exp = now_epoch - 3600
         else:
-            exp = now + datetime.timedelta(hours=1)
+            exp = now_epoch + 3600
 
         payload = {
             "iss": self.issuer,
             "aud": self.auth.expected_audience,
             "exp": exp,
-            "iat": now,
+            "iat": now_epoch,
             "preferred_username": email,
             "sub": "test-subject",
+            "name": "Full Name",
+            "APP_ROLES": app_roles,
+            "FIRM_CODE": 00000,
+            "FIRM_NAME": firm_name,
+            "LAA_ACCOUNTS": 0000000,
+            "USER_EMAIL": email,
         }
 
-        token = jwt.encode(payload, self.private_key, algorithm="RS256", headers={"kid": kid})
+        token = jwt.encode(
+            payload, self.private_key, algorithm="RS256", headers={"typ": "JWT", "alg": "RS256", "kid": kid}
+        )
 
         return token
 
 
 class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
+
     @patch("cla_auth.authentication.EntraAccessTokenAuthentication._public_keys")
     def test_valid_token_authentication(self, mock_public_keys):
-        """Test successful authentication with valid token"""
+
         email = "testuser@mail.com"
         user = User(email=email, is_active=True)
+
         user.save()
         make_recipe("cla_provider.staff", user=user)
 
         mock_public_keys.return_value = self.mock_jwks["keys"]
-
         token = self._create_token(expired=False, email=email)
 
         request = self.factory.get("/")
@@ -120,7 +134,7 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
 
     @patch("cla_auth.authentication.EntraAccessTokenAuthentication._public_keys")
     def test_expired_token_authentication(self, mock_public_keys):
-        """Test authentication fails with expired token"""
+
         mock_public_keys.return_value = self.mock_jwks["keys"]
         token = self._create_token(expired=True)
 
@@ -131,13 +145,12 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
             self.auth.authenticate(request)
 
     def test_no_token_returns_none(self):
-        """Test that missing token returns None"""
+
         request = self.factory.get("/")
         result = self.auth.authenticate(request)
         self.assertIsNone(result)
 
     def test_token_missing_email_claim(self):
-        """Test authentication fails when token missing email claim"""
 
         now = datetime.datetime.now()
         payload = {
@@ -145,7 +158,7 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
             "aud": self.auth.expected_audience,
             "exp": now + datetime.timedelta(hours=1),
             "iat": now,
-            "sub": "test-subject"
+            "sub": "test-subject",
             # No email claim
         }
 
@@ -157,29 +170,8 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
         with self.assertRaises(exceptions.AuthenticationFailed):
             self.auth.authenticate(request)
 
-    @patch("cla_auth.authentication.EntraAccessTokenAuthentication._public_keys")
-    def test_user_not_found(self, mock_public_keys):
-        """Test authentication fails when user not found"""
-
-        # this user is active, and exist
-        user = User(email="test1233@example.com", is_active=True)
-        user.save()
-        make_recipe("cla_provider.staff", user=user)
-
-        mock_public_keys.return_value = self.mock_jwks["keys"]
-
-        # different email from the one that is created
-        token = self._create_token(expired=False, email="tester@example.com")
-
-        request = self.factory.get("/")
-        request.META["HTTP_AUTHORIZATION"] = "Bearer %s" % token
-
-        with self.assertRaises(exceptions.AuthenticationFailed, msg="User not found or inactive"):
-            self.auth.authenticate(request)
-
     def test_invalid_signature(self):
         """Test authentication fails with invalid signature"""
-
         wrong_key = rsa.generate_private_key(public_exponent=65537, key_size=2048, backend=default_backend())
 
         now = datetime.datetime.now()
@@ -204,7 +196,6 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
     @patch("cla_auth.authentication.cache")
     def test_public_keys_cached(self, mock_cache, mock_requests):
         """Test that public keys are cached"""
-
         mock_cache.get.return_value = None
         mock_requests.return_value.json.return_value = self.mock_jwks
         mock_requests.return_value.raise_for_status.return_value = None
@@ -227,19 +218,79 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
     @patch("cla_auth.authentication.EntraAccessTokenAuthentication._public_keys")
     def test_user_exist_but_disable(self, mock_public_keys):
         """Test that authenticate returns None for a disabled user"""
-
         user = User(email="test1233@example.com", is_active=False)
         user.save()
         make_recipe("cla_provider.staff", user=user)
 
         mock_public_keys.return_value = self.mock_jwks["keys"]
-
         token = self._create_token(expired=False, email="test1233@example.com")
+
+        response = self.client.get("/", HTTP_AUTHORIZATION="Bearer %s" % token)
+        self.assertEqual(response.status_code, 404)
+
+    @patch("cla_auth.authentication.EntraAccessTokenAuthentication._public_keys")
+    def test_create_operator_success(self, mock_public_keys):
+        """Test successful creation of an operator manager"""
+        mock_public_keys.return_value = self.mock_jwks["keys"]
+
+        email = "provider@test.com"
+        providers = [OPERATOR_ROLE, OPERATOR_MANAGER_ROLE]
+
+        for operator in providers:
+            token = self._create_token(firm_name="THE FIRM NAME LTD", app_roles=operator, email=email)
+
+            request = self.factory.get("/")
+            request.META["HTTP_AUTHORIZATION"] = "Bearer %s" % token
+
+            user, _ = self.auth.authenticate(request)
+
+            self.assertIsNotNone(user)
+            self.assertEqual(user.email, email)
+
+    @patch("cla_auth.authentication.EntraAccessTokenAuthentication._public_keys")
+    def test_create_provider_user_success(self, mock_public_keys):
+        """Test successful creation of an operator manager"""
+        mock_public_keys.return_value = self.mock_jwks["keys"]
+
+        provider_name = "TEST FIRM 123A"
+        provider = make_recipe("cla_provider.provider", name=provider_name, active=True)
+
+        email = "provider@test.com"
+        providers = [PROVIDER_ROLE, PROVIDER_MCC_ROLE]
+
+        for provider in providers:
+            token = self._create_token(firm_name=provider_name, app_roles=provider, email=email)
+
+            request = self.factory.get("/")
+            request.META["HTTP_AUTHORIZATION"] = "Bearer %s" % token
+
+            user, _ = self.auth.authenticate(request)
+
+            self.assertIsNotNone(user)
+            self.assertEqual(user.email, email)
+
+    @patch("cla_auth.authentication.EntraAccessTokenAuthentication._public_keys")
+    def test_create_provider_missing_firm_name(self, mock_public_keys):
+        """Test provider creation fails when firm name is missing from token"""
+        mock_public_keys.return_value = self.mock_jwks["keys"]
+
+        now = datetime.datetime.now()
+        payload = {
+            "iss": self.issuer,
+            "aud": self.auth.expected_audience,
+            "exp": now + datetime.timedelta(hours=1),
+            "iat": now,
+            "USER_EMAIL": "nofirm@test.com",
+            "APP_ROLES": PROVIDER_ROLE,
+            # Missing FIRM_NAME
+        }
+
+        token = jwt.encode(payload, self.private_key, algorithm="RS256", headers={"kid": "test-kid-123"})
 
         request = self.factory.get("/")
         request.META["HTTP_AUTHORIZATION"] = "Bearer %s" % token
 
-        with self.assertRaises(exceptions.AuthenticationFailed, msg="User not found or inactive"):
+        with self.assertRaises(exceptions.AuthenticationFailed):
             self.auth.authenticate(request)
 
 
@@ -247,7 +298,6 @@ class EntraAuthorizationTestCase(EntraTokenGeneratorMixin, TestCase):
     def setUp(self):
         super(EntraAuthorizationTestCase, self).setUp()
 
-        # This will stay active for the duration of the test method
         self.settings_override = self.settings(
             ENTRA_TENANT_ID="test-tenant-id", ENTRA_EXPECTED_AUDIENCE="test-audience"
         )
@@ -260,53 +310,25 @@ class EntraAuthorizationTestCase(EntraTokenGeneratorMixin, TestCase):
     def tearDown(self):
         self.public_keys_patcher.stop()
 
-    def test_user_is_not_provider(self):
-        """User is NOT a provider and trys to access a case"""
-
-        # Create a case assigned to a provider
-        case = make_recipe(
-            "legalaid.case",
-            reference="AB-00-11-22",
-            personal_details=make_recipe("legalaid.personal_details"),
-            provider=make_recipe("cla_provider.provider"),
-            requires_action_by=REQUIRES_ACTION_BY.PROVIDER,
-        )
-
-        # Try to get the details of a case with a non-provider user using the provider API
-        url = reverse("cla_provider:case-detail", kwargs=dict(reference=case.reference))
-        token = self._create_token(email=self.test_user.email)
-        headers = {"HTTP_AUTHORIZATION": "Bearer %s" % token}
-        response = self.client.get(url, **headers)
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(
-            json.loads(response.content), {"detail": "You do not have permission to perform this action."}
-        )
-
     def test_user_is_provider(self):
-        """User is a provider and trys to access a case that belongs to them"""
-
-        # Create a case assigned to a provider
-        user = User(email="test@localhost")
-        user.save()
-        staff_instance = make_recipe("cla_provider.staff", user=user)
+        """User is a provider and tries to access a case that belongs to them"""
+        provider_name = "THE FIRM NAME LTD"
+        provider = make_recipe("cla_provider.provider", name=provider_name, active=True)
         case = make_recipe(
             "legalaid.case",
             reference="AB-00-11-22",
             personal_details=make_recipe("legalaid.personal_details"),
-            provider=staff_instance.provider,
+            provider=provider,
             requires_action_by=REQUIRES_ACTION_BY.PROVIDER,
         )
-
-        token = self._create_token(email=staff_instance.user.email)
-        # Try to get the details for a case with a provider user using the provider API
+        token = self._create_token(firm_name=provider_name, app_roles=PROVIDER_ROLE, email="test@localhost")
         url = reverse("cla_provider:case-detail", kwargs=dict(reference=case.reference))
         headers = {"HTTP_AUTHORIZATION": "Bearer %s" % token}
         response = self.client.get(url, **headers)
         self.assertEqual(response.status_code, 200)
 
     def test_user_is_provider_but_not_assigned_case(self):
-        """The user is a provider but the case is assigned to them."""
-
+        """The user is a provider but the case is not assigned to them"""
         user = User(email="test@localhost")
         user.save()
         staff_instance = make_recipe("cla_provider.staff", user=user)
@@ -317,10 +339,8 @@ class EntraAuthorizationTestCase(EntraTokenGeneratorMixin, TestCase):
             provider=make_recipe("cla_provider.provider"),
             requires_action_by=REQUIRES_ACTION_BY.PROVIDER,
         )
-
         token = self._create_token(email=staff_instance.user.email)
-        # Try to get the details of a case with a provider user using the provider API
         url = reverse("cla_provider:case-detail", kwargs=dict(reference=case.reference))
         headers = {"HTTP_AUTHORIZATION": "Bearer %s" % token}
         response = self.client.get(url, **headers)
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 403)

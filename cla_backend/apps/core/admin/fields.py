@@ -5,7 +5,6 @@ from django.utils.translation import ugettext_lazy as _
 import markdown
 from pagedown.widgets import AdminPagedownWidget
 
-
 DEFAULT_MARKDOWN_WHITELIST = {"tags": ["strong", "b", "ul", "li", "ol", "p"], "attributes": [], "styles": []}
 
 

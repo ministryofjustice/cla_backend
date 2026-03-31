@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 
 from django.db import migrations
 
-
 sql = """
 ALTER table cla_eventlog_log SET (
     autovacuum_enabled=true,

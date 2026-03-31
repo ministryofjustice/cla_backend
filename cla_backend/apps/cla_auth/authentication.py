@@ -1,13 +1,20 @@
-import logging
-
 import jwt
 import requests
+import logging
+import uuid
+from django.db import transaction
 from cryptography.x509 import load_pem_x509_certificate
 from cryptography.hazmat.backends import default_backend
 from django.contrib.auth import authenticate
 from django.core.cache import cache
 from django.conf import settings
 from rest_framework import exceptions, authentication
+from django.core.validators import validate_email
+from django.contrib.auth.models import User, Group
+from call_centre.models import Operator
+from cla_provider.models import Provider, Staff
+
+from cla_auth.constants import OPERATOR_ROLE, OPERATOR_MANAGER_ROLE, PROVIDER_ROLE, PROVIDER_MCC_ROLE
 
 logger = logging.getLogger(__name__)
 
@@ -22,8 +29,82 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
     def authenticate_header(self, request):
         return 'Bearer realm="api"'
 
-    def _public_keys(self):
+    def get_unique_username(self, payload):
+        email = payload["USER_EMAIL"]
+        validate_email(email)
 
+        max_length = 30
+        base = email.split("@")[0][:max_length].lower()
+
+        if not User.objects.filter(username=base).exists():
+            return base
+
+        for counter in range(1, 100):
+            suffix = str(counter)
+            username = base[: max_length - len(suffix)] + suffix
+            if not User.objects.filter(username=username).exists():
+                return username
+
+        return base[:20] + uuid.uuid4().hex[:7]
+
+    def _create_operator(self, payload, is_manager=False):
+        user_email = payload.get("USER_EMAIL")
+        if not user_email:
+            raise exceptions.AuthenticationFailed("Cannot create operator: USER_EMAIL missing from token payload")
+
+        try:
+            user_name = self.get_unique_username(payload)
+
+            with transaction.atomic():
+                user = User(
+                    username=user_name,
+                    email=user_email,
+                    is_active=True,
+                    is_staff=False,
+                )
+                user.set_unusable_password()
+                user.save()
+
+                operator = Operator(user=user, is_manager=is_manager)
+                operator.save()
+
+            return operator.user
+        except Exception:
+            return None
+
+    def _create_provider(self, payload):
+        user_email = payload.get("USER_EMAIL")
+        firm_name = payload.get("FIRM_NAME")
+
+        if not user_email or not firm_name:
+            return None
+
+        try:
+            provider = Provider.objects.active().get(name=firm_name)
+        except Exception:
+            return None
+
+        try:
+            user_name = self.get_unique_username(payload)
+            with transaction.atomic():
+                user = User(
+                    username=user_name,
+                    email=user_email,
+                    is_staff=False,
+                    is_active=True,
+                )
+                user.set_unusable_password()
+                user.save()
+
+                staff = Staff(user=user, provider=provider, is_manager=False)
+                staff.save()
+
+            return staff.user
+
+        except Exception:
+            return None
+
+    def _public_keys(self):
         keys = cache.get("entra_public_keys")
         if not keys:
             try:
@@ -32,7 +113,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
                 keys = response.json().get("keys", [])
                 cache.set("entra_public_keys", keys, 86400)
             except Exception:
-                raise exceptions.AuthenticationFailed("Failed to get the public key")
+                raise exceptions.AuthenticationFailed("Failed to fetch public keys")
 
         return keys
 
@@ -46,38 +127,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         except Exception as e:
             raise exceptions.AuthenticationFailed("Token validation failed: %s" % e)
 
-    def authenticate(self, request):
-        token = request.META.get("HTTP_AUTHORIZATION")
-        if not token:
-            return None
-
-        # Make sure it's a JWT token and if not, exit the authenticate method
-        if len(token.split(".")) != 3:
-            return None
-
-        # token will now be Bearer <token>, we are only interested in the token
-        _, token = token.split(" ")
-        if not token:
-            return None
-
-        try:
-            payload = self._validate_token(token)
-        except exceptions.AuthenticationFailed:
-            raise
-
-        email = payload.get("preferred_username")
-        if not email:
-            raise exceptions.AuthenticationFailed("Invalid Token format")
-
-        user = authenticate(entra_id_email=email)
-        if not user:
-            raise exceptions.AuthenticationFailed("User not found or inactive")
-
-        logger.info("User %s authenticated with entra token", str(user.get_username()))
-        return user, payload
-
     def validate_token(self, token):
-
         unverified_header = jwt.get_unverified_header(token)
         kid = unverified_header.get("kid")
         keys = self._public_keys()
@@ -94,4 +144,107 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         cert_str = "-----BEGIN CERTIFICATE-----\n%s\n-----END CERTIFICATE-----" % key_data["x5c"][0]
         cert_obj = load_pem_x509_certificate(cert_str.encode("utf-8"), default_backend())
         public_key = cert_obj.public_key()
-        return jwt.decode(token, public_key, algorithms=["RS256"], audience=self.expected_audience, issuer=self.issuer)
+        return jwt.decode(
+            token,
+            public_key,
+            algorithms=["RS256"],
+            audience=self.expected_audience,
+            issuer=self.issuer
+        )
+
+    def get_or_create_user(self, payload):
+        email = payload.get("USER_EMAIL")
+        if not email:
+            raise exceptions.AuthenticationFailed("Token payload is missing USER_EMAIL")
+
+        raw_roles = payload.get("APP_ROLES")
+        if not raw_roles:
+            raise exceptions.AuthenticationFailed("Token payload is missing APP_ROLES")
+
+        app_role = raw_roles if isinstance(raw_roles, list) else [raw_roles]
+
+        try:
+            user = authenticate(entra_id_email=email)
+        except Exception:
+            user = None
+
+        if user:
+            return app_role, user
+
+        is_manager = True if OPERATOR_MANAGER_ROLE in app_role else False
+
+        if OPERATOR_ROLE in app_role or OPERATOR_MANAGER_ROLE in app_role:
+            user = self._create_operator(payload, is_manager=is_manager)
+            return app_role, user
+
+        if PROVIDER_ROLE in app_role or PROVIDER_MCC_ROLE in app_role:
+            user = self._create_provider(payload)
+            return app_role, user
+
+        return app_role, None
+
+    def user_has_role(self, user, app_role):
+        user_group_mapping = {
+            OPERATOR_MANAGER_ROLE: "Operator Managers",
+        }
+
+        try:
+            user_group = user.groups.values_list("name", flat=True).first()
+            for role in app_role:
+                expected_group = user_group_mapping.get(role)
+                if expected_group == user_group:
+                    return True
+            return None
+
+        except Exception:
+            return None
+
+    def change_user_group(self, app_role, user):
+        user_group_mapping = {
+            OPERATOR_MANAGER_ROLE: "Operator Managers",
+        }
+
+        try:
+            user.groups.clear()
+            for role in app_role:
+                expected_group = user_group_mapping.get(role)
+                if expected_group is not None:
+                    group = Group.objects.get(name=expected_group)
+                    user.groups.add(group)
+            return True
+        except Exception as e:
+            logger.error("Failed to update groups for user %s: %s" % (user.email, e))
+            return None
+
+    def authenticate(self, request, retried=False):
+        token = request.META.get("HTTP_AUTHORIZATION")
+
+        if not token:
+            return None
+
+        if len(token.split(".")) != 3:
+            return None
+
+        _, token = token.split(" ", 1)
+        if not token:
+            return None
+
+        payload = self._validate_token(token)
+        app_role, user = self.get_or_create_user(payload)
+
+        if not user:
+            raise exceptions.AuthenticationFailed("Could not find or create user for token payload")
+
+        if not self.user_has_role(user, app_role):
+            if retried:
+                raise exceptions.AuthenticationFailed(
+                    "User %s group does not match expected role %s after update" % (user.email, app_role)
+                )
+            change_app_role = self.change_user_group(app_role, user)
+            if not change_app_role:
+                raise exceptions.AuthenticationFailed(
+                    "Failed to update group for user %s with roles %s" % (user.email, app_role)
+                )
+            return self.authenticate(request, retried=True)
+
+        return user, payload

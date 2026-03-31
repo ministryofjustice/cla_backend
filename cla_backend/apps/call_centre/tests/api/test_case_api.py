@@ -815,7 +815,7 @@ class FutureCallbacksCaseTestCase(BaseCaseTestCase):
 class SearchForPersonalDetailsTestCase(BaseCaseTestCase):
     def make_resource(self, **kwargs):
         """
-            Specifying case.personal_details == None by default
+        Specifying case.personal_details == None by default
         """
         kwargs["personal_details"] = None
         return super(SearchForPersonalDetailsTestCase, self).make_resource(**kwargs)

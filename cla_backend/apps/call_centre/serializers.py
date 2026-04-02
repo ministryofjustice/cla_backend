@@ -166,7 +166,7 @@ class PersonSerializer(PersonSerializerBase):
 
 class PartnerPersonSerializer(PersonSerializer):
     """
-        Like PersonSerializer but without child_benefits
+    Like PersonSerializer but without child_benefits
     """
 
     income = PartnerIncomeSerializer(required=False, allow_null=True)

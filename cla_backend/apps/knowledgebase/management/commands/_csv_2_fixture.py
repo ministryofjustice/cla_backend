@@ -1,6 +1,7 @@
 """
 Build a django json fixture from the CSV export of the Knowledgebase spreadsheet.
 """
+
 import csv
 import json
 import sys

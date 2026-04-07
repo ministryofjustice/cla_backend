@@ -254,7 +254,7 @@ class ProviderAllocationHelper(object):
         return num_cases_ideal - provider_current_num_cases
 
     def get_best_fit_education_provider(self, education_category):
-        """ This gets the education provider furthest away from their contracted weighted distribution.
+        """This gets the education provider furthest away from their contracted weighted distribution.
 
         Args:
             category (Category): The education legal aid category
@@ -334,7 +334,7 @@ class ProviderAllocationHelper(object):
         return True
 
     def get_valid_education_provider_allocations(self, education_category):
-        """ Gets a list of education ProviderAllocations that
+        """Gets a list of education ProviderAllocations that
         1) Are active
         2) Are working today, as based off their WorkingDays model
         3) If it is a Thursday:

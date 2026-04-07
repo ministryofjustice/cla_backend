@@ -3,7 +3,6 @@ from ..models import Provider, ProviderAllocation, OutOfHoursRota, Staff, Feedba
 
 
 provider = Recipe(Provider, name=seq("Name"))
-
 staff = Recipe(Staff)
 
 outofhoursrota = Recipe(OutOfHoursRota)

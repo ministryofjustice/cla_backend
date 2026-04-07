@@ -8,8 +8,8 @@ class Command(BaseCommand):
     help = "Creates the contact for research methods default entities AND migrates data from contact_for_research_via field"
 
     def handle(self, *args, **options):
-        for (value, label) in RESEARCH_CONTACT_VIA:
-            (method, created) = ContactResearchMethod.objects.get_or_create(
+        for value, label in RESEARCH_CONTACT_VIA:
+            method, created = ContactResearchMethod.objects.get_or_create(
                 method=value, defaults={"reference": uuid.uuid4()}
             )
             details_qs = PersonalDetails.objects.filter(

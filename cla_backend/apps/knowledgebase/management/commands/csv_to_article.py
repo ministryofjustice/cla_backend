@@ -4,7 +4,6 @@ import re
 from django.core.management.base import BaseCommand
 from knowledgebase.models import Article, TelephoneNumber, ArticleCategory, ArticleCategoryMatrix
 
-
 regex = re.compile(r"\(([^,]*)\)")
 
 

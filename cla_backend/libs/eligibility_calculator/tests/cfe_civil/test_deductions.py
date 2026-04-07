@@ -13,7 +13,7 @@ class TestTranslateDeductions(TestCase):
                 {"category": "rent_or_mortgage", "operation": "debit", "frequency": "monthly", "amount": 42.42},
                 {"category": "rent_or_mortgage", "operation": "debit", "frequency": "monthly", "amount": 57.57},
                 {"category": "legal_aid", "operation": "debit", "frequency": "monthly", "amount": 24.24},
-            ],
+            ]
         }
         deductions = Deductions(
             maintenance=4545, childcare=3737, mortgage=4242, rent=5757, criminal_legalaid_contributions=2424
@@ -34,7 +34,7 @@ class TestTranslateDeductions(TestCase):
         expected = {
             "regular_transactions": [
                 {"category": "rent_or_mortgage", "operation": "debit", "frequency": "monthly", "amount": 42.42}
-            ],
+            ]
         }
         deductions = Deductions(maintenance=0, childcare=0, mortgage=0, rent=4242, criminal_legalaid_contributions=0)
         self.assertEqual(expected, translate_deductions(deductions))

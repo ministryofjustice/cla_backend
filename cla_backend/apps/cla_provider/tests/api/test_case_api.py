@@ -160,15 +160,13 @@ class SearchCaseTestCase(BaseSearchCaseAPIMixin, BaseCaseTestCase):
 class FilteredSearchCaseTestCase(BaseCaseTestCase):
     def setUp(self):
         """
-            obj1 on operator queue => always ignored
-            obj2 assigned to different provider => always ignored
-            obj3 assigned to provider => new
-            obj4 assigned and opened by provider => opened
-            obj5 assigned to provider but marked as 'IRCB' => always ignored
-            obj6 accepted by provider => accepted
-            obj7 closed by provider => closed
-            obj8 rejected by provider => rejected (closed but not accepted)
-            obj9 completed by provider => completed (both accepted and closed)
+        obj1 on operator queue => always ignored
+        obj2 assigned to different provider => always ignored
+        obj3 assigned to provider => new
+        obj4 assigned and opened by provider => opened
+        obj5 assigned to provider but marked as 'IRCB' => always ignored
+        obj6 accepted by provider => accepted
+        obj7 closed by provider => closed
         """
         super(FilteredSearchCaseTestCase, self).setUp()
 

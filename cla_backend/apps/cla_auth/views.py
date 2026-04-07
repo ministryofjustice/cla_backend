@@ -64,6 +64,11 @@ class AccessTokenView(Oauth2AccessTokenView):
                 response["X-Throttle-Wait-Seconds"] = "%d" % exc.wait
             return response
         except OAuth2Error as exc:
+            if exc.description == "invalid_grant":
+                logger.error("31-03-2026: Investigate invalid_grant. USER: {} AND CLIENT_ID {}".format(
+                    request.POST.get("username"),
+                    request.POST.get("client_id")
+                ), exc_info=True)
             logger.info("User: {}; Error: {}".format(request.POST.get("username"), exc.description))
             response = self.error_response({"error": exc.description}, status=401)
             return response
@@ -125,6 +130,7 @@ class AccessTokenView(Oauth2AccessTokenView):
         try:
             assert class_name.objects.get(user__username=request.POST.get("username"))
         except class_name.DoesNotExist:
+            logger.error("User {} does not exist on client {}".format(request.POST.get("username"), request.POST.get("client_id")), exc_info=True)
             raise OAuth2Error("invalid_grant")
 
     def get_user_model(self, client_name):
@@ -137,6 +143,7 @@ class AccessTokenView(Oauth2AccessTokenView):
         elif client_name == "staff":
             class_name = Staff
         else:
+            logger.error("Unknown client {}".format(client_name), exc_info=True)
             raise OAuth2Error("invalid_grant")
 
         return class_name

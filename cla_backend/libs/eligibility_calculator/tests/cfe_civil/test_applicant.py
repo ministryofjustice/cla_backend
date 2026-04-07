@@ -18,9 +18,7 @@ class TestOneBenefitKnown(TestCase):
     def test_applicant_on_passported_benefits_True(self):
         applicant_facts = Facts(on_passported_benefits=True)
         output = translate_applicant(applicant_facts)
-        expected = {
-            "receives_qualifying_benefit": True,
-        }
+        expected = {"receives_qualifying_benefit": True}
         self.assertEqual(expected, output)
 
     def test_applicant_on_nass_benefits_None(self):
@@ -36,9 +34,7 @@ class TestOneBenefitKnown(TestCase):
     def test_applicant_on_nass_benefits_True(self):
         applicant_facts = Facts(on_nass_benefits=True)
         output = translate_applicant(applicant_facts)
-        expected = {
-            "receives_asylum_support": True,
-        }
+        expected = {"receives_asylum_support": True}
         self.assertEqual(expected, output)
 
 
@@ -46,26 +42,19 @@ class TestBothBenefitsKnown(TestCase):
     def test_on_both_benefits(self):
         applicant_facts = Facts(on_passported_benefits=True, on_nass_benefits=True)
         output = translate_applicant(applicant_facts)
-        expected = {
-            "receives_qualifying_benefit": True,
-            "receives_asylum_support": True,
-        }
+        expected = {"receives_qualifying_benefit": True, "receives_asylum_support": True}
         self.assertEqual(expected, output)
 
     def test_on_passported_benefit_only(self):
         applicant_facts = Facts(on_passported_benefits=True, on_nass_benefits=False)
         output = translate_applicant(applicant_facts)
-        expected = {
-            "receives_qualifying_benefit": True,
-        }
+        expected = {"receives_qualifying_benefit": True}
         self.assertEqual(expected, output)
 
     def test_on_nass_only(self):
         applicant_facts = Facts(on_passported_benefits=False, on_nass_benefits=True)
         output = translate_applicant(applicant_facts)
-        expected = {
-            "receives_asylum_support": True,
-        }
+        expected = {"receives_asylum_support": True}
         self.assertEqual(expected, output)
 
     def test_on_neither_benefit(self):

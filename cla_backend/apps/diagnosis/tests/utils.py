@@ -4,17 +4,17 @@ import mock
 class MockedGraph(mock.MagicMock):
     def __init__(self, *args, **kwargs):
         """
-                  start
-                    |
-                  _______
-                |         |
-                2a        2b
-                |         |
-         ___________       _____
-        |           |           |
-       3aa         3ab         3ba
-                    |
-                    INSCOPE
+                   start
+                     |
+                   _______
+                 |         |
+                 2a        2b
+                 |         |
+          ___________       _____
+         |           |           |
+        3aa         3ab         3ba
+                     |
+                     INSCOPE
         """
         super(MockedGraph, self).__init__(*args, **kwargs)
         self.node = {

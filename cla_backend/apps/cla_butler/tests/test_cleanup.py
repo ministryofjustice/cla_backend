@@ -9,8 +9,8 @@ from cla_butler.tasks import DeleteOldData
 
 class TestHousekeeping(TestCase):
     def test_cleanup_historic_case_archive(self):
-        """ Tests that archived cases that were last modified over 3 years ago will be removed
-            whilst ensuring any cases modified less than 3 years ago remain.
+        """Tests that archived cases that were last modified over 3 years ago will be removed
+        whilst ensuring any cases modified less than 3 years ago remain.
         """
         cases_to_be_removed = []
         cases_to_be_kept = []

@@ -3,7 +3,6 @@ from notifications_python_client.errors import HTTPError
 from django.conf import settings
 import requests
 
-
 logger = logging.getLogger(__name__)
 
 

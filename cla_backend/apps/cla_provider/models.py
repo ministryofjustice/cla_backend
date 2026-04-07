@@ -65,7 +65,7 @@ class WorkingDays(models.Model):
         verbose_name_plural = "Working Days"
 
     def is_working_today(self):
-        """ Returns if the provider allocation is allocated to work today.s
+        """Returns if the provider allocation is allocated to work today.s
 
         Returns:
             Boolean: Is the provider working today
@@ -75,7 +75,7 @@ class WorkingDays(models.Model):
         return self.is_working_on_day(current_day)
 
     def is_working_on_day(self, day):
-        """ Takes in a day of the week as a string and returns if the provider works on that day
+        """Takes in a day of the week as a string and returns if the provider works on that day
 
         Args:
             day (str): Day of the week as a string. E.g. "Monday"
@@ -108,8 +108,7 @@ class WorkingDays(models.Model):
 
 
 def get_current_day_as_string():
-    """ Returns the current day of the week as a lower case string.
-    """
+    """Returns the current day of the week as a lower case string."""
     week = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
     day_index = datetime.now().weekday()
 

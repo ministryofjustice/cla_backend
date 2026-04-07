@@ -35,7 +35,7 @@ class Command(BaseCommand):
         # First pass. Gather case/day/code with >1 occurrences
         cases_with_daily_multiple_events = []
         grouped_results = groupby(outcome_events, key=lambda i: i)
-        for (result, g) in grouped_results:
+        for result, g in grouped_results:
             count = sum(1 for _ in g)
             if count > 1:
                 result["count"] = count

@@ -693,6 +693,30 @@ class MIDigitalCaseTypesExtract(SQLFileDateRangeReport):
         ]
 
 
+class MIDigitalCaseTypesExtractWithCategory(SQLFileDateRangeReport):
+    QUERY_FILE = "MIDigitalCaseTypesWithCategory.sql"
+
+    def get_headers(self):
+        return [
+            "laa_reference",
+            "case_ref",
+            "contact_type",
+            "case_created_by",
+            "means_test_completed_online",
+            "call_me_back_only",
+            "scope_result",
+            "means_test_result",
+            "last_code_used",
+            "date_case_created",
+            "case_category",
+            "callback_type",
+            "email",
+            "bsl_required",
+            "other_comms_needs",
+            "other_comms_notes"
+        ]
+
+
 class MIEODReport(SQLFileDateRangeReport):
     QUERY_FILE = "MIEOD.sql"
 

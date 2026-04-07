@@ -27,6 +27,7 @@ from .forms import (
     MIDuplicateCaseExtract,
     ComplaintsReport,
     MIDigitalCaseTypesExtract,
+    MIDigitalCaseTypesExtractWithCategory,
     MIProviderAllocationExtract,
     MIExtractCaseViewAuditLog,
     MIExtractComplaintViewAuditLog,
@@ -57,7 +58,7 @@ def report_view(request, form_class, title, template="case_report", success_task
     form = form_class()
     if valid_submit(request, form):
         success_task().delay(request.user.pk, filename, form_class.__name__, json.dumps(request.POST))
-        messages.info(request, u"Your export is being processed. It will show up in the downloads tab shortly.")
+        messages.info(request, "Your export is being processed. It will show up in the downloads tab shortly.")
 
     return render(
         request,
@@ -165,6 +166,12 @@ def mi_voice_extract(request):
 @permission_required("legalaid.run_reports")
 def mi_digital_case_type_extract(request):
     return report_view(request, MIDigitalCaseTypesExtract, "MI Digital Case Types Report")
+
+
+@staff_member_required
+@permission_required("legalaid.run_reports")
+def mi_digital_case_type_extract_with_category(request):
+    return report_view(request, MIDigitalCaseTypesExtractWithCategory, "MI Digital Case Types with Category Report")
 
 
 @staff_member_required

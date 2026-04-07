@@ -4,6 +4,7 @@ from django.utils import timezone
 
 def schedule_notifications_to_users(sender, instance, **kwargs):
     from notifications.models import Schedule
+
     now = timezone.now()
 
     defaults = {}
@@ -17,4 +18,5 @@ def schedule_notifications_to_users(sender, instance, **kwargs):
 
 def un_schedule_notifications_to_users(sender, instance, **kwargs):
     from notifications.models import Schedule
+
     Schedule.objects.filter(notification=instance).delete()

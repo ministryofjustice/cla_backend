@@ -6,8 +6,7 @@ from .serializers import TimerSerializer
 
 
 class BaseTimerViewSet(viewsets.ViewSetMixin, views.APIView):
-    """
-    """
+    """ """
 
     serializer_class = TimerSerializer
 

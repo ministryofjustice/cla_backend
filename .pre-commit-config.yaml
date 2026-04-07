@@ -1,29 +1,24 @@
 default_language_version:
-  python: python2.7
+  python: python3.10
 repos:
   - repo: https://github.com/ministryofjustice/devsecops-hooks
-    rev: v1.4.1
+    rev: v1.5.0
     hooks:
       - id: baseline
-  - repo: https://github.com/ambv/black
-    rev: 18.9b0
-    hooks:
-      - id: black
-        language_version: python3.7
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v2.1.0
     hooks:
       - id: flake8
         # Pre-commit fails to install on apple chips as install pyyaml 5.4
         additional_dependencies: ["PyYAML==5.3.1"]
-        language_version: python2.7
+        language_version: python2.7.18
         args:
           ["--config=setup.cfg", "--exclude=./cla_backend/settings/*,./docs/*"]
   - repo: https://github.com/jazzband/pip-tools
     rev: 5.5.0
     hooks:
       - id: pip-compile
-        language_version: python2.7
+        language_version: python3.10
         name: pip-compile requirements-docs.in
         files: requirements-(base|docs).in
         args:
@@ -33,7 +28,7 @@ repos:
             requirements/generated/requirements-docs.txt,
           ]
       - id: pip-compile
-        language_version: python2.7
+        language_version: python3.10
         name: pip-compile requirements-dev.in
         files: requirements-(base|dev).in
         args:
@@ -43,7 +38,7 @@ repos:
             requirements/generated/requirements-dev.txt,
           ]
       - id: pip-compile
-        language_version: python2.7
+        language_version: python3.10
         name: pip-compile requirements-lint.in
         files: requirements-(base|lint).in
         args:
@@ -53,7 +48,7 @@ repos:
             requirements/generated/requirements-lint.txt,
           ]
       - id: pip-compile
-        language_version: python2.7
+        language_version: python3.10
         name: pip-compile requirements-testing.in
         files: requirements-(base|testing).in
         args:
@@ -63,7 +58,7 @@ repos:
             requirements/generated/requirements-testing.txt,
           ]
       - id: pip-compile
-        language_version: python2.7
+        language_version: python3.10
         name: pip-compile requirements-production.in
         files: requirements-(base|production).in
         args:

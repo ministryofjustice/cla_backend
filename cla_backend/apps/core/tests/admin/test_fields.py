@@ -4,7 +4,6 @@ from django import forms
 
 from core.admin.fields import MarkdownAdminField
 
-
 TEST_MARKDOWN_WHITELIST = {"tags": ["strong", "b", "i", "em", "p"], "attributes": [], "styles": []}
 
 

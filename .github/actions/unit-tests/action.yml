@@ -12,6 +12,9 @@ inputs:
   DB_PASSWORD:
     description: database password to use for unit tests
     required: true
+  COVERALLS_REPO_TOKEN:
+    description: The coveralls repo token so test coverage can be submitted
+    required: true
 
 runs:
   using: composite
@@ -30,7 +33,10 @@ runs:
         pip install --cache-dir=.pip-cache --requirement requirements/generated/requirements-testing.txt
       shell: bash
     - name: Run unit tests
-      run: coverage run manage.py test --verbosity=2
+      run: |
+        coverage run manage.py test --verbosity=2
+        coverage report -m
+        coveralls
       shell: bash
       env:
         DB_HOST: ${{ inputs.DB_HOST }}
@@ -38,3 +44,4 @@ runs:
         DB_USER: ${{ inputs.DB_USERNAME }}
         DB_PASSWORD: ${{ inputs.DB_PASSWORD }}
         DJANGO_SETTINGS_MODULE: cla_backend.settings.circle
+        COVERALLS_REPO_TOKEN: ${{ inputs.COVERALLS_REPO_TOKEN}}

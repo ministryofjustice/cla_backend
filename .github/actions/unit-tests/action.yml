@@ -1,0 +1,40 @@
+name: Run unit tests
+inputs:
+  DB_HOST:
+    description: database host to use for unit tests
+    required: true
+  DB_NAME:
+    description: database name to use for unit tests
+    required: true
+  DB_USERNAME:
+    description: database username to use for unit tests
+    required: true
+  DB_PASSWORD:
+    description: database password to use for unit tests
+    required: true
+
+runs:
+  using: composite
+  steps:
+
+    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+    - uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7
+      with:
+        path: .pip-cache
+        key: ${{ runner.os }}-pip-${{ hashFiles('requirements/generated/requirements-testing.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    - name: Install dependencies
+      run: |
+        mkdir -p .pip-cache
+        pip install --cache-dir=.pip-cache --requirement requirements/generated/requirements-testing.txt
+      shell: bash
+    - name: Run unit tests
+      run: coverage run manage.py test --verbosity=2
+      shell: bash
+      env:
+        DB_HOST: ${{ inputs.DB_HOST }}
+        DB_NAME: ${{ inputs.DB_NAME }}
+        DB_USER: ${{ inputs.DB_USERNAME }}
+        DB_PASSWORD: ${{ inputs.DB_PASSWORD }}
+        DJANGO_SETTINGS_MODULE: cla_backend.settings.circle

@@ -1,0 +1,23 @@
+name: workflow.yml
+on: pull_request
+
+jobs:
+  unit-tests:
+    name: "Unit tests"
+    runs-on: "ubuntu-latest"
+    container: python:2.7
+    services:
+      database:
+        image: postgres:14.7-bullseye
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: cla_backend_test
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+      - uses: ./.github/actions/unit-tests
+        with:
+          DB_HOST: database
+          DB_NAME: cla_backend_test
+          DB_USERNAME: postgres
+          DB_PASSWORD: postgres

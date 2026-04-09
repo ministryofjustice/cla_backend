@@ -111,7 +111,7 @@ class CaseViewSet(CLAProviderPermissionViewSetMixin, FullCaseViewSet):
     serializer_detail_class = CaseSerializer
 
     queryset = Case.objects.exclude(provider=None).select_related(
-        "diagnosis", "eligibility_check", "personal_details", "scope_traversal"
+        "diagnosis", "eligibility_check", "personal_details", "scope_traversal", "adaptation_details", "thirdparty_details"
     )
     queryset_detail = Case.objects.exclude(provider=None).select_related(
         "eligibility_check",

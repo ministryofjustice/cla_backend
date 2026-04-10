@@ -308,14 +308,21 @@ class DetailedCaseSerializer(CaseSerializer):
 class CaseListSerializer(CaseSerializer):
     safe_to_contact = serializers.CharField(source='personal_details.safe_to_contact', read_only=True)
     phone_number = serializers.CharField(source='personal_details.mobile_phone', read_only=True)
-    vulnerable_user = serializers.BooleanField(source='personal_details.vulnerable_user', read_only=True)
-    language = serializers.CharField(source='adaptation_details.language', read_only=True, allow_null=True)
-    bsl_webcam = serializers.BooleanField(source='adaptation_details.bsl_webcam', read_only=True)
-    text_relay = serializers.BooleanField(source='adaptation_details.text_relay', read_only=True)
-    thirdparty = serializers.SerializerMethodField()
+    mcc_case_flags = serializers.SerializerMethodField()
 
-    def get_thirdparty(self, obj):
-        return obj.thirdparty_details is not None
+    def get_mcc_case_flags(self, obj):
+        try:
+            adaptation = obj.adaptation_details
+        except Exception:
+            adaptation = None
+
+        return {
+            "vulnerable_user": getattr(obj.personal_details, "vulnerable_user", None),
+            "thirdparty": hasattr(obj, "thirdparty_details"),
+            "bsl_webcam": getattr(adaptation, "bsl_webcam", None),
+            "text_relay": getattr(adaptation, "text_relay", None),
+            "language": getattr(adaptation, "language", None),
+        }
 
     class Meta(CaseSerializer.Meta):
         fields = (
@@ -341,11 +348,7 @@ class CaseListSerializer(CaseSerializer):
             "is_urgent",
             "safe_to_contact",
             "phone_number",
-            "vulnerable_user",
-            "thirdparty",
-            "bsl_webcam",
-            "text_relay",
-            "language"
+            "mcc_case_flags",
         )
 
 

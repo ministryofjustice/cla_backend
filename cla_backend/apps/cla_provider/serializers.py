@@ -312,13 +312,18 @@ class CaseListSerializer(CaseSerializer):
 
     def get_mcc_case_flags(self, obj):
         try:
+            thirdparty = obj.thirdparty_details.reference
+        except obj.__class__.thirdparty_details.RelatedObjectDoesNotExist:
+            thirdparty = None
+
+        try:
             adaptation = obj.adaptation_details
-        except Exception:
+        except obj.__class__.adaptation_details.RelatedObjectDoesNotExist:
             adaptation = None
 
         return {
             "vulnerable_user": getattr(obj.personal_details, "vulnerable_user", None),
-            "thirdparty": hasattr(obj, "thirdparty_details"),
+            "thirdparty_details": thirdparty,
             "bsl_webcam": getattr(adaptation, "bsl_webcam", None),
             "text_relay": getattr(adaptation, "text_relay", None),
             "language": getattr(adaptation, "language", None),

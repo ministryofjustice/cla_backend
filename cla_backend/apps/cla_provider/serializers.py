@@ -323,7 +323,7 @@ class CaseListSerializer(CaseSerializer):
 
         return {
             "vulnerable_user": getattr(obj.personal_details, "vulnerable_user", None),
-            "thirdparty_details": thirdparty_obj,
+            "thirdparty_details": thirdparty_obj is not None,
             "bsl_webcam": getattr(adaptation, "bsl_webcam", None),
             "text_relay": getattr(adaptation, "text_relay", None),
             "language": getattr(adaptation, "language", None),

@@ -129,7 +129,7 @@ class AccessTokenView(Oauth2AccessTokenView):
         try:
             assert class_name.objects.get(user__username=request.POST.get("username"))
         except class_name.DoesNotExist:
-            logger.error("User does not exist on client {}".format(request.POST.get("client_id")), exc_info=True)
+            logger.error("User does not exist on client {}".format(client.name), exc_info=True)
             raise OAuth2Error("invalid_grant")
 
     def get_user_model(self, client_name):

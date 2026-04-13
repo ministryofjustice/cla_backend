@@ -167,7 +167,6 @@ class AccessTokenView(Oauth2AccessTokenView):
     def _get_request_log_extras(self, request):
         return {
             "IP": get_ip(request),
-            "USERNAME": request.POST.get("username"),
             "CLIENT_ID": request.POST.get("client_id"),
             "GRANT_TYPE": request.POST.get("grant_type"),
             "HTTP_REFERER": request.META.get("HTTP_REFERER"),

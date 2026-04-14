@@ -28,6 +28,14 @@ class SerializerConfigurationTest(TestCase):
         self.assertNotIn('eligibility_check', list_fields)
         self.assertIn('safe_to_contact', list_fields)
         self.assertIn('phone_number', list_fields)
+        self.assertIn("mcc_case_flags", list_fields)
+
+        # Not at top-level on CaseListSerializer
+        self.assertNotIn("vulnerable_user", list_fields)
+        self.assertNotIn("thirdparty_details", list_fields)
+        self.assertNotIn("bsl_webcam", list_fields)
+        self.assertNotIn("text_relay", list_fields)
+        self.assertNotIn("language", list_fields)
 
         # DetailedCaseSerializer
         self.assertIn('state', detailed_fields)

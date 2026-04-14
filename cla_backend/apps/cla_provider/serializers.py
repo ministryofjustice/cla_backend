@@ -308,6 +308,26 @@ class DetailedCaseSerializer(CaseSerializer):
 class CaseListSerializer(CaseSerializer):
     safe_to_contact = serializers.CharField(source='personal_details.safe_to_contact', read_only=True)
     phone_number = serializers.CharField(source='personal_details.mobile_phone', read_only=True)
+    mcc_case_flags = serializers.SerializerMethodField()
+
+    def get_mcc_case_flags(self, obj):
+        try:
+            thirdparty_obj = obj.thirdparty_details
+        except obj.__class__.thirdparty_details.RelatedObjectDoesNotExist:
+            thirdparty_obj = None
+
+        try:
+            adaptation = obj.adaptation_details
+        except obj.__class__.adaptation_details.RelatedObjectDoesNotExist:
+            adaptation = None
+
+        return {
+            "vulnerable_user": getattr(obj.personal_details, "vulnerable_user", None),
+            "thirdparty_details": thirdparty_obj is not None,
+            "bsl_webcam": getattr(adaptation, "bsl_webcam", None),
+            "text_relay": getattr(adaptation, "text_relay", None),
+            "language": getattr(adaptation, "language", None),
+        }
 
     class Meta(CaseSerializer.Meta):
         fields = (
@@ -333,6 +353,7 @@ class CaseListSerializer(CaseSerializer):
             "is_urgent",
             "safe_to_contact",
             "phone_number",
+            "mcc_case_flags",
         )
 
 

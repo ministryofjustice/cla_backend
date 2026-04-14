@@ -65,11 +65,10 @@ class AccessTokenView(Oauth2AccessTokenView):
             return response
         except OAuth2Error as exc:
             if exc.description == "invalid_grant":
-                logger.error("31-03-2026: Investigate invalid_grant. USER: {} AND CLIENT_ID {}".format(
-                    request.POST.get("username"),
+                logger.error("Investigate invalid_grant. CLIENT_ID {}".format(
                     request.POST.get("client_id")
                 ), exc_info=True)
-            logger.info("User: {}; Error: {}".format(request.POST.get("username"), exc.description))
+            logger.info("OAuth2Error: {}".format(exc.description))
             response = self.error_response({"error": exc.description}, status=401)
             return response
 
@@ -130,7 +129,7 @@ class AccessTokenView(Oauth2AccessTokenView):
         try:
             assert class_name.objects.get(user__username=request.POST.get("username"))
         except class_name.DoesNotExist:
-            logger.error("User {} does not exist on client {}".format(request.POST.get("username"), request.POST.get("client_id")), exc_info=True)
+            logger.error("User does not exist on client {}".format(client.name), exc_info=True)
             raise OAuth2Error("invalid_grant")
 
     def get_user_model(self, client_name):
@@ -161,14 +160,13 @@ class AccessTokenView(Oauth2AccessTokenView):
 
         if attempts >= settings.LOGIN_FAILURE_LIMIT:
 
-            logger.info("account locked out", extra={"username": username})
+            logger.info("account locked out")
 
             raise OAuth2Error("locked_out")
 
     def _get_request_log_extras(self, request):
         return {
             "IP": get_ip(request),
-            "USERNAME": request.POST.get("username"),
             "CLIENT_ID": request.POST.get("client_id"),
             "GRANT_TYPE": request.POST.get("grant_type"),
             "HTTP_REFERER": request.META.get("HTTP_REFERER"),

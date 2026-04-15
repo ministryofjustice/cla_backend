@@ -1,0 +1,61 @@
+name: Build and push
+description: Build image and push it ECR
+
+inputs:
+  ECR_ROLE_TO_ASSUME:
+    required: true
+    description: ECR role to assume
+  ECR_REGION:
+    required: true
+    description: ECR region
+  ECR_REGISTRY_URL:
+    required: true
+    description: ECR registry url
+  ECR_REPOSITORY:
+    required: true
+    description: ECR repository
+
+runs:
+  using: composite
+  steps:
+
+    - name: Checkout code
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+
+    - name:  Set up AWS credentials
+      uses: ministryofjustice/laa-reusable-github-actions/.github/actions/ecr-auth@cb1ebcbca5efcd1e91b7ee1e27c73650c1bba9d8
+      with:
+        ecr_region: ${{ inputs.ECR_REGION }}
+        ecr_role: ${{ inputs.ECR_ROLE_TO_ASSUME }}
+        role-session-name: laa-cla-backend
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435
+      with:
+        install: true
+
+    - name: Cache Docker layers
+      uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7
+      with:
+        path: /tmp/.buildx-cache
+        key: ${{ runner.os }}-buildx-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-buildx-
+
+    - name: Set image tag
+      id: branch-tag
+      run: |
+        if [ "${GITHUB_REF_NAME}" = "main" ]; then
+          echo "tag=main-${GITHUB_SHA}" >> "$GITHUB_OUTPUT"
+        else
+          echo "tag=branch-${GITHUB_SHA}" >> "$GITHUB_OUTPUT"
+        fi
+      shell: bash
+
+    - name: Build and push image with caching
+      uses: ministryofjustice/laa-reusable-github-actions/.github/actions/build_and_push_with_cache@main
+      with:
+       image_registry: ${{ inputs.ECR_REGISTRY_URL }}
+       image_repo: ${{ inputs.ECR_REPOSITORY }}
+       dockerfile_path: Dockerfile
+       image_tag: ${{  steps.branch-tag.outputs.tag  }}

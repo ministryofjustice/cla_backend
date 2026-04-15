@@ -1,5 +1,6 @@
 name: workflow.yml
-on: pull_request
+on: push
+
 permissions:
   contents: read
 
@@ -24,3 +25,17 @@ jobs:
           DB_USERNAME: postgres
           DB_PASSWORD: postgres
           COVERALLS_REPO_TOKEN: ${{secrets.COVERALLS_REPO_TOKEN}}
+  build-and-push:
+    permissions:
+      contents: read
+      id-token: write
+    name: Build and push
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
+      - uses: ./.github/actions/build-and-push
+        with:
+          ECR_REGISTRY_URL: ${{ secrets.ECR_REGISTRY_URL }}
+          ECR_ROLE_TO_ASSUME: ${{ secrets.ECR_ROLE_TO_ASSUME }}
+          ECR_REPOSITORY: ${{ vars.ECR_REPOSITORY }}
+          ECR_REGION: ${{ vars.ECR_REGION }}

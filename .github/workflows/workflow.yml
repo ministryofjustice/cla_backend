@@ -1,10 +1,23 @@
 name: workflow.yml
-on: push
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
 
 permissions:
   contents: read
 
 jobs:
+  format-and-lint:
+    name: "Format and lint"
+    runs-on: "ubuntu-latest"
+    container: python:2.7
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
+      - uses: ./.github/actions/format-and-lint
+
   unit-tests:
     name: "Unit tests"
     runs-on: "ubuntu-latest"

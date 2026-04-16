@@ -823,7 +823,7 @@ class Case(TimeStampedModel):
         TODO Replace painfully circuitous reload method when refresh_from_db available in Django 1.8
         """
         if self.id:
-            case = Case.objects.filter(id=self.id).first()
+            case = Case.objects.get(id=self.id)
             if not case:
                 logger.warning("LGA-275 Case not found for id: {}".format(self.id))
                 return

@@ -279,7 +279,7 @@ class ProviderExtract(APIView):
                 )
             self.check_object_permissions(request, case)
 
-            logger.info("Provider case exported", extra={"USERNAME": request.user.username, "POSTDATA": request.POST})
+            logger.info("Provider case exported", extra={"USER_ID": request.user.pk, "CASE_REFERENCE": case.reference})
 
             return ProviderExtractFormatter(case).format()
         else:

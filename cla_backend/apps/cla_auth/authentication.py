@@ -215,8 +215,8 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
                     user.groups.add(group)
             return True
         except Exception as e:
-            logger.error("ENTRA: Failed to update groups for user %s: %s" % (user.email, e), exc_info=True)
-            return None
+            logger.error("ENTRA: Failed to update groups for user %s: %s" % (user.pk, e), exc_info=True)
+        return None
 
     def authenticate(self, request, retried=False):
         token = request.META.get("HTTP_AUTHORIZATION")
@@ -240,15 +240,15 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
 
         if not self.user_has_role(user, app_role):
             if retried:
-                logger.error("ENTRA: User %s group does not match expected role %s after update" % (user.email, app_role), exc_info=True)
+                logger.error("ENTRA: User %s group does not match expected role %s after update" % (user.pk, app_role), exc_info=True)
                 raise exceptions.AuthenticationFailed(
-                    "User %s group does not match expected role %s after update" % (user.email, app_role)
+                    "User %s group does not match expected role %s after update" % (user.pk, app_role)
                 )
             change_app_role = self.change_user_group(app_role, user)
             if not change_app_role:
-                logger.error("ENTRA: Failed to update group for user %s with roles %s" % (user.email, app_role), exc_info=True)
+                logger.error("ENTRA: Failed to update group for user %s with roles %s" % (user.pk, app_role), exc_info=True)
                 raise exceptions.AuthenticationFailed(
-                    "Failed to update group for user %s with roles %s" % (user.email, app_role)
+                    "Failed to update group for user %s with roles %s" % (user.pk, app_role)
                 )
             return self.authenticate(request, retried=True)
 

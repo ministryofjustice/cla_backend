@@ -20,17 +20,22 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
 
       - name: Authenticate with cluster
+        env:
+          KUBE_CERT: ${{ secrets.KUBE_CERT }}
+          KUBE_CLUSTER: ${{ secrets.KUBE_CLUSTER }}
+          KUBE_TOKEN: ${{ secrets.KUBE_TOKEN }}
+          KUBE_NAMESPACE: ${{ secrets.KUBE_NAMESPACE }}
         run: |
-          echo "${{ secrets.KUBE_CERT }}" | base64 -d > ca.crt
-          kubectl config set-cluster ${{ secrets.KUBE_CLUSTER }} \
+          echo "$KUBE_CERT" | base64 -d > ca.crt
+          kubectl config set-cluster "$KUBE_CLUSTER" \
             --certificate-authority=./ca.crt \
-            --server=https://${{ secrets.KUBE_CLUSTER }}
-          kubectl config set-credentials deploy-user --token=${{ secrets.KUBE_TOKEN }}
-          kubectl config set-context ${{ secrets.KUBE_CLUSTER }} \
-            --cluster=${{ secrets.KUBE_CLUSTER }} \
+            --server="https://$KUBE_CLUSTER"
+          kubectl config set-credentials deploy-user --token="$KUBE_TOKEN"
+          kubectl config set-context "$KUBE_CLUSTER" \
+            --cluster="$KUBE_CLUSTER" \
             --user=deploy-user \
-            --namespace=${{ secrets.KUBE_NAMESPACE }}
-          kubectl config use-context ${{ secrets.KUBE_CLUSTER }}
+            --namespace="$KUBE_NAMESPACE"
+          kubectl config use-context "$KUBE_CLUSTER"
 
       - name: Delete UAT helm release
         env:

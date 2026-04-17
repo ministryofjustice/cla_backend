@@ -38,20 +38,31 @@ runs:
 
     - name: Authenticate with cluster
       shell: bash
+      env:
+        KUBE_CERT: ${{ inputs.KUBE_CERT }}
+        KUBE_CLUSTER: ${{ inputs.KUBE_CLUSTER }}
+        KUBE_TOKEN: ${{ inputs.KUBE_TOKEN }}
+        KUBE_NAMESPACE: ${{ inputs.KUBE_NAMESPACE }}
       run: |
-        echo "${{ inputs.KUBE_CERT }}" | base64 -d > ca.crt
-        kubectl config set-cluster ${{ inputs.KUBE_CLUSTER }} \
+        echo "$KUBE_CERT" | base64 -d > ca.crt
+        kubectl config set-cluster "$KUBE_CLUSTER" \
           --certificate-authority=./ca.crt \
-          --server=https://${{ inputs.KUBE_CLUSTER }}
-        kubectl config set-credentials deploy-user --token=${{ inputs.KUBE_TOKEN }}
-        kubectl config set-context ${{ inputs.KUBE_CLUSTER }} \
-          --cluster=${{ inputs.KUBE_CLUSTER }} \
+          --server="https://$KUBE_CLUSTER"
+        kubectl config set-credentials deploy-user --token="$KUBE_TOKEN"
+        kubectl config set-context "$KUBE_CLUSTER" \
+          --cluster="$KUBE_CLUSTER" \
           --user=deploy-user \
-          --namespace=${{ inputs.KUBE_NAMESPACE }}
-        kubectl config use-context ${{ inputs.KUBE_CLUSTER }}
+          --namespace="$KUBE_NAMESPACE"
+        kubectl config use-context "$KUBE_CLUSTER"
 
     - name: Set image tag and release info
       shell: bash
+      env:
+        DYNAMIC_HOSTNAME: ${{ inputs.dynamic_hostname }}
+        HOST: ${{ inputs.HOST }}
+        ECR_REGISTRY_URL: ${{ inputs.ECR_REGISTRY_URL }}
+        ECR_REPOSITORY: ${{ inputs.ECR_REPOSITORY }}
+        KUBE_NAMESPACE: ${{ inputs.KUBE_NAMESPACE }}
       run: |
         BRANCH_NAME="${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}"
         if [ "${GITHUB_REF_NAME}" = "main" ]; then
@@ -60,18 +71,18 @@ runs:
           IMAGE_TAG="branch-${GITHUB_SHA}"
         fi
         CLEANED_BRANCH_NAME=$(echo "$BRANCH_NAME" | sed 's/^feature[-/]//' | sed 's:^\w*\/::' | tr -s ' _/[]().' '-' | tr '[:upper:]' '[:lower:]' | cut -c1-28 | sed 's/-$//')
-        if [ "${{ inputs.dynamic_hostname }}" = "true" ]; then
+        if [ "$DYNAMIC_HOSTNAME" = "true" ]; then
           RELEASE_NAME="${CLEANED_BRANCH_NAME}"
-          RELEASE_HOST="${RELEASE_NAME}-${{ inputs.HOST }}"
+          RELEASE_HOST="${RELEASE_NAME}-${HOST}"
         else
           RELEASE_NAME="cla-backend"
-          RELEASE_HOST="${{ inputs.HOST }}"
+          RELEASE_HOST="${HOST}"
         fi
         echo "IMAGE_TAG=${IMAGE_TAG}" >> "$GITHUB_ENV"
         echo "RELEASE_NAME=${RELEASE_NAME}" >> "$GITHUB_ENV"
         echo "RELEASE_HOST=${RELEASE_HOST}" >> "$GITHUB_ENV"
-        echo "DOCKER_REPOSITORY=${{ inputs.ECR_REGISTRY_URL }}/${{ inputs.ECR_REPOSITORY }}" >> "$GITHUB_ENV"
-        echo "KUBE_NAMESPACE=${{ inputs.KUBE_NAMESPACE }}" >> "$GITHUB_ENV"
+        echo "DOCKER_REPOSITORY=${ECR_REGISTRY_URL}/${ECR_REPOSITORY}" >> "$GITHUB_ENV"
+        echo "KUBE_NAMESPACE=${KUBE_NAMESPACE}" >> "$GITHUB_ENV"
 
     - name: Get ingress cluster info
       shell: bash
@@ -88,4 +99,7 @@ runs:
 
     - name: Deploy
       shell: bash
-      run: ./bin/${{ inputs.namespace }}_deploy.sh ${{ inputs.dynamic_hostname }}
+      env:
+        NAMESPACE: ${{ inputs.namespace }}
+        DYNAMIC_HOSTNAME: ${{ inputs.dynamic_hostname }}
+      run: ./bin/${NAMESPACE}_deploy.sh "$DYNAMIC_HOSTNAME"

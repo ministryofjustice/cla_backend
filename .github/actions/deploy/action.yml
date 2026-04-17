@@ -1,5 +1,6 @@
 name: Deploy to Cloud Platform
 description: Deploys the helm chart to a Cloud Platform Kubernetes namespace
+# Composite action for deploying to a given namespace
 
 inputs:
   namespace:

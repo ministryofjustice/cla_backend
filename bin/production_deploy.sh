@@ -10,7 +10,7 @@ SHARED_IP_RANGES_LAA=$(curl -s https://raw.githubusercontent.com/ministryofjusti
 
 helm upgrade $RELEASE_NAME \
   $HELM_DIR \
-  --namespace=${KUBE_ENV_PRODUCTION_NAMESPACE} \
+  --namespace=${KUBE_NAMESPACE} \
   --set host=$RELEASE_HOST \
   --set ingress.cluster.name=${INGRESS_CLUSTER_NAME} \
   --set ingress.cluster.weight=${INGRESS_CLUSTER_WEIGHT} \

@@ -1,0 +1,38 @@
+name: Cleanup UAT release
+
+on:
+  pull_request:
+    types:
+      - closed
+
+permissions:
+  contents: read
+
+jobs:
+  cleanup:
+    name: Delete UAT release
+    runs-on: ubuntu-latest
+    environment: uat
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
+
+      - name: Authenticate with cluster
+        run: |
+          echo "${{ secrets.KUBE_CERT }}" | base64 -d > ca.crt
+          kubectl config set-cluster ${{ secrets.KUBE_CLUSTER }} \
+            --certificate-authority=./ca.crt \
+            --server=https://${{ secrets.KUBE_CLUSTER }}
+          kubectl config set-credentials deploy-user --token=${{ secrets.KUBE_TOKEN }}
+          kubectl config set-context ${{ secrets.KUBE_CLUSTER }} \
+            --cluster=${{ secrets.KUBE_CLUSTER }} \
+            --user=deploy-user \
+            --namespace=${{ secrets.KUBE_NAMESPACE }}
+          kubectl config use-context ${{ secrets.KUBE_CLUSTER }}
+
+      - name: Delete UAT helm release
+        env:
+          BRANCH_NAME: ${{ github.head_ref }}
+        run: ./bin/delete_uat_release.sh

@@ -248,11 +248,6 @@ workflows:
       - test:
           requires:
             - pip-compile
-      - cleanup_merged:
-          name: cleanup_merged_live
-          context:
-            - laa-cla-backend
-            - laa-cla-backend-live-uat
       - build:
           name: build_push_application
           image: app

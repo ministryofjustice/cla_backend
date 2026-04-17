@@ -271,38 +271,6 @@ workflows:
             - build_push_database_migration
           context: laa-cla-backend
 
-      - deploy:
-          name: uat_deploy_live
-          namespace: uat
-          dynamic_hostname: true
-          requires:
-            - build_push_application
-            - build_push_database_migration
-          filters:
-            branches:
-              ignore:
-                - main
-                - /^snyk-fix.*/
-          context:
-           - laa-cla-backend
-           - laa-cla-backend-live-uat
-
-      - static_uat_deploy_approval:
-          type: approval
-          requires:
-            - build_push_application
-            - build_push_database_migration
-
-      - deploy:
-          name: static_uat_deploy_live
-          namespace: uat
-          dynamic_hostname: false
-          requires:
-            - static_uat_deploy_approval
-          context:
-           - laa-cla-backend
-           - laa-cla-backend-live-uat
-
       - staging_deploy_approval:
           type: approval
           requires:

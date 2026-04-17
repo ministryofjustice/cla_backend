@@ -4,6 +4,14 @@ permissions:
   contents: read
 
 jobs:
+  slsa:
+    name: "SLSA"
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
+      - name: SLSA
+        uses: ministryofjustice/devsecops-actions/sca/slsa@e3c63a5986ea6e7d57d38b7f72e5b8cf08dc7020
+
   unit-tests:
     name: "Unit tests"
     runs-on: "ubuntu-latest"

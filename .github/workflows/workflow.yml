@@ -80,7 +80,7 @@ jobs:
     name: UAT static deploy
     runs-on: ubuntu-latest
     needs: [build-and-push]
-    environment: uat
+    environment: uat-static
     permissions:
       contents: read
       id-token: write

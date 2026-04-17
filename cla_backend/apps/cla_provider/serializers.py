@@ -322,12 +322,13 @@ class CaseListSerializer(CaseSerializer):
             adaptation = None
 
         has_valid_mcc_thirdparty = False
+
         if thirdparty_obj:
             is_other = thirdparty_obj.personal_relationship == "OTHER"
             no_name = getattr(thirdparty_obj.personal_details, "full_name", None) is None
             no_passphrase = thirdparty_obj.pass_phrase is None
 
-        has_valid_mcc_thirdparty = not (is_other and no_name and no_passphrase)
+            has_valid_mcc_thirdparty = not (is_other and no_name and no_passphrase)
 
         return {
             "vulnerable_user": getattr(obj.personal_details, "vulnerable_user", None),

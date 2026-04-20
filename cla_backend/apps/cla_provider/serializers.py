@@ -325,7 +325,7 @@ class CaseListSerializer(CaseSerializer):
 
         if thirdparty_obj is not None:
             personal_details = getattr(thirdparty_obj, "personal_details", None)
-            
+
             is_other = thirdparty_obj.personal_relationship == "OTHER"
             no_name = not getattr(personal_details, "full_name", None)
             no_passphrase = not thirdparty_obj.pass_phrase

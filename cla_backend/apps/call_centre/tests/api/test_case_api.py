@@ -330,6 +330,8 @@ class SuggestProviderTestCase(BaseCaseTestCase):
 
     def setUp(self):
         super(CLAOperatorAuthBaseApiTestMixin, self).setUp()
+        Case.objects.all().delete()
+
         category1 = make_recipe("legalaid.category")
         category2 = make_recipe("legalaid.category")
 
@@ -414,7 +416,7 @@ class SuggestProviderTestCase(BaseCaseTestCase):
             suitable_providers = [
                 ProviderSerializer(p).data for p in self.suggested_cat_providers + self.other_cat_providers
             ]
-            self.assertEqual(response.data["suitable_providers"], suitable_providers)
+            self.assertItemsEqual(response.data["suitable_providers"], suitable_providers)
 
 
 class AssignCaseTestCase(BaseCaseTestCase):

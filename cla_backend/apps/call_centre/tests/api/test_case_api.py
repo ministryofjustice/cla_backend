@@ -331,7 +331,7 @@ class SuggestProviderTestCase(BaseCaseTestCase):
     def setUp(self):
         super(CLAOperatorAuthBaseApiTestMixin, self).setUp()
         Case.objects.all().delete()
-        
+
         category1 = make_recipe("legalaid.category")
         category2 = make_recipe("legalaid.category")
 

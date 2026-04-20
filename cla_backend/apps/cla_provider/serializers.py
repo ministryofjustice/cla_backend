@@ -335,7 +335,6 @@ class CaseListSerializer(CaseSerializer):
         return {
             "vulnerable_user": getattr(obj.personal_details, "vulnerable_user", None),
             "thirdparty_details": has_valid_mcc_thirdparty,
-            "thirdparty_details_test": has_valid_mcc_thirdparty,
             "bsl_webcam": getattr(adaptation, "bsl_webcam", None),
             "text_relay": getattr(adaptation, "text_relay", None),
             "language": getattr(adaptation, "language", None),

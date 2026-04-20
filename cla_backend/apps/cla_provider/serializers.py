@@ -386,14 +386,8 @@ class ProviderSerializer(ProviderSerializerBase):
         fields = ("id", "name", "law_category")
 
 
-class ProviderSerializerMinimal(ProviderSerializerBase):
-    """Minimal provider serializer for nested use in user serialization"""
-    class Meta(ProviderSerializerBase.Meta):
-        fields = ("id", "name")
-
-
 class StaffSerializer(ExtendedUserSerializerBase):
-    provider = ProviderSerializerMinimal(read_only=True)
+    provider = ProviderSerializer(read_only=True)
 
     chs_user = serializers.CharField(required=False)
     chs_organisation = serializers.CharField(required=False)

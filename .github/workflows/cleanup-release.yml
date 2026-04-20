@@ -39,5 +39,6 @@ jobs:
 
       - name: Delete UAT helm release
         env:
-          BRANCH_NAME: ${{ github.head_ref }}
+          # head_ref is set if the workflow was triggered by a PR, ref_name is used if the workflow was trigged by a push.
+          BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
         run: ./bin/delete_uat_release.sh

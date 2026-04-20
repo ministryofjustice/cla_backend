@@ -323,10 +323,12 @@ class CaseListSerializer(CaseSerializer):
 
         has_valid_mcc_thirdparty = False
 
-        if thirdparty_obj:
+        if thirdparty_obj is not None:
+            personal_details = getattr(thirdparty_obj, "personal_details", None)
+            
             is_other = thirdparty_obj.personal_relationship == "OTHER"
-            no_name = getattr(thirdparty_obj.personal_details, "full_name", None) is None
-            no_passphrase = thirdparty_obj.pass_phrase is None
+            no_name = not getattr(personal_details, "full_name", None)
+            no_passphrase = not thirdparty_obj.pass_phrase
 
             has_valid_mcc_thirdparty = not (is_other and no_name and no_passphrase)
 

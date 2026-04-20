@@ -321,9 +321,20 @@ class CaseListSerializer(CaseSerializer):
         except obj.__class__.adaptation_details.RelatedObjectDoesNotExist:
             adaptation = None
 
+        has_valid_mcc_thirdparty = False
+
+        if thirdparty_obj is not None:
+            personal_details = getattr(thirdparty_obj, "personal_details", None)
+
+            is_other = thirdparty_obj.personal_relationship == "OTHER"
+            no_name = not getattr(personal_details, "full_name", None)
+            no_passphrase = not thirdparty_obj.pass_phrase
+
+            has_valid_mcc_thirdparty = not (is_other and no_name and no_passphrase)
+
         return {
             "vulnerable_user": getattr(obj.personal_details, "vulnerable_user", None),
-            "thirdparty_details": thirdparty_obj is not None,
+            "thirdparty_details": has_valid_mcc_thirdparty,
             "bsl_webcam": getattr(adaptation, "bsl_webcam", None),
             "text_relay": getattr(adaptation, "text_relay", None),
             "language": getattr(adaptation, "language", None),

@@ -1,7 +1,7 @@
 #################################################
 # BASE IMAGE USED BY ALL STAGES
 #################################################
-FROM alpine:3.15 as base
+FROM alpine:3.15 AS base
 
 RUN apk add --no-cache \
       bash \

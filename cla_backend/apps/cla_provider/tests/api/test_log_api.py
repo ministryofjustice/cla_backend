@@ -22,3 +22,40 @@ class LogViewSetTestCase(CLAProviderAuthBaseApiTestMixin, LogAPIMixin, APITestCa
 
         response = self.client.get(self.list_url, HTTP_AUTHORIZATION=self.get_http_authorization())
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_get_filtered_by_codes_parameter(self):
+        """
+        Test that when the 'codes' GET parameter is specified,
+        LogViewSet.get_queryset() filters logs by the specified codes.
+        """
+        code_param = self.event_logs[0].code
+        response = self.client.get(
+            self.list_url,
+            {"codes": code_param},
+            HTTP_AUTHORIZATION=self.get_http_authorization(),
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response_codes = [log["code"] for log in response.data]
+        self.assertIn(code_param, response_codes)
+        other_codes_in_response = set(response_codes) - set({code_param})
+        self.assertEqual(len(other_codes_in_response), 0)
+
+    def test_get_filtered_by_multiple_codes_parameter(self):
+        """
+        Test that when multiple codes are specified in the 'codes' GET parameter
+        (comma-separated), LogViewSet.get_queryset() filters logs by all specified codes.
+        """
+        codes_param = (self.event_logs[0].code, self.event_logs[1].code)
+        response = self.client.get(
+            self.list_url,
+            {"codes": codes_param},
+            HTTP_AUTHORIZATION=self.get_http_authorization(),
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response_codes = [log["code"] for log in response.data]
+        self.assertIn(self.event_logs[0].code, response_codes)
+        self.assertIn(self.event_logs[1].code, response_codes)
+        other_codes_in_response = set(response_codes) - set(codes_param)
+        self.assertEqual(len(other_codes_in_response), 0)

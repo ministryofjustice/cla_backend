@@ -38,7 +38,7 @@ class LogViewSetTestCase(CLAProviderAuthBaseApiTestMixin, LogAPIMixin, APITestCa
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         response_codes = [log["code"] for log in response.data]
         self.assertIn(code_param, response_codes)
-        other_codes_in_response = set(response_codes) - set((code_param,))
+        other_codes_in_response = set(response_codes) - {code_param}
         self.assertEqual(len(other_codes_in_response), 0)
 
     def test_get_filtered_by_multiple_codes_parameter(self):

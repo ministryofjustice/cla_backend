@@ -17,7 +17,7 @@ SHARED_IP_RANGES_LAA=$(curl -s https://raw.githubusercontent.com/ministryofjusti
 
 helm upgrade $RELEASE_NAME \
   $HELM_DIR \
-  --namespace=${KUBE_ENV_UAT_NAMESPACE} \
+  --namespace=${KUBE_NAMESPACE} \
   --values "${HELM_DIR}/$VALUES" \
   --set fullnameOverride=$RELEASE_NAME \
   --set environment=$RELEASE_NAME \

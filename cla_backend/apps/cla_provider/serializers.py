@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.fields import SerializerMethodField
 
 from cla_common.constants import FEEDBACK_ISSUE
 from cla_eventlog.serializers import LogSerializerBase
@@ -22,6 +23,7 @@ from legalaid.serializers import (
     CaseNotesHistorySerializerBase,
     CSVUploadSerializerBase,
 )
+from legalaid.models import Category
 
 from .models import Staff
 
@@ -214,6 +216,7 @@ class CaseSerializer(CaseSerializerFull):
     provider_viewed = serializers.DateTimeField(read_only=True)
     provider_accepted = serializers.DateTimeField(read_only=True)
     provider_closed = serializers.DateTimeField(read_only=True)
+    provider_assigned_at = serializers.DateTimeField(read_only=True)
 
     class Meta(CaseSerializerFull.Meta):
         fields = (
@@ -227,6 +230,7 @@ class CaseSerializer(CaseSerializerFull):
             "provider_viewed",
             "provider_accepted",
             "provider_closed",
+            "provider_assigned_at",
             "notes",
             "provider_notes",
             "client_notes",
@@ -253,10 +257,89 @@ class CaseSerializer(CaseSerializerFull):
             "complaint_flag",
             "gtm_anon_id",
             "scope_traversal",
+            "is_urgent",
         )
 
 
+class NestedScopeTraversalSerializer(serializers.Serializer):
+    """Serializer for scope_traversal in detailed endpoint"""
+    scope_answers = JSONField(read_only=True)
+    financial_assessment_status = serializers.CharField(read_only=True)
+    created = serializers.DateTimeField(read_only=True)
+
+
+class NestedDiagnosisSerializer(serializers.Serializer):
+    """Serializer for diagnosis in detailed endpoint"""
+    nodes = SerializerMethodField()
+    category = serializers.CharField(source="category.code", read_only=True)
+
+    def get_nodes(self, obj):
+        """Extract only the key field from each node"""
+        if obj and obj.nodes:
+            return [{"key": node.get("key")} for node in obj.nodes if "key" in node]
+        return []
+
+
+class DetailedCaseSerializer(CaseSerializer):
+    """
+    Extended case serializer that includes all nested details
+    for the detailed endpoint
+    """
+    personal_details = PersonalDetailsSerializerFull(read_only=True)
+    adaptation_details = AdaptationDetailsSerializerBase(read_only=True)
+    thirdparty_details = ThirdPartyDetailsSerializerBase(read_only=True)
+    scope_traversal = NestedScopeTraversalSerializer(read_only=True)
+    diagnosis = NestedDiagnosisSerializer(read_only=True)
+    notes_history = SerializerMethodField()
+    state = serializers.CharField(read_only=True)
+    state_note = LogSerializer(read_only=True)
+
+    def get_notes_history(self, obj):
+        """Fetch all notes history for the case"""
+        from legalaid.models import CaseNotesHistory
+
+        notes = CaseNotesHistory.objects.filter(case=obj).order_by('-created')
+        return CaseNotesHistorySerializer(notes, many=True).data
+
+    class Meta(CaseSerializer.Meta):
+        fields = tuple(field for field in CaseSerializer.Meta.fields if field != "eligibility_check") + ("state", "state_note", "notes_history")
+
+
 class CaseListSerializer(CaseSerializer):
+    safe_to_contact = serializers.CharField(source='personal_details.safe_to_contact', read_only=True)
+    phone_number = serializers.CharField(source='personal_details.mobile_phone', read_only=True)
+    mcc_case_flags = serializers.SerializerMethodField()
+
+    def get_mcc_case_flags(self, obj):
+        try:
+            thirdparty_obj = obj.thirdparty_details
+        except obj.__class__.thirdparty_details.RelatedObjectDoesNotExist:
+            thirdparty_obj = None
+
+        try:
+            adaptation = obj.adaptation_details
+        except obj.__class__.adaptation_details.RelatedObjectDoesNotExist:
+            adaptation = None
+
+        has_valid_mcc_thirdparty = False
+
+        if thirdparty_obj is not None:
+            personal_details = getattr(thirdparty_obj, "personal_details", None)
+
+            is_other = thirdparty_obj.personal_relationship == "OTHER"
+            no_name = not getattr(personal_details, "full_name", None)
+            no_passphrase = not thirdparty_obj.pass_phrase
+
+            has_valid_mcc_thirdparty = not (is_other and no_name and no_passphrase)
+
+        return {
+            "vulnerable_user": getattr(obj.personal_details, "vulnerable_user", None),
+            "thirdparty_details": has_valid_mcc_thirdparty,
+            "bsl_webcam": getattr(adaptation, "bsl_webcam", None),
+            "text_relay": getattr(adaptation, "text_relay", None),
+            "language": getattr(adaptation, "language", None),
+        }
+
     class Meta(CaseSerializer.Meta):
         fields = (
             "reference",
@@ -277,7 +360,11 @@ class CaseListSerializer(CaseSerializer):
             "provider_viewed",
             "provider_accepted",
             "provider_closed",
+            "provider_assigned_at",
             "is_urgent",
+            "safe_to_contact",
+            "phone_number",
+            "mcc_case_flags",
         )
 
 
@@ -296,13 +383,28 @@ class AdaptationDetailsSerializer(AdaptationDetailsSerializerBase):
         )
 
 
+class CategorySerializer(serializers.ModelSerializer):
+    """Serializer for Category model"""
+    class Meta:
+        model = Category
+        fields = ("code", "name", "description")
+
+
 class ProviderSerializer(ProviderSerializerBase):
+    law_category = CategorySerializer(many=True, read_only=True)
+
     class Meta(ProviderSerializerBase.Meta):
-        fields = ("name", "id")
+        fields = ("id", "name", "law_category")
+
+
+class ProviderSerializerMinimal(ProviderSerializerBase):
+    """Minimal provider serializer for nested use in user serialization"""
+    class Meta(ProviderSerializerBase.Meta):
+        fields = ("id", "name")
 
 
 class StaffSerializer(ExtendedUserSerializerBase):
-    provider = ProviderSerializer(read_only=True)
+    provider = ProviderSerializerMinimal(read_only=True)
 
     chs_user = serializers.CharField(required=False)
     chs_organisation = serializers.CharField(required=False)

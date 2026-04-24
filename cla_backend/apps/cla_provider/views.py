@@ -348,6 +348,15 @@ class ScopeTraversalViewSet(CLAProviderPermissionViewSetMixin, BaseScopeTraversa
 class LogViewSet(CLAProviderPermissionViewSetMixin, BaseLogViewSet):
     serializer_class = LogSerializer
 
+    def get_queryset(self):
+        qs = super(LogViewSet, self).get_queryset()
+        codes = self.request.query_params.getlist("codes")
+
+        if len(codes) > 0:
+            qs = qs.filter(code__in=codes)
+
+        return qs
+
 
 class FeedbackViewSet(CLAProviderPermissionViewSetMixin, BaseFeedbackViewSet, ClaCreateModelMixin):
     serializer_class = FeedbackSerializer

@@ -216,6 +216,7 @@ class MICaseExtract(SQLFileDateRangeReport):
             "Split_Link_Case",
             "Provider_ID",
             "Category_Name",
+            "Client_Category_Name",
             "Date_Case_Created",
             "Last_Modified_Date",
             "Outcome_Code_Child",

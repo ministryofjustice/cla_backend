@@ -8,6 +8,7 @@ spec:
   schedule: "0 5 * * *"
   jobTemplate:
     spec:
+      ttlSecondsAfterFinished: 300
       template:
         spec:
           containers:
@@ -29,6 +30,7 @@ spec:
   schedule: "15 2 * * *"
   jobTemplate:
     spec:
+      ttlSecondsAfterFinished: 300
       template:
         spec:
           containers:
@@ -50,6 +52,7 @@ spec:
   schedule: "0 5 * * 0"
   jobTemplate:
     spec:
+      ttlSecondsAfterFinished: 300
       template:
         spec:
           containers:
@@ -71,6 +74,7 @@ spec:
   schedule: "0 5 * * *"
   jobTemplate:
     spec:
+      ttlSecondsAfterFinished: 300
       template:
         spec:
           containers:
@@ -92,6 +96,7 @@ spec:
   schedule: "0 5 3 * *"
   jobTemplate:
     spec:
+      ttlSecondsAfterFinished: 300
       template:
         spec:
           containers:
@@ -113,6 +118,7 @@ spec:
   schedule: "0 1 * * *"
   jobTemplate:
     spec:
+      ttlSecondsAfterFinished: 300
       template:
         spec:
           containers:

@@ -9,7 +9,7 @@ from rest_framework import status
 
 from core.tests.mommy_utils import make_recipe
 from legalaid.tests.views.test_base import CLAProviderAuthBaseApiTestMixin
-from cla_provider.serializers import DetailedCaseSerializer, CaseSerializer
+from mcc.serializers import DetailedCaseSerializer, CaseSerializer
 
 
 class DetailedCaseSerializerTestCase(CLAProviderAuthBaseApiTestMixin, APITestCase):
@@ -126,7 +126,7 @@ class DetailedCaseEndpointTestCase(CLAProviderAuthBaseApiTestMixin, APITestCase)
         response = self.client.get(url, HTTP_AUTHORIZATION=self.get_http_authorization())
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    @mock.patch("cla_provider.views.DetailedCaseSerializer")
+    @mock.patch("mcc.serializers.DetailedCaseSerializer")
     def test_detailed_endpoint_uses_detailed_serializer(self, mock_serializer):
         """Test that the endpoint specifically uses DetailedCaseSerializer"""
         url = self.get_detailed_url()

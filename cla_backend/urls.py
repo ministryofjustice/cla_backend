@@ -36,6 +36,7 @@ if settings.BACKEND_ENABLED:
         url(r"^checker/api/v1/", include("checker.urls", namespace="checker")),
         url(r"^call_centre/api/v1/", include("call_centre.urls", namespace="call_centre")),
         url(r"^cla_provider/api/v1/", include("cla_provider.urls", namespace="cla_provider")),
+        url(r"^mcc/api/v1/", include("mcc.urls", namespace="mcc")),
         url(r"^oauth2/", include("cla_auth.urls", namespace="oauth2")),
     )
 

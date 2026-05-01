@@ -15,19 +15,6 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
 
-    permissions:
-      id-token: write
-      contents: read
-      security-events: write
-      actions: read
-
     steps:
-      - name: Run Snyk scan
-        uses: ministryofjustice/laa-reusable-github-actions/.github/workflows/sast.yml@a652d1076b05dd80d3ab619d263aac6ce526d70b
-        with:
-          image_uri: ${{ secrets.ECR_REGISTRY_URL }}/${{ vars.ECR_REPOSITORY }}:${{ github.event.workflow_run.head_sha }}
-          dockerfile_path: Dockerfile
-        secrets:
-          SNYK_CLIENT_ID: ${{ secrets.SNYK_CLIENT_ID }}
-          SNYK_CLIENT_SECRET: ${{ secrets.SNYK_CLIENT_SECRET }}
-          ECR_ROLE_TO_ASSUME: ${{ secrets.ECR_ROLE_TO_ASSUME }}
+      - name: Debug trigger
+        run: echo "Testing that this waits before running"

@@ -49,9 +49,9 @@ jobs:
       - uses: ./.github/actions/build-and-push
         with:
           ECR_REGISTRY_URL: ${{ secrets.ECR_REGISTRY_URL }}
-          ECR_ROLE_TO_ASSUME: ${{ secrets.ECR_ROLE_TO_ASSUME }}
-          ECR_REPOSITORY: ${{ vars.ECR_REPOSITORY }}
-          ECR_REGION: ${{ vars.ECR_REGION }}
+          ECR_ROLE_TO_ASSUME: ${{ secrets.CLA_BACKEND_ECR_ROLE_TO_ASSUME }}
+          ECR_REPOSITORY: ${{ vars.CLA_BACKEND_ECR_REPOSITORY }}
+          ECR_REGION: ${{ vars.CLA_BACKEND_ECR_REGION }}
 
   uat-deploy:
     name: UAT deploy
@@ -73,7 +73,7 @@ jobs:
           KUBE_NAMESPACE: ${{ secrets.KUBE_NAMESPACE }}
           KUBE_TOKEN: ${{ secrets.KUBE_TOKEN }}
           ECR_REGISTRY_URL: ${{ secrets.ECR_REGISTRY_URL }}
-          ECR_REPOSITORY: ${{ vars.ECR_REPOSITORY }}
+          ECR_REPOSITORY: ${{ vars.CLA_BACKEND_ECR_REPOSITORY }}
           HOST: ${{ vars.UAT_HOST }}
 
   uat-static-deploy:
@@ -95,7 +95,7 @@ jobs:
           KUBE_NAMESPACE: ${{ secrets.KUBE_NAMESPACE }}
           KUBE_TOKEN: ${{ secrets.KUBE_TOKEN }}
           ECR_REGISTRY_URL: ${{ secrets.ECR_REGISTRY_URL }}
-          ECR_REPOSITORY: ${{ vars.ECR_REPOSITORY }}
+          ECR_REPOSITORY: ${{ vars.CLA_BACKEND_ECR_REPOSITORY }}
           HOST: ${{ vars.UAT_HOST }}
 
   staging-deploy:
@@ -117,7 +117,7 @@ jobs:
           KUBE_NAMESPACE: ${{ secrets.KUBE_NAMESPACE }}
           KUBE_TOKEN: ${{ secrets.KUBE_TOKEN }}
           ECR_REGISTRY_URL: ${{ secrets.ECR_REGISTRY_URL }}
-          ECR_REPOSITORY: ${{ vars.ECR_REPOSITORY }}
+          ECR_REPOSITORY: ${{ vars.CLA_BACKEND_ECR_REPOSITORY }}
           HOST: ${{ vars.STAGING_HOST }}
 
   training-deploy:
@@ -139,7 +139,7 @@ jobs:
           KUBE_NAMESPACE: ${{ secrets.KUBE_NAMESPACE }}
           KUBE_TOKEN: ${{ secrets.KUBE_TOKEN }}
           ECR_REGISTRY_URL: ${{ secrets.ECR_REGISTRY_URL }}
-          ECR_REPOSITORY: ${{ vars.ECR_REPOSITORY }}
+          ECR_REPOSITORY: ${{ vars.CLA_BACKEND_ECR_REPOSITORY }}
           HOST: ${{ vars.TRAINING_HOST }}
 
   production-deploy:
@@ -161,5 +161,5 @@ jobs:
           KUBE_NAMESPACE: ${{ secrets.KUBE_NAMESPACE }}
           KUBE_TOKEN: ${{ secrets.KUBE_TOKEN }}
           ECR_REGISTRY_URL: ${{ secrets.ECR_REGISTRY_URL }}
-          ECR_REPOSITORY: ${{ vars.ECR_REPOSITORY }}
+          ECR_REPOSITORY: ${{ vars.CLA_BACKEND_ECR_REPOSITORY }}
           HOST: ${{ vars.PRODUCTION_HOST }}

@@ -1,9 +1,9 @@
 from django.test import TestCase
 from cla_provider.serializers import (
     CaseSerializer,
-    DetailedCaseSerializer,
     CaseListSerializer
 )
+from mcc.serializers import DetailedCaseSerializer
 
 
 class SerializerConfigurationTest(TestCase):

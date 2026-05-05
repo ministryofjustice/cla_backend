@@ -280,31 +280,6 @@ class NestedDiagnosisSerializer(serializers.Serializer):
         return []
 
 
-class DetailedCaseSerializer(CaseSerializer):
-    """
-    Extended case serializer that includes all nested details
-    for the detailed endpoint
-    """
-    personal_details = PersonalDetailsSerializerFull(read_only=True)
-    adaptation_details = AdaptationDetailsSerializerBase(read_only=True)
-    thirdparty_details = ThirdPartyDetailsSerializerBase(read_only=True)
-    scope_traversal = NestedScopeTraversalSerializer(read_only=True)
-    diagnosis = NestedDiagnosisSerializer(read_only=True)
-    notes_history = SerializerMethodField()
-    state = serializers.CharField(read_only=True)
-    state_note = LogSerializer(read_only=True)
-
-    def get_notes_history(self, obj):
-        """Fetch all notes history for the case"""
-        from legalaid.models import CaseNotesHistory
-
-        notes = CaseNotesHistory.objects.filter(case=obj).order_by('-created')
-        return CaseNotesHistorySerializer(notes, many=True).data
-
-    class Meta(CaseSerializer.Meta):
-        fields = tuple(field for field in CaseSerializer.Meta.fields if field != "eligibility_check") + ("state", "state_note", "notes_history")
-
-
 class CaseListSerializer(CaseSerializer):
     safe_to_contact = serializers.CharField(source='personal_details.safe_to_contact', read_only=True)
     phone_number = serializers.CharField(source='personal_details.mobile_phone', read_only=True)

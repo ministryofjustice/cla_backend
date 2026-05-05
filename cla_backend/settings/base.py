@@ -253,6 +253,7 @@ PROJECT_APPS = (
     "legalaid",
     "cla_butler",
     "cla_provider",
+    "mcc",
     "call_centre",
     "cla_eventlog",
     "knowledgebase",

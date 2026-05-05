@@ -48,7 +48,6 @@ from rest_framework import viewsets
 from .serializers import (
     EligibilityCheckSerializer,
     CaseSerializer,
-    DetailedCaseSerializer,
     StaffSerializer,
     AdaptationDetailsSerializer,
     PersonalDetailsSerializer,
@@ -228,6 +227,8 @@ class CaseViewSet(CLAProviderPermissionViewSetMixin, FullCaseViewSet):
         """
         Returns case with all nested details in a single call
         """
+        from mcc.serializers import DetailedCaseSerializer
+
         case = self.get_object()
         serializer = DetailedCaseSerializer(instance=case)
         return DRFResponse(serializer.data)

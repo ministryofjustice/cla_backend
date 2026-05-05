@@ -1,0 +1,49 @@
+name: Build, Push and Snyk Scan
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-and-push:
+    name: Build and push
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    outputs:
+      image_tag: ${{ steps.build.outputs.image_tag }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Build and push Docker image
+        id: build
+        uses: ./.github/actions/build-and-push
+        with:
+          ECR_REGISTRY_URL: ${{ secrets.ECR_REGISTRY_URL }}
+          ECR_ROLE_TO_ASSUME: ${{ secrets.ECR_ROLE_TO_ASSUME }}
+          ECR_REPOSITORY: ${{ vars.ECR_REPOSITORY }}
+          ECR_REGION: ${{ vars.ECR_REGION }}
+
+  snyk-image-scan:
+    name: Snyk Image Scan
+    needs: build-and-push
+
+    uses: ministryofjustice/laa-reusable-github-actions/.github/workflows/sast.yml@a652d1076b05dd80d3ab619d263aac6ce526d70b
+
+    permissions:
+      id-token: write
+      contents: read
+      security-events: write
+      actions: read
+
+    with:
+      image_uri: ${{ needs.build-and-push.outputs.image_tag }}
+      dockerfile_path: Dockerfile
+
+    secrets:
+      SNYK_CLIENT_ID: ${{ secrets.SNYK_CLIENT_ID }}
+      SNYK_CLIENT_SECRET: ${{ secrets.SNYK_CLIENT_SECRET }}
+      ECR_ROLE_TO_ASSUME: ${{ secrets.FALA_ECR_ROLE_TO_ASSUME }}

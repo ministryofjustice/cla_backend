@@ -1,4 +1,6 @@
-name: ç
+name: Build and push
+description: Build image and push it ECR
+
 on:
   workflow_call:
     inputs:

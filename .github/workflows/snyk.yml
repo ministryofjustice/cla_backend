@@ -71,7 +71,10 @@ jobs:
         with:
           image_uri: ${{ needs.build-and-push.outputs.image_tag }}
           dockerfile_path: Dockerfile
-        secrets:
+        
+          secrets:
           SNYK_CLIENT_ID: ${{ secrets.SNYK_CLIENT_ID }}
           SNYK_CLIENT_SECRET: ${{ secrets.SNYK_CLIENT_SECRET }}
           ECR_ROLE_TO_ASSUME: ${{ secrets.CLA_BACKEND_ECR_ROLE_TO_ASSUME }}
+
+  

@@ -27,6 +27,7 @@ runs:
       uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
 
     - name:  Set up AWS credentials
+      id: login-ecr
       uses: ministryofjustice/laa-reusable-github-actions/.github/actions/ecr-auth@cb1ebcbca5efcd1e91b7ee1e27c73650c1bba9d8
       with:
         ecr_region: ${{ inputs.ECR_REGION }}

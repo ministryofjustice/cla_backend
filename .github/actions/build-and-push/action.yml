@@ -17,7 +17,7 @@ inputs:
 
 outputs:
   image_tag:
-    value: ${{ steps.branch-tag.outputs.tags }}
+    value: ${{ steps.meta.outputs.tags }}
 
 runs:
   using: composite
@@ -55,19 +55,16 @@ runs:
         else
           echo "tag=branch-${GITHUB_SHA}" >> "$GITHUB_OUTPUT"
         fi
-        
-        echo "image_uri=${{ steps.login-ecr.outputs.registry }}/${{ inputs.ECR_REPOSITORY }}:${{steps.branch-tag.outputs.tag}}" >> "$GITHUB_OUTPUT"
-
 
       shell: bash
 
-    # - name: Docker meta
-    #   id: meta
-    #   uses: docker/metadata-action@030e881283bb7a6894de51c315a6bfe6a94e05cf # v6.0.0
-    #   with:
-    #     images: ${{ steps.login-ecr.outputs.registry }}/${{ inputs.ECR_REPOSITORY }}
-    #     tags: |
-    #       type=raw,value=${{steps.branch-tag.outputs.tag}} 
+    - name: Docker meta
+      id: meta
+      uses: docker/metadata-action@030e881283bb7a6894de51c315a6bfe6a94e05cf # v6.0.0
+      with:
+        images: ${{ steps.login-ecr.outputs.registry }}/${{ inputs.ECR_REPOSITORY }}
+        tags: |
+          type=raw,value=${{steps.branch-tag.outputs.tag}} 
 
     - name: Build and push image with caching
       uses: ministryofjustice/laa-reusable-github-actions/.github/actions/build_and_push_with_cache@7c81d37978aef9418f7185d9ecf70e3cd1c63c02

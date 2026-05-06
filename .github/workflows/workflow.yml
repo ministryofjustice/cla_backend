@@ -41,7 +41,6 @@ jobs:
   
   build-and-push:
     name: Build
-    needs: unit-tests
     uses: ./.github/workflows/build.yml
     permissions:
       contents: read

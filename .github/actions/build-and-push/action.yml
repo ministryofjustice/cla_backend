@@ -15,6 +15,10 @@ inputs:
     required: true
     description: ECR repository
 
+  outputs:
+    image_tag:
+      value: ${{ steps.meta.outputs.tags }}
+
 runs:
   using: composite
   steps:
@@ -41,16 +45,14 @@ runs:
         key: ${{ runner.os }}-buildx-${{ github.sha }}
         restore-keys: |
           ${{ runner.os }}-buildx-
-
-    - name: Set image tag
-      id: branch-tag
-      run: |
-        if [ "${GITHUB_REF_NAME}" = "main" ]; then
-          echo "tag=main-${GITHUB_SHA}" >> "$GITHUB_OUTPUT"
-        else
-          echo "tag=branch-${GITHUB_SHA}" >> "$GITHUB_OUTPUT"
-        fi
-      shell: bash
+  
+    - name: Docker meta
+      id: meta
+      uses: docker/metadata-action@030e881283bb7a6894de51c315a6bfe6a94e05cf # v6.0.0
+      with:
+        images: ${{ steps.login-ecr.outputs.registry }}/${{ inputs.ECR_REPOSITORY }}
+        tags: |
+            type=raw,value=${{ github.ref_name == 'main' && format('main-{0}', github.sha) || format('branch-{0}', github.sha) }}
 
     - name: Build and push image with caching
       uses: ministryofjustice/laa-reusable-github-actions/.github/actions/build_and_push_with_cache@7c81d37978aef9418f7185d9ecf70e3cd1c63c02

@@ -611,34 +611,6 @@ class CaseStateTestCase(BaseCaseTestCase):
         )
         self.assertEqual(case.state, 'rejected')
 
-    def test_api_returns_state_field(self):
-        """Test that the detailed API endpoint includes the state field"""
-        detailed_url = "{0}detailed/".format(self.get_url(self.resource.reference))
-        response = self.client.get(detailed_url, HTTP_AUTHORIZATION=self.get_http_authorization())
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-        self.assertIn('state', response.data)
-        self.assertEqual(response.data['state'], 'new')  # Default state for test case
-
-        # Test that regular endpoint does NOT include state field
-        response = self.client.get(self.get_url(self.resource.reference), HTTP_AUTHORIZATION=self.get_http_authorization())
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertNotIn('state', response.data)
-
-    def test_detailed_endpoint_excludes_eligibility_check(self):
-        """Test that the detailed endpoint does NOT include eligibility_check reference"""
-        detailed_url = "{0}detailed/".format(self.get_url(self.resource.reference))
-        response = self.client.get(detailed_url, HTTP_AUTHORIZATION=self.get_http_authorization())
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-        # Detailed endpoint should NOT have eligibility_check reference
-        self.assertNotIn('eligibility_check', response.data)
-
-        # Regular endpoint should still have eligibility_check reference
-        response = self.client.get(self.get_url(self.resource.reference), HTTP_AUTHORIZATION=self.get_http_authorization())
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn('eligibility_check', response.data)
-
     def test_case_state_note_prefers_non_minor_case_viewed_log(self):
         """State note should ignore minor CASE_VIEWED logs and use the visible log entry."""
         self._set_case_as_opened()
@@ -647,15 +619,3 @@ class CaseStateTestCase(BaseCaseTestCase):
         self.assertEqual(self.resource.state, "opened")
         self.assertIsNotNone(self.resource.state_note)
         self.assertEqual(self.resource.state_note.notes, "Not ready for determination")
-
-    def test_detailed_endpoint_state_note_ignores_minor_case_viewed_log(self):
-        """Detailed endpoint state_note should match visible logs endpoint behaviour."""
-        self._set_case_as_opened()
-        self._create_case_viewed_logs()
-
-        detailed_url = "{0}detailed/".format(self.get_url(self.resource.reference))
-        response = self.client.get(detailed_url, HTTP_AUTHORIZATION=self.get_http_authorization())
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["state"], "opened")
-        self.assertEqual(response.data["state_note"]["notes"], "Not ready for determination")

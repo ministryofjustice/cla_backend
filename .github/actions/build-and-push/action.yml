@@ -17,7 +17,7 @@ inputs:
 
 outputs:
   image_tag:
-    value: ${{ steps.meta.outputs.tags }}
+    value: ${{ steps.pusher.outputs.tags }}
 
 runs:
   using: composite
@@ -67,6 +67,7 @@ runs:
           type=raw,value=${{steps.branch-tag.outputs.tag}} 
 
     - name: Build and push image with caching
+      id: pusher
       uses: ministryofjustice/laa-reusable-github-actions/.github/actions/build_and_push_with_cache@7c81d37978aef9418f7185d9ecf70e3cd1c63c02
       with:
        image_registry: ${{ inputs.ECR_REGISTRY_URL }}

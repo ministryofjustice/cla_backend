@@ -18,6 +18,8 @@ from django.core.urlresolvers import reverse
 from cla_common.constants import REQUIRES_ACTION_BY
 
 from cla_auth.constants import OPERATOR_ROLE, OPERATOR_MANAGER_ROLE, PROVIDER_ROLE, PROVIDER_MCC_ROLE
+from call_centre.models import Operator
+
 
 User = get_user_model()
 
@@ -309,6 +311,40 @@ class EntraAuthorizationTestCase(EntraTokenGeneratorMixin, TestCase):
 
     def tearDown(self):
         self.public_keys_patcher.stop()
+
+    def test_user_is_operator_manager_in_silas_but_operator_in_backend(self):
+        """Test user is operator manager in silas but an operator in the backend. User should be promoted to an operator manager in the backend"""
+        operator = make_recipe("call_centre.operator")
+        operator.user.email = "test@localhost"
+        operator.user.save()
+        self.assertFalse(operator.is_manager)
+
+        token = self._create_token(app_roles=OPERATOR_MANAGER_ROLE, email=operator.user.email)
+        request = self.factory.get("/")
+        request.META["HTTP_AUTHORIZATION"] = "Bearer %s" % token
+        user, _ = self.auth.authenticate(request)
+        self.assertTrue(user.operator.is_manager)
+
+        operator = Operator.objects.get(pk=operator.pk)
+        self.assertTrue(operator.is_manager)
+
+    def test_user_is_operator_in_silas_but_operator_manager_in_backend(self):
+        """Test user is operator in silas but an operator manager in the backend. User should be demoted to an operator in the backend"""
+        operator = make_recipe("call_centre.operator")
+        operator.is_manager = True
+        operator.save()
+        operator.user.email = "test@localhost"
+        operator.user.save()
+        self.assertTrue(operator.is_manager)
+
+        token = self._create_token(app_roles=OPERATOR_ROLE, email=operator.user.email)
+        request = self.factory.get("/")
+        request.META["HTTP_AUTHORIZATION"] = "Bearer %s" % token
+        user, _ = self.auth.authenticate(request)
+        self.assertFalse(user.operator.is_manager)
+
+        operator = Operator.objects.get(pk=operator.pk)
+        self.assertFalse(operator.is_manager)
 
     def test_user_is_provider(self):
         """User is a provider and tries to access a case that belongs to them"""

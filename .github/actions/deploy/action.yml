@@ -28,10 +28,6 @@ inputs:
   HOST:
     required: true
 
-  IMAGE_TAG:
-    description: Image tag passed from build
-    required: true
-
 runs:
   using: composite
   steps:
@@ -55,7 +51,7 @@ runs:
           --user=deploy-user \
           --namespace="$KUBE_NAMESPACE"
         kubectl config use-context "$KUBE_CLUSTER"
-
+ 
     - name: Set image tag and release info
       shell: bash
       env:
@@ -64,14 +60,14 @@ runs:
         ECR_REGISTRY_URL: ${{ inputs.ECR_REGISTRY_URL }}
         ECR_REPOSITORY: ${{ inputs.ECR_REPOSITORY }}
         KUBE_NAMESPACE: ${{ inputs.KUBE_NAMESPACE }}
-        IMAGE_TAG_INPUT: ${{ inputs.IMAGE_TAG }}
       run: |
         BRANCH_NAME="${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}"
-
-        IMAGE_TAG="$IMAGE_TAG_INPUT"
-
+        if [ "${GITHUB_REF_NAME}" = "main" ]; then
+          IMAGE_TAG="main-${GITHUB_SHA}"
+        else
+          IMAGE_TAG="branch-${GITHUB_SHA}"
+        fi
         CLEANED_BRANCH_NAME=$(echo "$BRANCH_NAME" | sed 's/^feature[-/]//' | sed 's:^\w*\/::' | tr -s ' _/[]().' '-' | tr '[:upper:]' '[:lower:]' | cut -c1-28 | sed 's/-$//')
-
         if [ "$DYNAMIC_HOSTNAME" = "true" ]; then
           RELEASE_NAME="${CLEANED_BRANCH_NAME}"
           RELEASE_HOST="${RELEASE_NAME}-${HOST}"
@@ -79,7 +75,6 @@ runs:
           RELEASE_NAME="cla-backend"
           RELEASE_HOST="${HOST}"
         fi
-
         echo "IMAGE_TAG=${IMAGE_TAG}" >> "$GITHUB_ENV"
         echo "RELEASE_NAME=${RELEASE_NAME}" >> "$GITHUB_ENV"
         echo "RELEASE_HOST=${RELEASE_HOST}" >> "$GITHUB_ENV"

@@ -54,7 +54,7 @@ jobs:
   snyk-image-scan:
     name: Snyk Image Scan
     needs: [build-and-push]
-    if: always() #allowed to be passed for the error 
+    if: always() # allowed to be passed for the error 
 
     uses: ministryofjustice/laa-reusable-github-actions/.github/workflows/sast.yml@a652d1076b05dd80d3ab619d263aac6ce526d70b
 

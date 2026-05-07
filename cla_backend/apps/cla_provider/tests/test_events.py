@@ -7,7 +7,7 @@ class RejectCaseEventTestCase(EventTestCaseMixin, TestCase):
     EVENT_KEY = "reject_case"
 
     def test_reject_case(self):
-        self._test_process_with_expicit_code(["MIS", "MIS-MEANS", "MIS-OOS", "COI"])
+        self._test_process_with_expicit_code(["MIS", "MIS-MEANS", "MIS-OOS", "COI", "MERI", "DUPL", "CLOT"])
 
     def test_reject_conflict(self):
         self._test_process_with_implicit_code("COI", process_kwargs={"is_conflict": True})

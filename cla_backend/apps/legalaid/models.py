@@ -1078,7 +1078,7 @@ class Case(TimeStampedModel):
         code_mapping = {
             'opened': ['CASE_VIEWED'],
             'accepted': ['SPOP'],
-            'rejected': ['COI', 'MIS', 'MIS-OOS', 'MIS-MEANS'],
+            'rejected': ['COI', 'MIS', 'MIS-OOS', 'MIS-MEANS', 'MERI', 'DUPL', 'CLOT'],
             'completed': ['CLSP', 'DREFER', 'REOPEN']
         }
 

@@ -52,6 +52,9 @@ class Command(BaseCommand):
             "REOPEN",
             "SPOR",
             "WROF",
+            "MERI",
+            "DUPL",
+            "CLOT",
         ]
 
         once_only_events_today = Log.objects.filter(created__gte=start_of_today, code__in=once_only_codes)

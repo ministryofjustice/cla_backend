@@ -52,6 +52,12 @@ jobs:
           tags: |
             type=raw,value=${{ github.ref_name == 'main' && format('main-{0}', github.sha) || format('branch-{0}', github.sha) }}
 
+         
+      - name: Debug image URL
+        run: |
+          echo "Built image:"
+          echo "${{ steps.meta.outputs.tags }}"    
+
       - name: Build and push a Docker image to the container repository
         id: docker-build
         uses: docker/build-push-action@d08e5c354a6adb9ed34480a06d141179aa583294 # v7.0.0

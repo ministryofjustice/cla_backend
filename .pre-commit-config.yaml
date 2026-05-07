@@ -18,8 +18,8 @@ repos:
     rev: 5.5.0
     hooks:
       - id: pip-compile
-        language_version: python3.10
-        additional_dependencies: ["pip<22"]
+        language_version: python2.7
+        additional_dependencies: ["pip==20.3.4"]
         name: pip-compile requirements-docs.in
         files: requirements-(base|docs).in
         args:
@@ -29,8 +29,8 @@ repos:
             requirements/generated/requirements-docs.txt
           ]
       - id: pip-compile
-        language_version: python3.10
-        additional_dependencies: ["pip<22"]
+        language_version: python2.7
+        additional_dependencies: ["pip==20.3.4"]
         name: pip-compile requirements-dev.in
         files: requirements-(base|dev).in
         args:
@@ -40,19 +40,20 @@ repos:
             requirements/generated/requirements-dev.txt,
           ]
       - id: pip-compile
-        language_version: python3.10
-        additional_dependencies: ["pip<22"]
+        language_version: python2.7
+        additional_dependencies: ["pip==20.3.4"]
         name: pip-compile requirements-lint.in
         files: requirements-(base|lint).in
         args:
           [
+            "--generate-hashes",
             requirements/source/requirements-lint.in,
             "--output-file",
             requirements/generated/requirements-lint.txt,
           ]
       - id: pip-compile
-        language_version: python3.10
-        additional_dependencies: ["pip<22"]
+        language_version: python2.7
+        additional_dependencies: ["pip==20.3.4"]
         name: pip-compile requirements-testing.in
         files: requirements-(base|testing).in
         args:
@@ -62,8 +63,8 @@ repos:
             requirements/generated/requirements-testing.txt,
           ]
       - id: pip-compile
-        language_version: python3.10
-        additional_dependencies: ["pip<22"]
+        language_version: python2.7
+        additional_dependencies: ["pip==20.3.4"]
         name: pip-compile requirements-production.in
         files: requirements-(base|production).in
         args:

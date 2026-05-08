@@ -119,7 +119,9 @@ jobs:
     name: UAT static deploy
     runs-on: ubuntu-latest
     needs: [build-and-push]
-    if: github.event_name == 'pull_request'
+    if: |
+      github.event_name == 'pull_request' ||
+      (github.event_name == 'push' && github.ref_name == 'main')
     environment: uat-static
     permissions:
       contents: read

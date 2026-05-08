@@ -24,6 +24,7 @@ class ClientIDPermission(BasePermission):
     """
 
     client_name = None
+    entra_roles = []
 
     def get_client_name(self, token):
         client = token.application
@@ -34,6 +35,25 @@ class ClientIDPermission(BasePermission):
         return client_name
 
     def has_permission(self, request, view):
+        has_permission = self.entra_has_permission(request, view)
+        if has_permission is None:
+            return self.legacy_has_permission(request, view)
+        return has_permission
+
+    def entra_has_permission(self, request, view):
+        if isinstance(request.auth, dict):
+            token_roles = request.auth.get("APP_ROLES")
+            if not token_roles:
+                return False
+            if token_roles:
+                if isinstance(token_roles, unicode):
+                    token_roles = token_roles.encode("utf-8")
+                if isinstance(token_roles, str):
+                    token_roles = [token_roles]
+                return all(role in self.entra_roles for role in token_roles)
+        return None
+
+    def legacy_has_permission(self, request, view):
         token = request.auth
 
         if not token:

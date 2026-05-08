@@ -16,7 +16,6 @@ from jsonfield import JSONField
 from cla_common.money_interval.fields import MoneyIntervalField
 from cla_common.money_interval.models import MoneyInterval
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -110,7 +109,7 @@ class QuerysetToFile(object):
                 setattr(obj, n, val)
             except Exception as e:
                 logger.error(
-                    "Failed to set attribute {field}}({class_name}) to "
+                    "Failed to set attribute {field}({class_name}) to "
                     "{value}({value_class}) on object {object} with error: "
                     "{error}".format(
                         field=f.name,

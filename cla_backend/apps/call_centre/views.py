@@ -9,7 +9,6 @@ from django.db.models import Q
 from django.db import transaction
 from django.utils import six, timezone
 from django.shortcuts import get_object_or_404
-
 from cla_eventlog import event_registry
 from historic.models import CaseArchived
 from legalaid.permissions import IsManagerOrMePermission
@@ -58,6 +57,7 @@ from legalaid.views import (
     BaseCaseLogMixin,
     BaseEODDetailsViewSet,
     BaseContactResearchMethodViewSet,
+    BaseScopeTraversalViewSet,
 )
 
 from cla_common.constants import REQUIRES_ACTION_BY, CASE_SOURCE
@@ -180,7 +180,7 @@ class CaseViewSet(
     # using CreateCaseSerializer during creation
     serializer_detail_class = CaseSerializer
 
-    queryset = Case.objects.all().select_related("eligibility_check", "personal_details")
+    queryset = Case.objects.all().select_related("eligibility_check", "personal_details", "scope_traversal")
     queryset_detail = Case.objects.all().select_related(
         "eligibility_check",
         "personal_details",
@@ -192,6 +192,7 @@ class CaseViewSet(
         "media_code",
         "eligibility_check__category",
         "created_by",
+        "scope_traversal",
     )
 
     filter_backends = (AscCaseOrderingFilter,)
@@ -224,18 +225,14 @@ class CaseViewSet(
             qs = qs.filter(source=CASE_SOURCE.PHONE)
 
         if this_operator.is_cla_superuser_or_manager:
-            qs = qs.extra(
-                select={
-                    "complaint_count": """
+            qs = qs.extra(select={"complaint_count": """
                     SELECT COUNT(complaints_complaint.id)
                     FROM complaints_complaint
                     JOIN legalaid_eoddetails
                         ON complaints_complaint.eod_id = legalaid_eoddetails.id
                     WHERE legalaid_case.id = legalaid_eoddetails.case_id
                         AND complaints_complaint.resolved IS NULL
-                """
-                }
-            )
+                """})
         else:
             qs = qs.extra(select={"complaint_count": "SELECT NULL"})
 
@@ -401,17 +398,17 @@ class CaseViewSet(
     @detail_route(methods=["get"])
     def search_for_personal_details(self, request, reference=None, **kwargs):
         """
-            You can only call this endpoint if the case doesn't have any
-            personal_details record attached.
-            This is by design as it feels slighly more secure than allowing
-            clients to use a dedicated endpoint that they can call whenever
-            they want.
+        You can only call this endpoint if the case doesn't have any
+        personal_details record attached.
+        This is by design as it feels slighly more secure than allowing
+        clients to use a dedicated endpoint that they can call whenever
+        they want.
 
-            If things change in the future, feel free to add a dedicated
-            endpoint for this though.
+        If things change in the future, feel free to add a dedicated
+        endpoint for this though.
 
-            Should return just ('reference', 'full_name', 'postcode', 'dob')
-            and should NOT include vulnerable users.
+        Should return just ('reference', 'full_name', 'postcode', 'dob')
+        and should NOT include vulnerable users.
         """
         obj = self.get_object()
         if obj.personal_details:
@@ -597,6 +594,10 @@ class DiagnosisViewSet(
     pass
 
 
+class ScopeTraversalViewSet(CallCentrePermissionsViewSetMixin, BaseScopeTraversalViewSet):
+    pass
+
+
 class LogViewSet(CallCentrePermissionsViewSetMixin, BaseLogViewSet):
     serializer_class = LogSerializer
 
@@ -682,23 +683,17 @@ class ComplaintSearchFilter(SearchFilter):
     # https://github.com/encode/django-rest-framework/pull/2535
     # Later versions of DRF change this functionality so will need updating
     def filter_queryset(self, request, queryset, view):
-        search_fields = getattr(view, 'search_fields', None)
+        search_fields = getattr(view, "search_fields", None)
 
         search_terms = self.get_search_terms(request)
 
         if not search_fields or not search_terms:
             return queryset
 
-        orm_lookups = [
-            self.construct_search(six.text_type(search_field))
-            for search_field in search_fields
-        ]
+        orm_lookups = [self.construct_search(six.text_type(search_field)) for search_field in search_fields]
 
         for search_term in search_terms:
-            queries = [
-                models.Q(**{orm_lookup: search_term})
-                for orm_lookup in orm_lookups
-            ]
+            queries = [models.Q(**{orm_lookup: search_term}) for orm_lookup in orm_lookups]
             queryset = queryset.filter(reduce(operator.or_, queries))
         return queryset
 

@@ -91,13 +91,13 @@ class CLAAuthBaseApiTestMixin(CLABaseApiTestMixin):
         )
         # Create an access token
         self.staff_token = AccessToken.objects.create(
-            user=self.user, application=self.staff_api_client, token="stafF_token", scope=0, expires=self.token_expires
+            user=self.user, application=self.staff_api_client, token="staff_token", scope=0, expires=self.token_expires
         )
 
         self.staff_manager_token = AccessToken.objects.create(
             user=self.mgr_user,
             application=self.staff_api_client,
-            token="stafF_token_mgr",
+            token="staff_manager_token",
             scope=0,
             expires=self.token_expires,
         )

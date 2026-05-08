@@ -21,13 +21,15 @@
             <tbody>
     {% for report in urls %}
         {% if report.name != 'Exports' %}
-                <tr>
-                    <th scope="row">
-                        <a href="{{ report.url }}">{{ report.name }}</a>
-                    </th>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                </tr>
+            {% if report.name != "MI Scope Report" or perms.legalaid.run_internal_reports %}
+                  <tr>
+                      <th scope="row">
+                          <a href="{{ report.url }}">{{ report.name }}</a>
+                      </th>
+                      <td>&nbsp;</td>
+                      <td>&nbsp;</td>
+                  </tr>
+          {% endif %}
         {% endif %}
     {% endfor %}
             </tbody>

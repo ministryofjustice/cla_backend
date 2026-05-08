@@ -3,7 +3,6 @@ from django.conf.urls import patterns, url
 from . import views
 from . import api
 
-
 urlpatterns = patterns(
     "",
     url(r"^api/exports/$", api.ExportListView.as_view(), name="exports"),
@@ -37,23 +36,25 @@ urlpatterns = patterns(
     url(r"^mi-cb1-extract-agilisys/$", views.mi_cb1_extract_agilisys, name="mi_cb1_extract_agilisys"),
     url(r"^mi-voice-extract/$", views.mi_voice_extract, name="mi_voice_extract"),
     url(r"^mi-digital-case-type-extract/$", views.mi_digital_case_type_extract, name="mi_digital_case_type_extract"),
+    url(
+        r"^mi-digital-case-type-extract-with-category/$",
+        views.mi_digital_case_type_extract_with_category,
+        name="mi_digital_case_type_extract_with_category",
+    ),
     url(r"^mi-eod-extract/$", views.mi_eod_extract, name="mi_eod_extract"),
     url(r"^mi-comlpaints/$", views.mi_complaints, name="mi_complaints"),
     url(r"^mi-obiee-extract/$", views.mi_obiee_extract, name="mi_obiee_extract"),
-    url(r"^mi-problem-categorisation/$", views.problem_categorisation, name="mi_problem_categorisation"),
+    url(r"^mi-problem-categorisation/$", views.mi_problem_categorisation, name="mi_problem_categorisation"),
+    url(r"^mi-scope-report/$", views.mi_scope_report, name="mi_scope_report"),
     url(r"^metrics-report/$", views.metrics_report, name="metrics_report"),
     url(r"^all-knowledgebase-articles/$", views.all_knowledgebase_articles, name="all_knowledgebase_articles"),
     url(r"^reasons-for-contacting/$", views.reasons_for_contacting, name="reasons_for_contacting"),
+    url(r"^web-contact-cases/$", views.web_contact_cases_report, name="web_contact_cases_report"),
     url(
         r"^reasons-for-contacting-disaggregated/$",
         views.reasons_for_contacting_disaggregated,
         name="reasons_for_contacting_disaggregated",
     ),
-    url(r"^case-demographic-report/$", views.case_demographic_report, name="case_demographic_report"),
-    url(
-        r"^minimal-case-demographic-report/$",
-        views.minimal_case_demographic_report,
-        name="minimal_case_demographic_report",
-    ),
+    url(r"^mi-demographic-report/$", views.mi_demographic_report, name="mi_demographic_report"),
     url(r"^callback-time-slot-report/$", views.callback_time_slot_report, name="callback_time_slot_report"),
 )

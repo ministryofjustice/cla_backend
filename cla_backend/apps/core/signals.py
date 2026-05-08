@@ -8,7 +8,7 @@ def log_user_created(sender, instance, created, **kwargs):
         logger.info(
             "User created",
             extra={
-                "USERNAME": instance.username,
+                "USER_ID": instance.pk,
                 "IS_STAFF": unicode(instance.is_staff),
                 "IS_ACTIVE": unicode(instance.is_active),
                 "IS_SUPERUSER": unicode(instance.is_superuser),
@@ -25,7 +25,7 @@ def log_user_modified(sender, instance, **kwargs):
     logger.info(
         "User modified",
         extra={
-            "USERNAME": instance.username,
+            "USER_ID": instance.pk,
             "IS_STAFF": unicode(instance.is_staff),
             "IS_ACTIVE": unicode(instance.is_active),
             "IS_SUPERUSER": unicode(instance.is_superuser),

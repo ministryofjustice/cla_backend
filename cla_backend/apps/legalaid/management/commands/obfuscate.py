@@ -8,7 +8,6 @@ from legalaid.utils import diversity
 from legalaid.models import PersonalDetails, ThirdPartyDetails, EligibilityCheck, Case, CaseNotesHistory, EODDetails
 from complaints.models import Complaint
 
-
 OBFUSCATED_FIELDS = {
     PersonalDetails: {
         "full_name": "Fullname Obfuscated",

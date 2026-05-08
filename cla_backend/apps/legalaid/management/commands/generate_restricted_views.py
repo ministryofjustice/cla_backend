@@ -12,7 +12,7 @@ PG_USER_PASSWORD = os.environ.get("ANALYTICS_DB_PASSWORD")
 
 
 def get_all_non_restricted_models(models):
-    """ Gets all non-restricted fields and the model they belong to.
+    """Gets all non-restricted fields and the model they belong to.
 
     Args:
         List[django.Model]: List of models to check through
@@ -30,7 +30,7 @@ def get_all_non_restricted_models(models):
 
 
 def get_all_non_restricted_columns(model):
-    """ Gets all non restricted columns from the relevant django model.
+    """Gets all non restricted columns from the relevant django model.
     Columns are non-restricted if the model has Analytics._allow_analytics set to True and the columns are not listed in Analytics._PII.
 
     Args:
@@ -127,6 +127,8 @@ def create_view(view_name, table, columns):
         columns (list[str]): List of column names to include in the view
     """
     command = "CREATE VIEW %s AS SELECT %s FROM %s"
+    if "diagnosis_diagnosistraversal.nodes" in columns:
+        columns = columns.replace("diagnosis_diagnosistraversal.nodes", "json_array_elements(nodes) as nodes")
     with connection.cursor() as cursor:
         cursor.execute(command, [AsIs(view_name), AsIs(columns), AsIs(table)])
         logger.info("Created view: {view_name} with columns: {columns}".format(view_name=view_name, columns=columns))

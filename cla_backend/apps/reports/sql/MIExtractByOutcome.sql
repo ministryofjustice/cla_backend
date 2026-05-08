@@ -61,6 +61,7 @@ select
   -- /SPLIT FIELDS. --
   ,COALESCE(assigned_provider.name, trim((log.context->'provider')::text, '"'), provider.name) as "Provider_ID" -- need to convert to LAA provider ID
   ,category.code as "Category_Name"
+  ,cst.category->'name' as "Client_Category_Name"
   ,c.created as "Date_Case_Created"
   ,c.modified as "Last_Modified_Date"
   ,log.code as "Outcome_Code_Child"
@@ -165,6 +166,7 @@ from cla_eventlog_log as log
   LEFT OUTER JOIN legalaid_case split_case on c.from_case_id = split_case.id
   LEFT OUTER JOIN cla_provider_provider as assigned_provider on (log.context->>'provider_id')::numeric = assigned_provider.id
   LEFT OUTER JOIN call_centre_organisation AS cc_org ON cc_org.id = c.organisation_id
+  LEFT OUTER JOIN checker_scopetraversal cst ON cst.id = c.scope_traversal_id
 where
   log.type = 'outcome'
   and log.created >= %s

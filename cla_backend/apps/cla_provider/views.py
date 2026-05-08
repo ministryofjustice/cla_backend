@@ -7,6 +7,7 @@ from core.drf.mixins import ClaCreateModelMixin, ClaUpdateModelMixin
 from core.drf.paginator import StandardResultsSetPagination
 
 from django.shortcuts import get_object_or_404
+from guidance.views import BaseGuidanceNoteViewSet
 from legalaid.permissions import IsManagerOrMePermission
 
 from rest_framework import mixins
@@ -33,15 +34,17 @@ from legalaid.views import (
     BaseCaseNotesHistoryViewSet,
     BaseCSVUploadViewSet,
     DescCaseOrderingFilter,
+    BaseScopeTraversalViewSet,
 )
 from legalaid.serializers import ContactResearchMethodSerializerBase
 
 from diagnosis.views import BaseDiagnosisViewSet
 
-from .models import Staff
+from .models import Staff, Provider
 from .permissions import CLAProviderClientIDPermission
 from rest_framework.filters import OrderingFilter
 from rest_framework.views import APIView
+from rest_framework import viewsets
 from .serializers import (
     EligibilityCheckSerializer,
     CaseSerializer,
@@ -56,8 +59,9 @@ from .serializers import (
     CaseNotesHistorySerializer,
     CSVUploadSerializer,
     CSVUploadDetailSerializer,
+    ProviderSerializer,
 )
-from .forms import RejectCaseForm, AcceptCaseForm, CloseCaseForm, SplitCaseForm, ReopenCaseForm
+from .forms import RejectCaseForm, AcceptCaseForm, OpenCaseForm, CloseCaseForm, SplitCaseForm, ReopenCaseForm, SplitMCCCaseForm
 
 logger = logging.getLogger(__name__)
 
@@ -105,17 +109,21 @@ class CaseViewSet(CLAProviderPermissionViewSetMixin, FullCaseViewSet):
     serializer_class = CaseListSerializer
     serializer_detail_class = CaseSerializer
 
-    queryset = Case.objects.exclude(provider=None).select_related("diagnosis", "eligibility_check", "personal_details")
+    queryset = Case.objects.exclude(provider=None).select_related(
+        "diagnosis", "eligibility_check", "personal_details", "scope_traversal", "adaptation_details", "thirdparty_details"
+    )
     queryset_detail = Case.objects.exclude(provider=None).select_related(
         "eligibility_check",
         "personal_details",
         "adaptation_details",
+        "thirdparty_details",
         "matter_type1",
         "matter_type2",
         "diagnosis",
         "media_code",
         "eligibility_check__category",
         "created_by",
+        "scope_traversal",
     )
 
     filter_backends = (DescCaseOrderingFilter, SearchFilter)
@@ -126,6 +134,8 @@ class CaseViewSet(CLAProviderPermissionViewSetMixin, FullCaseViewSet):
         "priority",
         "personal_details__full_name",
         "personal_details__postcode",
+        "provider_assigned_at",
+        "provider_closed",
     )
 
     def get_queryset(self, **kwargs):
@@ -141,6 +151,10 @@ class CaseViewSet(CLAProviderPermissionViewSetMixin, FullCaseViewSet):
                 only == 'accepted'
             closed:
                 only == 'closed'
+            completed:
+                only == 'completed'
+            rejected:
+                only == 'rejected'
         """
         this_provider = get_object_or_404(Staff, user=self.request.user).provider
         qs = (
@@ -156,6 +170,10 @@ class CaseViewSet(CLAProviderPermissionViewSetMixin, FullCaseViewSet):
             qs = qs.filter(provider_accepted__isnull=False, provider_closed__isnull=True)
         elif only_param == "closed":
             qs = qs.filter(provider_closed__isnull=False)
+        elif only_param == "completed":
+            qs = qs.filter(provider_accepted__isnull=False, provider_closed__isnull=False)
+        elif only_param == "rejected":
+            qs = qs.filter(provider_accepted__isnull=True, provider_closed__isnull=False)
 
         return qs
 
@@ -172,6 +190,13 @@ class CaseViewSet(CLAProviderPermissionViewSetMixin, FullCaseViewSet):
         Accepts a case
         """
         return self._form_action(request, Form=AcceptCaseForm, no_body=False)
+
+    @detail_route(methods=["post"])
+    def open(self, request, reference=None, **kwargs):
+        """
+        Opens a case (marks as viewed by provider)
+        """
+        return self._form_action(request, Form=OpenCaseForm, no_body=False)
 
     @detail_route(methods=["post"])
     def close(self, request, reference=None, **kwargs):
@@ -197,9 +222,24 @@ class CaseViewSet(CLAProviderPermissionViewSetMixin, FullCaseViewSet):
         }
         return DRFResponse(data)
 
+    @detail_route()
+    def detailed(self, *args, **kwargs):
+        """
+        Returns case with all nested details in a single call
+        """
+        from mcc.serializers import DetailedCaseSerializer
+
+        case = self.get_object()
+        serializer = DetailedCaseSerializer(instance=case)
+        return DRFResponse(serializer.data)
+
     @detail_route(methods=["post"])
     def split(self, request, reference=None, **kwargs):
         return self._form_action(request, Form=SplitCaseForm, form_kwargs={"request": request})
+
+    @detail_route(methods=["post"])
+    def mcc_split(self, request, reference=None, **kwargs):
+        return self._form_action(request, Form=SplitMCCCaseForm, form_kwargs={"request": request})
 
 
 class ProviderExtract(APIView):
@@ -240,7 +280,7 @@ class ProviderExtract(APIView):
                 )
             self.check_object_permissions(request, case)
 
-            logger.info("Provider case exported", extra={"USERNAME": request.user.username, "POSTDATA": request.POST})
+            logger.info("Provider case exported", extra={"USER_ID": request.user.pk, "CASE_REFERENCE": case.reference})
 
             return ProviderExtractFormatter(case).format()
         else:
@@ -282,6 +322,10 @@ class EventViewSet(CLAProviderPermissionViewSetMixin, BaseEventViewSet):
     pass
 
 
+class GuidanceNoteViewSet(CLAProviderPermissionViewSetMixin, BaseGuidanceNoteViewSet):
+    pass
+
+
 class AdaptationDetailsViewSet(CLAProviderPermissionViewSetMixin, BaseAdaptationDetailsViewSet):
     serializer_class = AdaptationDetailsSerializer
 
@@ -298,8 +342,21 @@ class DiagnosisViewSet(CLAProviderPermissionViewSetMixin, BaseDiagnosisViewSet):
     pass
 
 
+class ScopeTraversalViewSet(CLAProviderPermissionViewSetMixin, BaseScopeTraversalViewSet):
+    pass
+
+
 class LogViewSet(CLAProviderPermissionViewSetMixin, BaseLogViewSet):
     serializer_class = LogSerializer
+
+    def get_queryset(self):
+        qs = super(LogViewSet, self).get_queryset()
+        codes = self.request.query_params.getlist("codes")
+
+        if len(codes) > 0:
+            qs = qs.filter(code__in=codes)
+
+        return qs
 
 
 class FeedbackViewSet(CLAProviderPermissionViewSetMixin, BaseFeedbackViewSet, ClaCreateModelMixin):
@@ -338,6 +395,20 @@ class CSVUploadViewSet(CLAProviderPermissionViewSetMixin, BaseCSVUploadViewSet):
     def perform_update(self, serializer):
         self.set_provider_user(serializer)
         return super(CSVUploadViewSet, self).perform_update(serializer)
+
+
+class ProviderViewSet(CLAProviderPermissionViewSetMixin, viewsets.ReadOnlyModelViewSet):
+    """
+    ViewSet for Provider that returns provider firm name and contracted categories.
+    Only returns the provider associated with the logged-in staff member.
+    """
+    serializer_class = ProviderSerializer
+    queryset = Provider.objects.all()
+
+    def get_queryset(self):
+        """Filter to only show the provider associated with the logged-in user"""
+        this_provider = get_object_or_404(Staff, user=self.request.user).provider
+        return Provider.objects.filter(id=this_provider.id)
 
 
 class CaseNotesHistoryViewSet(CLAProviderPermissionViewSetMixin, BaseCaseNotesHistoryViewSet):

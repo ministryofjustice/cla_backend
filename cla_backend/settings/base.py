@@ -179,11 +179,17 @@ STATICFILES_FINDERS = (
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
 )
 
+# Limit in-memory upload size to 5MB
+# Prevents files above 5MB being kept in the memory.
+FILE_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024
+DATA_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024
+
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = os.environ.get("SECRET_KEY", "iia425u_J_pwntnEyqBuI1xBDqOX8nZ4uC73epGce_w")
 
 
 MIDDLEWARE_CLASSES = (
+    "core.middleware.request_size.RequestSizeMiddleware",
     "django.middleware.locale.LocaleMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -195,6 +201,10 @@ MIDDLEWARE_CLASSES = (
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "status.middleware.MaintenanceModeMiddleware",
     "django_cookies_samesite.middleware.CookiesSameSite",
+)
+AUTHENTICATION_BACKENDS = (
+    "django.contrib.auth.backends.ModelBackend",
+    "cla_auth.backend.EntraAccessTokenAuthenticationBackend",
 )
 
 if not DEBUG:
@@ -243,6 +253,7 @@ PROJECT_APPS = (
     "legalaid",
     "cla_butler",
     "cla_provider",
+    "mcc",
     "call_centre",
     "cla_eventlog",
     "knowledgebase",
@@ -364,7 +375,10 @@ if AWS_STORAGE_BUCKET_NAME:
 
 # Django rest-framework-overrides
 REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": ("oauth2_provider.ext.rest_framework.OAuth2Authentication",),
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "cla_auth.authentication.EntraAccessTokenAuthentication",
+        "oauth2_provider.ext.rest_framework.OAuth2Authentication",
+    ),
     "DEFAULT_PERMISSION_CLASSES": ("core.permissions.AllowNone",),
     "DEFAULT_RENDERER_CLASSES": ("rest_framework.renderers.JSONRenderer",),
     "DEFAULT_THROTTLE_RATES": {"login": "10/sec"},
@@ -385,42 +399,21 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 # LGA-2236 Set rota hours start and end times using environment variables so can change without updating the code.
 # Want to alter start and end times via environment variables.
 # In case these are not set, default values are set here
-DEFAULT_NON_ROTA_START_TIME_HR = 8
-DEFAULT_NON_ROTA_END_TIME_HR = 17
-DEFAULT_ED_START_TIME_HR = 9
-DEFAULT_ED_END_TIME_HR = 17
-DEFAULT_DISCRIM_START_TIME_HR = 8
-DEFAULT_DISCRIM_END_TIME_HR = 18
+DEFAULT_NON_ROTA_START_TIME_HR = 9
+DEFAULT_NON_ROTA_END_TIME_HR = 18
 
 NON_ROTA_START_TIME_HR = int(os.environ.get("NON_ROTA_START_TIME_HR", DEFAULT_NON_ROTA_START_TIME_HR))
 NON_ROTA_END_TIME_HR = int(os.environ.get("NON_ROTA_END_TIME_HR", DEFAULT_NON_ROTA_END_TIME_HR))
 
-EDUCATION_START_TIME_HR = int(os.environ.get("EDUCATION_START_TIME_HR", DEFAULT_ED_START_TIME_HR))
-EDUCATION_END_TIME_HR = int(os.environ.get("EDUCATION_END_TIME_HR", DEFAULT_ED_END_TIME_HR))
-
-DISCRIMINATION_START_TIME_HR = int(os.environ.get("DISCRIMINATION_START_TIME_HR", DEFAULT_DISCRIM_START_TIME_HR))
-DISCRIMINATION_END_TIME_HR = int(os.environ.get("DISCRIMINATION_END_TIME_HR", DEFAULT_DISCRIM_END_TIME_HR))
-
 NON_ROTA_HOURS = {"weekday": (datetime.time(NON_ROTA_START_TIME_HR, 0), datetime.time(NON_ROTA_END_TIME_HR, 0))}
-EDUCATION_DAILY_HOURS = (datetime.time(EDUCATION_START_TIME_HR, 0), datetime.time(EDUCATION_END_TIME_HR, 0))
-DISCRIMINATION_NON_ROTA_HOURS = {
-    "weekday": (datetime.time(DISCRIMINATION_START_TIME_HR, 0), datetime.time(DISCRIMINATION_END_TIME_HR, 0))
-}
-
-EDUCATION_NON_ROTA_HOURS = {
-    "monday": EDUCATION_DAILY_HOURS,
-    "tuesday": EDUCATION_DAILY_HOURS,
-    "wednesday": EDUCATION_DAILY_HOURS,
-    "thursday": EDUCATION_DAILY_HOURS,
-}
 
 # If an unknown or empty is used to get from NON_ROTA_OPENING_HOURS then it will default to a basic NON_ROTA_HOURS
 NON_ROTA_OPENING_HOURS = defaultdict(lambda: OpeningHours(**NON_ROTA_HOURS))
 
-# If provider types have different opening hours they will need to be added here, with the category they service as the key.
-NON_ROTA_OPENING_HOURS["discrimination"] = OpeningHours(**DISCRIMINATION_NON_ROTA_HOURS)
-NON_ROTA_OPENING_HOURS["education"] = OpeningHours(**EDUCATION_NON_ROTA_HOURS)
+# If provider types have different opening hours they can be added here, with the category they service as the key.
 
+# If this is enabled when out of hours a provider will be suggested regardless of the out of hours rota, otherwise no provider will be suggested.
+ALWAYS_SUGGEST_PROVIDER = os.environ.get("ALWAYS_SUGGEST_PROVIDER", "False") == "True"
 
 OBIEE_IP_PERMISSIONS = ("*",)
 
@@ -482,8 +475,10 @@ CacheAdapter.set_adapter_factory(bank_holidays_cache_adapter_factory)
 MAINTENANCE_MODE = os.environ.get("MAINTENANCE_MODE", "False") == "True"
 
 # Settings for django-session-security.
-DEFAULT_SESSION_SECURITY_WARN_AFTER = 60 * 25
-DEFAULT_SESSION_SECURITY_EXPIRE_AFTER = 60 * 30
+DEFAULT_SESSION_SECURITY_WARN_AFTER = 60 * 25  # 25 minutes
+DEFAULT_SESSION_SECURITY_EXPIRE_AFTER = 60 * 30  # 30 minutes
+SESSION_COOKIE_AGE = 1800  # 30 minutes
+
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_SECURITY_WARN_AFTER = int(os.environ.get("SESSION_SECURITY_WARN_AFTER", DEFAULT_SESSION_SECURITY_WARN_AFTER))
 SESSION_SECURITY_EXPIRE_AFTER = int(
@@ -506,6 +501,9 @@ EDUCATION_ALLOCATION_FEATURE_FLAG = os.environ.get("EDUCATION_ALLOCATION_FEATURE
 # A notification will be sent for callback time slot if its remaining capacity drops below this threshold
 CALLBACK_CAPPING_THRESHOLD = os.environ.get("CALLBACK_CAPPING_THRESHOLD", 0)
 CALLBACK_CAPPING_THRESHOLD_NOTIFICATION = os.environ.get("CALLBACK_CAPPING_THRESHOLD_NOTIFICATION", None)
+
+ENTRA_TENANT_ID = os.environ.get("ENTRA_TENANT_ID", None)
+ENTRA_EXPECTED_AUDIENCE = os.environ.get("ENTRA_EXPECTED_AUDIENCE", None)
 
 # .local.py overrides all the common settings.
 try:

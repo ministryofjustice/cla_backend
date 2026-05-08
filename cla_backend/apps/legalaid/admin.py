@@ -38,6 +38,7 @@ class CaseAdmin(admin.ModelAdmin):
         "thirdparty_details",
         "adaptation_details",
         "from_case",
+        "scope_traversal",
     )
     readonly_fields = ("callback_window_type",)
     # Shouldn't be editable

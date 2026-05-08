@@ -33,7 +33,7 @@ cfgv==2.0.1
     # via pre-commit
 chardet==4.0.0
     # via requests
-https://github.com/ministryofjustice/cla_common/archive/refs/tags/0.3.23.tar.gz
+https://github.com/ministryofjustice/cla_common/archive/refs/tags/0.3.25.tar.gz
     # via -r requirements/source/requirements-base.in
 click==7.1.2
     # via pip-tools
@@ -53,6 +53,7 @@ coveralls==1.8.2
     # via -r requirements/source/requirements-testing.in
 cryptography==3.3.2
     # via
+    #   -r requirements/source/requirements-base.in
     #   pyopenssl
     #   urllib3
 csvkit==0.9.0
@@ -229,7 +230,9 @@ pycparser==2.21
 pycurl==7.43.0.5
     # via celery
 pyjwt==1.7.1
-    # via notifications-python-client
+    # via
+    #   -r requirements/source/requirements-base.in
+    #   notifications-python-client
 pyminizip==0.2.3
     # via -r requirements/source/requirements-base.in
 pyopenssl==21.0.0

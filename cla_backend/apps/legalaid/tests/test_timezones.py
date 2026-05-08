@@ -25,24 +25,24 @@ class BaseAssignedOutOfHours(object):
         return case
 
     def test_before_hours(self):
-        case = self.create_and_assign(self.dt.replace(hour=7, minute=30))
+        case = self.create_and_assign(self.dt.replace(hour=8, minute=30))
         self.assertTrue(case.assigned_out_of_hours)
         return case
 
     def test_first_hour_of_business(self):
-        case = self.create_and_assign(self.dt.replace(hour=8, minute=30))
-        self.assertFalse(case.assigned_out_of_hours)
-
-    def test_second_hour_of_business(self):
         case = self.create_and_assign(self.dt.replace(hour=9, minute=30))
         self.assertFalse(case.assigned_out_of_hours)
 
+    def test_second_hour_of_business(self):
+        case = self.create_and_assign(self.dt.replace(hour=10, minute=30))
+        self.assertFalse(case.assigned_out_of_hours)
+
     def test_last_hour_of_business(self):
-        case = self.create_and_assign(self.dt.replace(hour=16, minute=30))
+        case = self.create_and_assign(self.dt.replace(hour=17, minute=30))
         self.assertFalse(case.assigned_out_of_hours)
 
     def test_after_hours(self):
-        case = self.create_and_assign(self.dt.replace(hour=17, minute=30))
+        case = self.create_and_assign(self.dt.replace(hour=18, minute=30))
         self.assertTrue(case.assigned_out_of_hours)
 
 
@@ -161,7 +161,7 @@ class TestRecalculateAssignedOutOfHours(TestCase):
         correct_gmt = self.create(2021, 2, 2, 9, 30, False)
         incorrect_bst = self.create(2021, 5, 5, 9, 30, True)
         incorrect_bst_2 = self.create(2021, 5, 12, 9, 30, True)
-        incorrect_bst_evening = self.create(2021, 5, 12, 17, 30, False)
+        incorrect_bst_evening = self.create(2021, 5, 12, 18, 30, False)
         correct_bst = self.create(2021, 5, 19, 9, 30, False)
         self.call_command_and_expect_output(
             [

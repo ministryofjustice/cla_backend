@@ -20,6 +20,7 @@ from checker.models import ReasonForContacting
 
 import mock
 from core.tests.mommy_utils import make_recipe
+from checker.models import FINANCIAL_ASSESSMENT_STATUSES, FAST_TRACK_REASON
 
 
 class ReportsSQLColumnsMatchHeadersTestCase(TestCase):
@@ -39,12 +40,7 @@ class ReportsSQLColumnsMatchHeadersTestCase(TestCase):
                 inst.get_queryset()
                 len_desc = len(inst.description)
                 len_headers = len(inst.get_headers())
-                if inst.__class__.__name__ in [
-                    "MICaseExtract",
-                    "MICaseExtractExtended",
-                    "CaseDemographicsReport",
-                    "MinimalCaseDemographicsReport",
-                ]:
+                if inst.__class__.__name__ in ["MICaseExtract", "MICaseExtractExtended", "MIDemographicReport"]:
                     # this is due to getting multiple fields as 1 json field in sql
                     len_headers = len_headers - 3
                 self.assertEqual(
@@ -68,6 +64,62 @@ class ReportsSQLColumnsMatchHeadersTestCase(TestCase):
                     "Number of columns in %s.get_headers() doesn't match the number of columns returned by the sql query."
                     % n,
                 )
+
+
+class ReportMIDigitalExtractTestCase(TestCase):
+    def test_mi_digital_extract(self):
+        data = {"date_from": datetime.datetime.now(), "date_to": datetime.datetime.now()}
+
+        for _ in range(3):
+            make_recipe("legalaid.case", source="PHONE", created=datetime.datetime.now())
+
+        for _ in range(2):
+            make_recipe("legalaid.case", source="WEB", created=datetime.datetime.now())
+
+        instance = reports.forms.MIDigitalCaseTypesExtract(data=data)
+        instance.is_valid()
+        results = instance.get_queryset()
+
+        self.assertEqual(len(results), 5)
+
+        headers = [h.lower() for h in instance.get_headers()]
+        self.assertIn("contact_type", headers)
+
+        for row in results:
+            contact_type_index = headers.index("contact_type")
+            self.assertIn(row[contact_type_index], ["PHONE", "WEB"])
+
+
+class ReportMIDigitalCaseWithCategoryExtractTestCase(TestCase):
+    def test_mi_digital_case_with_category_extract(self):
+        now = datetime.datetime.now()
+        data = {"date_from": now - datetime.timedelta(days=1), "date_to": now + datetime.timedelta(days=1)}
+
+        diag_category = make_recipe("legalaid.category", code="debt")
+        scope_cat_json = {"code": "housing", "name": "Housing, homelessness, losing your home"}
+
+        diagnosis_traversal1 = make_recipe("diagnosis.diagnosis", category=diag_category)
+        diagnosis_traversal2 = make_recipe("diagnosis.diagnosis", category=diag_category)
+
+        scope_setup = make_recipe("checker.scope_traversal", category=scope_cat_json)
+
+        make_recipe("legalaid.case", diagnosis=diagnosis_traversal1, created=now, scope_traversal=None)
+        make_recipe("legalaid.case", scope_traversal=scope_setup, created=now, diagnosis=diagnosis_traversal2)
+
+        instance = reports.forms.MIDigitalCaseTypesExtractWithCategory(data=data)
+        instance.is_valid()
+        results = instance.get_queryset()
+
+        self.assertEqual(len(results), 2)
+
+        headers = [h.lower() for h in instance.get_headers()]
+        category_index = headers.index("case_category")
+
+        returned_categories = {row[category_index] for row in results}
+
+        self.assertIn("debt", returned_categories)
+        self.assertIn("housing", returned_categories)
+        self.assertNotIn("unknown", returned_categories)
 
 
 class ReportOrganisationColumnTestCase(TestCase):
@@ -159,11 +211,11 @@ class ReportsDateRangeValidationWorks(TestCase):
         self.assertEqual(i.errors.keys(), ["__all__"])
         self.assertEqual(len(i.errors["__all__"]), 1)
         self.assertIn(
-            i.errors[u"__all__"][0],
+            i.errors["__all__"][0],
             [
-                u"The date range (6 days, 0:00:00) should span no more than 5 working days",
-                u"The date range (6 days, 1:00:00) should span no more than 5 working days",
-                u"The date range (5 days, 23:00:00) should span no more than 5 working days",
+                "The date range (6 days, 0:00:00) should span no more than 5 working days",
+                "The date range (6 days, 1:00:00) should span no more than 5 working days",
+                "The date range (5 days, 23:00:00) should span no more than 5 working days",
             ],
         )
 
@@ -181,7 +233,7 @@ class ReportsDateRangeValidationWorks(TestCase):
             from_.strftime("%d/%m/%Y"),
             to.strftime("%d/%m/%Y"),
         )
-        self.assertEqual(str(i.errors[u"__all__"][0]), error_string)
+        self.assertEqual(str(i.errors["__all__"][0]), error_string)
 
     def test_valid_date_range_clocks_going_forward(self):
         class T(reports.forms.DateRangeReportForm):
@@ -257,6 +309,67 @@ class MIDuplicateCasesTestCase(TestCase):
                 ["Mary Smith", datetime.date(1980, 5, 1), "SW1A 1AA"],
             ],
         )
+
+
+class MIDemographicReportPostcodeFormattingTestCase(TestCase):
+    def test_postcode_formatting_valid_uk_postcode(self):
+        personal_details = make_recipe(
+            "legalaid.personal_details",
+            full_name="John Doe",
+            date_of_birth=datetime.date(1990, 1, 1),
+            postcode="ec1a1bb",
+        )
+        make_recipe("legalaid.case", personal_details=personal_details)
+
+        form = reports.forms.MIDemographicReport(
+            data={"date_from": datetime.date.today() - datetime.timedelta(days=1), "date_to": datetime.date.today()}
+        )
+        self.assertTrue(form.is_valid())
+        rows = list(form.get_rows())
+        self.assertEqual(len(rows), 1)
+
+        postcode_index = form.get_headers().index("Postcode")
+        self.assertEqual(rows[0][postcode_index], "EC1A 1BB")
+        self.assertNotEqual(rows[0][postcode_index], "ec1a1bb")
+        self.assertNotEqual(rows[0][postcode_index], "EC1A1BB")
+
+    def test_postcode_formatting_invalid_postcode_returns_none(self):
+        personal_details = make_recipe(
+            "legalaid.personal_details",
+            full_name="Jane Doe",
+            date_of_birth=datetime.date(1990, 1, 1),
+            postcode="Invalid123",
+        )
+        make_recipe("legalaid.case", personal_details=personal_details)
+
+        form = reports.forms.MIDemographicReport(
+            data={"date_from": datetime.date.today() - datetime.timedelta(days=1), "date_to": datetime.date.today()}
+        )
+        self.assertTrue(form.is_valid())
+        rows = list(form.get_rows())
+        self.assertEqual(len(rows), 1)
+
+        postcode_index = form.get_headers().index("Postcode")
+        self.assertIsNotNone(rows[0][postcode_index])
+        self.assertEqual(rows[0][postcode_index], "Invalid123")
+
+    def test_postcode_formatting_empty_postcode_is_ok(self):
+        personal_details = make_recipe(
+            "legalaid.personal_details", full_name="John Doe", date_of_birth=datetime.date(1990, 1, 1), postcode=""
+        )
+        make_recipe("legalaid.case", personal_details=personal_details)
+
+        form = reports.forms.MIDemographicReport(
+            data={"date_from": datetime.date.today() - datetime.timedelta(days=1), "date_to": datetime.date.today()}
+        )
+        self.assertTrue(form.is_valid())
+
+        rows = list(form.get_rows())
+        self.assertEqual(len(rows), 1)
+
+        postcode_index = form.get_headers().index("Postcode")
+
+        self.assertIn(rows[0][postcode_index], ("", None))
 
 
 class OBIEEExportOutputsZipTestCase(TestCase):
@@ -463,7 +576,7 @@ class TestCallbackTimeSlotReport(TestCase):
         callbacks = {
             "0900": {
                 "Date": tomorrow.strftime(date_format),
-                "Interval": u"0900",
+                "Interval": "0900",
                 "Total capacity": 4,
                 "Used capacity": 1,
                 "Remaining capacity": 3,
@@ -471,7 +584,7 @@ class TestCallbackTimeSlotReport(TestCase):
             },
             "1000": {
                 "Date": tomorrow.strftime(date_format),
-                "Interval": u"1000",
+                "Interval": "1000",
                 "Total capacity": 9,
                 "Used capacity": 3,
                 "Remaining capacity": 6,
@@ -479,7 +592,7 @@ class TestCallbackTimeSlotReport(TestCase):
             },
             "1100": {
                 "Date": tomorrow.strftime(date_format),
-                "Interval": u"1100",
+                "Interval": "1100",
                 "Total capacity": 0,
                 "Used capacity": 0,
                 "Remaining capacity": 0,
@@ -487,7 +600,7 @@ class TestCallbackTimeSlotReport(TestCase):
             },
             "1200": {
                 "Date": tomorrow.strftime(date_format),
-                "Interval": u"1200",
+                "Interval": "1200",
                 "Total capacity": 1,
                 "Used capacity": 1,
                 "Remaining capacity": 0,
@@ -495,7 +608,7 @@ class TestCallbackTimeSlotReport(TestCase):
             },
             "1300": {
                 "Date": tomorrow.strftime(date_format),
-                "Interval": u"1300",
+                "Interval": "1300",
                 "Total capacity": 1,
                 "Used capacity": 0,
                 "Remaining capacity": 1,
@@ -503,7 +616,7 @@ class TestCallbackTimeSlotReport(TestCase):
             },
             "1400": {
                 "Date": overmorrow.strftime(date_format),
-                "Interval": u"1400",
+                "Interval": "1400",
                 "Total capacity": 1,
                 "Used capacity": 0,
                 "Remaining capacity": 1,
@@ -525,6 +638,7 @@ class TestCallbackTimeSlotReport(TestCase):
                     _quantity=callback["Used capacity"],
                     eligibility_check=None,
                     callback_type=CALLBACK_TYPES.CHECKER_SELF,
+                    outcome_code="CB1",
                     notes=interval,
                 )
 
@@ -535,3 +649,359 @@ class TestCallbackTimeSlotReport(TestCase):
             row_dict = dict(row)
             self.assertEqual(row_dict["Date"], tomorrow.strftime(date_format))
             self.assertDictEqual(row_dict, callbacks[row_dict["Interval"]])
+
+
+class TestMIScopeReport(TestCase):
+    LEGALAID_CASE = "legalaid.case"
+    today = datetime.date.today()
+
+    def get_report(self):
+        date_from = self.today - datetime.timedelta(days=1)
+        date_to = self.today + datetime.timedelta(days=1)
+
+        with mock.patch("reports.forms.MIScopeReport.date_range", (date_from, date_to)):
+            report = reports.forms.MIScopeReport()
+            rows = report.get_rows()
+            headers = report.get_headers()
+            data = []
+            for row in rows:
+                data.append(zip(headers, row))
+
+        return data
+
+    def test_report_client_notes(self):
+        eligible_case = make_recipe("legalaid.eligible_case", source="WEB")
+        eligible_case.eligibility_check.notes = self.get_notes()
+        eligible_case.eligibility_check.save()
+
+        self.assertEqual(eligible_case.eligibility_check.state, "yes")
+        self.assertEqual(eligible_case.diagnosis.state, "INSCOPE")
+        self.assertEqual(eligible_case.source, "WEB")
+
+        report = self.get_report()
+        expected = {
+            "Web diagnosis category 1": "Discrimination",
+            "Web diagnosis category 2": "Age",
+            "Web diagnosis category 3": "18 or over",
+            "Web diagnosis category 4": "At work",
+            "Web diagnosis category 5": "",
+            "Web diagnosis category 6": "",
+            "Web scope state": "INSCOPE",
+            "Client notes": "This is a free text field\nI can type whatever I want\nYes\nNo\nDiscrimination\n\n",
+            "Workflow status": "Operator",
+        }
+        self.assertDictContainsSubset(expected, dict(report[0]))
+
+    def test_report_client_notes_no_user_problem(self):
+        eligible_case = make_recipe("legalaid.eligible_case", source="WEB")
+        eligible_case.eligibility_check.notes = self.get_notes_without_user_problem()
+        eligible_case.eligibility_check.save()
+
+        self.assertEqual(eligible_case.eligibility_check.state, "yes")
+        self.assertEqual(eligible_case.diagnosis.state, "INSCOPE")
+        self.assertEqual(eligible_case.source, "WEB")
+
+        report = self.get_report()
+        expected = {
+            "Web diagnosis category 1": "Discrimination",
+            "Web diagnosis category 2": "Age",
+            "Web diagnosis category 3": "18 or over",
+            "Web diagnosis category 4": "At work",
+            "Web diagnosis category 5": "",
+            "Web diagnosis category 6": "",
+            "Web scope state": "INSCOPE",
+            "Client notes": "",
+            "Workflow status": "Operator",
+        }
+        self.assertDictContainsSubset(expected, dict(report[0]))
+
+    def test_report_client_just_user_problem(self):
+        eligible_case = make_recipe("legalaid.eligible_case", source="WEB")
+        eligible_case.eligibility_check.notes = self.get_notes_just_user_problem()
+        eligible_case.eligibility_check.save()
+
+        self.assertEqual(eligible_case.eligibility_check.state, "yes")
+        self.assertEqual(eligible_case.diagnosis.state, "INSCOPE")
+        self.assertEqual(eligible_case.source, "WEB")
+
+        report = self.get_report()
+        expected = {
+            "Web diagnosis category 1": "",
+            "Web diagnosis category 2": "",
+            "Web diagnosis category 3": "",
+            "Web diagnosis category 4": "",
+            "Web diagnosis category 5": "",
+            "Web diagnosis category 6": "",
+            "Web scope state": "",
+            "Client notes": "This is a free text field",
+            "Workflow status": "Operator",
+        }
+        self.assertDictContainsSubset(expected, dict(report[0]))
+
+    def test_report_client_public_diagnosis_note(self):
+        eligible_case = make_recipe("legalaid.eligible_case", source="WEB")
+        eligible_case.eligibility_check.notes = self.get_notes_public_diagnosis_note()
+        eligible_case.eligibility_check.save()
+
+        self.assertEqual(eligible_case.eligibility_check.state, "yes")
+        self.assertEqual(eligible_case.diagnosis.state, "INSCOPE")
+        self.assertEqual(eligible_case.source, "WEB")
+
+        report = self.get_report()
+        expected = {
+            "Web diagnosis category 1": "Domestic abuse",
+            "Web diagnosis category 2": "Domestic abuse",
+            "Web diagnosis category 3": "Yes",
+            "Web diagnosis category 4": "",
+            "Web diagnosis category 5": "",
+            "Web diagnosis category 6": "",
+            "Web scope state": "CONTACT",
+            "Client notes": "",
+            "Workflow status": "Operator",
+        }
+        self.assertDictContainsSubset(expected, dict(report[0]))
+
+    def test_report_workflow_status_pending(self):
+        eligible_case = make_recipe("legalaid.case", source="WEB")
+        self.assertEqual(eligible_case.source, "WEB")
+        report = self.get_report()
+        expected = {"Workflow status": "Pending"}
+        self.assertDictContainsSubset(expected, dict(report[0]))
+
+    def test_report_workflow_status_operator(self):
+        eligible_case = make_recipe("legalaid.eligible_case", source="WEB")
+        self.assertEqual(eligible_case.source, "WEB")
+        report = self.get_report()
+        expected = {"Workflow status": "Operator"}
+        self.assertDictContainsSubset(expected, dict(report[0]))
+
+    def test_report_workflow_status_read_approved_by_SP(self):
+        eligible_case = make_recipe(
+            "legalaid.eligible_case",
+            source="WEB",
+            provider_viewed=self.today,
+            provider_assigned_at=self.today,
+            outcome_code="COI",
+        )
+        make_recipe("cla_eventlog.log", case=eligible_case, code="COI")
+        self.assertEqual(eligible_case.source, "WEB")
+        report = self.get_report()
+        expected = {"Workflow status": "Read and approved by SP"}
+        self.assertDictContainsSubset(expected, dict(report[0]))
+
+    def test_report_workflow_status_read_NOT_approved_by_SP(self):
+        eligible_case = make_recipe(
+            "legalaid.eligible_case", source="WEB", provider_viewed=self.today, provider_assigned_at=self.today
+        )
+        make_recipe("cla_eventlog.log", case=eligible_case, code="MIS-OOS")
+
+        self.assertEqual(eligible_case.source, "WEB")
+
+        report = self.get_report()
+        expected = {"Workflow status": "Read and NOT approved by SP"}
+        self.assertDictContainsSubset(expected, dict(report[0]))
+
+    def test_report_workflow_status_NOT_read_by_SP(self):
+        eligible_case = make_recipe("legalaid.eligible_case", source="WEB", provider_assigned_at=self.today)
+        self.assertEqual(eligible_case.source, "WEB")
+        report = self.get_report()
+        expected = {"Workflow status": "NOT read by SP"}
+        self.assertDictContainsSubset(expected, dict(report[0]))
+
+    def get_notes(self):
+        return """User problem:
+This is a free text field
+I can type whatever I want
+Yes
+No
+Discrimination
+
+User selected:
+What do you need help with?: Discrimination
+
+On what grounds have you been discriminated against?: Age
+
+How old are you?: 18 or over
+
+Where did the discrimination occur?: At work
+
+Outcome: INSCOPE"""
+
+    def get_notes_without_user_problem(self):
+        return """User selected:
+What do you need help with?: Discrimination
+
+On what grounds have you been discriminated against?: Age
+
+How old are you?: 18 or over
+
+Where did the discrimination occur?: At work
+
+Outcome: INSCOPE"""
+
+    def get_notes_just_user_problem(self):
+        return """User problem:
+This is a free text field"""
+
+    def get_notes_public_diagnosis_note(self):
+        return """Public Diagnosis note:
+User is at immediate risk of harm
+
+User selected:
+What do you need help with?: Domestic abuse
+
+Choose the option that best describes your personal situation: Domestic abuse
+
+Are you or your children at immediate risk of harm?: Yes
+
+Outcome: CONTACT
+        """
+
+
+class TestWebCaseReport(TestCase):
+    def test_report(self):
+        # Create call me back case
+        case_call_me_back = self.make_web_cases(
+            FAST_TRACK_REASON.OTHER,
+            FINANCIAL_ASSESSMENT_STATUSES.SKIPPED,
+            reason_for_contacting_categories=[
+                REASONS_FOR_CONTACTING.MISSING_PAPERWORK,
+                REASONS_FOR_CONTACTING.DIFFICULTY_ONLINE,
+                REASONS_FOR_CONTACTING.HOW_SERVICE_HELPS,
+                REASONS_FOR_CONTACTING.PNS,
+            ],
+            callback_type="web_form_self",
+        )
+        assert case_call_me_back.outcome_code == "CB1"
+
+        # Create call someone else case
+        case_call_someone_else = self.make_web_cases(
+            FAST_TRACK_REASON.MORE_INFO_REQUIRED,
+            FINANCIAL_ASSESSMENT_STATUSES.PASSED,
+            reason_for_contacting_categories=[REASONS_FOR_CONTACTING.PNS],
+            callback_type="web_form_third_party",
+        )
+        assert case_call_someone_else.outcome_code == "CB1"
+
+        # Create I will call you back case
+        case_i_will_call_you_back = self.make_web_cases(
+            FAST_TRACK_REASON.MORE_INFO_REQUIRED,
+            FINANCIAL_ASSESSMENT_STATUSES.PASSED,
+            reason_for_contacting_categories=[REASONS_FOR_CONTACTING.PNS],
+            callback_type=None,
+        )
+        assert case_i_will_call_you_back.outcome_code == "CASE_CREATED"
+
+        expected_data = [
+            [
+                ("Case ref", case_i_will_call_you_back.reference),
+                ("Case created date", case_i_will_call_you_back.created),
+                ("Case modified date", case_i_will_call_you_back.modified),
+                ("Contact type", FINANCIAL_ASSESSMENT_STATUSES.PASSED + " + " + FAST_TRACK_REASON.MORE_INFO_REQUIRED),
+                ("Enquiry contact reason", REASONS_FOR_CONTACTING.PNS),
+                ("Callback type", None),
+                ("Client notes", ""),
+                ("CHS outcome code", "CASE_CREATED"),
+                ("Urgent", False),
+            ],
+            [
+                ("Case ref", case_call_someone_else.reference),
+                ("Case created date", case_call_someone_else.created),
+                ("Case modified date", case_call_someone_else.modified),
+                ("Contact type", FINANCIAL_ASSESSMENT_STATUSES.PASSED + " + " + FAST_TRACK_REASON.MORE_INFO_REQUIRED),
+                ("Enquiry contact reason", REASONS_FOR_CONTACTING.PNS),
+                ("Callback type", "web_form_third_party"),
+                ("Client notes", ""),
+                ("CHS outcome code", "CB1"),
+                ("Urgent", False),
+            ],
+            [
+                ("Case ref", case_call_me_back.reference),
+                ("Case created date", case_call_me_back.created),
+                ("Case modified date", case_call_me_back.modified),
+                ("Contact type", FINANCIAL_ASSESSMENT_STATUSES.SKIPPED + " + " + FAST_TRACK_REASON.OTHER),
+                (
+                    "Enquiry contact reason",
+                    ", ".join(
+                        [
+                            REASONS_FOR_CONTACTING.DIFFICULTY_ONLINE,
+                            REASONS_FOR_CONTACTING.HOW_SERVICE_HELPS,
+                            REASONS_FOR_CONTACTING.MISSING_PAPERWORK,
+                            REASONS_FOR_CONTACTING.PNS,
+                        ]
+                    ),
+                ),
+                ("Callback type", "web_form_self"),
+                ("Client notes", ""),
+                ("CHS outcome code", "CB1"),
+                ("Urgent", False),
+            ],
+        ]
+        report = self.get_report()
+
+        self.assertListEqual(expected_data[0], report[0])
+        self.assertListEqual(expected_data[1], report[1])
+        self.assertListEqual(expected_data[2], report[2])
+
+    def make_web_cases(
+        self, fast_track_reason, financial_assessment_status, reason_for_contacting_categories, callback_type
+    ):
+        operator = make_recipe("call_centre.operator")
+
+        scope_traversal = make_recipe(
+            "checker.scope_traversal",
+            scope_answers={},
+            category={},
+            subcategory={},
+            financial_assessment_status=financial_assessment_status,
+            fast_track_reason=fast_track_reason,
+        )
+
+        # Create dummy cases that shouldn't be include in the report
+        make_recipe("legalaid.case", eligibility_check=None, _quantity=5)
+        # Create the web case
+        outcome_code = "CB1" if callback_type else "CASE_CREATED"
+        case = make_recipe(
+            "legalaid.case",
+            created_by=operator.user,
+            scope_traversal=scope_traversal,
+            callback_type=callback_type,
+            outcome_code=outcome_code,
+        )
+
+        make_recipe("cla_eventlog.Log", code="CASE_CREATED", case=case, notes="Case created digitally")
+        if callback_type:
+            make_recipe("cla_eventlog.Log", code=outcome_code, case=case)
+
+        if reason_for_contacting_categories:
+            reasons_for_contacting = make_recipe(
+                "checker.reasonforcontacting", referrer="https://localhost/scope/diagnosis", case=case
+            )
+            make_recipe(
+                "checker.reasonforcontacting_category",
+                reason_for_contacting=reasons_for_contacting,
+                category=cycle(reason_for_contacting_categories),
+                _quantity=len(reason_for_contacting_categories),
+            )
+
+        # If you don't do this then outcome come could be modified by either the eventlog or other hooks in the app
+        # making the test flake
+        case.outcome_code = outcome_code
+        case.save()
+
+        return case
+
+    def get_report(self):
+        today = datetime.date.today()
+        date_from = today - datetime.timedelta(days=1)
+        date_to = today + datetime.timedelta(days=1)
+
+        with mock.patch("reports.forms.WebContactCases.date_range", (date_from, date_to)):
+            report = reports.forms.WebContactCases()
+            rows = report.get_rows()
+            headers = report.get_headers()
+            data = []
+            for row in rows:
+                data.append(zip(headers, row))
+
+        return data

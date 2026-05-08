@@ -8,7 +8,7 @@ from rest_framework import status
 class ProviderExtractAPIMixin(object):
     def setUp(self):
         super(ProviderExtractAPIMixin, self).setUp()
-        self.creds = {"chs_org": "org123", "chs_user": "test_user", "chs_pass": "test_pass"}
+        self.creds = {"chs_org": "org123", "chs_user": "cla_user", "chs_pass": "cla_pass"}
         self.user.staff.chs_organisation = self.creds["chs_org"]
         self.user.staff.set_chs_password(self.creds["chs_pass"])
         self.user.staff.chs_user = self.creds["chs_user"]

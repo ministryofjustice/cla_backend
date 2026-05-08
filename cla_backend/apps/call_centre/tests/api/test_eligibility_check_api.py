@@ -35,6 +35,7 @@ class EligibilityCheckTestCase(CLAOperatorAuthBaseApiTestMixin, NestedEligibilit
             "state",
             "specific_benefits",
             "disregards",
+            "disregard_selection",
             "has_passported_proceedings_letter",
         ]
 
@@ -90,8 +91,8 @@ class EligibilityCheckTestCase(CLAOperatorAuthBaseApiTestMixin, NestedEligibilit
 
     def test_check_validate_disregards(self):
         """
-               Make sure that the disregards does not allow fields that have not been created
-               """
+        Make sure that the disregards does not allow fields that have not been created
+        """
         disregard_defined = {"disregards": {"criminal_injuries": "true"}}
 
         disregard_not_defined = {"disregards": {"no_disregard_defined": "true"}}

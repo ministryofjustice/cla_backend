@@ -1,0 +1,186 @@
+name: workflow.yml
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+
+permissions:
+  contents: read
+
+jobs:
+  format-and-lint:
+    name: "Format and lint"
+    runs-on: "ubuntu-latest"
+    container: python:2.7
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
+      - uses: ./.github/actions/format-and-lint
+
+  unit-tests:
+    name: "Unit tests"
+    runs-on: "ubuntu-latest"
+    container: python:2.7
+    services:
+      database:
+        image: postgres:14.7-bullseye
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: cla_backend_test
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
+      - uses: ./.github/actions/unit-tests
+        with:
+          DB_HOST: database
+          DB_NAME: cla_backend_test
+          DB_USERNAME: postgres
+          DB_PASSWORD: postgres
+          COVERALLS_REPO_TOKEN: ${{secrets.COVERALLS_REPO_TOKEN}}
+
+  build-and-push:
+    permissions:
+      contents: read
+      id-token: write
+    name: Build and push
+    runs-on: "ubuntu-latest"
+    outputs:
+      image_tag: ${{ steps.build-step.outputs.image_tag }}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
+      - uses: ./.github/actions/build-and-push
+        id: build-step
+        with:
+          ECR_REGISTRY_URL: ${{ secrets.ECR_REGISTRY_URL }}
+          ECR_ROLE_TO_ASSUME: ${{ secrets.CLA_BACKEND_ECR_ROLE_TO_ASSUME }}
+          ECR_REPOSITORY: ${{ vars.CLA_BACKEND_ECR_REPOSITORY }}
+          ECR_REGION: ${{ vars.CLA_BACKEND_ECR_REGION }}
+
+  end-to-end-tests:
+    needs: [build-and-push]
+    permissions:
+      contents: read
+      id-token: write
+    uses: ministryofjustice/cla-end-to-end-tests/.github/workflows/e2e.yml@main
+    with:
+      CLA_BACKEND_IMAGE: "${{ vars.CLA_BACKEND_ECR_REPOSITORY }}:${{ needs.build-and-push.outputs.image_tag }}"
+      CLA_FRONTEND_ECR_REGION: ${{ vars.CLA_FRONTEND_ECR_REGION}}
+      CLA_BACKEND_ECR_REGION: ${{ vars.CLA_BACKEND_ECR_REGION}}
+      SOCKET_SERVER_ECR_REGION: ${{ vars.SOCKET_SERVER_ECR_REGION }}
+    secrets:
+      ECR_REGISTRY_URL: ${{ secrets.ECR_REGISTRY_URL }}
+      CLA_FRONTEND_ECR_ROLE_TO_ASSUME: ${{ secrets.CLA_FRONTEND_ECR_ROLE_TO_ASSUME }}
+      CLA_BACKEND_ECR_ROLE_TO_ASSUME: ${{ secrets.CLA_BACKEND_ECR_ROLE_TO_ASSUME }}
+      SOCKET_SERVER_ECR_ROLE_TO_ASSUME: ${{ secrets.SOCKET_SERVER_ECR_ROLE_TO_ASSUME }}
+
+  uat-deploy:
+    name: UAT deploy
+    runs-on: ubuntu-latest
+    needs: [build-and-push]
+    if: github.event_name == 'pull_request' && !startsWith(github.head_ref, 'snyk-fix')
+    environment: uat
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
+      - uses: ./.github/actions/deploy
+        with:
+          namespace: uat
+          dynamic_hostname: 'true'
+          KUBE_CERT: ${{ secrets.KUBE_CERT }}
+          KUBE_CLUSTER: ${{ secrets.KUBE_CLUSTER }}
+          KUBE_NAMESPACE: ${{ secrets.KUBE_NAMESPACE }}
+          KUBE_TOKEN: ${{ secrets.KUBE_TOKEN }}
+          ECR_REGISTRY_URL: ${{ secrets.ECR_REGISTRY_URL }}
+          ECR_REPOSITORY: ${{ vars.CLA_BACKEND_ECR_REPOSITORY }}
+          HOST: ${{ vars.UAT_HOST }}
+
+  uat-static-deploy:
+    name: UAT static deploy
+    runs-on: ubuntu-latest
+    needs: [build-and-push]
+    environment: uat-static
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
+      - uses: ./.github/actions/deploy
+        with:
+          namespace: uat
+          dynamic_hostname: 'false'
+          KUBE_CERT: ${{ secrets.KUBE_CERT }}
+          KUBE_CLUSTER: ${{ secrets.KUBE_CLUSTER }}
+          KUBE_NAMESPACE: ${{ secrets.KUBE_NAMESPACE }}
+          KUBE_TOKEN: ${{ secrets.KUBE_TOKEN }}
+          ECR_REGISTRY_URL: ${{ secrets.ECR_REGISTRY_URL }}
+          ECR_REPOSITORY: ${{ vars.CLA_BACKEND_ECR_REPOSITORY }}
+          HOST: ${{ vars.UAT_HOST }}
+
+  staging-deploy:
+    name: Staging deploy
+    runs-on: ubuntu-latest
+    needs: [build-and-push]
+    if: github.ref_name == 'main'
+    environment: staging
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
+      - uses: ./.github/actions/deploy
+        with:
+          namespace: staging
+          KUBE_CERT: ${{ secrets.KUBE_CERT }}
+          KUBE_CLUSTER: ${{ secrets.KUBE_CLUSTER }}
+          KUBE_NAMESPACE: ${{ secrets.KUBE_NAMESPACE }}
+          KUBE_TOKEN: ${{ secrets.KUBE_TOKEN }}
+          ECR_REGISTRY_URL: ${{ secrets.ECR_REGISTRY_URL }}
+          ECR_REPOSITORY: ${{ vars.CLA_BACKEND_ECR_REPOSITORY }}
+          HOST: ${{ vars.STAGING_HOST }}
+
+  training-deploy:
+    name: Training deploy
+    runs-on: ubuntu-latest
+    needs: [staging-deploy]
+    if: github.ref_name == 'main'
+    environment: training
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
+      - uses: ./.github/actions/deploy
+        with:
+          namespace: training
+          KUBE_CERT: ${{ secrets.KUBE_CERT }}
+          KUBE_CLUSTER: ${{ secrets.KUBE_CLUSTER }}
+          KUBE_NAMESPACE: ${{ secrets.KUBE_NAMESPACE }}
+          KUBE_TOKEN: ${{ secrets.KUBE_TOKEN }}
+          ECR_REGISTRY_URL: ${{ secrets.ECR_REGISTRY_URL }}
+          ECR_REPOSITORY: ${{ vars.CLA_BACKEND_ECR_REPOSITORY }}
+          HOST: ${{ vars.TRAINING_HOST }}
+
+  production-deploy:
+    name: Production deploy
+    runs-on: ubuntu-latest
+    needs: [training-deploy]
+    if: github.ref_name == 'main'
+    environment: production
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
+      - uses: ./.github/actions/deploy
+        with:
+          namespace: production
+          KUBE_CERT: ${{ secrets.KUBE_CERT }}
+          KUBE_CLUSTER: ${{ secrets.KUBE_CLUSTER }}
+          KUBE_NAMESPACE: ${{ secrets.KUBE_NAMESPACE }}
+          KUBE_TOKEN: ${{ secrets.KUBE_TOKEN }}
+          ECR_REGISTRY_URL: ${{ secrets.ECR_REGISTRY_URL }}
+          ECR_REPOSITORY: ${{ vars.CLA_BACKEND_ECR_REPOSITORY }}
+          HOST: ${{ vars.PRODUCTION_HOST }}

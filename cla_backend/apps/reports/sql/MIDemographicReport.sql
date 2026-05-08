@@ -1,3 +1,4 @@
+
 with latest_outcome as (
     select
       e.*
@@ -13,7 +14,7 @@ SELECT
     legalaid_case.reference AS "Case ID",
     legalaid_provider.name AS "Provider ID",
     category.code AS "Category Name",
-    legalaid_case.created AS "Date Case Created",
+    TO_CHAR(legalaid_case.created, 'DD-MM-YY') AS "Date Case Created",
     matter_type_1.code AS "Matter Type 1",
     matter_type_2.code AS "Matter Type 2",
     CASE diagnosis.state
@@ -53,9 +54,9 @@ SELECT
     legalaid_case.source as "Contact Type",
     media_code.name as "Referral Agencies",
     legalaid_case.exempt_user_reason as "Exempt Client",
-    CASE upper(adaptations.language) 
-      WHEN upper('Welsh') THEN true 
-      ELSE false 
+    CASE upper(adaptations.language)
+      WHEN upper('Welsh') THEN true
+      ELSE false
     END as "Welsh",
     CASE upper(adaptations.language)
       WHEN 'ENGLISH' THEN 'English'
@@ -64,14 +65,11 @@ SELECT
       ELSE 'Non-English'
     END as "Language",
     legalaid_case.outcome_code as "Outcome code",
-    latest_outcome.created as "Outcome Created At",
+    TO_CHAR(latest_outcome.created, 'DD-MM-YY') as "Outcome Created At",
     legalaid_case.thirdparty_details_id::bool as "Has Third Party",
     call_centre_organisation.name as "Organisation",
-    legalaid_case.notes as "Notes",
-    legalaid_case.provider_notes as "Provider Notes",
-    adaptations.notes as "Adaptation Notes",
     personal_details.vulnerable_user as "Vulnerable User",
-    CASE 
+    CASE
       WHEN TRIM('123456789' FROM SUBSTRING(personal_details.postcode, 1, 2)) IN ('DE', 'LE', 'LN', 'NG') THEN 'East Midlands'
       WHEN TRIM('123456789' FROM SUBSTRING(personal_details.postcode, 1, 2)) IN ('AL', 'CB', 'CM', 'CO', 'HP', 'IP', 'LU', 'NR', 'SG', 'SS') THEN 'East of England'
       WHEN TRIM('123456789' FROM SUBSTRING(personal_details.postcode, 1, 2)) IN ('BR', 'CR', 'DA', 'E', 'EC', 'EN', 'HA', 'IG', 'KT', 'N', 'NW', 'RM', 'SE', 'SM', 'SW', 'TW', 'UB', 'W', 'WC', 'WD') THEN 'Greater London'
@@ -100,5 +98,4 @@ FROM legalaid_case AS legalaid_case
     LEFT OUTER JOIN call_centre_organisation AS call_centre_organisation ON call_centre_organisation.id = legalaid_case.organisation_id
     LEFT OUTER JOIN legalaid_personaldetails AS personal_details ON personal_details.id = legalaid_case.personal_details_id
 WHERE
-    -- If a case does not have an outcome log event then it should not be part of this dataset.
-    latest_outcome.created >= %s AND latest_outcome.created < %s
+    legalaid_case.created >= %s AND legalaid_case.created < %s

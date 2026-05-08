@@ -44,6 +44,7 @@ class BaseCaseTestCase(CLAOperatorAuthBaseApiTestMixin, BaseFullCaseAPIMixin, AP
             "provider",
             "notes",
             "provider_notes",
+            "client_notes",
             "full_name",
             "laa_reference",
             "eligibility_state",
@@ -75,6 +76,8 @@ class BaseCaseTestCase(CLAOperatorAuthBaseApiTestMixin, BaseFullCaseAPIMixin, AP
             "call_started",
             "organisation_name",
             "organisation",
+            "gtm_anon_id",
+            "scope_traversal",
         ]
 
 
@@ -118,7 +121,7 @@ class CreateCaseTestCase(BaseCaseTestCase):
             "billable_time": 234,
             "created": "2014-08-05T10:41:55.979Z",
             "modified": "2014-08-05T10:41:55.985Z",
-            "created_by": "test_user",
+            "created_by": "cla_user",
             "matter_type1": matter_type1.code,
             "matter_type2": matter_type2.code,
             "media_code": media_code.code,
@@ -327,6 +330,9 @@ class SuggestProviderTestCase(BaseCaseTestCase):
 
     def setUp(self):
         super(CLAOperatorAuthBaseApiTestMixin, self).setUp()
+
+        Case.objects.all().delete()
+
         category1 = make_recipe("legalaid.category")
         category2 = make_recipe("legalaid.category")
 
@@ -411,7 +417,7 @@ class SuggestProviderTestCase(BaseCaseTestCase):
             suitable_providers = [
                 ProviderSerializer(p).data for p in self.suggested_cat_providers + self.other_cat_providers
             ]
-            self.assertEqual(response.data["suitable_providers"], suitable_providers)
+            self.assertItemsEqual(response.data["suitable_providers"], suitable_providers)
 
 
 class AssignCaseTestCase(BaseCaseTestCase):
@@ -812,7 +818,7 @@ class FutureCallbacksCaseTestCase(BaseCaseTestCase):
 class SearchForPersonalDetailsTestCase(BaseCaseTestCase):
     def make_resource(self, **kwargs):
         """
-            Specifying case.personal_details == None by default
+        Specifying case.personal_details == None by default
         """
         kwargs["personal_details"] = None
         return super(SearchForPersonalDetailsTestCase, self).make_resource(**kwargs)

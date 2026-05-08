@@ -214,7 +214,7 @@ class ReasonForContactingExportTask(ExportTaskBase):
             if parse_url.hostname:
                 parts.append(parse_url.hostname.replace(".", "_"))
             if parse_url.path:
-                parts.append(parse_url.path.replace("/", "_"),)
+                parts.append(parse_url.path.replace("/", "_"))
             if parse_url.query:
                 parts.append(parse_url.query.replace("=", "_"))
 

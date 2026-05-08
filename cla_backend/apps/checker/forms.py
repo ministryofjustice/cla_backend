@@ -17,7 +17,10 @@ class WebCallMeBackForm(BaseCallMeBackForm):
 
     def save(self, user):
         super(WebCallMeBackForm, self).save(user)
-        if callback_capacity_threshold_breached(self.case.requires_action_at):
+
+        # We only want to fire a notification email if this case could have subtracted from the slot capacity
+        should_case_contribute_to_cap = self.case.callback_type == "web_form_self" and self.case.outcome_code == "CB1"
+        if callback_capacity_threshold_breached(self.case.requires_action_at) and should_case_contribute_to_cap:
             callback_capacity_threshold_breach_send_notification(self.case.requires_action_at)
 
 

@@ -48,6 +48,7 @@ class BaseFullCaseAPIMixin(SimpleResourceAPIMixin):
             "provider",
             "notes",
             "provider_notes",
+            "client_notes",
             "full_name",
             "laa_reference",
             "eligibility_state",
@@ -65,6 +66,7 @@ class BaseFullCaseAPIMixin(SimpleResourceAPIMixin):
             "exempt_user_reason",
             "ecf_statement",
             "complaint_flag",
+            "scope_traversal",
         ]
 
     def assertPersonalDetailsEqual(self, data, obj):
@@ -90,6 +92,7 @@ class BaseFullCaseAPIMixin(SimpleResourceAPIMixin):
             "matter_type2": "code",
             "media_code": "code",
             "organisation": "pk",
+            "scope_traversal": "reference",
         }
 
         for field, fk_pk in fks.items():
@@ -106,6 +109,7 @@ class BaseFullCaseAPIMixin(SimpleResourceAPIMixin):
             "billable_time",
             "laa_reference",
             "provider_notes",
+            "client_notes",
             "requires_action_by",
             "exempt_user",
             "exempt_user_reason",
@@ -310,7 +314,7 @@ class BaseUpdateCaseTestCase(BaseFullCaseAPIMixin):
             "billable_time": 234,
             "created": "2014-08-05T10:41:55.979Z",
             "modified": "2014-08-05T10:41:55.985Z",
-            "created_by": "test_user",
+            "created_by": "cla_user",
             "matter_type1": matter_type1.code,
             "matter_type2": matter_type2.code,
             "media_code": media_code.code,

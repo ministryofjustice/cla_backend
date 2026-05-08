@@ -5,15 +5,14 @@ from core.drf.router import NestedSimpleRouter, NestedCLARouter
 
 from . import views
 
-
 router = routers.DefaultRouter()
 router.register(r"category", views.CategoryViewSet)
 router.register(r"case", views.CaseViewSet)
 router.register(r"user", views.UserViewSet, base_name="user")
 router.register(r"event", views.EventViewSet, base_name="event")
+router.register(r"provider", views.ProviderViewSet, base_name="provider")
 
-# router.register(r'knowledgebase/article', views.ArticleViewSet)
-# router.register(r'knowledgebase/category', views.ArticleCategoryViewSet)
+router.register(r"guidance/note", views.GuidanceNoteViewSet, base_name="guidance_note")
 router.register(r"adaptations", views.AdaptationDetailsMetadataViewSet, base_name="adaptations-metadata")
 router.register(r"contact_research_methods", views.ContactResearchMethodViewSet)
 router.register(r"mattertype", views.MatterTypeViewSet)
@@ -26,6 +25,7 @@ case_one2one_router.register(r"personal_details", views.PersonalDetailsViewSet)
 case_one2one_router.register(r"adaptation_details", views.AdaptationDetailsViewSet)
 case_one2one_router.register(r"thirdparty_details", views.ThirdPartyDetailsViewSet)
 case_one2one_router.register(r"diagnosis", views.DiagnosisViewSet, base_name="diagnosis")
+case_one2one_router.register(r"scope_traversal", views.ScopeTraversalViewSet, base_name="scope_traversal")
 
 case_one2many_router = NestedSimpleRouter(router, r"case", lookup="case")
 

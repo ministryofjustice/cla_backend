@@ -44,6 +44,9 @@ class BaseCaseTestCase(
                 "callback_window_type",
                 "adaptation_details",
                 "thirdparty_details",
+                "gtm_anon_id",
+                "client_notes",
+                "scope_traversal",
             ],
         )
 

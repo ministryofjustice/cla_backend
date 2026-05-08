@@ -94,7 +94,7 @@ jobs:
     name: UAT deploy
     runs-on: ubuntu-latest
     needs: [build-and-push]
-    if: github.event_name == 'pull_request' && !startsWith(github.head_ref, 'snyk-fix')
+    if: github.event_name == 'pull_request'
     environment: uat
     permissions:
       contents: read
@@ -119,6 +119,7 @@ jobs:
     name: UAT static deploy
     runs-on: ubuntu-latest
     needs: [build-and-push]
+    if: github.event_name == 'pull_request'
     environment: uat-static
     permissions:
       contents: read

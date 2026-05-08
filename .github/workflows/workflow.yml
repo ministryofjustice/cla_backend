@@ -38,7 +38,7 @@ jobs:
           DB_USERNAME: postgres
           DB_PASSWORD: postgres
           COVERALLS_REPO_TOKEN: ${{secrets.COVERALLS_REPO_TOKEN}}
-  
+
   build-and-push:
     name: Build
     uses: ./.github/workflows/build.yml
@@ -54,7 +54,7 @@ jobs:
   snyk-image-scan:
     name: Snyk Image Scan
     needs: [build-and-push]
-    if: always() #allowed to be passed for the error 
+    if: always() #allowed to be passed for the error
 
     uses: ministryofjustice/laa-reusable-github-actions/.github/workflows/sast.yml@a652d1076b05dd80d3ab619d263aac6ce526d70b
 
@@ -65,13 +65,30 @@ jobs:
       actions: read
 
     with:
-      image_uri: ${{ needs.build-and-push.outputs.image_tag }}
+      image_uri: ${{ needs.build-and-push.outputs.image_uri }}
       dockerfile_path: ./Dockerfile
 
     secrets:
       SNYK_CLIENT_ID: ${{ secrets.SNYK_CLIENT_ID }}
       SNYK_CLIENT_SECRET: ${{ secrets.SNYK_CLIENT_SECRET }}
       ECR_ROLE_TO_ASSUME: ${{ secrets.CLA_BACKEND_ECR_ROLE_TO_ASSUME }}
+
+  end-to-end-tests:
+    needs: [build-and-push]
+    permissions:
+      contents: read
+      id-token: write
+    uses: ministryofjustice/cla-end-to-end-tests/.github/workflows/e2e.yml@main
+    with:
+      CLA_BACKEND_IMAGE: "${{ vars.CLA_BACKEND_ECR_REPOSITORY }}:${{ needs.build-and-push.outputs.image_tag }}"
+      CLA_FRONTEND_ECR_REGION: ${{ vars.CLA_FRONTEND_ECR_REGION}}
+      CLA_BACKEND_ECR_REGION: ${{ vars.CLA_BACKEND_ECR_REGION}}
+      SOCKET_SERVER_ECR_REGION: ${{ vars.SOCKET_SERVER_ECR_REGION }}
+    secrets:
+      ECR_REGISTRY_URL: ${{ secrets.ECR_REGISTRY_URL }}
+      CLA_FRONTEND_ECR_ROLE_TO_ASSUME: ${{ secrets.CLA_FRONTEND_ECR_ROLE_TO_ASSUME }}
+      CLA_BACKEND_ECR_ROLE_TO_ASSUME: ${{ secrets.CLA_BACKEND_ECR_ROLE_TO_ASSUME }}
+      SOCKET_SERVER_ECR_ROLE_TO_ASSUME: ${{ secrets.SOCKET_SERVER_ECR_ROLE_TO_ASSUME }}
 
   uat-deploy:
     name: UAT deploy
@@ -95,7 +112,7 @@ jobs:
           ECR_REGISTRY_URL: ${{ secrets.ECR_REGISTRY_URL }}
           ECR_REPOSITORY: ${{ vars.CLA_BACKEND_ECR_REPOSITORY }}
           HOST: ${{ vars.UAT_HOST }}
-         
+
 
 
   uat-static-deploy:
@@ -119,7 +136,7 @@ jobs:
           ECR_REGISTRY_URL: ${{ secrets.ECR_REGISTRY_URL }}
           ECR_REPOSITORY: ${{ vars.CLA_BACKEND_ECR_REPOSITORY }}
           HOST: ${{ vars.UAT_HOST }}
-         
+
   staging-deploy:
     name: Staging deploy
     runs-on: ubuntu-latest
@@ -141,7 +158,7 @@ jobs:
           ECR_REGISTRY_URL: ${{ secrets.ECR_REGISTRY_URL }}
           ECR_REPOSITORY: ${{ vars.CLA_BACKEND_ECR_REPOSITORY }}
           HOST: ${{ vars.STAGING_HOST }}
-        
+
 
   training-deploy:
     name: Training deploy
@@ -164,7 +181,7 @@ jobs:
           ECR_REGISTRY_URL: ${{ secrets.ECR_REGISTRY_URL }}
           ECR_REPOSITORY: ${{ vars.CLA_BACKEND_ECR_REPOSITORY }}
           HOST: ${{ vars.TRAINING_HOST }}
-         
+
 
   production-deploy:
     name: Production deploy
@@ -187,4 +204,4 @@ jobs:
           ECR_REGISTRY_URL: ${{ secrets.ECR_REGISTRY_URL }}
           ECR_REPOSITORY: ${{ vars.CLA_BACKEND_ECR_REPOSITORY }}
           HOST: ${{ vars.PRODUCTION_HOST }}
-         
+

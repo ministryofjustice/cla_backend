@@ -5,28 +5,32 @@ inputs:
   namespace:
     description: Target namespace (uat, staging, training, production)
     required: true
-
   dynamic_hostname:
     description: Use dynamic hostname based on branch name
     required: false
     default: 'false'
-
   KUBE_CERT:
+    description: Kubernetes cluster certificate (base64 encoded)
     required: true
   KUBE_CLUSTER:
+    description: Kubernetes cluster hostname
     required: true
   KUBE_NAMESPACE:
+    description: Kubernetes namespace
     required: true
   KUBE_TOKEN:
+    description: Kubernetes service account token
     required: true
-
   ECR_REGISTRY_URL:
+    description: ECR registry URL
     required: true
   ECR_REPOSITORY:
+    description: ECR repository name
+    required: true
+  HOST:
+    description: Base hostname for deployment
     required: true
 
-  HOST:
-    required: true
 
 runs:
   using: composite

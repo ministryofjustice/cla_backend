@@ -10,7 +10,7 @@ from django.core.cache import cache
 from django.conf import settings
 from rest_framework import exceptions, authentication
 from django.core.validators import validate_email
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User
 from call_centre.models import Operator
 from cla_provider.models import Provider, Staff
 
@@ -185,39 +185,6 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
 
         return app_role, None
 
-    def user_has_role(self, user, app_role):
-        user_group_mapping = {
-            OPERATOR_MANAGER_ROLE: "Operator Managers",
-        }
-
-        try:
-            user_group = user.groups.values_list("name", flat=True).first()
-            for role in app_role:
-                expected_group = user_group_mapping.get(role)
-                if expected_group == user_group:
-                    return True
-            return None
-
-        except Exception:
-            return None
-
-    def change_user_group(self, app_role, user):
-        user_group_mapping = {
-            OPERATOR_MANAGER_ROLE: "Operator Managers",
-        }
-
-        try:
-            user.groups.clear()
-            for role in app_role:
-                expected_group = user_group_mapping.get(role)
-                if expected_group is not None:
-                    group = Group.objects.get(name=expected_group)
-                    user.groups.add(group)
-            return True
-        except Exception as e:
-            logger.error("ENTRA: Failed to update groups for user %s: %s" % (user.pk, e), exc_info=True)
-        return None
-
     def authenticate(self, request, retried=False):
         token = request.META.get("HTTP_AUTHORIZATION")
 
@@ -238,18 +205,21 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
             logger.error("ENTRA: Could not find or create user for token payload", exc_info=True)
             raise exceptions.AuthenticationFailed("Could not find or create user for token payload")
 
-        if not self.user_has_role(user, app_role):
-            if retried:
-                logger.error("ENTRA: User %s group does not match expected role %s after update" % (user.pk, app_role), exc_info=True)
-                raise exceptions.AuthenticationFailed(
-                    "User %s group does not match expected role %s after update" % (user.pk, app_role)
-                )
-            change_app_role = self.change_user_group(app_role, user)
-            if not change_app_role:
-                logger.error("ENTRA: Failed to update group for user %s with roles %s" % (user.pk, app_role), exc_info=True)
-                raise exceptions.AuthenticationFailed(
-                    "Failed to update group for user %s with roles %s" % (user.pk, app_role)
-                )
-            return self.authenticate(request, retried=True)
-
+        self.sync_user_roles(user, app_role)
         return user, payload
+
+    def sync_user_roles(self, user, silas_roles):
+        if not hasattr(user, "operator"):
+            return
+
+        if OPERATOR_MANAGER_ROLE in silas_roles:  # User is operator manager in silas but operator in fox admin
+            if not user.operator.is_manager:
+                logger.info(
+                    "ENTRA: User %s is an operator manager in silas but only operator in fox admin. promoting user to operator manager" % user.pk)
+                user.operator.is_manager = True
+                user.operator.save()
+        elif user.operator.is_manager:  # User is operator  silas but is an operator manager in fox admin
+            logger.info(
+                "ENTRA: User %s is operator in silas but operator manager in fox admin. demoting user operator" % user.pk)
+            user.operator.is_manager = False
+            user.operator.save()

@@ -99,7 +99,7 @@ django-oauth-toolkit==0.11.0
 https://github.com/timmyomahony/django-pagedown/archive/refs/tags/v1.1.tar.gz
     # via -r requirements/source/requirements-git.in
 https://github.com/HassenPy/django-pdb/archive/refs/tags/0.3.2.tar.gz
-    # via -r requirements/source/requirements-git.in
+    # via -r requirements/source/requirements-testing.in
 django-session-security==2.2.3
     # via -r requirements/source/requirements-base.in
 django-storages==1.5.2

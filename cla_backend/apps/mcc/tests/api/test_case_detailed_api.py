@@ -4,12 +4,16 @@ from __future__ import unicode_literals
 import mock
 
 from django.core.urlresolvers import reverse
+from django.utils import timezone
 from rest_framework.test import APITestCase
 from rest_framework import status
 
 from core.tests.mommy_utils import make_recipe
 from legalaid.tests.views.test_base import CLAProviderAuthBaseApiTestMixin
 from mcc.serializers import DetailedCaseSerializer, CaseSerializer
+
+from cla_eventlog.models import Log
+from cla_eventlog.constants import LOG_LEVELS, LOG_TYPES
 
 
 class DetailedCaseSerializerTestCase(CLAProviderAuthBaseApiTestMixin, APITestCase):
@@ -88,15 +92,43 @@ class DetailedCaseEndpointTestCase(CLAProviderAuthBaseApiTestMixin, APITestCase)
 
     def setUp(self):
         super(DetailedCaseEndpointTestCase, self).setUp()
-        self.case = make_recipe("legalaid.case", provider=self.provider)
+        self.case = make_recipe("legalaid.case", provider=self.provider, reference="AA-1234-5678")
+
+    def _set_case_as_opened(self):
+        self.case.provider_viewed = timezone.now()
+        self.case.save(update_fields=["provider_viewed", "modified"])
+
+    def _create_case_viewed_logs(self):
+        created_by = self.case.created_by or self.user
+
+        Log.objects.create(
+            case=self.case,
+            code="CASE_VIEWED",
+            created_by=created_by,
+            notes="Not ready for determination",
+            type=LOG_TYPES.OUTCOME,
+            level=LOG_LEVELS.HIGH,
+        )
+        Log.objects.create(
+            case=self.case,
+            code="CASE_VIEWED",
+            created_by=created_by,
+            notes="Case viewed",
+            type=LOG_TYPES.SYSTEM,
+            level=LOG_LEVELS.MINOR,
+        )
 
     def get_detailed_url(self, reference=None):
         reference = reference or self.case.reference
-        return reverse("cla_provider:case-detailed", args=(), kwargs={"reference": reference})
+        return reverse("mcc:case-detailed", args=(), kwargs={"reference": reference})
+
+    def get_case_url(self, reference=None):
+        reference = reference or self.case.reference
+        return reverse("cla_provider:case-detail", args=(), kwargs={"reference": reference})
 
     def test_detailed_endpoint_exists_and_uses_correct_serializer(self):
         """Test that the detailed endpoint exists and uses DetailedCaseSerializer"""
-        url = self.get_detailed_url()
+        url = self.get_detailed_url("AA-1234-5678")
 
         # Test without auth first
         response = self.client.get(url)
@@ -120,7 +152,7 @@ class DetailedCaseEndpointTestCase(CLAProviderAuthBaseApiTestMixin, APITestCase)
         """Test that detailed endpoint respects case ownership"""
         # Case not owned by provider
         other_provider = make_recipe("cla_provider.provider")
-        other_case = make_recipe("legalaid.case", provider=other_provider)
+        other_case = make_recipe("legalaid.case", provider=other_provider, reference="BB-1234-5678")
 
         url = self.get_detailed_url(other_case.reference)
         response = self.client.get(url, HTTP_AUTHORIZATION=self.get_http_authorization())
@@ -129,7 +161,7 @@ class DetailedCaseEndpointTestCase(CLAProviderAuthBaseApiTestMixin, APITestCase)
     @mock.patch("mcc.serializers.DetailedCaseSerializer")
     def test_detailed_endpoint_uses_detailed_serializer(self, mock_serializer):
         """Test that the endpoint specifically uses DetailedCaseSerializer"""
-        url = self.get_detailed_url()
+        url = self.get_detailed_url("AA-1234-5678")
         mock_instance = mock_serializer.return_value
         mock_instance.data = {"reference": self.case.reference}
 
@@ -139,3 +171,43 @@ class DetailedCaseEndpointTestCase(CLAProviderAuthBaseApiTestMixin, APITestCase)
             mock_serializer.assert_called_once()
             call_args = mock_serializer.call_args
             self.assertEqual(call_args[1]["instance"], self.case)
+
+    def test_detailed_endpoint_excludes_eligibility_check(self):
+        """Test that the detailed endpoint does NOT include eligibility_check reference"""
+        detailed_url = self.get_detailed_url(self.case.reference)
+        response = self.client.get(detailed_url, HTTP_AUTHORIZATION=self.get_http_authorization())
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Detailed endpoint should NOT have eligibility_check reference
+        self.assertNotIn('eligibility_check', response.data)
+
+        # Regular endpoint should still have eligibility_check reference
+        response = self.client.get(self.get_case_url(self.case.reference), HTTP_AUTHORIZATION=self.get_http_authorization())
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('eligibility_check', response.data)
+
+    def test_detailed_endpoint_state_note_ignores_minor_case_viewed_log(self):
+        """Detailed endpoint state_note should match visible logs endpoint behaviour."""
+        self._set_case_as_opened()
+        self._create_case_viewed_logs()
+
+        detailed_url = self.get_detailed_url(self.case.reference)
+        response = self.client.get(detailed_url, HTTP_AUTHORIZATION=self.get_http_authorization())
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["state"], "opened")
+        self.assertEqual(response.data["state_note"]["notes"], "Not ready for determination")
+
+    def test_api_returns_state_field(self):
+        """Test that the detailed API endpoint includes the state field"""
+        detailed_url = self.get_detailed_url(self.case.reference)
+        response = self.client.get(detailed_url, HTTP_AUTHORIZATION=self.get_http_authorization())
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.assertIn('state', response.data)
+        self.assertEqual(response.data['state'], 'new')  # Default state for test case
+
+        # Test that regular endpoint does NOT include state field
+        response = self.client.get(self.get_case_url(self.case.reference), HTTP_AUTHORIZATION=self.get_http_authorization())
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertNotIn('state', response.data)

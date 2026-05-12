@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 from rest_framework.decorators import detail_route
 from rest_framework.response import Response as DRFResponse
 
-from cla_provider.forms import SplitMCCCaseForm
+from mcc.forms import SplitMCCCaseForm
 from cla_provider.views import CaseViewSet
 
 from mcc import serializers

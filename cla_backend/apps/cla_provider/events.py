@@ -44,6 +44,33 @@ class RejectCaseEvent(BaseEvent):
             "order": 40,
             "set_requires_action_by": REQUIRES_ACTION_BY.OPERATOR,
         },
+        "MERI": {
+            "type": LOG_TYPES.OUTCOME,
+            "level": LOG_LEVELS.HIGH,
+            "selectable_by": [LOG_ROLES.SPECIALIST],
+            "description": "Merits - not eligible",
+            "stops_timer": False,
+            "order": 50,
+            "set_requires_action_by": REQUIRES_ACTION_BY.OPERATOR,
+        },
+        "DUPL": {
+            "type": LOG_TYPES.OUTCOME,
+            "level": LOG_LEVELS.HIGH,
+            "selectable_by": [LOG_ROLES.SPECIALIST],
+            "description": "Duplicate case",
+            "stops_timer": False,
+            "order": 60,
+            "set_requires_action_by": REQUIRES_ACTION_BY.OPERATOR,
+        },
+        "CLOT": {
+            "type": LOG_TYPES.OUTCOME,
+            "level": LOG_LEVELS.HIGH,
+            "selectable_by": [LOG_ROLES.SPECIALIST],
+            "description": "Other",
+            "stops_timer": False,
+            "order": 70,
+            "set_requires_action_by": REQUIRES_ACTION_BY.OPERATOR,
+        },
     }
 
     def get_log_code(self, **kwargs):

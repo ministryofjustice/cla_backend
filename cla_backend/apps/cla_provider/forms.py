@@ -269,11 +269,6 @@ class SplitCaseForm(SplitBaseCaseForm):
         return cleaned_data
 
 
-class SplitMCCCaseForm(SplitBaseCaseForm):
-    # Doesn't care about an `already split` case or if case is being split by `same-category`
-    pass
-
-
 class ProviderExtractForm(Form):
     CHSUserName = forms.CharField(required=True)
     CHSOrganisationID = forms.CharField(required=True)

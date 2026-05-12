@@ -61,7 +61,7 @@ from .serializers import (
     CSVUploadDetailSerializer,
     ProviderSerializer,
 )
-from .forms import RejectCaseForm, AcceptCaseForm, OpenCaseForm, CloseCaseForm, SplitCaseForm, ReopenCaseForm, SplitMCCCaseForm
+from .forms import RejectCaseForm, AcceptCaseForm, OpenCaseForm, CloseCaseForm, SplitCaseForm, ReopenCaseForm
 
 logger = logging.getLogger(__name__)
 
@@ -222,24 +222,9 @@ class CaseViewSet(CLAProviderPermissionViewSetMixin, FullCaseViewSet):
         }
         return DRFResponse(data)
 
-    @detail_route()
-    def detailed(self, *args, **kwargs):
-        """
-        Returns case with all nested details in a single call
-        """
-        from mcc.serializers import DetailedCaseSerializer
-
-        case = self.get_object()
-        serializer = DetailedCaseSerializer(instance=case)
-        return DRFResponse(serializer.data)
-
     @detail_route(methods=["post"])
     def split(self, request, reference=None, **kwargs):
         return self._form_action(request, Form=SplitCaseForm, form_kwargs={"request": request})
-
-    @detail_route(methods=["post"])
-    def mcc_split(self, request, reference=None, **kwargs):
-        return self._form_action(request, Form=SplitMCCCaseForm, form_kwargs={"request": request})
 
 
 class ProviderExtract(APIView):

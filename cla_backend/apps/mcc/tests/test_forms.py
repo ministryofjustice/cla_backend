@@ -5,7 +5,8 @@ from cla_common.constants import REQUIRES_ACTION_BY
 
 from core.tests.mommy_utils import make_recipe, make_user
 
-from cla_provider.forms import SplitCaseForm, SplitMCCCaseForm
+from cla_provider.forms import SplitCaseForm
+from mcc.forms import SplitMCCCaseForm
 
 
 class SplitMCCCaseFormTestCase(TestCase):

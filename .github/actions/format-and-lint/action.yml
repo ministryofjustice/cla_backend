@@ -3,9 +3,6 @@ runs:
   using: composite
   steps:
 
-      - name: SLSA
-        uses: ministryofjustice/devsecops-actions/sca/slsa@e3c63a5986ea6e7d57d38b7f72e5b8cf08dc7020
-
       - name: Requirements
         shell: bash
         run: python -m pip install -r requirements/generated/requirements-lint.txt

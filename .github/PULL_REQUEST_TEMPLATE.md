@@ -1,11 +1,22 @@
-## What does this pull request do?
+# What does this pull request do?
 
-Required.
+<!-- Briefly describe the change and why it's needed. -->
 
-## Any other changes that would benefit highlighting?
+**Ticket:** LGA-XXX
 
-Intentionally left blank.
+## Any other changes worth highlighting?
+
+<!-- Note any side effects, refactors, or related changes that reviewers should be aware of. Remove this section if not applicable. -->
+
+None.
+
+## Screenshots / evidence
+
+<!-- If this includes UI changes, add before/after screenshots. Remove this section if not applicable. -->
 
 ## Checklist
 
-- [ ] Provided JIRA ticket number in the title, e.g. "LGA-152: Sample title"
+- [ ] Provided Jira ticket number in the PR title, e.g. `LGA-152: Sample title`
+- [ ] Tested locally and verified the change works as expected
+- [ ] Updated or added tests where appropriate
+- [ ] Updated documentation / README if applicable

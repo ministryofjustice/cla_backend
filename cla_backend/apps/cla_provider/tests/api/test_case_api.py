@@ -380,6 +380,15 @@ class RejectCaseTestCase(ExplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
     def test_COI_successful(self):
         self._test_provider_closed("COI", False)
 
+    def test_MERI_successful(self):
+        self._test_provider_closed("MERI", False)
+
+    def test_DUPL_successful(self):
+        self._test_provider_closed("DUPL", False)
+
+    def test_CLOT_successful(self):
+        self._test_provider_closed("CLOT", False)
+
 
 class AcceptCaseTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
     NO_BODY_RESPONSE = False

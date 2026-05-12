@@ -83,6 +83,15 @@ class RejectCaseFormTestCase(EventSpecificLogFormTestCaseMixin, TestCase):
     def test_save_COI_doesnt_set_provider_closed(self):
         self._test_provider_closed("COI", expected_None=False)
 
+    def test_save_MERI_doesnt_set_provider_closed(self):
+        self._test_provider_closed("MERI", False)
+
+    def test_save_DUPL_doesnt_set_provider_closed(self):
+        self._test_provider_closed("DUPL", False)
+
+    def test_save_CLOT_doesnt_set_provider_closed(self):
+        self._test_provider_closed("CLOT", False)
+
 
 class CloseCaseFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
     FORM = CloseCaseForm

@@ -14,7 +14,7 @@ class RejectCaseEvent(BaseEvent):
             "selectable_by": [],
             "description": "Misdiagnosed, out of scope",
             "stops_timer": False,
-            "order": 1,
+            "order": 10,
             "set_requires_action_by": None,
         },
         "MIS-MEANS": {
@@ -23,7 +23,7 @@ class RejectCaseEvent(BaseEvent):
             "selectable_by": [],
             "description": "Misdiagnosed, means test isn't correct",
             "stops_timer": False,
-            "order": 2,
+            "order": 20,
             "set_requires_action_by": None,
         },
         "COI": {
@@ -32,7 +32,7 @@ class RejectCaseEvent(BaseEvent):
             "selectable_by": [LOG_ROLES.SPECIALIST],
             "description": "Conflict of Interest",
             "stops_timer": False,
-            "order": 3,
+            "order": 30,
             "set_requires_action_by": REQUIRES_ACTION_BY.OPERATOR,
         },
         "MIS": {
@@ -41,7 +41,7 @@ class RejectCaseEvent(BaseEvent):
             "selectable_by": [],
             "description": "Misdiagnosed, assigned to wrong Specialist or another Specialist is dealing with client",
             "stops_timer": False,
-            "order": 4,
+            "order": 40,
             "set_requires_action_by": REQUIRES_ACTION_BY.OPERATOR,
         },
         "MERI": {
@@ -50,7 +50,7 @@ class RejectCaseEvent(BaseEvent):
             "selectable_by": [LOG_ROLES.SPECIALIST],
             "description": "Merits - not eligible",
             "stops_timer": False,
-            "order": 5,
+            "order": 50,
             "set_requires_action_by": REQUIRES_ACTION_BY.OPERATOR,
         },
         "DUPL": {
@@ -59,7 +59,7 @@ class RejectCaseEvent(BaseEvent):
             "selectable_by": [LOG_ROLES.SPECIALIST],
             "description": "Duplicate case",
             "stops_timer": False,
-            "order": 6,
+            "order": 60,
             "set_requires_action_by": REQUIRES_ACTION_BY.OPERATOR,
         },
         "CLOT": {
@@ -68,7 +68,7 @@ class RejectCaseEvent(BaseEvent):
             "selectable_by": [LOG_ROLES.SPECIALIST],
             "description": "Other",
             "stops_timer": False,
-            "order": 7,
+            "order": 70,
             "set_requires_action_by": REQUIRES_ACTION_BY.OPERATOR,
         },
     }

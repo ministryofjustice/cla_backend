@@ -9,7 +9,24 @@ permissions:
   contents: read
 
 jobs:
+
+  pip-compile:
+    name: "Pip Compile"
+    runs-on: "ubuntu-latest"
+    container: python:2.7
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
+      - name: Install dependencies
+        run: pip install pre-commit==1.14.2
+
+      - name: Run pip-compile check
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          export PIP_NO_BUILD_ISOLATION=0
+          ls requirements/source/* | xargs pre-commit run pip-compile --files
+
   format-and-lint:
+    needs: [pip-compile]
     name: "Format and lint"
     runs-on: "ubuntu-latest"
     container: python:2.7
@@ -18,6 +35,7 @@ jobs:
       - uses: ./.github/actions/format-and-lint
 
   unit-tests:
+    needs: [pip-compile]
     name: "Unit tests"
     runs-on: "ubuntu-latest"
     container: python:2.7

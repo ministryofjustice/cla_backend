@@ -34,7 +34,7 @@ cfgv==2.0.1
 chardet==4.0.0
     # via requests
 https://github.com/ministryofjustice/cla_common/archive/refs/tags/0.3.25.tar.gz
-    # via -r requirements/source/requirements-base.in
+    # via -r requirements/source/requirements-git.in
 click==7.1.2
     # via pip-tools
 configparser==4.0.2
@@ -62,7 +62,7 @@ dbf==0.94.003
     # via csvkit
 decorator==4.4.2
     # via networkx
-distlib==0.3.6
+distlib==0.4.0
     # via virtualenv
 dj-database-url==0.3.0
     # via -r requirements/source/requirements-base.in
@@ -91,13 +91,13 @@ django-ipware==0.1.0
 django-model-utils==2.2
     # via -r requirements/source/requirements-base.in
 https://github.com/said-moj/django-moj-irat/archive/refs/tags/0.3.1.tar.gz
-    # via -r requirements/source/requirements-base.in
+    # via -r requirements/source/requirements-git.in
 django-nested-admin==3.2.4
     # via -r requirements/source/requirements-base.in
 django-oauth-toolkit==0.11.0
     # via -r requirements/source/requirements-base.in
 https://github.com/timmyomahony/django-pagedown/archive/refs/tags/v1.1.tar.gz
-    # via -r requirements/source/requirements-base.in
+    # via -r requirements/source/requirements-git.in
 https://github.com/HassenPy/django-pdb/archive/refs/tags/0.3.2.tar.gz
     # via -r requirements/source/requirements-testing.in
 django-session-security==2.2.3
@@ -125,7 +125,7 @@ djangorestframework==3.3.3
     #   drf-extensions
     #   drf-nested-routers
 https://github.com/ministryofjustice/djorm-ext-pgfulltext/archive/refs/tags/0.1.0.tar.gz
-    # via -r requirements/source/requirements-base.in
+    # via -r requirements/source/requirements-git.in
 docopt==0.6.2
     # via
     #   coveralls
@@ -143,7 +143,7 @@ filelock==3.2.1
     # via virtualenv
 freezegun==0.3.14
     # via -r requirements/source/requirements-testing.in
-future==0.18.3
+future==1.0.0
     # via notifications-python-client
 futures==3.4.0
     # via
@@ -178,7 +178,7 @@ jsonfield==0.9.22
     # via -r requirements/source/requirements-base.in
 jsonpatch==1.9
     # via -r requirements/source/requirements-base.in
-jsonpointer==2.3
+jsonpointer==2.4
     # via jsonpatch
 kombu==4.1.0
     # via
@@ -200,7 +200,7 @@ monotonic==1.6
     # via notifications-python-client
 networkx==1.9.1
     # via -r requirements/source/requirements-base.in
-nodeenv==1.7.0
+nodeenv==1.10.0
     # via pre-commit
 notifications-python-client==6.0.0
     # via -r requirements/source/requirements-base.in
@@ -246,7 +246,7 @@ python-dateutil==2.2
     #   cla-common
     #   csvkit
     #   freezegun
-python-monkey-business==1.0.0
+python-monkey-business==1.1.0
     # via django-nested-admin
 pytz==2021.1
     # via
@@ -274,7 +274,7 @@ sentry-sdk==0.19.3
     # via -r requirements/source/requirements-base.in
 singledispatch==3.7.0
     # via importlib-resources
-six==1.16.0
+six==1.17.0
     # via
     #   bleach
     #   cfgv
@@ -290,14 +290,13 @@ six==1.16.0
     #   pre-commit
     #   pyopenssl
     #   python-dateutil
-    #   python-monkey-business
     #   singledispatch
     #   unittest-xml-reporting
     #   vcrpy
     #   virtualenv
 speaklater==1.3
     # via cla-common
-sqlalchemy==1.4.46
+sqlalchemy==1.4.54
     # via csvkit
 sqlparse==0.3.1
     # via django-debug-toolbar
@@ -315,7 +314,7 @@ unittest-xml-reporting==2.5.1
     # via -r requirements/source/requirements-testing.in
 urllib3-secure-extra==0.1.0
     # via urllib3
-urllib3[secure]==1.26.14
+urllib3[secure]==1.26.20
     # via
     #   botocore
     #   coveralls
@@ -335,7 +334,7 @@ werkzeug==0.15.3
     # via -r requirements/source/requirements-dev.in
 wrapt==1.15.0
     # via vcrpy
-xlrd==2.0.1
+xlrd==2.0.2
     # via csvkit
 zipp==1.2.0
     # via
@@ -344,4 +343,3 @@ zipp==1.2.0
 
 # The following packages are considered to be unsafe in a requirements file:
 # pip
-# setuptools

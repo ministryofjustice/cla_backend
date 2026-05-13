@@ -51,7 +51,7 @@ class RejectCaseEvent(BaseEvent):
             "description": "Merits - not eligible",
             "stops_timer": False,
             "order": 50,
-            "set_requires_action_by": REQUIRES_ACTION_BY.OPERATOR,
+            "set_requires_action_by": None,
         },
         "DUPL": {
             "type": LOG_TYPES.OUTCOME,
@@ -60,7 +60,7 @@ class RejectCaseEvent(BaseEvent):
             "description": "Duplicate case",
             "stops_timer": False,
             "order": 60,
-            "set_requires_action_by": REQUIRES_ACTION_BY.OPERATOR,
+            "set_requires_action_by": None,
         },
         "CLOT": {
             "type": LOG_TYPES.OUTCOME,
@@ -69,7 +69,7 @@ class RejectCaseEvent(BaseEvent):
             "description": "Other",
             "stops_timer": False,
             "order": 70,
-            "set_requires_action_by": REQUIRES_ACTION_BY.OPERATOR,
+            "set_requires_action_by": None,
         },
     }
 

@@ -64,10 +64,21 @@ class ExportTaskBase(Task):
         # this creates a unique filepath for each report
         # uniqueness is from user pk and datetime
         # file will be in settings.TEMP_DIR
+        filename = os.path.basename(filename)
         file_name, file_ext = os.path.splitext(filename)
         user_datetime = "%s-%s" % (self.user.pk, time.strftime("%Y-%m-%d-%H%M%S"))
         filename = "%s-%s%s" % (file_name, user_datetime, file_ext)
         return os.path.join(settings.TEMP_DIR, filename)
+
+    def _safe_temp_path(self, filepath):
+        if not filepath:
+            raise ValueError("Export path is empty")
+
+        temp_dir = os.path.realpath(settings.TEMP_DIR)
+        target_path = os.path.realpath(filepath)
+        if target_path != temp_dir and not target_path.startswith(temp_dir + os.sep):
+            raise ValueError("Invalid export path outside TEMP_DIR")
+        return target_path
 
     def on_success(self, retval, task_id, args, kwargs):
         self.export.status = EXPORT_STATUS.created
@@ -81,9 +92,15 @@ class ExportTaskBase(Task):
         self.export.save()
 
     def send_to_s3(self):
-        key = settings.EXPORT_DIR + os.path.basename(self.filepath)
-        ReportsS3.save_file(settings.AWS_REPORTS_STORAGE_BUCKET_NAME, key, self.filepath)
-        shutil.rmtree(self.filepath, ignore_errors=True)
+        safe_path = self._safe_temp_path(self.filepath)
+        key = settings.EXPORT_DIR + os.path.basename(safe_path)
+        ReportsS3.save_file(settings.AWS_REPORTS_STORAGE_BUCKET_NAME, key, safe_path)
+
+        # Export tasks generate files by default, but keep directory cleanup for compatibility.
+        if os.path.isdir(safe_path):
+            shutil.rmtree(safe_path, ignore_errors=True)
+        elif os.path.exists(safe_path):
+            os.remove(safe_path)
 
 
 class ExportTask(ExportTaskBase):

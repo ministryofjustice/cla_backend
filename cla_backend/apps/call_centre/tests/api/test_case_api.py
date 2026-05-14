@@ -522,7 +522,6 @@ class AssignCaseTestCase(BaseCaseTestCase):
         self.assertEqual(response.data["provider"], None)
 
     @override_settings(
-        EDUCATION_DUMMY_PROVIDER_ROUTE_TO_FALA=True,
         EDUCATION_DUMMY_PROVIDER_SHORT_CODE="EDFF_DUMMY",
     )
     @mock.patch("cla_provider.models.timezone.now")
@@ -559,16 +558,8 @@ class AssignCaseTestCase(BaseCaseTestCase):
         response = self.client.post(url, data=data, HTTP_AUTHORIZATION="Bearer %s" % self.token, format="json")
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertTrue(response.data["rerouted_to_alternative_help"])
-        self.assertEqual(response.data["outcome_code"], "EDFF")
-        self.assertEqual(response.data["selected_provider"]["id"], dummy_provider.id)
-        self.assertIn("banner_message", response.data)
-
         case = Case.objects.get(pk=case.pk)
-        self.assertIsNone(case.provider)
         self.assertEqual(case.outcome_code, "EDFF")
-        self.assertEqual(case.requires_action_by, None)
-
         edff_logs = Log.objects.filter(case=case, code="EDFF")
         self.assertEqual(edff_logs.count(), 1)
         self.assertTrue("AUTO_EDFF_ROUTE" in edff_logs.first().notes)

@@ -502,10 +502,6 @@ EDUCATION_DUMMY_PROVIDER_ROUTE_TO_FALA = (
     os.environ.get("EDUCATION_DUMMY_PROVIDER_ROUTE_TO_FALA", "False") == "True"
 )
 EDUCATION_DUMMY_PROVIDER_SHORT_CODE = os.environ.get("EDUCATION_DUMMY_PROVIDER_SHORT_CODE", "EDFF_DUMMY")
-EDUCATION_DUMMY_PROVIDER_BANNER_MESSAGE = os.environ.get(
-    "EDUCATION_DUMMY_PROVIDER_BANNER_MESSAGE",
-    "Clients cannot currently be assigned to this provider. Referred to FALA for face-to-face support.",
-)
 
 # A notification will be sent for callback time slot if its remaining capacity drops below this threshold
 CALLBACK_CAPPING_THRESHOLD = os.environ.get("CALLBACK_CAPPING_THRESHOLD", 0)

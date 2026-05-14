@@ -328,27 +328,14 @@ class CaseViewSet(
 
         return DRFResponse(suggestions)
 
-    def _is_education_dummy_provider(self, case_obj, provider_obj):
-        category = case_obj.eligibility_check.category if case_obj.eligibility_check else None
-        if not category or category.code != "education":
+    def _is_education_dummy_provider(self, case, provider):
+       
+        category = case.eligibility_check.category if case.eligibility_check else None
+        if not category or category.code != "education" or not provider:
             return False
-        return (
-            settings.EDUCATION_DUMMY_PROVIDER_ROUTE_TO_FALA
-            and provider_obj.short_code == settings.EDUCATION_DUMMY_PROVIDER_SHORT_CODE
-        )
+        
+        return provider.short_code == settings.EDUCATION_DUMMY_PROVIDER_SHORT_CODE
 
-    def _build_edff_auto_notes(self, case_obj, provider_obj):
-        postcode = ""
-        if case_obj.personal_details and case_obj.personal_details.postcode:
-            postcode = case_obj.personal_details.postcode
-        return (
-            u"AUTO_EDFF_ROUTE: selected_provider_id={provider_id}; selected_provider_name={provider_name}; "
-            u"postcode={postcode}"
-        ).format(
-            provider_id=provider_obj.id,
-            provider_name=provider_obj.name,
-            postcode=postcode,
-        )
 
     @detail_route(methods=["post"])
     def assign(self, request, reference=None, **kwargs):
@@ -370,37 +357,6 @@ class CaseViewSet(
         else:
             raise ValueError("Provider not found")
 
-        # Route education dummy provider to alternative help (EDFF) instead of assigning a specialist.
-        if self._is_education_dummy_provider(obj, p):
-            alt_data = request.data.copy()
-
-            alt_data.update({"event_code": "EDFF", "notes": self._build_edff_auto_notes(obj, p)})
-
-            alt_form = AlternativeHelpForm(case=obj, data=alt_data)
-            if alt_form.is_valid():
-                alt_form.save(request.user)
-
-                ProviderPreAllocation.objects.clear(case=obj)
-                self.set_case_organisation(self.get_object())
-
-                logger.warning(
-                    "Education case routed to FALA via EDFF (case_reference=%s, provider_id=%s)",
-                    obj.reference,
-                    p.id,
-                )
-
-                return DRFResponse(
-                    data={
-                        "rerouted_to_alternative_help": True,
-                        "selected_provider": ProviderSerializer(p).data,
-                        "banner_message": settings.EDUCATION_DUMMY_PROVIDER_BANNER_MESSAGE,
-                        "outcome_code": "EDFF",
-                    },
-                    status=status.HTTP_200_OK,
-                )
-
-            return DRFResponse(dict(alt_form.errors), status=status.HTTP_400_BAD_REQUEST)
-
         data = request.data.copy()
         data["provider"] = p.pk
         form = ProviderAllocationForm(case=obj, data=data, providers=suitable_providers)
@@ -413,6 +369,26 @@ class CaseViewSet(
 
             provider_serialised = ProviderSerializer(provider)
             self.set_case_organisation(self.get_object())
+
+            def _build_edff_auto_notes(case_obj, provider_obj):
+                return (
+                    u"AUTO_EDFF_ROUTE: selected_provider_id={}; "
+                    u"selected_provider_name={}; "
+                    u"postcode={}"
+                ).format(
+                    provider_obj.id,
+                    provider_obj.name,
+                    getattr(case_obj.personal_details, "postcode", "") or "",
+                )
+
+            if self._is_education_dummy_provider(case=obj, provider=provider):      
+                alt_form = AlternativeHelpForm(case=obj, data={"event_code": "EDFF", "notes": _build_edff_auto_notes(obj, provider)})
+                if alt_form.is_valid():
+                    alt_form.save(request.user)
+                else:
+                    return DRFResponse({"error": "Could not save EDFF for dummy provider"}, status=status.HTTP_400_BAD_REQUEST)
+
+
             return DRFResponse(data=provider_serialised.data)
 
         return DRFResponse(dict(form.errors), status=status.HTTP_400_BAD_REQUEST)

@@ -373,11 +373,8 @@ class CaseViewSet(
         # Route education dummy provider to alternative help (EDFF) instead of assigning a specialist.
         if self._is_education_dummy_provider(obj, p):
             alt_data = request.data.copy()
-            
-            alt_data.update({
-            "event_code": "EDFF",
-            "notes": self._build_edff_auto_notes(obj, p),
-            })
+
+            alt_data.update({"event_code": "EDFF", "notes": self._build_edff_auto_notes(obj, p)})
 
             alt_form = AlternativeHelpForm(case=obj, data=alt_data)
             if alt_form.is_valid():

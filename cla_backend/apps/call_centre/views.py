@@ -325,6 +325,16 @@ class CaseViewSet(
 
         return DRFResponse(suggestions)
 
+    def is_eddf_dummy_provider(self, case, provider):
+        category = case.eligibility_check.category if case.eligibility_check else None
+        if not category or category.code != "education":
+            return False
+
+        if not provider:
+            return False
+
+        return provider.short_code == settings.EDUCATION_DUMMY_PROVIDER_SHORT_CODE
+
     @detail_route(methods=["post"])
     def assign(self, request, reference=None, **kwargs):
         """
@@ -360,6 +370,16 @@ class CaseViewSet(
 
             provider_serialised = ProviderSerializer(provider)
             self.set_case_organisation(self.get_object())
+
+            # During a period of providers change over a dummy provider will be used for education cases
+            # https://dsdmoj.atlassian.net/browse/LGA-3974
+            if self.is_eddf_dummy_provider(case=obj, provider=provider):
+                alt_form = AlternativeHelpForm(case=obj, data={"event_code": "EDFF", "notes": "hello world"})
+                if alt_form.is_valid():
+                    alt_form.save(request.user)
+                else:
+                    return DRFResponse({"error": "Could not save EDFF for dummy provider"}, status=status.HTTP_400_BAD_REQUEST)
+
             return DRFResponse(data=provider_serialised.data)
 
         return DRFResponse(dict(form.errors), status=status.HTTP_400_BAD_REQUEST)

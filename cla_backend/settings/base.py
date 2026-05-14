@@ -505,6 +505,8 @@ CALLBACK_CAPPING_THRESHOLD_NOTIFICATION = os.environ.get("CALLBACK_CAPPING_THRES
 ENTRA_TENANT_ID = os.environ.get("ENTRA_TENANT_ID", None)
 ENTRA_EXPECTED_AUDIENCE = os.environ.get("ENTRA_EXPECTED_AUDIENCE", None)
 
+EDUCATION_DUMMY_PROVIDER_SHORT_CODE = os.environ.get("EDUCATION_DUMMY_PROVIDER_SHORT_CODE", "EDFF_DUMMY")
+
 # .local.py overrides all the common settings.
 try:
     from .local import *

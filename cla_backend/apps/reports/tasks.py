@@ -70,16 +70,6 @@ class ExportTaskBase(Task):
         filename = "%s-%s%s" % (file_name, user_datetime, file_ext)
         return os.path.join(settings.TEMP_DIR, filename)
 
-    def _safe_temp_path(self, filepath):
-        if not filepath:
-            raise ValueError("Export path is empty")
-
-        temp_dir = os.path.realpath(settings.TEMP_DIR)
-        target_path = os.path.realpath(filepath)
-        if target_path != temp_dir and not target_path.startswith(temp_dir + os.sep):
-            raise ValueError("Invalid export path outside TEMP_DIR")
-        return target_path
-
     def on_success(self, retval, task_id, args, kwargs):
         self.export.status = EXPORT_STATUS.created
         self.export.path = self.filepath
@@ -92,15 +82,18 @@ class ExportTaskBase(Task):
         self.export.save()
 
     def send_to_s3(self):
-        safe_path = self._safe_temp_path(self.filepath)
-        key = settings.EXPORT_DIR + os.path.basename(safe_path)
-        ReportsS3.save_file(settings.AWS_REPORTS_STORAGE_BUCKET_NAME, key, safe_path)
+        filepath = os.path.normpath(self.filepath)
+        temp_dir = os.path.normpath(settings.TEMP_DIR)
+        if not filepath.startswith(temp_dir + os.sep) and filepath != temp_dir:
+            raise ValueError("Invalid export path")
+        
+        key = settings.EXPORT_DIR + os.path.basename(filepath)
+        ReportsS3.save_file(settings.AWS_REPORTS_STORAGE_BUCKET_NAME, key, filepath)
 
-        # Export tasks generate files by default, but keep directory cleanup for compatibility.
-        if os.path.isdir(safe_path):
-            shutil.rmtree(safe_path, ignore_errors=True)
-        elif os.path.exists(safe_path):
-            os.remove(safe_path)
+        if os.path.isdir(filepath):
+            shutil.rmtree(filepath, ignore_errors=True)
+        elif os.path.exists(filepath):
+            os.remove(filepath)
 
 
 class ExportTask(ExportTaskBase):

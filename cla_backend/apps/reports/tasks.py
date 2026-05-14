@@ -70,6 +70,14 @@ class ExportTaskBase(Task):
         filename = "%s-%s%s" % (file_name, user_datetime, file_ext)
         return os.path.join(settings.TEMP_DIR, filename)
 
+    def _validated_filepath(self):
+        filepath = os.path.realpath(self.filepath)
+        temp_dir = os.path.realpath(settings.TEMP_DIR)
+        relative_path = os.path.relpath(filepath, temp_dir)
+        if relative_path == os.pardir or relative_path.startswith(os.pardir + os.sep):
+            raise ValueError("Invalid export path")
+        return filepath
+
     def on_success(self, retval, task_id, args, kwargs):
         self.export.status = EXPORT_STATUS.created
         self.export.path = self.filepath
@@ -82,11 +90,8 @@ class ExportTaskBase(Task):
         self.export.save()
 
     def send_to_s3(self):
-        filepath = os.path.normpath(self.filepath)
-        temp_dir = os.path.normpath(settings.TEMP_DIR)
-        if not filepath.startswith(temp_dir + os.sep) and filepath != temp_dir:
-            raise ValueError("Invalid export path")
-        
+        filepath = self._validated_filepath()
+
         key = settings.EXPORT_DIR + os.path.basename(filepath)
         ReportsS3.save_file(settings.AWS_REPORTS_STORAGE_BUCKET_NAME, key, filepath)
 

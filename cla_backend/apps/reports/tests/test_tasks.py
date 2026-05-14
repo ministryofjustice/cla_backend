@@ -87,15 +87,21 @@ class RFCTaskTestCase(TestCase):
 
 
 class ExportTaskPathSanitizationTestCase(TestCase):
-    """Test that filepath sanitization prevents path traversal attacks"""
-
     def setUp(self):
         self.task = ExportTaskBase()
+        self.user = make_user()
+
+    def test_filepath_uses_basename_only(self):
+        self.task.user = self.user
+
+        filepath = self.task._filepath("../../../../tmp/evil.csv")
+
+        self.assertEqual(os.path.realpath(filepath), filepath)
+        self.assertTrue(filepath.startswith(settings.TEMP_DIR))
+        self.assertEqual("evil.csv", os.path.basename(filepath).split("-", 1)[0] + ".csv")
 
     @mock.patch('reports.tasks.ReportsS3.save_file')
     def test_path_traversal_blocked(self, mock_s3_save):
-        """Verify that path traversal attempts outside TEMP_DIR raise ValueError"""
-        # Attempt to escape TEMP_DIR with ../.. sequences
         malicious_path = os.path.join(settings.TEMP_DIR, "../../../../etc/passwd")
         self.task.filepath = malicious_path
 
@@ -106,17 +112,14 @@ class ExportTaskPathSanitizationTestCase(TestCase):
         mock_s3_save.assert_not_called()
 
     @mock.patch('reports.tasks.ReportsS3.save_file')
-    def test_valid_temp_dir_path_accepted(self, mock_s3_save):
-        """Verify that valid paths within TEMP_DIR pass validation"""
+    @mock.patch('reports.tasks.os.remove')
+    @mock.patch('reports.tasks.os.path.exists', return_value=True)
+    @mock.patch('reports.tasks.os.path.isdir', return_value=False)
+    def test_valid_temp_dir_path_accepted(self, mock_isdir, mock_exists, mock_remove, mock_s3_save):
         valid_path = os.path.join(settings.TEMP_DIR, "report_123.csv")
         self.task.filepath = valid_path
 
-        # Path validation should succeed (though S3 save will fail gracefully since file doesn't exist)
-        try:
-            self.task.send_to_s3()
-        except (IOError, OSError):
-            # Expected - file doesn't actually exist
-            pass
+        self.task.send_to_s3()
 
-        # S3 save should have been called (validation passed)
         mock_s3_save.assert_called_once()
+        mock_remove.assert_called_once_with(os.path.realpath(valid_path))

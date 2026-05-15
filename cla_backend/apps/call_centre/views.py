@@ -335,6 +335,15 @@ class CaseViewSet(
 
         return provider.short_code == settings.EDUCATION_DUMMY_PROVIDER_SHORT_CODE
 
+    def _build_edff_auto_notes(self, provider_obj):
+        return (
+            u"AUTO_EDFF_ROUTE: selected_provider_id={};"
+            u"selected_provider_name={};"
+        ).format(
+            provider_obj.id,
+            provider_obj.name,
+        )
+
     @detail_route(methods=["post"])
     def assign(self, request, reference=None, **kwargs):
         """
@@ -368,19 +377,9 @@ class CaseViewSet(
             provider_serialised = ProviderSerializer(provider)
             self.set_case_organisation(self.get_object())
 
-            def _build_edff_auto_notes(case_obj, provider_obj):
-                return (
-                    u"AUTO_EDFF_ROUTE: selected_provider_id={}; "
-                    u"selected_provider_name={}; "
-                    u"postcode={}"
-                ).format(
-                    provider_obj.id,
-                    provider_obj.name,
-                    getattr(case_obj.personal_details, "postcode", "") or "",
-                )
-
+            # https://dsdmoj.atlassian.net/browse/LGA-3974
             if self._is_education_dummy_provider(case=obj, provider=provider):
-                alt_form = AlternativeHelpForm(case=obj, data={"event_code": "EDFF", "notes": _build_edff_auto_notes(obj, provider)})
+                alt_form = AlternativeHelpForm(case=obj, data={"event_code": "EDFF", "notes": self._build_edff_auto_notes(provider)})
                 if alt_form.is_valid():
                     alt_form.save(request.user)
                 else:

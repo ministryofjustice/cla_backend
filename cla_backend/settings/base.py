@@ -498,9 +498,7 @@ CFE_URL = (
 
 EDUCATION_ALLOCATION_FEATURE_FLAG = os.environ.get("EDUCATION_ALLOCATION_FEATURE_FLAG", "False") == "True"
 
-EDUCATION_DUMMY_PROVIDER_ROUTE_TO_FALA = (
-    os.environ.get("EDUCATION_DUMMY_PROVIDER_ROUTE_TO_FALA", "False") == "True"
-)
+
 EDUCATION_DUMMY_PROVIDER_SHORT_CODE = os.environ.get("EDUCATION_DUMMY_PROVIDER_SHORT_CODE", "EDFF_DUMMY")
 
 # A notification will be sent for callback time slot if its remaining capacity drops below this threshold

@@ -1,4 +1,5 @@
 import datetime
+from django.test.utils import override_settings
 
 from dateutil.parser import parse
 from django.core.urlresolvers import reverse
@@ -519,6 +520,49 @@ class AssignCaseTestCase(BaseCaseTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["provider"], None)
+
+    @override_settings(
+        EDUCATION_DUMMY_PROVIDER_SHORT_CODE="EDFF_DUMMY",
+    )
+    @mock.patch("cla_provider.models.timezone.now")
+    @mock.patch("cla_provider.helpers.timezone.now")
+    def test_assign_education_dummy_provider_routes_to_edff(self, tz_model_mock, tz_helper_tz):
+        fake_day = datetime.datetime(2014, 1, 2, 9, 1, 0).replace(tzinfo=timezone.get_current_timezone())
+        tz_model_mock.return_value = fake_day
+        tz_helper_tz.return_value = fake_day
+
+        case = make_recipe("legalaid.case")
+        education_category = make_recipe("legalaid.category", code="education")
+        case.eligibility_check.category = education_category
+        case.eligibility_check.save()
+
+        case.matter_type1 = make_recipe("legalaid.matter_type1", category=education_category)
+        case.matter_type2 = make_recipe("legalaid.matter_type2", category=education_category)
+        case.save()
+
+        dummy_provider = make_recipe(
+            "cla_provider.provider",
+            name="Education Dummy Provider",
+            active=True,
+            short_code="EDFF_DUMMY",
+        )
+        make_recipe(
+            "cla_provider.provider_allocation",
+            weighted_distribution=0.6,
+            provider=dummy_provider,
+            category=education_category,
+        )
+
+        url = reverse("call_centre:case-assign", kwargs={"reference": case.reference})
+        data = {"suggested_provider": dummy_provider.pk, "provider_id": dummy_provider.pk, "is_manual": False}
+        response = self.client.post(url, data=data, HTTP_AUTHORIZATION="Bearer %s" % self.token, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        case = Case.objects.get(pk=case.pk)
+        self.assertEqual(case.outcome_code, "EDFF")
+        edff_logs = Log.objects.filter(case=case, code="EDFF")
+        self.assertEqual(edff_logs.count(), 1)
+        self.assertTrue("AUTO_EDFF_ROUTE" in edff_logs.first().notes)
 
 
 class DeferAssignmentTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):

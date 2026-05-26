@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 from rest_framework.decorators import detail_route
 from rest_framework.response import Response as DRFResponse
 
-from mcc.forms import SplitMCCCaseForm
+from mcc.forms import SplitMCCCaseForm, ChangeCategoryForm
 from cla_provider.views import CaseViewSet
 
 from mcc import serializers
@@ -22,3 +22,11 @@ class MCCCaseViewSet(CaseViewSet):
         case = self.get_object()
         serializer = serializers.DetailedCaseSerializer(instance=case)
         return DRFResponse(serializer.data)
+
+    @detail_route(methods=["patch"])
+    def change_category(self, request, reference=None, **kwargs):
+        return self._form_action(
+            request,
+            Form=ChangeCategoryForm,
+            form_kwargs={"request": request}
+        )

@@ -6,9 +6,11 @@ from .views import MCCCaseViewSet
 
 case_split = MCCCaseViewSet.as_view({"post": "split"})
 case_detailed = MCCCaseViewSet.as_view({"get": "detailed"})
+case_category_change = MCCCaseViewSet.as_view({"patch": "change_category"})
 
 urlpatterns = patterns(
     "",
     url(r"^case/(?P<reference>[A-Z\d]{2}-\d{4}-\d{4})/split/$", case_split, name="case-split"),
     url(r"^case/(?P<reference>[A-Z\d]{2}-\d{4}-\d{4})/detailed/$", case_detailed, name="case-detailed"),
+    url(r"^case/(?P<reference>[A-Z\d]{2}-\d{4}-\d{4})/category-change/$", case_category_change, name="case-category-change"),
 )

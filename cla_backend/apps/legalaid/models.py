@@ -977,6 +977,30 @@ class Case(TimeStampedModel):
         self.provider_closed = None
         self.save(update_fields=["provider_closed"])
 
+    def change_category(self, category, note, user=None):
+        old = self.diagnosis
+        if old:
+            old.delete()
+
+        diagnosis = DiagnosisTraversal.objects.create_eligible(category)
+
+        if note:
+            diagnosis.nodes = diagnosis.nodes or []
+            diagnosis.nodes.append({
+                "title": category.name,
+                "label": note,
+            })
+            diagnosis.save()
+
+        if self.eligibility_check:
+            self.eligibility_check.category = category
+            self.eligibility_check.save(update_fields=["category"])
+
+        self.diagnosis = diagnosis
+
+        self.save(update_fields=["diagnosis", "modified"])
+        return self
+
     def assign_alternative_help(self, user, articles):
         self.alternative_help_articles.clear()
         for article in articles:

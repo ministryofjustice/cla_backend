@@ -25,6 +25,9 @@ class MCCCaseViewSet(CaseViewSet):
 
     @detail_route(methods=["patch"])
     def change_category(self, request, reference=None, **kwargs):
+        """
+        Updates only the category for a case
+        """
         return self._form_action(
             request,
             Form=ChangeCategoryForm,

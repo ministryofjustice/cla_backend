@@ -46,14 +46,15 @@ class ChangeCategoryForm(BaseCaseLogForm):
     def clean(self):
         cleaned_data = super(ChangeCategoryForm, self).clean()
 
-        if self._errors:
-            return cleaned_data
+        # collect non-field errors (same pattern as SplitBaseCaseForm)
+        non_field_errors = []
 
-        # Ensure provider owns the case (same pattern as split)
         if self.case.provider != self.request.user.staff.provider:
-            self._errors[NON_FIELD_ERRORS] = ErrorList([
-                "Only Providers assigned to the Case can change its category."
-            ])
+            non_field_errors.append("Only Providers assigned to the Case can change its category.")
+
+        if non_field_errors:
+            self._errors[NON_FIELD_ERRORS] = ErrorList(non_field_errors)
+ 
         return cleaned_data
 
     @transaction.atomic

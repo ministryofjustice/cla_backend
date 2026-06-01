@@ -20,6 +20,18 @@ metadata:
     {{- with .Values.ingress.annotations }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
+    {{- if .Values.rateLimit.rps }}
+    nginx.ingress.kubernetes.io/limit-rps: "{{ .Values.rateLimit.rps }}"
+    {{- end }}
+    {{- if .Values.rateLimit.rpm }}
+    nginx.ingress.kubernetes.io/limit-rpm: "{{ .Values.rateLimit.rpm }}"
+    {{- end }}
+    {{- if .Values.rateLimit.burst }}
+    nginx.ingress.kubernetes.io/limit-burst-multiplier: "{{ .Values.rateLimit.burst }}"
+    {{- end }}
+    {{- if .Values.rateLimit.limitReqStatusCode }}
+    nginx.ingress.kubernetes.io/configuration-snippet: limit_req_status 429;
+    {{- end }}
     nginx.ingress.kubernetes.io/enable-modsecurity: "true"
     nginx.ingress.kubernetes.io/modsecurity-snippet: |
       SecRuleEngine On

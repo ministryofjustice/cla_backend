@@ -104,6 +104,20 @@ It's suggested to have two terminals open:
 
 Alternatively, some editors have functionality to hook into running containers, such as VS Code's 'Dev Containers' extension.
 
+### Rate limiting
+The application ingress has rate limiting enabled, which is enforced across all namespaces:
+
+| Environment | RPS | RPM | BURST |
+|-------------|-----|-----|-------|
+| uat         | 10  | ~   | 1     |
+| uat-static  | 10  | 100 | 5     |
+| staging     | 10  | 100 | 5     |
+| training    | 10  | 100 | 5     |
+| production  | 10  | 100 | 5     |
+
+####  Evidence of limits
+Please refer to the figures in [this ticket ](https://dsdmoj.atlassian.net/browse/LGA-3927)showing the application’s requests per minute. These values were obtained from the application’s Kibana logs.
+
 ## 🐛 Debugging
 
 Ensure your container is running once you have created your Docker development container as above.

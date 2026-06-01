@@ -54,7 +54,7 @@ class ChangeCategoryForm(BaseCaseLogForm):
 
         if non_field_errors:
             self._errors[NON_FIELD_ERRORS] = ErrorList(non_field_errors)
- 
+
         return cleaned_data
 
     @transaction.atomic

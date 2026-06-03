@@ -17,7 +17,7 @@ from core.tests.mommy_utils import make_recipe
 from django.core.urlresolvers import reverse
 from cla_common.constants import REQUIRES_ACTION_BY
 
-from cla_auth.constants import OPERATOR_ROLE, OPERATOR_MANAGER_ROLE, PROVIDER_ROLE, PROVIDER_MCC_ROLE
+from cla_auth.constants import OPERATOR_ROLE, OPERATOR_MANAGER_ROLE, PROVIDER_ROLE, PROVIDER_MCC_ROLE, OPERATOR_OFFICE_CODES
 from call_centre.models import Operator
 
 
@@ -88,6 +88,10 @@ class EntraTokenGeneratorMixin(object):
         else:
             exp = now_epoch + 3600
 
+        office_codes = ""
+        if app_roles == OPERATOR_ROLE or app_roles == OPERATOR_MANAGER_ROLE:
+            office_codes = unicode(",".join(OPERATOR_OFFICE_CODES))
+
         payload = {
             "iss": self.issuer,
             "aud": self.auth.expected_audience,
@@ -99,7 +103,7 @@ class EntraTokenGeneratorMixin(object):
             "APP_ROLES": app_roles,
             "FIRM_CODE": 00000,
             "FIRM_NAME": firm_name,
-            "LAA_ACCOUNTS": 0000000,
+            "LAA_ACCOUNTS": office_codes,
             "USER_EMAIL": email,
         }
 
@@ -294,6 +298,40 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
 
         with self.assertRaises(exceptions.AuthenticationFailed):
             self.auth.authenticate(request)
+
+    def test_perform_operator_office_codes_check__operator(self):
+        """Operators must have a given office code"""
+
+        payload = {
+            "APP_ROLES": OPERATOR_ROLE,
+            "LAA_ACCOUNTS": unicode(",".join(OPERATOR_OFFICE_CODES))
+        }
+        self.assertTrue(self.auth.perform_operator_office_codes_check(payload))
+
+    def test_perform_operator_office_codes_check__operator_manager(self):
+        """Operator managers must have a given office code"""
+
+        payload = {
+            "APP_ROLES": OPERATOR_MANAGER_ROLE,
+            "LAA_ACCOUNTS": unicode(",".join(OPERATOR_OFFICE_CODES))
+        }
+        self.assertTrue(self.auth.perform_operator_office_codes_check(payload))
+
+    def test_perform_operator_office_codes_check__provider(self):
+        """Only operator and operator manager are checked if they have a given LAA_ACCOUNTS"""
+
+        payload = {
+            "APP_ROLES": PROVIDER_ROLE,
+            "LAA_ACCOUNTS": "",
+        }
+        self.assertTrue(self.auth.perform_operator_office_codes_check(payload))
+
+    def test_perform_operator_office_codes_check__invalid_laa_accounts(self):
+        payload = {
+            "APP_ROLES": OPERATOR_ROLE,
+            "LAA_ACCOUNTS": "HELLO",
+        }
+        self.assertFalse(self.auth.perform_operator_office_codes_check(payload))
 
 
 class EntraAuthorizationTestCase(EntraTokenGeneratorMixin, TestCase):

@@ -193,19 +193,13 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
             return None
 
         if len(token.split(".")) != 3:
-            print("TOKEN FORMAT IS NOT VALID")
-            logger.error("ENTRA: INVALID TOKEN FORMAT", exc_info=True)
-            raise exceptions.AuthenticationFailed("INVALID TOKEN FORMAT")
             return None
 
         _, token = token.split(" ", 1)
-        print("TOKEN WITHOUT BEARER", token)
-        print("OTHERS", _)
         if not token:
             return None
 
         payload = self._validate_token(token)
-        print("PAYLOAD", payload)
         app_role, user = self.get_or_create_user(payload)
 
         if not user:

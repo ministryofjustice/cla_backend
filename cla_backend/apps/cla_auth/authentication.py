@@ -188,7 +188,6 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
     def authenticate(self, request, retried=False):
         token = request.META.get("HTTP_AUTHORIZATION")
         print("TOKEN", token)
-        logger.info("TOKEN", token)
 
         if not token:
             return None
@@ -202,7 +201,6 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
 
         payload = self._validate_token(token)
         print("PAYLOAD", payload)
-        logger.info("PAYLOAD", payload)
         app_role, user = self.get_or_create_user(payload)
 
         if not user:

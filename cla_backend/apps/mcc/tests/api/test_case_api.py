@@ -1,3 +1,4 @@
+from diagnosis.models import DiagnosisTraversal
 from django.core.urlresolvers import reverse
 
 from rest_framework import status
@@ -84,3 +85,82 @@ class MCCSplitCaseTestCase(CLAProviderAuthBaseApiTestMixin, APITestCase):
         )
 
         self.assertIn(response.status_code, [status.HTTP_200_OK, status.HTTP_204_NO_CONTENT])
+
+
+class MCCChangeCategoryTestCase(CLAProviderAuthBaseApiTestMixin, APITestCase):
+    def setUp(self):
+        super(MCCChangeCategoryTestCase, self).setUp()
+
+        self.case_category = make_recipe("legalaid.category")
+        self.new_category = make_recipe("legalaid.category")
+
+        self.resource = make_recipe(
+            "legalaid.case",
+            reference="AA-9999-9999",
+            provider=self.provider,
+            requires_action_by=REQUIRES_ACTION_BY.PROVIDER,
+            eligibility_check=make_recipe(
+                "legalaid.eligibility_check",
+                category=self.case_category
+            )
+        )
+
+        self.resource.diagnosis = DiagnosisTraversal.objects.create_eligible(self.case_category)
+        self.resource.save()
+
+        self.url = self.get_url()
+
+    def get_url(self, reference=None):
+        reference = reference or self.resource.reference
+        return reverse("mcc:case-category-change", kwargs={"reference": reference})
+
+    def test_change_category_success(self):
+        self.assertEqual(Log.objects.count(), 0)
+
+        response = self.client.patch(
+            self.url,
+            data={
+                "category": self.new_category.code,
+                "notes": "Changing category via MCC"
+            },
+            format="json",
+            HTTP_AUTHORIZATION=self.get_http_authorization(),
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        self.resource.refresh_from_db()
+        eligibility = self.resource.eligibility_check
+        eligibility.refresh_from_db()
+        self.assertEqual(
+            eligibility.category,
+            self.new_category
+        )
+
+        self.assertIsNotNone(self.resource.diagnosis)
+
+        logs = Log.objects.filter(case=self.resource)
+        self.assertEqual(logs.count(), 1)
+        log = logs.first()
+
+        self.assertEqual(log.code, "MCC")
+        self.assertEqual(log.notes, "Changing category via MCC")
+        self.assertEqual(
+            log.context,
+            {
+                "old_category": self.case_category.code,
+                "new_category": self.new_category.code,
+            }
+        )
+
+    def test_change_category_requires_note(self):
+        response = self.client.patch(
+            self.url,
+            data={
+                "category": self.new_category.code
+            },
+            format="json",
+            HTTP_AUTHORIZATION=self.get_http_authorization(),
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

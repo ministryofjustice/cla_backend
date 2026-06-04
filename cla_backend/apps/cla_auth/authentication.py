@@ -199,6 +199,8 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
             return None
 
         _, token = token.split(" ", 1)
+        print("TOKEN WITHOUT BEARER", token)
+        print("OTHERS", _)
         if not token:
             return None
 

@@ -199,6 +199,8 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
             return None
 
         payload = self._validate_token(token)
+        print("PAYLOAD", payload)
+        logger.info("PAYLOAD", payload)
         app_role, user = self.get_or_create_user(payload)
 
         if not user:

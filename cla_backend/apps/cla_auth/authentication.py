@@ -193,6 +193,9 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
             return None
 
         if len(token.split(".")) != 3:
+            print("TOKEN FORMAT IS NOT VALID")
+            logger.error("ENTRA: INVALID TOKEN FORMAT", exc_info=True)
+            raise exceptions.AuthenticationFailed("INVALID TOKEN FORMAT")
             return None
 
         _, token = token.split(" ", 1)

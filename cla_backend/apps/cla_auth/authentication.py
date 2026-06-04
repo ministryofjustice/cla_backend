@@ -187,6 +187,8 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
 
     def authenticate(self, request, retried=False):
         token = request.META.get("HTTP_AUTHORIZATION")
+        print("TOKEN", token)
+        logger.info("TOKEN", token)
 
         if not token:
             return None

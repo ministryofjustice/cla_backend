@@ -159,6 +159,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
             raise exceptions.AuthenticationFailed("Token payload is missing USER_EMAIL")
 
         if not self.perform_operator_office_codes_check(payload):
+            logger.error("User does not have list of expected offices", exc_info=True)
             raise exceptions.AuthenticationFailed("User does not have list of expected offices")
 
         raw_roles = payload.get("APP_ROLES")

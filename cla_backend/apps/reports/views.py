@@ -1,6 +1,8 @@
 import json
 import re
 import os
+import logging
+
 from django.contrib import messages
 from django.contrib.admin import AdminSite
 from django.contrib.admin.views.decorators import staff_member_required
@@ -46,6 +48,7 @@ from reports.models import Export
 from .tasks import ExportTask, OBIEEExportTask, ReasonForContactingExportTask
 from cla_backend.libs.aws.s3 import ReportsS3
 
+logger = logging.getLogger(__name__)
 
 def report_view(request, form_class, title, template="case_report", success_task=ExportTask, file_name=None):
 
@@ -58,6 +61,10 @@ def report_view(request, form_class, title, template="case_report", success_task
     tmpl = "admin/reports/{0}.html".format(template)
     form = form_class()
     if valid_submit(request, form):
+        logger.info(
+            "Report requested: {}".format(title),
+            extra={"USER": request.user.pk, "REPORT": form_class.__name__},
+        )
         success_task().delay(request.user.pk, filename, form_class.__name__, json.dumps(request.POST))
         messages.info(request, "Your export is being processed. It will show up in the downloads tab shortly.")
 

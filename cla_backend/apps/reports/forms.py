@@ -1166,6 +1166,26 @@ class CallbackTimeSlotReport(DateRangeReportForm):
     def get_headers(self):
         return ["Date", "Interval", "Total capacity", "Used capacity", "Remaining capacity", "% Remaining capacity"]
 
+class CallbackProgressionReport(SQLFileDateRangeReport):
+    QUERY_FILE = "CallbackProgressionReport.sql"
+
+    def get_sql_params(self):
+        from_date, to_date = self.date_range
+        print("THE DATES:",from_date, to_date)
+        return {"from_date": from_date, "to_date": to_date}
+
+    def get_headers(self):
+        return [
+            "Case Reference",
+            "Callback Date",
+            "Booking Slot",
+            "Source",
+            "Callback Type",
+            "Third Party",
+            "Created On",
+            "Created At",
+        ]
+    
 
 class WebContactCases(SQLFileDateRangeReport):
     QUERY_FILE = "WebContactCases.sql"
@@ -1204,3 +1224,4 @@ def get_recursively(item, attribute):
     if remaining:
         return get_recursively(value, remaining)
     return value if value is not None else ""
+

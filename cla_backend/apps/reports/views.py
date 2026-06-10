@@ -38,6 +38,7 @@ from .forms import (
     MIScopeReport,
     MIDemographicReport,
     CallbackTimeSlotReport,
+    CallbackProgressionReport,
     WebContactCases,
 )
 
@@ -299,6 +300,12 @@ def mi_scope_report(request):
 @permission_required("legalaid.run_reports")
 def callback_time_slot_report(request):
     return report_view(request, CallbackTimeSlotReport, "Callback Time Slot Report")
+
+
+@staff_member_required
+@permission_required("legalaid.run_reports")
+def callback_progression_report(request):
+    return report_view(request, CallbackProgressionReport, "Callback Progression Report")
 
 
 def delete_record(user_id, file_name):

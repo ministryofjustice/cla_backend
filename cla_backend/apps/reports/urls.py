@@ -57,4 +57,5 @@ urlpatterns = patterns(
     ),
     url(r"^mi-demographic-report/$", views.mi_demographic_report, name="mi_demographic_report"),
     url(r"^callback-time-slot-report/$", views.callback_time_slot_report, name="callback_time_slot_report"),
+    url(r"^callback-progression-report/$", views.callback_progression_report, name="callback_progression_report")
 )

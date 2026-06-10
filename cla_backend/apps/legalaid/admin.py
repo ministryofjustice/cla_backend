@@ -24,6 +24,7 @@ class EODDetailsCategoryAdmin(admin.TabularInline):
 class EODDetailsAdmin(admin.ModelAdmin):
     inlines = (EODDetailsCategoryAdmin,)
 
+
 admin.site.register(Category, CategoryModelAdmin)
 # admin.site.register(Question)
 # admin.site.register(Answer)

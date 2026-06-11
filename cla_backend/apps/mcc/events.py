@@ -10,11 +10,11 @@ class ChangeCategoryEvent(BaseEvent):
     key = "change_category"
 
     codes = {
-        "MCC": {
-            "type": LOG_TYPES.OUTCOME,
+        "CATEGORY_CHANGED": {
+            "type": LOG_TYPES.SYSTEM,
             "level": LOG_LEVELS.HIGH,
             "selectable_by": [],
-            "description": "Category changed via MCC",
+            "description": "Category of law changed",
             "stops_timer": False,
         }
     }

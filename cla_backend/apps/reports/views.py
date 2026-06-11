@@ -50,6 +50,7 @@ from cla_backend.libs.aws.s3 import ReportsS3
 
 logger = logging.getLogger(__name__)
 
+
 def report_view(request, form_class, title, template="case_report", success_task=ExportTask, file_name=None):
 
     admin_site_instance = AdminSite()

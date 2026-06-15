@@ -333,6 +333,25 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
         }
         self.assertFalse(self.auth.perform_operator_office_codes_check(payload))
 
+    @patch("cla_auth.authentication.EntraAccessTokenAuthentication._public_keys")
+    def test_email_case_insensitivity(self, mock_public_keys):
+        """Test case-insensitive email addresses"""
+
+        email = "TestUser@mail.com"
+        user = User(email=email, is_active=True)
+
+        user.save()
+        make_recipe("cla_provider.staff", user=user)
+
+        mock_public_keys.return_value = self.mock_jwks["keys"]
+        token = self._create_token(expired=False, email="testuser@mail.com")
+
+        request = self.factory.get("/")
+        request.META["HTTP_AUTHORIZATION"] = "Bearer %s" % token
+
+        authenticated_user, _ = self.auth.authenticate(request)
+        self.assertEqual(authenticated_user.id, user.id)
+
 
 class EntraAuthorizationTestCase(EntraTokenGeneratorMixin, TestCase):
     def setUp(self):

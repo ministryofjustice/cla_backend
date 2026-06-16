@@ -171,6 +171,9 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
 
         try:
             user = authenticate(entra_id_email=email)
+        except User.MultipleObjectsReturned:
+            logger.exception("Multiple users found with the email address  %s", email)
+            raise exceptions.AuthenticationFailed("Multiple users found with the email address")
         except Exception:
             user = None
 

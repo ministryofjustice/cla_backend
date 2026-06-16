@@ -280,3 +280,12 @@ class ProviderExtractForm(Form):
         if data:
             data = data.strip().upper()
         return data
+    
+class ProviderExtractEntraForm(Form):
+    CHSCRN = forms.CharField(required=True)
+    
+    def clean_CHSCRN(self):
+        data = self.cleaned_data["CHSCRN"]
+        if data:
+            data = data.strip().upper()
+        return data

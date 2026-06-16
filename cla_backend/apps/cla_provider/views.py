@@ -1,7 +1,6 @@
 import logging
 
-from requests import request
-from cla_backend.apps.cla_auth.authentication import EntraAccessTokenAuthentication
+from cla_auth.authentication import EntraAccessTokenAuthentication
 from cla_provider.authentication import LegacyCHSAuthentication
 from cla_provider.forms import ProviderExtractForm
 from cla_provider.helpers import ProviderExtractFormatter
@@ -254,7 +253,7 @@ class ProviderExtract(APIView):
             form = ProviderExtractEntraForm(request.data)
         else:
             # Legacy CHS auth - keep backward compatibility
-            data = request.data.copy()
+            data = request.POST.copy()
             if "CHSOrganisationID" not in data:
                 data["CHSOrganisationID"] = data.get("CHSOrgansationID")
             form = ProviderExtractForm(data)

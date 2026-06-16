@@ -352,6 +352,27 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
         authenticated_user, _ = self.auth.authenticate(request)
         self.assertEqual(authenticated_user.id, user.id)
 
+    @patch("cla_auth.authentication.EntraAccessTokenAuthentication._public_keys")
+    def test_email_duplicate_emails(self, mock_public_keys):
+        """Test duplicate email addresses raise an exception"""
+
+        user1 = User(username="testuser1", email="TestUser@mail.com", is_active=True)
+        user2 = User(username="testuser2", email="testuser@mail.com", is_active=True)
+
+        user1.save()
+        user2.save()
+
+        make_recipe("cla_provider.staff", user=user1)
+        make_recipe("cla_provider.staff", user=user2)
+
+        mock_public_keys.return_value = self.mock_jwks["keys"]
+        token = self._create_token(expired=False, email="testuser@mail.com")
+
+        request = self.factory.get("/")
+        request.META["HTTP_AUTHORIZATION"] = "Bearer %s" % token
+
+        self.assertRaises(exceptions.AuthenticationFailed, self.auth.authenticate, request)
+
 
 class EntraAuthorizationTestCase(EntraTokenGeneratorMixin, TestCase):
     def setUp(self):

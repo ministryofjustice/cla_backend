@@ -143,7 +143,7 @@ class MCCChangeCategoryTestCase(CLAProviderAuthBaseApiTestMixin, APITestCase):
         self.assertEqual(logs.count(), 1)
         log = logs.first()
 
-        self.assertEqual(log.code, "MCC")
+        self.assertEqual(log.code, "CATEGORY_CHANGED")
         self.assertEqual(log.notes, "Changing category via MCC")
         self.assertEqual(
             log.context,
@@ -164,3 +164,21 @@ class MCCChangeCategoryTestCase(CLAProviderAuthBaseApiTestMixin, APITestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_change_category_does_not_change_outcome_code(self):
+        original_outcome_code = self.resource.outcome_code
+        response = self.client.patch(
+            self.url,
+            data={
+                "category": self.new_category.code,
+                "notes": "Changing category via MCC"
+            },
+            format="json",
+            HTTP_AUTHORIZATION=self.get_http_authorization(),
+        )
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.resource.refresh_from_db()
+        self.assertEqual(
+            self.resource.outcome_code,
+            original_outcome_code
+        )

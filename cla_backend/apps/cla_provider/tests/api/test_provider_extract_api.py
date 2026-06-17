@@ -97,6 +97,20 @@ class ProviderExtractEntraTests(EntraTokenGeneratorMixin, APITestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
+    def test_response_is_xml_with_key_fields(self):
+        response = self.client.post(
+            self.detail_url, data={"CHSCRN": self.case.reference}, **self.auth_header()
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn("text/xml", response["Content-Type"])
+        o = objectify.fromstring(response.content)
+        self.assertIn("CRN", o.attrib)
+        self.assertIn("CaseCreated", o.attrib)
+        self.assertEqual(str(o.attrib["CRN"]), str(self.case.laa_reference))
+        self.assertTrue(hasattr(o, "MeansTestResult"))
+        self.assertTrue(hasattr(o, "ReferredOrganisation"))
+        self.assertEqual(str(o.ReferredOrganisation.Organisation), self.FIRM_NAME)
+
     def test_entra_post_does_not_require_legacy_chs_fields(self):
         """No CHSOrganisationID/CHSUserName/CHSPassword needed for the Entra path."""
         response = self.client.post(

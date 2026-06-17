@@ -248,4 +248,4 @@ rateLimit:
   rps: 10
   rpm: 100
   burst: 5
-  limitReqStatusCode: 429
+  use429AsStatusCode: true

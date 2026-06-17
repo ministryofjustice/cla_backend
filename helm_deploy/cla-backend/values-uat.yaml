@@ -68,6 +68,6 @@ pdb:
 # Configuration for rate limiting.
 rateLimit:
   rps: 10
-  rpm: ~
+  rpm: null
   burst: 1
-  limitReqStatusCode: 429
+  use429AsStatusCode: true

@@ -65,3 +65,9 @@ envVars:
 pdb:
   enabled: false
 
+# Configuration for rate limiting.
+rateLimit:
+  rps: 10
+  rpm: null
+  burst: 1
+  use429AsStatusCode: true

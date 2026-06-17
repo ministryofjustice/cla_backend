@@ -61,10 +61,10 @@ class ProviderExtractEntraTests(EntraTokenGeneratorMixin, APITestCase):
     def auth_header(self, **token_kwargs):
         token_kwargs.setdefault("firm_name", self.FIRM_NAME)
         token_kwargs.setdefault("app_roles", PROVIDER_ROLE)
-        # EntraTokenGeneratorMixin.setUp() already creates a plain User for
-        # "test@example.com" (the _create_token default), which has no staff
-        # link - use a distinct email so get_or_create_user takes the
-        # "create a new provider/staff" branch instead of finding that stub.
+        # Use a distinct email from the mixin's default ("test@example.com").
+        # The mixin creates a bare User with that email but no Staff link;
+        # get_or_create_user would return it early, skipping _create_provider(),
+        # leaving us with a user that fails IsProviderPermission.
         token_kwargs.setdefault("email", "new-provider-staff@example.com")
         token = self._create_token(**token_kwargs)
         return {"HTTP_AUTHORIZATION": "Bearer %s" % token}

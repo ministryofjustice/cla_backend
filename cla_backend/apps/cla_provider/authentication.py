@@ -6,7 +6,7 @@ from cla_provider.models import Staff
 
 
 # =======================================
-# To be retired once Entra auth is fully implemented and CHS auth is no longer used
+# TODO: To be retired once Entra auth is fully implemented and CHS auth is no longer used
 # =======================================
 class LegacyCHSAuthentication(BaseAuthentication):
     def authenticate(self, request):

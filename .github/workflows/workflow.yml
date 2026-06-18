@@ -91,7 +91,7 @@ jobs:
     permissions:
       contents: read
       id-token: write
-    uses: ministryofjustice/cla-end-to-end-tests/.github/workflows/e2e.yml@main
+    uses: ministryofjustice/cla-end-to-end-tests/.github/workflows/e2e.yml@557854e057888b294df2f8a61a3d3e67e26ca3f6 #v1.0.0 
     with:
       CLA_BACKEND_IMAGE: "${{ vars.CLA_BACKEND_ECR_REPOSITORY }}:${{ needs.build-and-push.outputs.image_tag }}"
       CLA_FRONTEND_ECR_REGION: ${{ vars.CLA_FRONTEND_ECR_REGION}}

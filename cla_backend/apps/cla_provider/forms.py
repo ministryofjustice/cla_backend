@@ -270,6 +270,7 @@ class SplitCaseForm(SplitBaseCaseForm):
 
 # TODO: To be retired once Entra auth is fully implemented and CHS auth is no longer used
 
+
 class ProviderExtractForm(Form):
     CHSUserName = forms.CharField(required=True)
     CHSOrganisationID = forms.CharField(required=True)

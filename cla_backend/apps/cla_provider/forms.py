@@ -268,11 +268,23 @@ class SplitCaseForm(SplitBaseCaseForm):
 
         return cleaned_data
 
+# TODO: To be retired once Entra auth is fully implemented and CHS auth is no longer used
+
 
 class ProviderExtractForm(Form):
     CHSUserName = forms.CharField(required=True)
     CHSOrganisationID = forms.CharField(required=True)
     CHSPassword = forms.CharField(required=True)
+    CHSCRN = forms.CharField(required=True)
+
+    def clean_CHSCRN(self):
+        data = self.cleaned_data["CHSCRN"]
+        if data:
+            data = data.strip().upper()
+        return data
+
+
+class ProviderExtractEntraForm(Form):
     CHSCRN = forms.CharField(required=True)
 
     def clean_CHSCRN(self):

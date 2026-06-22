@@ -1,4 +1,6 @@
 import logging
+
+from cla_auth.authentication import EntraAccessTokenAuthentication
 from cla_provider.authentication import LegacyCHSAuthentication
 from cla_provider.forms import ProviderExtractForm
 from cla_provider.helpers import ProviderExtractFormatter
@@ -61,7 +63,7 @@ from .serializers import (
     CSVUploadDetailSerializer,
     ProviderSerializer,
 )
-from .forms import RejectCaseForm, AcceptCaseForm, OpenCaseForm, CloseCaseForm, SplitCaseForm, ReopenCaseForm
+from .forms import ProviderExtractEntraForm, RejectCaseForm, AcceptCaseForm, OpenCaseForm, CloseCaseForm, SplitCaseForm, ReopenCaseForm
 
 logger = logging.getLogger(__name__)
 
@@ -229,7 +231,7 @@ class CaseViewSet(CLAProviderPermissionViewSetMixin, FullCaseViewSet):
 
 class ProviderExtract(APIView):
     permission_classes = (IsProviderPermission,)
-    authentication_classes = (LegacyCHSAuthentication,)
+    authentication_classes = (LegacyCHSAuthentication, EntraAccessTokenAuthentication,)
 
     http_method_names = [u"post", "options"]
 
@@ -246,16 +248,19 @@ class ProviderExtract(APIView):
         )
 
     def post(self, request):
-        # this is to keep backward compatibility with the old system
-        data = request.POST.copy()
-        if "CHSOrganisationID" not in data:
-            data["CHSOrganisationID"] = data.get("CHSOrgansationID")
+        # Entra auth - only needs case reference, token contains provider info
+        if isinstance(request.successful_authenticator, EntraAccessTokenAuthentication):
+            form = ProviderExtractEntraForm(request.data)
+        else:
+            # Legacy CHS auth - keep backward compatibility
+            data = request.POST.copy()
+            if "CHSOrganisationID" not in data:
+                data["CHSOrganisationID"] = data.get("CHSOrgansationID")
+            form = ProviderExtractForm(data)
 
-        form = ProviderExtractForm(data)
         if form.is_valid():
-            data = form.cleaned_data
             try:
-                case = Case.objects.get(reference__iexact=data["CHSCRN"])
+                case = Case.objects.get(reference__iexact=form.cleaned_data["CHSCRN"])
             except Case.DoesNotExist:
                 return DRFResponse(
                     {"detail": "Not found"},

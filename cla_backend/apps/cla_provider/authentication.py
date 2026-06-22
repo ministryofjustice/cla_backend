@@ -5,6 +5,9 @@ from rest_framework.exceptions import AuthenticationFailed
 from cla_provider.models import Staff
 
 
+# =======================================
+# TODO: To be retired once Entra auth is fully implemented and CHS auth is no longer used
+# =======================================
 class LegacyCHSAuthentication(BaseAuthentication):
     def authenticate(self, request):
         """

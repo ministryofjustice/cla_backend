@@ -26,7 +26,7 @@ jobs:
           KUBE_TOKEN: ${{ secrets.KUBE_TOKEN }}
           KUBE_NAMESPACE: ${{ secrets.KUBE_NAMESPACE }}
         run: |
-          echo "$KUBE_CERT" | base64 -d > ca.crt
+          echo "$KUBE_CERT" > ca.crt
           kubectl config set-cluster "$KUBE_CLUSTER" \
             --certificate-authority=./ca.crt \
             --server="https://$KUBE_CLUSTER"

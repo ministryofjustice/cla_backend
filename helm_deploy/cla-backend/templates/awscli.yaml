@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "cla-backend.fullname" . }}-awscli
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ include "cla-backend.fullname" . }}-awscli
+  template:
+    metadata:
+      labels:
+        app: {{ include "cla-backend.fullname" . }}-awscli
+    spec:
+      serviceAccountName: {{ include "cla-backend.serviceAccountName" . }}
+      containers:
+        - name: {{ include "cla-backend.fullname" . }}-awscli
+          image: "amazon/aws-cli"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["sh", "-c", "sleep infinity"]
+          env:
+            {{ include "cla-backend.app.vars" . | nindent 12 }}
+

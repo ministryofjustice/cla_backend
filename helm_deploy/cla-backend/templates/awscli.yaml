@@ -20,4 +20,7 @@ spec:
           command: ["sh", "-c", "sleep infinity"]
           env:
             {{ include "cla-backend.app.vars" . | nindent 12 }}
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
 

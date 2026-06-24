@@ -127,6 +127,9 @@ spec:
             command: ["python", "manage.py", "remove_expired_reports"]
             env:
               {{ include "cla-backend.app.vars" . | nindent 12 }}
+            securityContext:
+              runAsNonRoot: true
+              runAsUser: 1000
           serviceAccountName: {{ include "cla-backend.serviceAccountName" . }}
           restartPolicy: OnFailure
 
@@ -150,8 +153,9 @@ spec:
             command: [bin/automate_backup.sh]
             env:
               {{ include "cla-backend.app.vars" . | nindent 12 }}
-              - name: HOME
-                value: /tmp
+            securityContext:
+              runAsNonRoot: true
+              runAsUser: 1000
           serviceAccountName: {{ include "cla-backend.serviceAccountName" . }}
           restartPolicy: OnFailure
 
@@ -177,7 +181,5 @@ spec:
             command: [bin/automate_database_delete.sh]
             env:
               {{ include "cla-backend.app.vars" . | nindent 12 }}
-              - name: HOME
-                value: /tmp
           serviceAccountName: {{ include "cla-backend.serviceAccountName" . }}
           restartPolicy: OnFailure

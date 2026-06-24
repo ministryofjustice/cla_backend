@@ -23,6 +23,8 @@ ingress:
 envVars:
   DEBUG:
     value: "False"
+  CORS_ORIGIN_WHITELIST:
+    value: "https://laa-cla-frontend-uat.apps.live-1.cloud-platform.service.justice.gov.uk"
   REPLICA_DB_HOST:
     secret:
       optional: true

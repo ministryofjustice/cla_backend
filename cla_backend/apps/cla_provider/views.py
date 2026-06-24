@@ -244,7 +244,6 @@ class ProviderExtract(APIView):
             self.metadata(request),
             content_type="application/json",
             status=200,
-            headers={"Access-Control-Allow-Origin": "*"},
         )
 
     def post(self, request):
@@ -266,7 +265,6 @@ class ProviderExtract(APIView):
                     {"detail": "Not found"},
                     content_type="application/json",
                     status=404,
-                    headers={"Access-Control-Allow-Origin": "*"},
                 )
             self.check_object_permissions(request, case)
 
@@ -274,9 +272,7 @@ class ProviderExtract(APIView):
 
             return ProviderExtractFormatter(case).format()
         else:
-            return DRFResponse(
-                form.errors, content_type="text/xml", status=400, headers={"Access-Control-Allow-Origin": "*"}
-            )
+            return DRFResponse(form.errors, content_type="text/xml", status=400)
 
 
 class UserViewSet(CLAProviderPermissionViewSetMixin, BaseUserViewSet):

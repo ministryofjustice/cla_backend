@@ -235,16 +235,12 @@ class ProviderExtract(APIView):
 
     http_method_names = [u"post", "options"]
 
-    def options(self, request):
+    def options(self, request, *args, **kwargs):
         """
         CORS requests begin with an OPTIONS request, which must not require
         authentication and must have CORS headers in the response.
         """
-        return DRFResponse(
-            self.metadata(request),
-            content_type="application/json",
-            status=200,
-        )
+        return super(ProviderExtract, self).options(request, *args, **kwargs)
 
     def post(self, request):
         # Entra auth - only needs case reference, token contains provider info

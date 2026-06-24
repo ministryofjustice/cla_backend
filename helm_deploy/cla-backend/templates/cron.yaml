@@ -129,3 +129,55 @@ spec:
               {{ include "cla-backend.app.vars" . | nindent 12 }}
           serviceAccountName: {{ include "cla-backend.serviceAccountName" . }}
           restartPolicy: OnFailure
+
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}-hourly-snapshots
+  labels:
+    {{- include "cla-backend.labels" . | nindent 4 }}
+spec:
+  schedule: "0 * * * *"   
+  jobTemplate:
+    spec:
+      ttlSecondsAfterFinished: 300
+      template:
+        spec:
+          containers:
+          - name: hourly-snapshots
+            image: "amazon/aws-cli"
+            command: [bin/automate_backup.sh]
+            env:
+              {{ include "cla-backend.app.vars" . | nindent 12 }}
+              - name: HOME
+                value: /tmp
+          serviceAccountName: {{ include "cla-backend.serviceAccountName" . }}
+          restartPolicy: OnFailure
+
+
+
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}-delete-hourly-snapshots
+  labels:
+    {{- include "cla-backend.labels" . | nindent 4 }}
+spec:
+  schedule: "0 7 * * *"
+  jobTemplate:
+    spec:
+      ttlSecondsAfterFinished: 300
+      template:
+        spec:
+          containers:
+          - name: delete-hourly-snapshots
+            image: "amazon/aws-cli"
+            command: [bin/automate_database_delete.sh]
+            env:
+              {{ include "cla-backend.app.vars" . | nindent 12 }}
+              - name: HOME
+                value: /tmp
+          serviceAccountName: {{ include "cla-backend.serviceAccountName" . }}
+          restartPolicy: OnFailure

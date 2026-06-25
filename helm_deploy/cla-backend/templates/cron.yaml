@@ -150,7 +150,7 @@ spec:
           containers:
           - name: hourly-snapshots
             image: "{{ .Values.image.repository }}:awscli"
-            command: [automate_backup.sh]
+            command: [/app/automate_backup.sh]
             env:
               {{ include "cla-backend.app.vars" . | nindent 12 }}
             securityContext:
@@ -178,7 +178,7 @@ spec:
           containers:
           - name: delete-hourly-snapshots
             image: "{{ .Values.image.repository }}:awscli"
-            command: [automate_database_delete.sh]
+            command: [/app/automate_database_delete.sh]
             securityContext:
             runAsNonRoot: true
             runAsUser: 1000

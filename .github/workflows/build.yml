@@ -8,6 +8,12 @@ on:
       ECR_REPOSITORY:
         required: true
         type: string
+      IMAGE_TAG:
+        required: false 
+        type: string 
+      DOCKERFILE_PATH:
+        required: false 
+        type: string
     secrets:
       ECR_ROLE_TO_ASSUME:
         required: true
@@ -54,8 +60,10 @@ jobs:
         with:
           images: ${{ steps.login-ecr.outputs.registry }}/${{ inputs.ECR_REPOSITORY }}
           tags: |
-            type=raw,value=${{ github.ref_name == 'main' && format('main-{0}', github.sha) || format('branch-{0}', github.sha) }}
-
+            type=raw,value=${{
+              (inputs.IMAGE_TAG != '' && inputs.IMAGE_TAG)
+              || (github.ref_name == 'main' && format('main-{0}', github.sha) || format('branch-{0}', github.sha))
+            }}
 
       - name: Debug image URL
         run: |
@@ -67,6 +75,7 @@ jobs:
         uses: docker/build-push-action@d08e5c354a6adb9ed34480a06d141179aa583294 # v7.0.0
         with:
           context: .
+          file: ${{ inputs.DOCKERFILE_PATH || './Dockerfile' }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           cache-from: type=gha

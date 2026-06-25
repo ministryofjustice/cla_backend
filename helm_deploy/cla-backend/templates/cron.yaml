@@ -149,7 +149,7 @@ spec:
         spec:
           containers:
           - name: hourly-snapshots
-            image: "amazon/aws-cli"
+            image: "{{ .Values.image.repository }}:awscli"
             command: [bin/automate_backup.sh]
             env:
               {{ include "cla-backend.app.vars" . | nindent 12 }}
@@ -177,8 +177,8 @@ spec:
         spec:
           containers:
           - name: delete-hourly-snapshots
-            image: "amazon/aws-cli"
-            command: [bin/automate_database_delete.sh]
+            image: "{{ .Values.image.repository }}:awscli"
+            command: [automate_database_delete.sh]
             securityContext:
             runAsNonRoot: true
             runAsUser: 1000

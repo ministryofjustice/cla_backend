@@ -8,6 +8,7 @@ from core.permissions import IsProviderPermission
 from core.drf.mixins import ClaCreateModelMixin, ClaUpdateModelMixin
 from core.drf.paginator import StandardResultsSetPagination
 
+from django.conf import settings
 from django.shortcuts import get_object_or_404
 from guidance.views import BaseGuidanceNoteViewSet
 from legalaid.permissions import IsManagerOrMePermission
@@ -235,17 +236,32 @@ class ProviderExtract(APIView):
 
     http_method_names = [u"post", "options"]
 
-    def options(self, request):
+    def _apply_cors_headers(self, request, response):
+        origin = request.META.get("HTTP_ORIGIN")
+        whitelist = getattr(settings, "CORS_ORIGIN_WHITELIST", []) or []
+
+        if origin and origin in whitelist:
+            response["Access-Control-Allow-Origin"] = origin
+
+            vary = response.get("Vary")
+            if vary:
+                if "Origin" not in [v.strip() for v in vary.split(",")]:
+                    response["Vary"] = "{0}, Origin".format(vary)
+            else:
+                response["Vary"] = "Origin"
+
+            if getattr(settings, "CORS_ALLOW_CREDENTIALS", False):
+                response["Access-Control-Allow-Credentials"] = "true"
+
+        return response
+
+    def options(self, request, *args, **kwargs):
         """
         CORS requests begin with an OPTIONS request, which must not require
         authentication and must have CORS headers in the response.
         """
-        return DRFResponse(
-            self.metadata(request),
-            content_type="application/json",
-            status=200,
-            headers={"Access-Control-Allow-Origin": "*"},
-        )
+        response = super(ProviderExtract, self).options(request, *args, **kwargs)
+        return self._apply_cors_headers(request, response)
 
     def post(self, request):
         # Entra auth - only needs case reference, token contains provider info
@@ -262,21 +278,21 @@ class ProviderExtract(APIView):
             try:
                 case = Case.objects.get(reference__iexact=form.cleaned_data["CHSCRN"])
             except Case.DoesNotExist:
-                return DRFResponse(
+                response = DRFResponse(
                     {"detail": "Not found"},
                     content_type="application/json",
                     status=404,
-                    headers={"Access-Control-Allow-Origin": "*"},
                 )
+                return self._apply_cors_headers(request, response)
             self.check_object_permissions(request, case)
 
             logger.info("Provider case exported", extra={"USER_ID": request.user.pk, "CASE_REFERENCE": case.reference})
 
-            return ProviderExtractFormatter(case).format()
+            response = ProviderExtractFormatter(case).format()
+            return self._apply_cors_headers(request, response)
         else:
-            return DRFResponse(
-                form.errors, content_type="text/xml", status=400, headers={"Access-Control-Allow-Origin": "*"}
-            )
+            response = DRFResponse(form.errors, content_type="text/xml", status=400)
+            return self._apply_cors_headers(request, response)
 
 
 class UserViewSet(CLAProviderPermissionViewSetMixin, BaseUserViewSet):

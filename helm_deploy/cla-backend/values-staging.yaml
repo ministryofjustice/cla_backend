@@ -23,6 +23,8 @@ metabase:
 envVars:
   DEBUG:
     value: "False"
+  CORS_ORIGIN_WHITELIST:
+    value: "https://staging.cases.civillegaladvice.service.gov.uk"
   LOAD_SEED_DATA:
     value: "True"
   LOAD_TEST_DATA:

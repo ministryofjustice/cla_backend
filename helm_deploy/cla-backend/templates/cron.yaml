@@ -179,6 +179,9 @@ spec:
           - name: delete-hourly-snapshots
             image: "amazon/aws-cli"
             command: [bin/automate_database_delete.sh]
+            securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
             env:
               {{ include "cla-backend.app.vars" . | nindent 12 }}
           serviceAccountName: {{ include "cla-backend.serviceAccountName" . }}

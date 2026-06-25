@@ -158,7 +158,7 @@ spec:
             fsGroup: 1000
           containers:
             - name: hourly-snapshots
-              image: "{{ .Values.image.repository }}:awscli-v1"
+              image: "{{ .Values.image.repository }}:awscli:latest-v1"
               command: ["/bin/sh", "/app/automate_backup.sh"]
               env:
                 {{- include "cla-backend.app.vars" . | nindent 16 }}
@@ -181,9 +181,14 @@ spec:
       ttlSecondsAfterFinished: 7200
       template:
         spec:
-          containers:
+         securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+            fsGroup: 1000
+        containers:
           - name: delete-hourly-snapshots
-            image: "{{ .Values.image.repository }}:awscli"
+            image:  "{{ .Values.image.repository }}:awscli:latest-v1"
             command: ["sh", "/app/automate_database_delete.sh"]
             securityContext:
             runAsNonRoot: true

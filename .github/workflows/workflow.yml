@@ -77,7 +77,7 @@ jobs:
       with:
         ECR_REGION: ${{vars.CLA_BACKEND_ECR_REGION}}
         ECR_REPOSITORY: ${{vars.CLA_BACKEND_ECR_REPOSITORY}}
-        IMAGE_TAG: awscli-v1
+        IMAGE_TAG: awscli:latest-v1
         DOCKERFILE_PATH: ./Backups/Dockerfile
       secrets:
         ECR_ROLE_TO_ASSUME: ${{ secrets.CLA_BACKEND_ECR_ROLE_TO_ASSUME }}

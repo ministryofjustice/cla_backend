@@ -213,12 +213,12 @@ envVars:
       optional: true
   ENTRA_EXPECTED_AUDIENCE:
     secret:
-      name: sso
+      name: sso-nle
       key: expected_audience
       optional: true
   ENTRA_TENANT_ID:
     secret:
-      name: sso
+      name: sso-nle
       key: tenant_id
       optional: true
 resources: {}

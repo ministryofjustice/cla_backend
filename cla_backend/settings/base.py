@@ -126,7 +126,7 @@ AWS_DELETED_OBJECTS_BUCKET_NAME = os.environ.get("AWS_DELETED_OBJECTS_BUCKET_NAM
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split()
-
+print(ALLOWED_HOSTS)
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
@@ -189,6 +189,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "iia425u_J_pwntnEyqBuI1xBDqOX8nZ4uC73e
 
 
 MIDDLEWARE_CLASSES = (
+    "corsheaders.middleware.CorsMiddleware",
     "core.middleware.request_size.RequestSizeMiddleware",
     "django.middleware.locale.LocaleMiddleware",
     "django.middleware.security.SecurityMiddleware",
@@ -246,6 +247,7 @@ INSTALLED_APPS = (
     "nested_admin",
     "djorm_pgfulltext",
     "session_security",
+    "corsheaders",
 )
 
 PROJECT_APPS = (
@@ -507,6 +509,8 @@ CALLBACK_CAPPING_THRESHOLD_NOTIFICATION = os.environ.get("CALLBACK_CAPPING_THRES
 
 ENTRA_TENANT_ID = os.environ.get("ENTRA_TENANT_ID", None)
 ENTRA_EXPECTED_AUDIENCE = os.environ.get("ENTRA_EXPECTED_AUDIENCE", None)
+CORS_ORIGIN_WHITELIST = ALLOWED_HOSTS
+
 
 # .local.py overrides all the common settings.
 try:

@@ -16,7 +16,7 @@ services:
   rabbitmq:
     image: rabbitmq
     ports:
-      - '5672:5672'
+      - "5672:5672"
 
   db:
     image: postgres:14-alpine
@@ -24,8 +24,7 @@ services:
       - ${DOCKER_DATABASE_PORT_MAPPING:-5433:5432}
     security_opt:
       - no-new-privileges:true
-    container_name:
-      cla_backend_db
+    container_name: cla_backend_db
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -36,15 +35,14 @@ services:
       context: .
       target: ${ENVIRONMENT:-development}
     ports:
-      - '8010:8000'
+      - "8010:8000"
     stdin_open: true
     tty: true
     volumes:
       - .:/home/app
     depends_on:
       - db
-    container_name:
-      cla_backend
+    container_name: cla_backend
     environment: &cla_backend_environment
       ENV: local
       DEBUG: "True"
@@ -61,7 +59,7 @@ services:
       ADMIN_USER: cla_admin
       STATIC_FILES_BACKEND: local
       ADMIN_PASSWORD: cla_admin
-      ALLOWED_HOSTS: "*"
+      ALLOWED_HOSTS: "localhost:8010 localhost *"
       DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS:-cla_backend.settings.base}
       CELERY_BROKER_URL: "amqp://rabbitmq"
       PREVIOUS_DIVERSITY_PRIVATE_KEY: ${PREVIOUS_DIVERSITY_PRIVATE_KEY:-}
@@ -74,11 +72,9 @@ services:
     ports: []
     depends_on:
       - cla_backend
-    container_name:
-      cla_backend_worker
+    container_name: cla_backend_worker
     environment:
       <<: *cla_backend_environment
       DIVERSITY_PRIVATE_KEY_PATH: ${DIVERSITY_PRIVATE_KEY_PATH:-}
       DIVERSITY_PUBLIC_KEY_PATH: ${DIVERSITY_PUBLIC_KEY_PATH:-}
       PREVIOUS_DIVERSITY_PRIVATE_KEY: ${PREVIOUS_DIVERSITY_PRIVATE_KEY:-}
-

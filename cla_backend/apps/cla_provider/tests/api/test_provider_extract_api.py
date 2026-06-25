@@ -124,7 +124,7 @@ class ProviderExtractEntraTests(EntraTokenGeneratorMixin, APITestCase):
         response = self.client.options(self.detail_url, HTTP_ORIGIN="https://allowed.example")
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response["Access-Control-Allow-Origin"], "https://allowed.example")
+        self.assertEqual(response.get("Access-Control-Allow-Origin"), "https://allowed.example")
 
     @override_settings(CORS_ORIGIN_WHITELIST=["https://allowed.example"])
     def test_options_with_disallowed_origin_omits_cors_headers(self):
@@ -143,7 +143,7 @@ class ProviderExtractEntraTests(EntraTokenGeneratorMixin, APITestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response["Access-Control-Allow-Origin"], "https://allowed.example")
+        self.assertEqual(response.get("Access-Control-Allow-Origin"), "https://allowed.example")
 
     @override_settings(CORS_ORIGIN_WHITELIST=["https://allowed.example"])
     def test_post_with_disallowed_origin_omits_cors_headers(self):
@@ -167,5 +167,5 @@ class ProviderExtractEntraTests(EntraTokenGeneratorMixin, APITestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response["Access-Control-Allow-Origin"], "https://allowed.example")
-        self.assertEqual(response["Access-Control-Allow-Credentials"], "true")
+        self.assertEqual(response.get("Access-Control-Allow-Origin"), "https://allowed.example")
+        self.assertEqual(response.get("Access-Control-Allow-Credentials"), "true")

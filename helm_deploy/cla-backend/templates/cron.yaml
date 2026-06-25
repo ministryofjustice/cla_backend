@@ -150,7 +150,7 @@ spec:
           containers:
           - name: hourly-snapshots
             image: "{{ .Values.image.repository }}:awscli"
-            command: [bin/automate_backup.sh]
+            command: [automate_backup.sh]
             env:
               {{ include "cla-backend.app.vars" . | nindent 12 }}
             securityContext:

@@ -1,11 +1,16 @@
-FROM amazon/aws-cli
+FROM amazon/aws-cli:latest
 
-RUN useradd -m -u 1000 appuser
+# Create a non-root user and group with UID/GID 1000
+RUN groupadd -g 1000 appuser && \
+    useradd --uid 1000 --gid 1000 --create-home --shell /bin/bash appuser
 
 WORKDIR /app
 
+# Copy application files
 COPY . .
 
-RUN chown -R appuser:appuser /app
+# Ensure the non-root user owns the application files
+RUN chown -R 1000:1000 /app
 
-USER 1000
+# Switch to the non-root user
+USER 1000:1000

@@ -151,23 +151,18 @@ spec:
         spec:
           serviceAccountName: {{ include "cla-backend.serviceAccountName" . }}
           restartPolicy: OnFailure
-
           securityContext:
             runAsNonRoot: true
             runAsUser: 1000
             runAsGroup: 1000
             fsGroup: 1000
-
           containers:
             - name: hourly-snapshots
               image: "{{ .Values.image.repository }}:awscli-v1"
-              command:
-                - /bin/sh
-                - /app/automate_backup.sh
-
+              imagePullPolicy: Always
+              command: ["./automate_backup.sh"]
               env:
                 {{- include "cla-backend.app.vars" . | nindent 16 }}
-
               securityContext:
                 runAsNonRoot: true
                 runAsUser: 1000
@@ -176,35 +171,3 @@ spec:
                 capabilities:
                   drop:
                     - ALL
-
-
----
-apiVersion: batch/v1
-kind: CronJob
-metadata:
-  name: {{ .Release.Name }}-delete-hourly-snapshots
-  labels:
-    {{- include "cla-backend.labels" . | nindent 4 }}
-spec:
-  schedule: "0 7 * * *"
-  jobTemplate:
-    spec:
-      ttlSecondsAfterFinished: 7200
-      template:
-        spec:
-         securityContext:
-            runAsNonRoot: true
-            runAsUser: 1000
-            runAsGroup: 1000
-            fsGroup: 1000
-        containers:
-          - name: delete-hourly-snapshots
-            image:  "{{ .Values.image.repository }}:awscli:latest-v1"
-            command: ["sh", "/app/automate_database_delete.sh"]
-            securityContext:
-            runAsNonRoot: true
-            runAsUser: 1000
-            env:
-              {{ include "cla-backend.app.vars" . | nindent 12 }}
-            serviceAccountName: {{ include "cla-backend.serviceAccountName" . }}
-            restartPolicy: OnFailure

@@ -9,11 +9,15 @@ on:
         required: true
         type: string
       IMAGE_TAG:
-        required: false 
-        type: string 
-      DOCKERFILE_PATH:
-        required: false 
+        required: false
         type: string
+      DOCKERFILE_PATH:
+        required: false
+        type: string
+      DOCKER_CONTEXT:
+        required: false
+        type: string
+        default: "."
     secrets:
       ECR_ROLE_TO_ASSUME:
         required: true
@@ -74,7 +78,7 @@ jobs:
         id: docker-build
         uses: docker/build-push-action@d08e5c354a6adb9ed34480a06d141179aa583294 # v7.0.0
         with:
-          context: .
+          context: ${{ inputs.DOCKER_CONTEXT }}
           file: ${{ inputs.DOCKERFILE_PATH || './Dockerfile' }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}

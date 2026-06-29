@@ -143,7 +143,6 @@ metadata:
 
 spec:
   schedule: "0 * * * *"
-
   jobTemplate:
     spec:
       ttlSecondsAfterFinished: 7200
@@ -161,6 +160,44 @@ spec:
               image: "{{ .Values.image.repository }}:awscli-v1"
               imagePullPolicy: Always
               command: ["./automate_backup.sh"]
+              env:
+                {{- include "cla-backend.app.vars" . | nindent 16 }}
+              securityContext:
+                runAsNonRoot: true
+                runAsUser: 1000
+                runAsGroup: 1000
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                    - ALL
+
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}-delete-hourly-snapshots
+  labels:
+    {{- include "cla-backend.labels" . | nindent 4 }}
+
+spec:
+  schedule: "0 * * * *"
+  jobTemplate:
+    spec:
+      ttlSecondsAfterFinished: 7200
+      template:
+        spec:
+          serviceAccountName: {{ include "cla-backend.serviceAccountName" . }}
+          restartPolicy: OnFailure
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+            fsGroup: 1000
+          containers:
+            - name: hourly-snapshots
+              image: "{{ .Values.image.repository }}:awscli-v1"
+              imagePullPolicy: Always
+              command: ["./automate_database_delete.sh"]
               env:
                 {{- include "cla-backend.app.vars" . | nindent 16 }}
               securityContext:

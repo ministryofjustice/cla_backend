@@ -39,3 +39,5 @@ envVars:
     value: "http://cfe-civil.cfe-civil-production.svc.cluster.local"
 pdb:
   enabled: false
+backups:
+  enabled: false

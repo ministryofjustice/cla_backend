@@ -134,6 +134,7 @@ spec:
           restartPolicy: OnFailure
 
 ---
+{{- if .Values.backups.enabled -}}
 apiVersion: batch/v1
 kind: CronJob
 metadata:
@@ -170,8 +171,9 @@ spec:
                 capabilities:
                   drop:
                     - ALL
-
+{{- end }}
 ---
+{{- if .Values.backups.enabled -}}
 apiVersion: batch/v1
 kind: CronJob
 metadata:
@@ -208,3 +210,4 @@ spec:
                 capabilities:
                   drop:
                     - ALL
+{{- end }}

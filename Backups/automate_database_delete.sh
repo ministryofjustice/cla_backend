@@ -25,6 +25,7 @@ if [ "${#array[@]}" -gt "$SNAPSHOT_TO_KEEP" ]; then
     END=$((${#array[@]} - SNAPSHOT_TO_KEEP))
 
     for ((i=0; i<=END; i++)); do
+        echo "Deleting snapshots ${array[i]}"
         aws rds delete-db-snapshot \
             --region=eu-west-2 \
             --db-snapshot-identifier "${array[i]}"

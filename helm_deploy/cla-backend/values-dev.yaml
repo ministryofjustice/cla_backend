@@ -57,4 +57,4 @@ envVars:
 pdb:
   enabled: false
 takeManualSnapshots:
-  enabled: true
+  enabled: false

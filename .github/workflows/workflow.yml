@@ -68,8 +68,8 @@ jobs:
     secrets:
       ECR_ROLE_TO_ASSUME: ${{ secrets.CLA_BACKEND_ECR_ROLE_TO_ASSUME }}
 
-  build-and-push-aws:
-      name: Build
+  Build-aws-cli:
+      name: Build aws cli
       uses: ./.github/workflows/build.yml
       permissions:
         contents: read

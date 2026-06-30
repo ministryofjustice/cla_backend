@@ -19,7 +19,7 @@ snapshot_count=$(aws rds describe-db-snapshots --region=eu-west-2 --db-instance-
 array=($manual_snapshots)
 
 echo "There are ${#array[@]} hourly backups"
-echo "There are $snapshot_count automatic daily DB backups"
+echo "There are $snapshot_count automatic daily database backups"
 
 if [ "${#array[@]}" -gt "$SNAPSHOT_TO_KEEP" ]; then
     END=$((${#array[@]} - SNAPSHOT_TO_KEEP))

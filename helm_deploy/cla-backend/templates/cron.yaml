@@ -160,7 +160,7 @@ spec:
             - name: hourly-snapshots
               image: "{{ .Values.image.repository }}:awscli-v1"
               imagePullPolicy: Always
-              command: ["./automate_backup.sh"]
+              command: ["./create_manual_snapshot.sh"]
               env:
                 {{- include "cla-backend.app.vars" . | nindent 16 }}
               securityContext:
@@ -199,7 +199,7 @@ spec:
             - name: hourly-snapshots
               image: "{{ .Values.image.repository }}:awscli-v1"
               imagePullPolicy: Always
-              command: ["./automate_database_delete.sh"]
+              command: ["./cleanup_manual_snapshots.sh"]
               env:
                 {{- include "cla-backend.app.vars" . | nindent 16 }}
               securityContext:

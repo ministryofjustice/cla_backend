@@ -19,7 +19,7 @@ on:
         type: string
         default: "."
       TARGET:
-        required: True 
+        required: false 
         type: string
         default: null
 

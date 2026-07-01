@@ -78,6 +78,36 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
         self.assertItemsEqual(errors.keys(), expected_errors.keys())
         self.assertItemsEqual(errors, expected_errors)
 
+    def _test_method_phone_format_in_error(self, method, url):
+        data = self._get_default_post_data()
+        data["mobile_phone"] = "invalid-phone"
+        data["home_phone"] = "invalid-phone"
+
+        method_callable = getattr(self.client, method)
+        response = method_callable(url, data, HTTP_AUTHORIZATION=self.get_http_authorization())
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        expected_errors = {
+            "mobile_phone": [u"Enter a valid phone number"],
+            "home_phone": [u"Enter a valid phone number"],
+        }
+        errors = response.data
+        for field, messages in expected_errors.items():
+            self.assertIn(field, errors)
+            self.assertEqual(errors[field], messages)
+
+    def _test_method_postcode_format_in_error(self, method, url):
+        data = self._get_default_post_data()
+        data["postcode"] = "invalid-postcode"
+
+        method_callable = getattr(self.client, method)
+        response = method_callable(url, data, HTTP_AUTHORIZATION=self.get_http_authorization())
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        errors = response.data
+        self.assertIn("postcode", errors)
+        self.assertEqual(errors["postcode"], [u"Enter a valid postcode"])
+
     def assertPersonalDetailsEqual(self, data, obj):
         if data is None or obj is None:
             self.assertEqual(data, obj)
@@ -101,6 +131,14 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
     def test_methods_in_error(self):
         self._test_method_in_error("patch", self.detail_url)
         self._test_method_in_error("put", self.detail_url)
+
+    def test_phone_format_validation(self):
+        self._test_method_phone_format_in_error("patch", self.detail_url)
+        self._test_method_phone_format_in_error("put", self.detail_url)
+
+    def test_postcode_format_validation(self):
+        self._test_method_postcode_format_in_error("patch", self.detail_url)
+        self._test_method_postcode_format_in_error("put", self.detail_url)
 
         # CREATE
 

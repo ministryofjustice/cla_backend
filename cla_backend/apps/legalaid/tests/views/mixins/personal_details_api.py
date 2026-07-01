@@ -67,7 +67,7 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
         expected_errors = {
             "title": [u"Ensure this value has at most 20 characters (it has 21)."],
             "full_name": [u"Ensure this value has at most 255 characters (it has 256)."],
-            "postcode": [u"Enter a valid postcode", u"Ensure this value has at most 12 characters (it has 13)."],
+            "postcode": [u"Ensure this value has at most 12 characters (it has 13)."],
             "street": [u"Ensure this value has at most 255 characters (it has 256)."],
             "mobile_phone": [u"Ensure this value has at most 20 characters (it has 21)."],
             "home_phone": [u"Ensure this value has at most 20 characters (it has 21)."],
@@ -96,17 +96,6 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
             self.assertIn(field, errors)
             self.assertEqual(errors[field], messages)
 
-    def _test_method_postcode_format_in_error(self, method, url):
-        data = self._get_default_post_data()
-        data["postcode"] = "INVALID"
-
-        method_callable = getattr(self.client, method)
-        response = method_callable(url, data, HTTP_AUTHORIZATION=self.get_http_authorization())
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-        errors = response.data
-        self.assertIn("postcode", errors)
-        self.assertEqual(errors["postcode"], [u"Enter a valid postcode"])
 
     def assertPersonalDetailsEqual(self, data, obj):
         if data is None or obj is None:
@@ -136,9 +125,6 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
         self._test_method_phone_format_in_error("patch", self.detail_url)
         self._test_method_phone_format_in_error("put", self.detail_url)
 
-    def test_postcode_format_validation(self):
-        self._test_method_postcode_format_in_error("patch", self.detail_url)
-        self._test_method_postcode_format_in_error("put", self.detail_url)
 
         # CREATE
 

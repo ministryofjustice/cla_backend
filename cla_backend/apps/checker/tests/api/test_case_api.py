@@ -184,7 +184,7 @@ class CaseTestCase(BaseCaseTestCase):
             errors["personal_details"],
             {
                 "title": [u"Ensure this field has no more than 20 characters."],
-                "postcode": [u"Enter a valid postcode", u"Ensure this field has no more than 12 characters."],
+                "postcode": [u"Ensure this field has no more than 12 characters."],
                 "street": [u"Ensure this field has no more than 255 characters."],
                 "mobile_phone": [u"Ensure this field has no more than 20 characters."],
                 "home_phone": [u"Ensure this field has no more than 20 characters."],

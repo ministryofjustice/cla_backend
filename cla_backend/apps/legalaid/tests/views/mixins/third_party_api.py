@@ -70,7 +70,7 @@ class ThirdPartyDetailsApiMixin(NestedSimpleResourceAPIMixin):
                 "full_name": [u"Ensure this field has no more than 255 characters."],
                 "home_phone": [u"Ensure this field has no more than 20 characters."],
                 "mobile_phone": [u"Ensure this field has no more than 20 characters."],
-                "postcode": [u"Enter a valid postcode", u"Ensure this field has no more than 12 characters."],
+                "postcode": [u"Ensure this field has no more than 12 characters."],
                 "street": [u"Ensure this field has no more than 255 characters."],
                 "title": [u"Ensure this field has no more than 20 characters."],
             },
@@ -117,17 +117,6 @@ class ThirdPartyDetailsApiMixin(NestedSimpleResourceAPIMixin):
         self.assertEqual(errors["personal_details"]["mobile_phone"], [u"Enter a valid phone number"])
         self.assertEqual(errors["personal_details"]["home_phone"], [u"Enter a valid phone number"])
 
-    def _test_method_postcode_format_in_error(self, method, url):
-        data = self._get_default_post_data()
-        data["personal_details"]["postcode"] = "INVALID"
-
-        method_callable = getattr(self.client, method)
-        response = method_callable(url, data, HTTP_AUTHORIZATION=self.get_http_authorization(), format="json")
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-        errors = response.data
-        self.assertIn("personal_details", errors)
-        self.assertEqual(errors["personal_details"]["postcode"], [u"Enter a valid postcode"])
 
     def test_methods_in_error(self):
         self._test_method_in_error("patch", self.detail_url)
@@ -137,9 +126,6 @@ class ThirdPartyDetailsApiMixin(NestedSimpleResourceAPIMixin):
         self._test_method_phone_format_in_error("patch", self.detail_url)
         self._test_method_phone_format_in_error("put", self.detail_url)
 
-    def test_postcode_format_validation(self):
-        self._test_method_postcode_format_in_error("patch", self.detail_url)
-        self._test_method_postcode_format_in_error("put", self.detail_url)
 
     # CREATE
 

@@ -18,6 +18,11 @@ on:
         required: false
         type: string
         default: "."
+      TARGET:
+        required: True 
+        type: string
+        default: null
+
     secrets:
       ECR_ROLE_TO_ASSUME:
         required: true
@@ -84,3 +89,4 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          target: ${{ inputs.TARGET }}

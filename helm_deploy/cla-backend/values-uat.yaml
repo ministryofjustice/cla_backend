@@ -71,3 +71,5 @@ rateLimit:
   rpm: null
   burst: 1
   use429AsStatusCode: true
+takeManualSnapshots:
+  enabled: true

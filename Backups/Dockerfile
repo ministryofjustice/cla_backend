@@ -1,4 +1,4 @@
-FROM amazon/aws-cli:latest
+FROM amazon/aws-cli:2.35.13
 
 WORKDIR /tmp
 

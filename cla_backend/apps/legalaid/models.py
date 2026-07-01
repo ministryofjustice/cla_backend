@@ -58,11 +58,6 @@ _phone_validator = RegexValidator(
     message="Enter a valid phone number",
 )
 
-_postcode_validator = RegexValidator(
-    regex=r"^[A-Z]{1,2}\d[A-Z\d]?\s*\d[A-Z]{2}$",
-    message="Enter a valid postcode",
-    flags=re.IGNORECASE,
-)
 
 
 def _make_reference():
@@ -169,7 +164,7 @@ class PersonalDetails(CloneModelMixin, TimeStampedModel):
 
     title = models.CharField(max_length=20, blank=True, null=True)
     full_name = models.CharField(max_length=255, blank=True, null=True)
-    postcode = models.CharField(max_length=12, blank=True, null=True, validators=[_postcode_validator])
+    postcode = models.CharField(max_length=12, blank=True, null=True)
     street = models.CharField(max_length=255, blank=True, null=True)
     mobile_phone = models.CharField(max_length=20, blank=True, null=True, validators=[_phone_validator])
     home_phone = models.CharField(max_length=20, blank=True, validators=[_phone_validator])

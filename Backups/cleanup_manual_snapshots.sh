@@ -2,7 +2,7 @@
 
 echo "Logging into RDS"
 
-regex_manual='cla-backend-manual-snapshot'
+regex_manual='cla-backend-manual-hourly-snapshot'
 regex_automatic='rds:cloud-platform'
 
 regex_identifer='\..*'

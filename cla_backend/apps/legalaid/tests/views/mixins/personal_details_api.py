@@ -96,7 +96,6 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
             self.assertIn(field, errors)
             self.assertEqual(errors[field], messages)
 
-
     def assertPersonalDetailsEqual(self, data, obj):
         if data is None or obj is None:
             self.assertEqual(data, obj)
@@ -125,8 +124,7 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
         self._test_method_phone_format_in_error("patch", self.detail_url)
         self._test_method_phone_format_in_error("put", self.detail_url)
 
-
-        # CREATE
+    # CREATE
 
     def test_create_no_data(self):
         """

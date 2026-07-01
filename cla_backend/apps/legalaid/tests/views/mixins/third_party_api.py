@@ -70,7 +70,7 @@ class ThirdPartyDetailsApiMixin(NestedSimpleResourceAPIMixin):
                 "full_name": [u"Ensure this field has no more than 255 characters."],
                 "home_phone": [u"Ensure this field has no more than 20 characters."],
                 "mobile_phone": [u"Ensure this field has no more than 20 characters."],
-                "postcode": [u"Ensure this field has no more than 12 characters."],
+                "postcode": [u"Enter a valid postcode", u"Ensure this field has no more than 12 characters."],
                 "street": [u"Ensure this field has no more than 255 characters."],
                 "title": [u"Ensure this field has no more than 20 characters."],
             },
@@ -119,7 +119,7 @@ class ThirdPartyDetailsApiMixin(NestedSimpleResourceAPIMixin):
 
     def _test_method_postcode_format_in_error(self, method, url):
         data = self._get_default_post_data()
-        data["personal_details"]["postcode"] = "invalid-postcode"
+        data["personal_details"]["postcode"] = "INVALID"
 
         method_callable = getattr(self.client, method)
         response = method_callable(url, data, HTTP_AUTHORIZATION=self.get_http_authorization(), format="json")

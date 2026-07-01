@@ -1,5 +1,6 @@
 #!/bin/sh
 current_time=$(date "+%Y%m%d-%H%M")
+
 file_name="cla-backend-manual-hourly-snapshot"
 
 new_file_name=$file_name-$current_time

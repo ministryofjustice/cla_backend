@@ -49,7 +49,7 @@ class ThirdPartyDetailsApiMixin(NestedSimpleResourceAPIMixin):
         data = {
             "personal_details": {
                 "title": "1" * 21,
-                "full_name": "1" * 456,
+                "full_name": "1" * 256,
                 "postcode": "1" * 13,
                 "street": "1" * 256,
                 "mobile_phone": "1" * 21,
@@ -67,7 +67,7 @@ class ThirdPartyDetailsApiMixin(NestedSimpleResourceAPIMixin):
 
         expected_errors = {
             "personal_details": {
-                "full_name": [u"Ensure this field has no more than 400 characters."],
+                "full_name": [u"Ensure this field has no more than 255 characters."],
                 "home_phone": [u"Ensure this field has no more than 20 characters."],
                 "mobile_phone": [u"Ensure this field has no more than 20 characters."],
                 "postcode": [u"Ensure this field has no more than 12 characters."],
@@ -103,9 +103,27 @@ class ThirdPartyDetailsApiMixin(NestedSimpleResourceAPIMixin):
         if hasattr(self, "list_url") and self.list_url:
             self._test_delete_not_allowed(self.list_url)
 
+    def _test_method_phone_format_in_error(self, method, url):
+        data = self._get_default_post_data()
+        data["personal_details"]["mobile_phone"] = "invalid-phone"
+        data["personal_details"]["home_phone"] = "invalid-phone"
+
+        method_callable = getattr(self.client, method)
+        response = method_callable(url, data, HTTP_AUTHORIZATION=self.get_http_authorization(), format="json")
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        errors = response.data
+        self.assertIn("personal_details", errors)
+        self.assertEqual(errors["personal_details"]["mobile_phone"], [u"Enter a valid phone number"])
+        self.assertEqual(errors["personal_details"]["home_phone"], [u"Enter a valid phone number"])
+
     def test_methods_in_error(self):
         self._test_method_in_error("patch", self.detail_url)
         self._test_method_in_error("put", self.detail_url)
+
+    def test_phone_format_validation(self):
+        self._test_method_phone_format_in_error("patch", self.detail_url)
+        self._test_method_phone_format_in_error("put", self.detail_url)
 
     # CREATE
 

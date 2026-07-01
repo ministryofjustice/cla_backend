@@ -157,7 +157,7 @@ class PersonalDetails(CloneModelMixin, TimeStampedModel):
         ]
 
     title = models.CharField(max_length=20, blank=True, null=True)
-    full_name = models.CharField(max_length=400, blank=True, null=True)
+    full_name = models.CharField(max_length=255, blank=True, null=True)
     postcode = models.CharField(max_length=12, blank=True, null=True)
     street = models.CharField(max_length=255, blank=True, null=True)
     mobile_phone = models.CharField(max_length=20, blank=True, null=True)

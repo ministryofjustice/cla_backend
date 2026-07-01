@@ -53,7 +53,7 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
         """
         data = {
             "title": "1" * 21,
-            "full_name": "1" * 456,
+            "full_name": "1" * 256,
             "postcode": "1" * 13,
             "street": "1" * 256,
             "mobile_phone": "1" * 21,
@@ -66,7 +66,7 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
 
         expected_errors = {
             "title": [u"Ensure this value has at most 20 characters (it has 21)."],
-            "full_name": [u"Ensure this value has at most 400 characters (it has 456)."],
+            "full_name": [u"Ensure this value has at most 255 characters (it has 256)."],
             "postcode": [u"Ensure this value has at most 12 characters (it has 13)."],
             "street": [u"Ensure this value has at most 255 characters (it has 256)."],
             "mobile_phone": [u"Ensure this value has at most 20 characters (it has 21)."],

@@ -49,7 +49,7 @@ class ThirdPartyDetailsApiMixin(NestedSimpleResourceAPIMixin):
         data = {
             "personal_details": {
                 "title": "1" * 21,
-                "full_name": "1" * 456,
+                "full_name": "1" * 256,
                 "postcode": "1" * 13,
                 "street": "1" * 256,
                 "mobile_phone": "1" * 21,
@@ -67,7 +67,7 @@ class ThirdPartyDetailsApiMixin(NestedSimpleResourceAPIMixin):
 
         expected_errors = {
             "personal_details": {
-                "full_name": [u"Ensure this field has no more than 400 characters."],
+                "full_name": [u"Ensure this field has no more than 255 characters."],
                 "home_phone": [u"Ensure this field has no more than 20 characters."],
                 "mobile_phone": [u"Ensure this field has no more than 20 characters."],
                 "postcode": [u"Ensure this field has no more than 12 characters."],

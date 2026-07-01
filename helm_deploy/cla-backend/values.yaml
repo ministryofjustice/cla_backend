@@ -54,6 +54,20 @@ ingress:
 localPostgres:
   enabled: false
 
+appWaitForDb:
+  enabled: false
+
+localPostgresProbes:
+  enabled: false
+  startup:
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 30
+  readiness:
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 12
+
 metabase:
   enabled: true
   host: "cla-dashboard"

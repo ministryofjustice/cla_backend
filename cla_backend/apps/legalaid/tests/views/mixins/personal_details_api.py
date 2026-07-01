@@ -67,7 +67,7 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
         expected_errors = {
             "title": [u"Ensure this value has at most 20 characters (it has 21)."],
             "full_name": [u"Ensure this value has at most 255 characters (it has 256)."],
-            "postcode": [u"Ensure this value has at most 12 characters (it has 13)."],
+            "postcode": [u"Enter a valid postcode", u"Ensure this value has at most 12 characters (it has 13)."],
             "street": [u"Ensure this value has at most 255 characters (it has 256)."],
             "mobile_phone": [u"Ensure this value has at most 20 characters (it has 21)."],
             "home_phone": [u"Ensure this value has at most 20 characters (it has 21)."],
@@ -98,7 +98,7 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
 
     def _test_method_postcode_format_in_error(self, method, url):
         data = self._get_default_post_data()
-        data["postcode"] = "invalid-postcode"
+        data["postcode"] = "INVALID"
 
         method_callable = getattr(self.client, method)
         response = method_callable(url, data, HTTP_AUTHORIZATION=self.get_http_authorization())

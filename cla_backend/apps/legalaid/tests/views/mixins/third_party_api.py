@@ -117,7 +117,6 @@ class ThirdPartyDetailsApiMixin(NestedSimpleResourceAPIMixin):
         self.assertEqual(errors["personal_details"]["mobile_phone"], [u"Enter a valid phone number"])
         self.assertEqual(errors["personal_details"]["home_phone"], [u"Enter a valid phone number"])
 
-
     def test_methods_in_error(self):
         self._test_method_in_error("patch", self.detail_url)
         self._test_method_in_error("put", self.detail_url)
@@ -125,7 +124,6 @@ class ThirdPartyDetailsApiMixin(NestedSimpleResourceAPIMixin):
     def test_phone_format_validation(self):
         self._test_method_phone_format_in_error("patch", self.detail_url)
         self._test_method_phone_format_in_error("put", self.detail_url)
-
 
     # CREATE
 

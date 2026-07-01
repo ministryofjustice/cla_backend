@@ -59,7 +59,6 @@ _phone_validator = RegexValidator(
 )
 
 
-
 def _make_reference():
     from django.utils.crypto import get_random_string
 

@@ -53,7 +53,7 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
         """
         data = {
             "title": "1" * 21,
-            "full_name": "1" * 456,
+            "full_name": "1" * 256,
             "postcode": "1" * 13,
             "street": "1" * 256,
             "mobile_phone": "1" * 21,
@@ -66,7 +66,7 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
 
         expected_errors = {
             "title": [u"Ensure this value has at most 20 characters (it has 21)."],
-            "full_name": [u"Ensure this value has at most 400 characters (it has 456)."],
+            "full_name": [u"Ensure this value has at most 255 characters (it has 256)."],
             "postcode": [u"Ensure this value has at most 12 characters (it has 13)."],
             "street": [u"Ensure this value has at most 255 characters (it has 256)."],
             "mobile_phone": [u"Ensure this value has at most 20 characters (it has 21)."],
@@ -77,6 +77,24 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
         errors = response.data
         self.assertItemsEqual(errors.keys(), expected_errors.keys())
         self.assertItemsEqual(errors, expected_errors)
+
+    def _test_method_phone_format_in_error(self, method, url):
+        data = self._get_default_post_data()
+        data["mobile_phone"] = "invalid-phone"
+        data["home_phone"] = "invalid-phone"
+
+        method_callable = getattr(self.client, method)
+        response = method_callable(url, data, HTTP_AUTHORIZATION=self.get_http_authorization())
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        expected_errors = {
+            "mobile_phone": [u"Enter a valid phone number"],
+            "home_phone": [u"Enter a valid phone number"],
+        }
+        errors = response.data
+        for field, messages in expected_errors.items():
+            self.assertIn(field, errors)
+            self.assertEqual(errors[field], messages)
 
     def assertPersonalDetailsEqual(self, data, obj):
         if data is None or obj is None:
@@ -102,7 +120,11 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
         self._test_method_in_error("patch", self.detail_url)
         self._test_method_in_error("put", self.detail_url)
 
-        # CREATE
+    def test_phone_format_validation(self):
+        self._test_method_phone_format_in_error("patch", self.detail_url)
+        self._test_method_phone_format_in_error("put", self.detail_url)
+
+    # CREATE
 
     def test_create_no_data(self):
         """

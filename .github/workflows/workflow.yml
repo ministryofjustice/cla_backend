@@ -65,8 +65,24 @@ jobs:
     with:
       ECR_REGION: ${{vars.CLA_BACKEND_ECR_REGION}}
       ECR_REPOSITORY: ${{vars.CLA_BACKEND_ECR_REPOSITORY}}
+      TARGET: production
     secrets:
       ECR_ROLE_TO_ASSUME: ${{ secrets.CLA_BACKEND_ECR_ROLE_TO_ASSUME }}
+
+  Build-aws-cli:
+      name: Build aws cli
+      uses: ./.github/workflows/build.yml
+      permissions:
+        contents: read
+        id-token: write
+      with:
+        ECR_REGION: ${{vars.CLA_BACKEND_ECR_REGION}}
+        ECR_REPOSITORY: ${{vars.CLA_BACKEND_ECR_REPOSITORY}}
+        IMAGE_TAG: awscli-v1
+        DOCKERFILE_PATH: ./Backups/Dockerfile
+        DOCKER_CONTEXT: ./Backups
+      secrets:
+        ECR_ROLE_TO_ASSUME: ${{ secrets.CLA_BACKEND_ECR_ROLE_TO_ASSUME }}
 
   snyk-image-scan:
     name: Snyk Image Scan

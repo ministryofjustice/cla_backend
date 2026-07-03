@@ -42,8 +42,8 @@ class ArticleCategory(TimeStampedModel):
 
 
 class ArticleCategoryMatrix(TimeStampedModel):
-    article = models.ForeignKey(Article)
-    article_category = models.ForeignKey(ArticleCategory)
+    article = models.ForeignKey(Article, on_delete=models.CASCADE)
+    article_category = models.ForeignKey(ArticleCategory, on_delete=models.CASCADE)
     preferred_signpost = models.BooleanField(default=False)
 
     def __unicode__(self):
@@ -54,6 +54,6 @@ class ArticleCategoryMatrix(TimeStampedModel):
 
 
 class TelephoneNumber(TimeStampedModel):
-    article = models.ForeignKey("Article")
+    article = models.ForeignKey("Article", on_delete=models.CASCADE)
     name = models.CharField(max_length=100, blank=True, null=True)
     number = models.CharField(max_length=25)

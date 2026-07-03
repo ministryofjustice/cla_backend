@@ -9,7 +9,7 @@ from cla_backend.libs.aws.s3 import ReportsS3
 
 
 class Export(TimeStampedModel):
-    user = models.ForeignKey("auth.User")
+    user = models.ForeignKey("auth.User", on_delete=models.CASCADE)
     path = models.CharField(max_length=255, null=True)
     status = models.CharField(max_length=10, choices=EXPORT_STATUS)
     task_id = models.CharField(max_length=100)

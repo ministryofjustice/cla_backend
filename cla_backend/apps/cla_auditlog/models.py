@@ -9,5 +9,5 @@ class AuditLog(TimeStampedModel):
         # constant, db_id, friendly string
         ("VIEWED", "VIEWED", "viewed")
     )
-    user = models.ForeignKey("auth.User", blank=True, null=True)
+    user = models.ForeignKey("auth.User", blank=True, null=True, on_delete=models.CASCADE)
     action = models.CharField(choices=ACTIONS, db_index=True, max_length=50)

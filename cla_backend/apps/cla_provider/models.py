@@ -51,7 +51,7 @@ class WorkingDays(models.Model):
     This model represents the working days for Education specialist providers, to align with the changes required as part of LGA-2904.
     """
 
-    provider_allocation = models.OneToOneField("ProviderAllocation")
+    provider_allocation = models.OneToOneField("ProviderAllocation", on_delete=models.CASCADE)
     monday = models.BooleanField(default=DEFAULT_WORKING_DAYS["monday"])
     tuesday = models.BooleanField(default=DEFAULT_WORKING_DAYS["tuesday"])
     wednesday = models.BooleanField(default=DEFAULT_WORKING_DAYS["wednesday"])
@@ -124,8 +124,8 @@ class ProviderAllocationManager(models.Manager):
 
 
 class ProviderAllocation(TimeStampedModel):
-    provider = models.ForeignKey(Provider)
-    category = models.ForeignKey("legalaid.Category")
+    provider = models.ForeignKey(Provider, on_delete=models.CASCADE)
+    category = models.ForeignKey("legalaid.Category", on_delete=models.CASCADE)
     weighted_distribution = models.FloatField()  # see XXXXXXXXXXXX
 
     def is_working_today(self):
@@ -184,16 +184,16 @@ class ProviderPreAllocationManager(models.Manager):
 
 
 class ProviderPreAllocation(TimeStampedModel):
-    provider = models.ForeignKey(Provider)
-    category = models.ForeignKey("legalaid.Category")
-    case = models.ForeignKey("legalaid.Case")
+    provider = models.ForeignKey(Provider, on_delete=models.CASCADE)
+    category = models.ForeignKey("legalaid.Category", on_delete=models.CASCADE)
+    case = models.ForeignKey("legalaid.Case", on_delete=models.CASCADE)
 
     objects = ProviderPreAllocationManager()
 
 
 class Staff(TimeStampedModel):
-    user = models.OneToOneField("auth.User")
-    provider = models.ForeignKey(Provider)
+    user = models.OneToOneField("auth.User", on_delete=models.CASCADE)
+    provider = models.ForeignKey(Provider, on_delete=models.CASCADE)
     is_manager = models.BooleanField(default=False)
 
     chs_organisation = models.CharField(
@@ -255,8 +255,8 @@ class OutOfHoursRotaManager(models.Manager):
 class OutOfHoursRota(TimeStampedModel):
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
-    category = models.ForeignKey("legalaid.Category")
-    provider = models.ForeignKey(Provider)
+    category = models.ForeignKey("legalaid.Category", on_delete=models.CASCADE)
+    provider = models.ForeignKey(Provider, on_delete=models.CASCADE)
 
     objects = OutOfHoursRotaManager()
 
@@ -296,9 +296,9 @@ class Feedback(TimeStampedModel):
         _allow_analytics = True
 
     reference = UUIDField(auto=True, unique=True)
-    case = models.ForeignKey("legalaid.Case", related_name="provider_feedback")
+    case = models.ForeignKey("legalaid.Case", related_name="provider_feedback", on_delete=models.CASCADE)
 
-    created_by = models.ForeignKey(Staff)
+    created_by = models.ForeignKey(Staff, on_delete=models.CASCADE)
     comment = models.TextField()
 
     justified = models.BooleanField(default=False)
@@ -309,8 +309,8 @@ class Feedback(TimeStampedModel):
 
 class CSVUpload(TimeStampedModel):
 
-    provider = models.ForeignKey(Provider)
-    created_by = models.ForeignKey(Staff)
+    provider = models.ForeignKey(Provider, on_delete=models.CASCADE)
+    created_by = models.ForeignKey(Staff, on_delete=models.CASCADE)
     comment = models.TextField(blank=True, null=True)
     body = JSONField()
     month = models.DateField(validators=[validate_first_of_month])

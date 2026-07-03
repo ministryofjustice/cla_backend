@@ -1,5 +1,5 @@
 # coding=utf-8
-from model_mommy.recipe import Recipe
+from model_bakery.recipe import Recipe
 
 from ..models import DiversityDataCheck
 

@@ -1,4 +1,4 @@
-from model_mommy.recipe import Recipe
+from model_bakery.recipe import Recipe
 
 from cla_common.constants import DIAGNOSIS_SCOPE
 from diagnosis.models import DiagnosisTraversal

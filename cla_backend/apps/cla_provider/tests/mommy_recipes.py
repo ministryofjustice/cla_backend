@@ -1,4 +1,4 @@
-from model_mommy.recipe import Recipe, seq, foreign_key
+from model_bakery.recipe import Recipe, seq, foreign_key
 from ..models import Provider, ProviderAllocation, OutOfHoursRota, Staff, Feedback, CSVUpload, WorkingDays
 
 

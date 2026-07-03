@@ -1,6 +1,6 @@
 # coding=utf-8
 import json
-from django.core.management.base import NoArgsCommand
+from django.core.management.base import BaseCommand
 from django.conf import settings
 from django.db import connection
 
@@ -36,11 +36,11 @@ OBFUSCATED_FIELDS = {
 }
 
 
-class Command(NoArgsCommand):
+class Command(BaseCommand):
 
     help = "Obfuscate all sensitive data in the database"
 
-    def handle_noargs(self, *args, **kwargs):
+    def handle(self, *args, **options):
         if settings.CLA_ENV != "prod":
             with connection.cursor() as cursor:
                 for model, field_names in OBFUSCATED_FIELDS.items():

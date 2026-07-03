@@ -1,7 +1,7 @@
 # coding=utf-8
 import datetime
 import pytz
-from model_mommy.recipe import Recipe, seq
+from model_bakery.recipe import Recipe, seq
 
 from ..models import Notification
 

@@ -1,5 +1,5 @@
 import datetime
-from model_mommy.recipe import Recipe, foreign_key
+from model_bakery.recipe import Recipe, foreign_key
 
 from ..models import ReasonForContacting, ReasonForContactingCategory, CallbackTimeSlot, ScopeTraversal
 

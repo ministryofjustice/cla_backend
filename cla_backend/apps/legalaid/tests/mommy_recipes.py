@@ -1,4 +1,4 @@
-from model_mommy.recipe import Recipe, seq, foreign_key
+from model_bakery.recipe import Recipe, seq, foreign_key
 
 from cla_common.money_interval.models import MoneyInterval
 

@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from model_mommy.recipe import Recipe
+from model_bakery.recipe import Recipe
 
 from legalaid.admin_support.forms import CategoryModelForm
 from legalaid.models import Category

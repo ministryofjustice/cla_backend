@@ -75,7 +75,7 @@ SPECIALIST_USER_ALERT_EMAILS = []
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "ENGINE": "django.db.backends.postgresql",
         "NAME": os.environ.get("DB_NAME", "cla_backend"),
         "USER": os.environ.get("DB_USER", "postgres"),
         "PASSWORD": os.environ.get("DB_PASSWORD", ""),

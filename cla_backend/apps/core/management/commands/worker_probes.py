@@ -1,11 +1,11 @@
 from django.conf import settings
-from django.core.management.base import NoArgsCommand
+from django.core.management.base import BaseCommand
 from cla_backend.celery import app as celery
 from legalaid.models import Case
 
 
-class Command(NoArgsCommand):
-    def handle_noargs(self, **options):
+class Command(BaseCommand):
+    def handle(self, *args, **options):
         self.celery_probe()
         self.database_probe()
 

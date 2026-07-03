@@ -1,12 +1,12 @@
 from django.conf import settings
-from django.core.management.base import NoArgsCommand
+from django.core.management.base import BaseCommand
 from django.utils.html import strip_tags
 from six import text_type
 
 from diagnosis.graph import get_graph
 
 
-class Command(NoArgsCommand):
+class Command(BaseCommand):
     """
     Prints a map of possible paths that can be taken through the scope checker graph,
     useful for determining meaning of URL paths in Public e.g. from Google Analytics
@@ -14,7 +14,7 @@ class Command(NoArgsCommand):
 
     help = "Prints a map of possible paths that can be taken through the scope checker graph"
 
-    def handle_noargs(self, *args, **options):
+    def handle(self, *args, **options):
         graph = get_graph(settings.CHECKER_DIAGNOSIS_FILE_NAME)
         paths = dict()
 

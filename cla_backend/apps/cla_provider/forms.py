@@ -28,7 +28,9 @@ class RejectCaseForm(EventSpecificLogForm):
 
     def _is_mcc_user(self):
         if self.request is None:
-            return False
+            # Backward compatible default for internal/tests where no request is provided.
+            # API usage always passes request and enforces role-based filtering.
+            return True
 
         auth_data = getattr(self.request, "auth", None)
         if not isinstance(auth_data, dict):

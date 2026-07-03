@@ -388,7 +388,7 @@ class RejectCaseTestCase(ExplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
             self.url,
             data=data,
             format="json",
-            HTTP_AUTHORIZATION="Bearer %s" % self.token,
+            HTTP_AUTHORIZATION=self.get_http_authorization()
         )
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

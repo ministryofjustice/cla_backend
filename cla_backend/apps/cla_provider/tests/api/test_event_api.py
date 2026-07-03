@@ -17,10 +17,10 @@ class RejectCaseEventVisibilityTestCase(CLAProviderAuthBaseApiTestMixin, APITest
         super(RejectCaseEventVisibilityTestCase, self).setUp()
         self.reject_event_url = reverse("cla_provider:event-detail", args=(), kwargs={"action": "reject_case"})
 
-    def test_chs_users_do_not_see_mcc_only_reject_codes(self):
+    def test_non_mcc_users_do_not_see_mcc_only_reject_codes(self):
         response = self.client.get(
             self.reject_event_url,
-            HTTP_AUTHORIZATION="Bearer %s" % self.token,
+            HTTP_AUTHORIZATION=self.get_http_authorization(),
             format="json",
         )
 
@@ -34,7 +34,7 @@ class RejectCaseEventVisibilityTestCase(CLAProviderAuthBaseApiTestMixin, APITest
     def test_mcc_users_see_mcc_only_reject_codes(self, _mock_is_mcc_user):
         response = self.client.get(
             self.reject_event_url,
-            HTTP_AUTHORIZATION="Bearer %s" % self.token,
+            HTTP_AUTHORIZATION=self.get_http_authorization(),
             format="json",
         )
 

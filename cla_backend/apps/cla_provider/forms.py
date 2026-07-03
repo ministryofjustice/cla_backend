@@ -45,7 +45,7 @@ class RejectCaseForm(EventSpecificLogForm):
     def clean_event_code(self):
         event_code = self.cleaned_data["event_code"]
         if event_code in self.MCC_ONLY_EVENT_CODES and not self._is_mcc_user():
-            raise forms.ValidationError("Select a valid choice. That choice is not one of the available choices.")
+            raise forms.ValidationError(self.fields["event_code"].error_messages["invalid_choice"])
         return event_code
 
     def save(self, user):

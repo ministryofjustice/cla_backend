@@ -210,6 +210,9 @@ AUTHENTICATION_BACKENDS = (
 if not DEBUG:
     MIDDLEWARE_CLASSES += ("csp.middleware.CSPMiddleware",)
 
+# Django 2+ uses MIDDLEWARE; keep legacy MIDDLEWARE_CLASSES as source of truth.
+MIDDLEWARE = MIDDLEWARE_CLASSES
+
 ROOT_URLCONF = "cla_backend.urls"
 
 # Python dotted path to the WSGI application used by Django's runserver.
@@ -274,6 +277,8 @@ if BACKEND_ENABLED:
     INSTALLED_APPS += ("rest_framework", "oauth2_provider")
 if ADMIN_ENABLED:
     INSTALLED_APPS += ("django.contrib.admin", "reports")
+
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 OAUTH2_PROVIDER_APPLICATION_MODEL = "oauth2_provider.Application"
 

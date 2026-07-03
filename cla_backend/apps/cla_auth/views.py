@@ -7,7 +7,7 @@ from django.http import HttpResponse
 from django.utils import timezone
 from django.contrib.auth.models import User
 
-from ipware.ip import get_ip
+from ipware import get_client_ip
 from rest_framework.exceptions import Throttled
 
 from call_centre.models import Operator
@@ -165,8 +165,9 @@ class AccessTokenView(Oauth2AccessTokenView):
             raise OAuth2Error("locked_out")
 
     def _get_request_log_extras(self, request):
+        ip_address, _ = get_client_ip(request)
         return {
-            "IP": get_ip(request),
+            "IP": ip_address,
             "CLIENT_ID": request.POST.get("client_id"),
             "GRANT_TYPE": request.POST.get("grant_type"),
             "HTTP_REFERER": request.META.get("HTTP_REFERER"),

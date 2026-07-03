@@ -2,14 +2,18 @@ from collections import OrderedDict
 from django.core.exceptions import ImproperlyConfigured
 from django.urls import NoReverseMatch
 from rest_framework import views
-from rest_framework.routers import BaseRouter, flatten, replace_methodname
+from rest_framework.routers import BaseRouter, flatten
 from rest_framework.urlpatterns import format_suffix_patterns
 from cla_backend.libs.django_compat import url
 from rest_framework.reverse import reverse
 from rest_framework.response import Response
 
 from rest_framework_nested.routers import NestedSimpleRouter as OriginalNestedSimpleRouter
-from rest_framework.routers import Route, DynamicDetailRoute, DynamicListRoute
+from rest_framework.routers import Route, DynamicRoute
+
+
+def replace_methodname(route_pattern, methodname):
+    return route_pattern.replace("{methodname}", methodname).replace("{methodnamehyphen}", methodname.replace("_", "-"))
 
 
 class NestedSimpleRouter(OriginalNestedSimpleRouter):
@@ -18,10 +22,10 @@ class NestedSimpleRouter(OriginalNestedSimpleRouter):
 
         return parent_viewset_dict.get(self.parent_prefix)
 
-    def register(self, prefix, viewset, base_name=None):
+    def register(self, prefix, viewset, basename=None):
         viewset.parent = self.get_parent_viewset()
         viewset.parent_prefix = self.parent_prefix
-        return super(NestedSimpleRouter, self).register(prefix, viewset, base_name)
+        return super(NestedSimpleRouter, self).register(prefix, viewset, basename=basename)
 
 
 class NestedCLARouter(NestedSimpleRouter):
@@ -38,11 +42,12 @@ class NestedCLARouter(NestedSimpleRouter):
                 "post": "create",
             },
             name="{basename}-detail",
+            detail=True,
             initkwargs={"suffix": "Instance"},
         ),
         # Dynamically generated routes.
         # Generated using @detail_route or @list_route decorators on methods of the viewset.
-        DynamicDetailRoute(url=r"^{prefix}/{methodname}/$", name="{basename}-{methodnamehyphen}", initkwargs={}),
+        DynamicRoute(url=r"^{prefix}/{methodname}/$", name="{basename}-{methodnamehyphen}", detail=True, initkwargs={}),
     ]
 
 
@@ -58,26 +63,29 @@ class AdvancedSimpleRouter(BaseRouter):
             url=r"^{prefix}{trailing_slash}$",
             mapping={"get": "list", "post": "create"},
             name="{basename}-list",
+            detail=False,
             initkwargs={"suffix": "List"},
         ),
         # Dynamically generated list routes.
         # Generated using @list_route decorator
         # on methods of the viewset.
-        DynamicListRoute(
-            url=r"^{prefix}/{methodname}{trailing_slash}$", name="{basename}-{methodnamehyphen}", initkwargs={}
+        DynamicRoute(
+            url=r"^{prefix}/{methodname}{trailing_slash}$", name="{basename}-{methodnamehyphen}", detail=False, initkwargs={}
         ),
         # Detail route.
         Route(
             url=r"^{prefix}/{lookup}{trailing_slash}$",
             mapping={"get": "retrieve", "put": "update", "patch": "partial_update", "delete": "destroy"},
             name="{basename}-detail",
+            detail=True,
             initkwargs={"suffix": "Instance"},
         ),
         # Dynamically generated detail routes.
         # Generated using @detail_route decorator on methods of the viewset.
-        DynamicDetailRoute(
+        DynamicRoute(
             url=r"^{prefix}/{lookup}/{methodname}{trailing_slash}$",
             name="{basename}-{methodnamehyphen}",
+            detail=True,
             initkwargs={},
         ),
     ]
@@ -106,6 +114,9 @@ class AdvancedSimpleRouter(BaseRouter):
         )
 
         return model_cls._meta.object_name.lower()
+
+    def get_default_basename(self, viewset):
+        return self.get_default_base_name(viewset)
 
     def get_routes(self, viewset):
         """
@@ -138,9 +149,9 @@ class AdvancedSimpleRouter(BaseRouter):
 
         ret = []
         for route in self.routes:
-            if isinstance(route, DynamicDetailRoute):
-                # Dynamic detail routes (@detail_route decorator)
-                for httpmethods, methodname in detail_routes:
+            if isinstance(route, DynamicRoute):
+                dynamic_routes = detail_routes if route.detail else list_routes
+                for httpmethods, methodname in dynamic_routes:
                     initkwargs = route.initkwargs.copy()
                     initkwargs.update(getattr(viewset, methodname).kwargs)
                     ret.append(
@@ -148,19 +159,7 @@ class AdvancedSimpleRouter(BaseRouter):
                             url=replace_methodname(route.url, methodname),
                             mapping=dict((httpmethod, methodname) for httpmethod in httpmethods),
                             name=replace_methodname(route.name, methodname),
-                            initkwargs=initkwargs,
-                        )
-                    )
-            elif isinstance(route, DynamicListRoute):
-                # Dynamic list routes (@list_route decorator)
-                for httpmethods, methodname in list_routes:
-                    initkwargs = route.initkwargs.copy()
-                    initkwargs.update(getattr(viewset, methodname).kwargs)
-                    ret.append(
-                        Route(
-                            url=replace_methodname(route.url, methodname),
-                            mapping=dict((httpmethod, methodname) for httpmethod in httpmethods),
-                            name=replace_methodname(route.name, methodname),
+                            detail=route.detail,
                             initkwargs=initkwargs,
                         )
                     )

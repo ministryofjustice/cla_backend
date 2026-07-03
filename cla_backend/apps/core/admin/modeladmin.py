@@ -11,6 +11,7 @@ from django.http import HttpResponseRedirect
 from django.utils.html import escape
 from django.contrib import messages
 from django.contrib.auth.forms import AdminPasswordChangeForm
+from django.urls import re_path
 
 from cla_auth.models import AccessAttempt
 
@@ -61,13 +62,10 @@ class OneToOneUserAdmin(admin.ModelAdmin):
         obj.save()
 
     def get_urls(self):
-        from cla_backend.libs.django_compat import patterns
-
-        urls = patterns(
-            "",
-            (r"^(\d+)/password/$", self.admin_site.admin_view(self.user_change_password)),
-            (r"^(\d+)/reset-lockout/$", self.admin_site.admin_view(self.reset_lockout)),
-        )
+        urls = [
+            re_path(r"^(\d+)/password/$", self.admin_site.admin_view(self.user_change_password)),
+            re_path(r"^(\d+)/reset-lockout/$", self.admin_site.admin_view(self.reset_lockout)),
+        ]
         return urls + super(OneToOneUserAdmin, self).get_urls()
 
     @require_POST_m
@@ -111,7 +109,7 @@ class OneToOneUserAdmin(admin.ModelAdmin):
             "adminForm": adminForm,
             "form_url": form_url,
             "form": form,
-            "is_popup": IS_POPUP_VAR in request.REQUEST,
+            "is_popup": IS_POPUP_VAR in request.GET,
             "add": True,
             "change": False,
             "has_delete_permission": False,

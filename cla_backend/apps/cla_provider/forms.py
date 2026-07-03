@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import Form
-from django.forms.util import ErrorList
+from django.forms.utils import ErrorList
 from django.core.exceptions import NON_FIELD_ERRORS
 from django.db import transaction
 

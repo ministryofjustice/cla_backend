@@ -3,7 +3,7 @@ from cla_eventlog.forms import BaseCaseLogForm
 from django import forms
 from legalaid.models import Category
 from django.db import transaction
-from django.forms.util import ErrorList
+from django.forms.utils import ErrorList
 from django.core.exceptions import NON_FIELD_ERRORS
 
 

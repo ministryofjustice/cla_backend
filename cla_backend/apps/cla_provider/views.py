@@ -14,8 +14,8 @@ from django.shortcuts import get_object_or_404
 from guidance.views import BaseGuidanceNoteViewSet
 from legalaid.permissions import IsManagerOrMePermission
 
+from core.drf.decorators import detail_route
 from rest_framework import mixins
-from rest_framework.decorators import detail_route
 from rest_framework.response import Response as DRFResponse
 from rest_framework.filters import SearchFilter
 

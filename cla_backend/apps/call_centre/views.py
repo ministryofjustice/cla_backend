@@ -10,14 +10,14 @@ from django.db.models import Q
 from django.db import transaction
 from django.utils import six, timezone
 from django.shortcuts import get_object_or_404
+from django_filters.rest_framework import DjangoFilterBackend
 from cla_eventlog import event_registry
 from historic.models import CaseArchived
 from legalaid.permissions import IsManagerOrMePermission
 
 from rest_framework import viewsets, mixins, status
-from rest_framework.decorators import detail_route, list_route
 from rest_framework.response import Response as DRFResponse
-from rest_framework.filters import OrderingFilter, DjangoFilterBackend, SearchFilter, BaseFilterBackend
+from rest_framework.filters import OrderingFilter, SearchFilter, BaseFilterBackend
 import operator
 from django.db import models
 
@@ -27,6 +27,7 @@ from cla_eventlog.views import BaseEventViewSet, BaseLogViewSet
 from cla_provider.helpers import ProviderAllocationHelper, notify_case_assigned
 
 from core.drf.mixins import FormActionMixin, ClaCreateModelMixin, ClaUpdateModelMixin
+from core.drf.decorators import detail_route, list_route
 from core.drf.viewsets import CompatGenericViewSet
 from core.drf.paginator import StandardResultsSetPagination
 from notifications.views import BaseNotificationViewSet

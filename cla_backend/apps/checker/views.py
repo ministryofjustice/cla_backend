@@ -3,12 +3,12 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from rest_framework import mixins
 from rest_framework.views import APIView
-from rest_framework.decorators import detail_route
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response as DRFResponse
 from rest_framework.exceptions import ParseError
 
 from core.models import get_web_user
+from core.drf.decorators import detail_route
 from core.drf.mixins import ClaCreateModelMixin, ClaUpdateModelMixin
 from core.drf.viewsets import CompatGenericViewSet
 from diagnosis.views import DiagnosisModelMixin

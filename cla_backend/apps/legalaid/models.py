@@ -174,7 +174,7 @@ class PersonalDetails(CloneModelMixin, TimeStampedModel):
     contact_for_research_via = models.CharField(
         max_length=10, default=RESEARCH_CONTACT_VIA.PHONE, choices=RESEARCH_CONTACT_VIA, blank=True, null=True
     )
-    contact_for_research_methods = models.ManyToManyField(ContactResearchMethod, null=True, blank=True)
+    contact_for_research_methods = models.ManyToManyField(ContactResearchMethod, blank=True)
     vulnerable_user = models.NullBooleanField(blank=True, null=True)
     safe_to_contact = models.CharField(
         max_length=30, default=CONTACT_SAFETY.SAFE, choices=CONTACT_SAFETY, blank=True, null=True
@@ -760,9 +760,7 @@ class Case(TimeStampedModel):
 
     media_code = models.ForeignKey(MediaCode, blank=True, null=True, on_delete=models.CASCADE)
 
-    alternative_help_articles = models.ManyToManyField(
-        "knowledgebase.Article", through="CaseKnowledgebaseAssignment", null=True, blank=True
-    )
+    alternative_help_articles = models.ManyToManyField("knowledgebase.Article", through="CaseKnowledgebaseAssignment", blank=True)
 
     outcome_code = models.CharField(max_length=50, blank=True)
     outcome_code_id = models.IntegerField(null=True, blank=True)

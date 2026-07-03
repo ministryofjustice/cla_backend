@@ -1,6 +1,7 @@
+import uuid
+
 from django.db import models
 from jsonfield import JSONField
-from uuidfield import UUIDField
 from model_utils.models import TimeStampedModel
 
 from cla_common.constants import DIAGNOSIS_SCOPE, MATTER_TYPE_LEVELS
@@ -19,7 +20,7 @@ class DiagnosisTraversal(TimeStampedModel):
     class Analytics:
         _allow_analytics = True
 
-    reference = UUIDField(auto=True, unique=True)
+    reference = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     nodes = JSONField(null=True, blank=True)
     current_node_id = models.CharField(blank=True, max_length=50)
     graph_version = models.CharField(blank=True, max_length=50)

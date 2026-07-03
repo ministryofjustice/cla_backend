@@ -1,13 +1,13 @@
 import json
 import logging
 import datetime
+import uuid
 import re
 from django.template.defaultfilters import date as date_filter
 from django.utils import timezone
 
 from jsonfield import JSONField
 
-from uuidfield import UUIDField
 from django.conf import settings
 from django.core.validators import MaxValueValidator, RegexValidator
 from django.db import models
@@ -137,7 +137,7 @@ class ContactResearchMethod(CloneModelMixin, TimeStampedModel):
         _allow_analytics = True
 
     method = models.CharField(max_length=10)
-    reference = UUIDField(auto=True, unique=True)
+    reference = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
 
     def __unicode__(self):
         return u"%s" % self.method
@@ -184,7 +184,7 @@ class PersonalDetails(CloneModelMixin, TimeStampedModel):
     )
     case_count = models.PositiveSmallIntegerField(default=0)
 
-    reference = UUIDField(auto=True, unique=True)
+    reference = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     diversity = models.BinaryField(blank=True, null=True, editable=False)
     diversity_modified = models.DateTimeField(auto_now=False, blank=True, null=True, editable=False)
 
@@ -261,7 +261,7 @@ class ThirdPartyDetails(CloneModelMixin, TimeStampedModel):
     no_contact_reason = models.TextField(blank=True, null=True)
     organisation_name = models.CharField(max_length=255, blank=True, null=True)
 
-    reference = UUIDField(auto=True, unique=True)
+    reference = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
 
     cloning_config = {"excludes": ["reference", "created", "modified"], "clone_fks": ["personal_details"]}
 
@@ -284,7 +284,7 @@ class AdaptationDetails(CloneModelMixin, TimeStampedModel):
     language = models.CharField(max_length=30, choices=ADAPTATION_LANGUAGES, blank=True, null=True)
     notes = models.TextField(blank=True)
     callback_preference = models.BooleanField(default=False)
-    reference = UUIDField(auto=True, unique=True)
+    reference = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     no_adaptations_required = models.NullBooleanField(blank=True)
 
     cloning_config = {"excludes": ["reference", "created", "modified"]}
@@ -304,7 +304,7 @@ class EODDetails(TimeStampedModel):
 
     case = models.OneToOneField("Case", related_name="eod_details", on_delete=models.CASCADE)
     notes = models.TextField(blank=True)
-    reference = UUIDField(auto=True, unique=True)
+    reference = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
 
     objects = EODDetailsManager()
 
@@ -422,7 +422,7 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin):
     class Analytics:
         _allow_analytics = True
 
-    reference = UUIDField(auto=True, unique=True)
+    reference = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
 
     category = models.ForeignKey(Category, blank=True, null=True, on_delete=models.CASCADE)
     you = models.ForeignKey(Person, blank=True, null=True, related_name="you", on_delete=models.CASCADE)

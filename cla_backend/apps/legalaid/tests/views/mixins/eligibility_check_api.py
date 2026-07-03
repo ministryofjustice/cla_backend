@@ -2,7 +2,7 @@ import copy
 import uuid
 import mock
 import random
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from rest_framework import status
 
@@ -58,7 +58,7 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
         )
 
     def _update(self, ref, data):
-        url = self.get_detail_url(unicode(ref))
+        url = self.get_detail_url(str(ref))
         return self.client.patch(url, data=data, HTTP_AUTHORIZATION=self.get_http_authorization(), format="json")
 
     def get_reference_from_response(self, data):
@@ -68,7 +68,7 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
         return reverse(
             "%s:eligibility_check-is-eligible" % self.API_URL_NAMESPACE,
             args=(),
-            kwargs={self.LOOKUP_KEY: unicode(reference)},
+            kwargs={self.LOOKUP_KEY: str(reference)},
         )
 
     def assertIncomeEqual(self, data, obj, partner=False):
@@ -136,7 +136,7 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
         self.assertDeductionsEqual(d_deductions, o_deductions)
 
     def assertEligibilityCheckEqual(self, data, check):
-        self.assertEqual(data["reference"], unicode(check.reference))
+        self.assertEqual(data["reference"], str(check.reference))
         self.assertEqual(data["category"], check.category.code if check.category else None)
         self.assertEqual(data["your_problem_notes"], check.your_problem_notes)
         self.assertEqual(data["notes"], check.notes)
@@ -288,10 +288,10 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
 
         self.assertResponseKeys(response)
         self.assertEqual(len(data["property_set"]), 2)
-        self.assertItemsEqual([p["value"] for p in response.data["property_set"]], [111, 999])
-        self.assertItemsEqual([p["mortgage_left"] for p in response.data["property_set"]], [222, 888])
-        self.assertItemsEqual([p["share"] for p in response.data["property_set"]], [33, 77])
-        self.assertItemsEqual([p["disputed"] for p in response.data["property_set"]], [True, False])
+        self.assertCountEqual([p["value"] for p in response.data["property_set"]], [111, 999])
+        self.assertCountEqual([p["mortgage_left"] for p in response.data["property_set"]], [222, 888])
+        self.assertCountEqual([p["share"] for p in response.data["property_set"]], [33, 77])
+        self.assertCountEqual([p["disputed"] for p in response.data["property_set"]], [True, False])
 
     def test_create_with_more_main_properties_fails(self):
         data = {
@@ -460,13 +460,13 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
         errors = response.data
-        self.assertItemsEqual(
+        self.assertCountEqual(
             errors.keys(),
             ["category", "your_problem_notes", "property_set", "dependants_young", "dependants_old", "you", "partner"],
         )
         self.assertEqual(errors["category"], [u"Object with code=-1 does not exist."])
         self.assertEqual(errors["your_problem_notes"], [u"Ensure this field has no more than 500 characters."])
-        self.assertItemsEqual(
+        self.assertCountEqual(
             errors["property_set"],
             [
                 {},
@@ -481,7 +481,7 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
         self.assertEqual(errors["dependants_young"], [u"Ensure this value is greater than or equal to 0."])
         self.assertEqual(errors["dependants_old"], [u"Ensure this value is greater than or equal to 0."])
         self.maxDiff = None
-        self.assertItemsEqual(
+        self.assertCountEqual(
             errors["you"],
             {
                 "savings": [
@@ -497,7 +497,7 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
                 ],
             },
         )
-        self.assertItemsEqual(
+        self.assertCountEqual(
             errors["partner"],
             {
                 "savings": [
@@ -518,7 +518,7 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
     def deep_update(cls, d, u):
         import collections
 
-        for k, v in u.iteritems():
+        for k, v in u.items():
             if isinstance(v, collections.Mapping):
                 r = EligibilityCheckAPIMixin.deep_update(d.get(k, {}), v)
                 d[k] = r
@@ -781,10 +781,10 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
         self.assertTrue(properties[0].id in property_ids)
         self.assertFalse(set([p.id for p in properties[1:]]).intersection(set(property_ids)))
 
-        self.assertItemsEqual([p["value"] for p in response.data["property_set"]], [111, 999])
-        self.assertItemsEqual([p["mortgage_left"] for p in response.data["property_set"]], [222, 888])
-        self.assertItemsEqual([p["share"] for p in response.data["property_set"]], [33, 77])
-        self.assertItemsEqual([p["disputed"] for p in response.data["property_set"]], [True, True])
+        self.assertCountEqual([p["value"] for p in response.data["property_set"]], [111, 999])
+        self.assertCountEqual([p["mortgage_left"] for p in response.data["property_set"]], [222, 888])
+        self.assertCountEqual([p["share"] for p in response.data["property_set"]], [33, 77])
+        self.assertCountEqual([p["disputed"] for p in response.data["property_set"]], [True, True])
 
         # checking the db just in case
         self.assertEqual(self.resource.property_set.count(), 2)

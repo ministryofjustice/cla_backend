@@ -4,7 +4,7 @@ import unittest
 from cla_backend.apps.core.admin.middleware import ClaSessionSecurityMiddleware
 
 
-@patch("django.core.urlresolvers.reverse")
+@patch("django.urls.reverse")
 @patch("session_security.middleware.SessionSecurityMiddleware.process_request", return_value=None)
 class TestClaSessionSecurityMiddleware(unittest.TestCase):
     """Unit tests for the ClaSessionSecurityMiddleware class."""

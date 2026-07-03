@@ -54,7 +54,7 @@ class CaseNotesHistoryAPIMixin(NestedSimpleResourceAPIMixin):
 
         results = response.data["results"]
         if response.data["count"] > 0:
-            self.assertItemsEqual(
+            self.assertCountEqual(
                 results[0].keys(), ["created_by", "created", "operator_notes", "provider_notes", "type_notes"]
             )
 

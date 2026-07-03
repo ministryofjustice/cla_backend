@@ -1,4 +1,4 @@
-from django.core.urlresolvers import reverse, NoReverseMatch
+from django.urls import reverse, NoReverseMatch
 from rest_framework import status
 
 from core.tests.mommy_utils import make_recipe
@@ -44,7 +44,7 @@ class EventAPIMixin(object):
         codes = []
         for code, code_data in action.codes.items():
             codes.append({"code": code, "description": code_data["description"]})
-        self.assertItemsEqual(response.data, codes)
+        self.assertCountEqual(response.data, codes)
 
     def test_get_using_wrong_event_key_404(self):
         detail_url = self.get_detail_url("__wrong__")
@@ -195,7 +195,7 @@ class LogAPIMixin(NestedSimpleResourceAPIMixin):
         same_day_outcome_log_codes = [log.code for log in self.same_day_outcome_logs]
         # We expect all four event logs and only one outcome code for today
         expected_log_codes = event_log_codes + same_day_outcome_log_codes[:1]
-        self.assertItemsEqual(expected_log_codes, [log["code"] for log in response.data])
+        self.assertCountEqual(expected_log_codes, [log["code"] for log in response.data])
 
     def test_two_created_only_one_saved(self):
         """Two outcome log objects created, but only one saved"""

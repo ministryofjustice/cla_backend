@@ -9,9 +9,9 @@ def log_user_created(sender, instance, created, **kwargs):
             "User created",
             extra={
                 "USER_ID": instance.pk,
-                "IS_STAFF": unicode(instance.is_staff),
-                "IS_ACTIVE": unicode(instance.is_active),
-                "IS_SUPERUSER": unicode(instance.is_superuser),
+                "IS_STAFF": str(instance.is_staff),
+                "IS_ACTIVE": str(instance.is_active),
+                "IS_SUPERUSER": str(instance.is_superuser),
             },
         )
 
@@ -26,8 +26,8 @@ def log_user_modified(sender, instance, **kwargs):
         "User modified",
         extra={
             "USER_ID": instance.pk,
-            "IS_STAFF": unicode(instance.is_staff),
-            "IS_ACTIVE": unicode(instance.is_active),
-            "IS_SUPERUSER": unicode(instance.is_superuser),
+            "IS_STAFF": str(instance.is_staff),
+            "IS_ACTIVE": str(instance.is_active),
+            "IS_SUPERUSER": str(instance.is_superuser),
         },
     )

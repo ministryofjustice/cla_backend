@@ -34,8 +34,8 @@ class DiagnosisAPIMixin(NestedSimpleResourceAPIMixin):
         self.move_up_url = self.get_detail_url(self.resource_lookup_value, suffix="move-up")
 
     def assertLogEquals(self, log, diagnosis):
-        self.assertItemsEqual(log.patch["nodes"], diagnosis.nodes)
-        self.assertItemsEqual(log.patch["reference"], unicode(diagnosis.reference))
+        self.assertCountEqual(log.patch["nodes"], diagnosis.nodes)
+        self.assertCountEqual(log.patch["reference"], str(diagnosis.reference))
 
     def test_delete_creates_log_with_completed_diagnosis(self):
         self.resource.current_node_id = "INSCOPE"

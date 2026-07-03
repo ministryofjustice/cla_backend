@@ -1,6 +1,6 @@
 from cla_common.constants import REQUIRES_ACTION_BY
 from core.tests.mommy_utils import make_recipe
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from rest_framework import status
 

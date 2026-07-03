@@ -1,6 +1,6 @@
 import datetime
 
-from django.conf.urls import patterns
+from cla_backend.libs.django_compat import patterns
 from django.http import HttpResponse
 from django.test import TestCase
 from rest_framework import status

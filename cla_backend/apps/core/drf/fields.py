@@ -2,7 +2,7 @@ import datetime
 import json
 from django.core.validators import EMPTY_VALUES
 from rest_framework import serializers
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.core import validators
 from cla_common.money_interval.models import MoneyInterval
 from cla_common.money_interval.fields import MoneyIntervalField

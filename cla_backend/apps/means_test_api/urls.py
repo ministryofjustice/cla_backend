@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, url
+from cla_backend.libs.django_compat import patterns, url
 
 from . import views
 

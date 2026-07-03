@@ -18,7 +18,7 @@ class Command(BaseCommand):
             self.stderr("This command can only run on the following environments: local, uat and staging")
             return
         self.stdout.write("THIS COMMAND WILL CREATING {} DUMMY CASES/PERSONAL DETAILS RECORD".format(counter))
-        reply = raw_input("ARE YOU SURE YOU WANT TO DO THIS(YES/NO): ")
+        reply = input("ARE YOU SURE YOU WANT TO DO THIS(YES/NO): ")
         if reply != "YES":
             self.stdout.write("You did not answer YES, process aborted")
             return

@@ -1,5 +1,5 @@
-from django.conf.urls import patterns, url
-from django.core.urlresolvers import reverse
+from cla_backend.libs.django_compat import patterns, url
+from django.urls import reverse
 from django.shortcuts import render
 from django.core.exceptions import PermissionDenied
 from django.contrib import admin, messages

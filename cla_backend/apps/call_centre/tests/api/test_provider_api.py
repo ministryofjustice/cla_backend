@@ -2,7 +2,7 @@ from datetime import timedelta
 from itertools import cycle
 
 from dateutil import parser
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.utils import timezone
 from rest_framework import status
 from rest_framework.test import APITestCase
@@ -37,7 +37,7 @@ class ProviderTestCase(CLAOperatorAuthBaseApiTestMixin, SimpleResourceAPIMixin, 
         response = self.client.get(self.list_url, HTTP_AUTHORIZATION="Bearer %s" % self.token, format="json")
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertItemsEqual([d["name"] for d in response.data], [x.name for x in self.providers])
+        self.assertCountEqual([d["name"] for d in response.data], [x.name for x in self.providers])
 
         # DETAIL
         response = self.client.get(self.detail_url, HTTP_AUTHORIZATION="Bearer %s" % self.token, format="json")
@@ -66,7 +66,7 @@ class ProviderTestCase(CLAOperatorAuthBaseApiTestMixin, SimpleResourceAPIMixin, 
 
 class OutOfHoursRotaTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
     def assertOutOfHoursRotaCheckResponseKeys(self, response):
-        self.assertItemsEqual(
+        self.assertCountEqual(
             response.data.keys(), ["id", "start_date", "end_date", "category", "provider", "provider_name"]
         )
 
@@ -122,7 +122,7 @@ class OutOfHoursRotaTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         response = self.client.get(self.list_url, HTTP_AUTHORIZATION="Bearer %s" % self.token, format="json")
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertItemsEqual(
+        self.assertCountEqual(
             response.data,
             [
                 {

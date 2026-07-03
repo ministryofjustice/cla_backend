@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, url
+from cla_backend.libs.django_compat import patterns, url
 from django.conf import settings
 from moj_irat.views import HealthcheckView
 from . import views

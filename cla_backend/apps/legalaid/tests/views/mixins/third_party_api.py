@@ -79,7 +79,7 @@ class ThirdPartyDetailsApiMixin(NestedSimpleResourceAPIMixin):
         }
 
         errors = response.data
-        self.assertItemsEqual(errors.keys(), expected_errors.keys())
+        self.assertCountEqual(errors.keys(), expected_errors.keys())
         self.assertDictEqual(errors, expected_errors)
 
     def assertThirdPartyDetailsEqual(self, data, obj):
@@ -92,7 +92,7 @@ class ThirdPartyDetailsApiMixin(NestedSimpleResourceAPIMixin):
                 else:
                     val = getattr(obj, prop)
                     if val:
-                        val = unicode(val)
+                        val = str(val)
                 self.assertEqual(val, data[prop])
 
     def test_methods_not_allowed(self):

@@ -2,7 +2,7 @@ import datetime
 
 from django import forms
 from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.forms.util import ErrorList
 from django.utils import timezone
 
@@ -175,7 +175,7 @@ class AlternativeHelpForm(EventSpecificLogForm):
 
         notes_l = [notes, "Assigned alternative help:"]
         for provider in providers:
-            notes_l.append(unicode(provider))
+            notes_l.append(str(provider))
 
         return "\n".join(notes_l)
 

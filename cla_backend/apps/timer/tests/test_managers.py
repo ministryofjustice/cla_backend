@@ -16,7 +16,7 @@ class RunningTimerManagerTestCase(TestCase):
         make_recipe("timer.Timer", cancelled=True)
 
         timers = Timer.running_objects.all()
-        self.assertItemsEqual(timers, [timer1, timer3])
+        self.assertCountEqual(timers, [timer1, timer3])
 
     def test_get_by_user_fails_with_multiple_timers(self):
         try:

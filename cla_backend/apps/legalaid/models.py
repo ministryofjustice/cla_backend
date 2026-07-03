@@ -227,7 +227,7 @@ class PersonalDetails(CloneModelMixin, TimeStampedModel):
         for phone in [self.home_phone, self.mobile_phone]:
             if phone:
                 try:
-                    phone = unicode(phone)
+                    phone = str(phone)
                 except UnicodeDecodeError:
                     pass
                 search_field = add_string(search_field, re.sub("[^0-9a-zA-Z]+", "", phone))
@@ -333,7 +333,7 @@ class EODDetails(TimeStampedModel):
 
     def get_category_descriptions(self, include_severity=False):
         mapper = (
-            (lambda cat: unicode(cat) + (u" (Major)" if cat.is_major else u" (Minor)")) if include_severity else unicode
+            (lambda cat: str(cat) + (u" (Major)" if cat.is_major else u" (Minor)")) if include_severity else unicode
         )
         return list(map(mapper, self.categories.all()))
 

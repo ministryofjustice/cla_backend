@@ -146,7 +146,7 @@ class EventTestCaseMixin(object):
         event = event_registry.get_event(self.EVENT_KEY)()
         codes = event.codes.keys()
 
-        self.assertItemsEqual(codes, expected_available_codes)
+        self.assertCountEqual(codes, expected_available_codes)
 
         # building process params and overridding potential ones through process_kwargs
         chosen_code = code or codes[0]

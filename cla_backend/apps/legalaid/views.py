@@ -323,7 +323,7 @@ class BaseCaseOrderingFilter(OrderingFilter):
     def filter_queryset(self, request, queryset, view):
         ordering = self.get_ordering(request, queryset, view)
 
-        if isinstance(ordering, basestring):
+        if isinstance(ordering, str):
             if "," in ordering:
                 ordering = ordering.split(",")
             else:

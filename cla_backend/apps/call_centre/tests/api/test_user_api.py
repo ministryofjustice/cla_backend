@@ -1,6 +1,6 @@
 from rest_framework import status
 from rest_framework.test import APITestCase
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.utils.crypto import get_random_string
 
 from core.tests.mommy_utils import make_recipe
@@ -147,7 +147,7 @@ class UserTestCase(CLAOperatorAuthBaseApiTestMixin, UserAPIMixin, APITestCase):
         bar_org = make_recipe("call_centre.organisation", name="Organisation Bar")
         operators = self._assign_operators_to_organisation(foo_org, bar_org)
         # flatten dict of lists
-        expected_usernames = list({x for v in operators.itervalues() for x in v})
+        expected_usernames = list({x for v in operators.values() for x in v})
 
         self.operator_manager.is_cla_superuser = True
         self.operator_manager.save()
@@ -158,7 +158,7 @@ class UserTestCase(CLAOperatorAuthBaseApiTestMixin, UserAPIMixin, APITestCase):
         response = self.client.get(url, HTTP_AUTHORIZATION=self.get_http_authorization(token=self.manager_token))
 
         actual_usernames = [operator["username"] for operator in response.data]
-        self.assertItemsEqual(expected_usernames, actual_usernames)
+        self.assertCountEqual(expected_usernames, actual_usernames)
 
     def test_cannot_reset_operator_password_of_another_organisation(self):
         foo_org = make_recipe("call_centre.organisation", name="Organisation Foo")

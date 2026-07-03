@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.contrib.admin import widgets
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 
 class OneToOneUserAdminForm(forms.ModelForm):

@@ -27,7 +27,7 @@ class KnowledgebaseCSVImporter:
         return [rows, errors]
 
     def process_row(self, row):
-        encoded_row = [unicode(cell, "utf-8") for cell in row]
+        encoded_row = [str(cell, "utf-8") for cell in row]
         article = self.get_article_from_row(encoded_row)
         telephone_numbers = self.get_telephone_numbers_from_row(article, encoded_row)
         article_category_matrices = self.get_article_category_matrices_from_row(article, encoded_row)

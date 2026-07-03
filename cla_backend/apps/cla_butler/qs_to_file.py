@@ -49,7 +49,7 @@ class QuerysetToFile(object):
         if val is None:
             val = ""
         try:
-            return unicode(val).encode("utf-8")
+            return str(val).encode("utf-8")
         except UnicodeDecodeError:
             return val
 

@@ -1,6 +1,6 @@
 import mock
 
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.utils import timezone
 
 from rest_framework.test import APITestCase
@@ -147,14 +147,14 @@ class SearchCaseTestCase(BaseSearchCaseAPIMixin, BaseCaseTestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(1, len(response.data["results"]))
-        self.assertItemsEqual([c["reference"] for c in response.data["results"]], ["ref1"])
+        self.assertCountEqual([c["reference"] for c in response.data["results"]], ["ref1"])
 
         # searching for pd2 AND dashboard=1 should ignore dashboard param
         url = "%s&dashboard=1" % self.get_list_person_ref_url(pd2.reference)
         response = self.client.get(url, format="json", HTTP_AUTHORIZATION=self.get_http_authorization())
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(1, len(response.data["results"]))
-        self.assertItemsEqual([case["reference"] for case in response.data["results"]], ["ref2"])
+        self.assertCountEqual([case["reference"] for case in response.data["results"]], ["ref2"])
 
 
 class FilteredSearchCaseTestCase(BaseCaseTestCase):
@@ -241,7 +241,7 @@ class FilteredSearchCaseTestCase(BaseCaseTestCase):
         response = self.client.get(self.list_url, format="json", HTTP_AUTHORIZATION=self.get_http_authorization())
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(6, len(response.data["results"]))
-        self.assertItemsEqual([c["reference"] for c in response.data["results"]], ["ref3", "ref4", "ref6", "ref7", "ref8", "ref9"])
+        self.assertCountEqual([c["reference"] for c in response.data["results"]], ["ref3", "ref4", "ref6", "ref7", "ref8", "ref9"])
 
     def test_new_cases(self):
         response = self.client.get(
@@ -249,7 +249,7 @@ class FilteredSearchCaseTestCase(BaseCaseTestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(1, len(response.data["results"]))
-        self.assertItemsEqual([c["reference"] for c in response.data["results"]], ["ref3"])
+        self.assertCountEqual([c["reference"] for c in response.data["results"]], ["ref3"])
 
     def test_opened_cases(self):
         response = self.client.get(
@@ -257,7 +257,7 @@ class FilteredSearchCaseTestCase(BaseCaseTestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(1, len(response.data["results"]))
-        self.assertItemsEqual([c["reference"] for c in response.data["results"]], ["ref4"])
+        self.assertCountEqual([c["reference"] for c in response.data["results"]], ["ref4"])
 
     def test_accepted_cases(self):
         response = self.client.get(
@@ -265,7 +265,7 @@ class FilteredSearchCaseTestCase(BaseCaseTestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(1, len(response.data["results"]))
-        self.assertItemsEqual([c["reference"] for c in response.data["results"]], ["ref6"])
+        self.assertCountEqual([c["reference"] for c in response.data["results"]], ["ref6"])
 
     def test_closed_cases(self):
         response = self.client.get(
@@ -273,7 +273,7 @@ class FilteredSearchCaseTestCase(BaseCaseTestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(3, len(response.data["results"]))
-        self.assertItemsEqual([c["reference"] for c in response.data["results"]], ["ref7", "ref8", "ref9"])
+        self.assertCountEqual([c["reference"] for c in response.data["results"]], ["ref7", "ref8", "ref9"])
 
     def test_rejected_cases(self):
         response = self.client.get(
@@ -281,7 +281,7 @@ class FilteredSearchCaseTestCase(BaseCaseTestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(1, len(response.data["results"]))
-        self.assertItemsEqual([c["reference"] for c in response.data["results"]], ["ref8"])
+        self.assertCountEqual([c["reference"] for c in response.data["results"]], ["ref8"])
 
     def test_completed_cases(self):
         response = self.client.get(
@@ -289,7 +289,7 @@ class FilteredSearchCaseTestCase(BaseCaseTestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(2, len(response.data["results"]))
-        self.assertItemsEqual([c["reference"] for c in response.data["results"]], ["ref7", "ref9"])
+        self.assertCountEqual([c["reference"] for c in response.data["results"]], ["ref7", "ref9"])
 
 
 class UpdateCaseTestCase(BaseUpdateCaseTestCase, BaseCaseTestCase):

@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 import mock
 
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.utils import timezone
 from rest_framework.test import APITestCase
 from rest_framework import status

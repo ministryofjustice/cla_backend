@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, url
+from cla_backend.libs.django_compat import patterns, url
 from django.views.decorators.csrf import csrf_exempt
 from oauth2_provider.views import RevokeTokenView
 

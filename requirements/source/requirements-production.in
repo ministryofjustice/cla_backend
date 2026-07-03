@@ -1,1 +1,3 @@
 -r requirements-base.in
+
+uwsgi==2.0.26

@@ -14,7 +14,7 @@ import logging
 from celery import Task
 from django.core.exceptions import ImproperlyConfigured
 from django.db import InternalError
-from django.utils.six import text_type
+from six import text_type
 from dateutil.relativedelta import relativedelta
 from django.conf import settings
 

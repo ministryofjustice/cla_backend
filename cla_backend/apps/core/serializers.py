@@ -1,5 +1,5 @@
 from django.db import models
-from django.core.exceptions import ValidationError as DjangoValidationError
+from django.core.exceptions import FieldDoesNotExist, ValidationError as DjangoValidationError
 from rest_framework.exceptions import ValidationError
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
@@ -11,7 +11,6 @@ from core import fields
 from legalaid.fields import MoneyField, MoneyFieldDRF
 from cla_common.money_interval.fields import MoneyIntervalField
 from core.drf.fields import MoneyIntervalDRFField
-from django.db.models.fields import FieldDoesNotExist
 
 
 class MoneyIntervalModelSerializerMixin(object):

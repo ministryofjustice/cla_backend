@@ -49,7 +49,7 @@ class MoneyInterval(object):
         """
         @return: list of tuples for dropdown widget
         """
-        return [(i[0], i[1]) for i in MoneyInterval._intervals]
+        return [(i[0], str(i[1])) for i in MoneyInterval._intervals]
 
     def as_monthly(self):
         """

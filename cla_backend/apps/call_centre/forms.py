@@ -3,7 +3,7 @@ import datetime
 from django import forms
 from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
 from django.utils.translation import gettext_lazy as _
-from django.forms.util import ErrorList
+from django.forms.utils import ErrorList
 from django.utils import timezone
 
 from cla_common.call_centre_availability import OpeningHours

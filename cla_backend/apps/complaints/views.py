@@ -1,9 +1,10 @@
 # coding=utf-8
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.contenttypes.models import ContentType
-from django.utils.text import capfirst, force_text
+from django.utils.encoding import force_str
+from django.utils.text import capfirst
+from core.drf.decorators import detail_route
 from rest_framework import mixins, status, views as rest_views
-from rest_framework.decorators import detail_route
 from rest_framework.response import Response as DRFResponse
 
 from cla_eventlog import event_registry
@@ -223,7 +224,7 @@ class BaseComplaintConstantsView(rest_views.APIView):
     @classmethod
     def get_field_choices(cls, key):
         return [
-            {"value": choice[0], "description": capfirst(force_text(choice[1]))}
+            {"value": choice[0], "description": capfirst(force_str(choice[1]))}
             for choice in Complaint._meta.get_field(key).choices
         ]
 

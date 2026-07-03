@@ -230,9 +230,9 @@ class DeductionsSerializerBase(TotalsModelSerializer):
 
 
 class PersonalDetailsSerializerBase(serializers.ModelSerializer):
-    contact_for_research = serializers.NullBooleanField(required=False)
-    vulnerable_user = serializers.NullBooleanField(required=False)
-    announce_call = serializers.NullBooleanField(required=False)
+    contact_for_research = serializers.BooleanField(required=False, allow_null=True)
+    vulnerable_user = serializers.BooleanField(required=False, allow_null=True)
+    announce_call = serializers.BooleanField(required=False, allow_null=True)
 
     class Meta(object):
         model = PersonalDetails
@@ -252,7 +252,7 @@ class ThirdPartyPersonalDetailsSerializerBase(PersonalDetailsSerializerBase):
 
 class ThirdPartyDetailsSerializerBase(ClaModelSerializer):
     personal_details = ThirdPartyPersonalDetailsSerializerBase(required=True)
-    spoke_to = serializers.NullBooleanField(required=False)
+    spoke_to = serializers.BooleanField(required=False, allow_null=True)
 
     class Meta(object):
         model = ThirdPartyDetails
@@ -309,15 +309,15 @@ class EligibilityCheckSerializerBase(ClaModelSerializer):
     disregards = JSONField(required=False, allow_null=True)
     # DRF 3.0 fails to determine that these fields are nullable when trying to map django model fields to DRF fields
     # So we are setting here explicitly so that DRF doesn't try guessing if it's nullable
-    is_you_or_your_partner_over_60 = serializers.NullBooleanField(default=None)
-    on_passported_benefits = serializers.NullBooleanField(default=None)
-    has_passported_proceedings_letter = serializers.NullBooleanField(default=None)
-    on_nass_benefits = serializers.NullBooleanField(default=None)
-    has_partner = serializers.NullBooleanField(default=None)
-    under_18_passported = serializers.NullBooleanField(default=None)
-    is_you_under_18 = serializers.NullBooleanField(default=None)
-    under_18_receive_regular_payment = serializers.NullBooleanField(default=None)
-    under_18_has_valuables = serializers.NullBooleanField(default=None)
+    is_you_or_your_partner_over_60 = serializers.BooleanField(default=None, allow_null=True)
+    on_passported_benefits = serializers.BooleanField(default=None, allow_null=True)
+    has_passported_proceedings_letter = serializers.BooleanField(default=None, allow_null=True)
+    on_nass_benefits = serializers.BooleanField(default=None, allow_null=True)
+    has_partner = serializers.BooleanField(default=None, allow_null=True)
+    under_18_passported = serializers.BooleanField(default=None, allow_null=True)
+    is_you_under_18 = serializers.BooleanField(default=None, allow_null=True)
+    under_18_receive_regular_payment = serializers.BooleanField(default=None, allow_null=True)
+    under_18_has_valuables = serializers.BooleanField(default=None, allow_null=True)
 
     class Meta(object):
         model = EligibilityCheck
@@ -504,7 +504,7 @@ class CaseSerializerFull(CaseSerializerBase):
     date_of_birth = serializers.CharField(source="personal_details.date_of_birth", read_only=True)
     category = serializers.CharField(source="diagnosis.category.name", read_only=True)
 
-    exempt_user = serializers.NullBooleanField(required=False)
+    exempt_user = serializers.BooleanField(required=False, allow_null=True)
 
     scope_traversal = UUIDSerializer(required=False, slug_field="reference", read_only=True)
 
@@ -562,8 +562,8 @@ class CaseArchivedSerializerBase(serializers.ModelSerializer):
     date_of_birth = ThreePartDateField(required=False, allow_null=True)
     date_specialist_referred = ThreePartDateField(required=False, allow_null=True)
     date_specialist_closed = ThreePartDateField(required=False, allow_null=True)
-    financially_eligible = serializers.NullBooleanField(required=False)
-    in_scope = serializers.NullBooleanField(required=False)
+    financially_eligible = serializers.BooleanField(required=False, allow_null=True)
+    in_scope = serializers.BooleanField(required=False, allow_null=True)
 
     class Meta(object):
         model = CaseArchived

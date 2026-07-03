@@ -6,11 +6,12 @@ from core.drf.exceptions import ConflictException
 from django import forms
 from django.db import connection, transaction, IntegrityError
 from django.utils.crypto import get_random_string
+from django_filters.rest_framework import DjangoFilterBackend
+from core.drf.decorators import detail_route
 from rest_framework import viewsets, mixins, status
-from rest_framework.decorators import detail_route
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response as DRFResponse
-from rest_framework.filters import OrderingFilter, DjangoFilterBackend
+from rest_framework.filters import OrderingFilter
 from rest_framework_extensions.mixins import DetailSerializerMixin
 
 from core.utils import format_patch

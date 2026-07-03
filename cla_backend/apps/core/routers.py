@@ -1,4 +1,4 @@
-from rest_framework.routers import DefaultRouter, Route
+from rest_framework.routers import DefaultRouter, DynamicRoute, Route
 
 
 class SingletonRouter(DefaultRouter):
@@ -31,14 +31,15 @@ class SingletonRouter(DefaultRouter):
                 "delete": "destroy",
             },
             name="{basename}-detail",
+            detail=True,
             initkwargs={"suffix": "Instance"},
         ),
         # Dynamically generated routes.
         # Generated using @detail_route or @list_route decorators on methods of the viewset
-        Route(
+        DynamicRoute(
             url=r"^{prefix}/{methodname}{trailing_slash}$",
-            mapping={"{httpmethod}": "{methodname}"},
             name="{basename}-{methodnamehyphen}",
+            detail=False,
             initkwargs={},
         ),
     ]

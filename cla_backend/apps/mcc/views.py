@@ -1,8 +1,8 @@
 from __future__ import unicode_literals
 
-from rest_framework.decorators import detail_route
 from rest_framework.response import Response as DRFResponse
 
+from core.drf.decorators import detail_route
 from mcc.forms import SplitMCCCaseForm, ChangeCategoryForm
 from cla_provider.views import CaseViewSet
 

@@ -1,6 +1,7 @@
 from rest_framework.test import APITestCase
 from django.core.urlresolvers import reverse
 from rest_framework import status
+import mock
 
 from legalaid.tests.views.test_base import CLAProviderAuthBaseApiTestMixin
 from cla_eventlog.tests.test_views import EventAPIMixin
@@ -28,3 +29,17 @@ class RejectCaseEventVisibilityTestCase(CLAProviderAuthBaseApiTestMixin, APITest
         self.assertNotIn("MERI", returned_codes)
         self.assertNotIn("DUPL", returned_codes)
         self.assertNotIn("CLOT", returned_codes)
+
+    @mock.patch("cla_provider.views.EventViewSet._is_mcc_user", return_value=True)
+    def test_mcc_users_see_mcc_only_reject_codes(self, _mock_is_mcc_user):
+        response = self.client.get(
+            self.reject_event_url,
+            HTTP_AUTHORIZATION="Bearer %s" % self.token,
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        returned_codes = [item["code"] for item in response.data]
+        self.assertIn("MERI", returned_codes)
+        self.assertIn("DUPL", returned_codes)
+        self.assertIn("CLOT", returned_codes)

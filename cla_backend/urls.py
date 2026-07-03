@@ -31,6 +31,10 @@ if settings.ADMIN_ENABLED:
     )
 
 if settings.BACKEND_ENABLED:
+    from cla_eventlog import autodiscover as eventlog_autodiscover
+
+    eventlog_autodiscover()
+
     urlpatterns += patterns(
         "",
         url(r"^checker/api/v1/", include("checker.urls", namespace="checker")),

@@ -58,9 +58,13 @@ class ClaModelSerializer(
             if field_name not in attrs or not attrs[field_name]:
                 continue
             try:
-                model._meta.get_field(field_name, many_to_many=False)
+                model_field = model._meta.get_field(field_name)
             except FieldDoesNotExist:
                 # Don't include many-to-many fields
+                continue
+
+            # Don't include many-to-many fields
+            if getattr(model_field, "many_to_many", False):
                 continue
 
             if isinstance(field, serializers.ModelSerializer):

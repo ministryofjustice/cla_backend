@@ -32,6 +32,7 @@ class Command(BaseCommand):
                     client_type=client["client_type"],
                     client_id=client["client_id"],
                     client_secret=client["client_secret"],
+                    hash_client_secret=False,
                     redirect_uris=client["redirect_uris"],
                     authorization_grant_type="password",
                 )

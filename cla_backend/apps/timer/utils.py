@@ -6,7 +6,7 @@ def _create_timer(user):
 
 
 def get_timer(user):
-    if not user.is_authenticated():
+    if not user.is_authenticated:
         raise ValueError(u"User is not authenticated")
 
     try:

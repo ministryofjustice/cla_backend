@@ -73,6 +73,8 @@ class AccessTokenView(Oauth2AccessTokenView):
             return response
 
         response = super(AccessTokenView, self).dispatch(request, *args, **kwargs)
+        if response.status_code == 400:
+            response.status_code = 401
         if response.status_code > 399:
             self.on_invalid_attempt(request)
         else:

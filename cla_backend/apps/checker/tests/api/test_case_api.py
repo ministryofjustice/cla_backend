@@ -153,7 +153,7 @@ class CaseTestCase(BaseCaseTestCase):
         self.assertEqual(log.created_by.username, "web")
 
         # no email sent
-        self.assertEquals(len(self.mailbox), 0)
+        self.assertEqual(len(self.mailbox), 0)
 
     def _test_method_in_error(self, method, url):
         """
@@ -279,12 +279,12 @@ class CallMeBackCaseTestCase(BaseCaseTestCase, MockGovNotifyMailBox):
     @property
     def _default_dt(self):
         if not hasattr(self, "__default_dt"):
-            self.__default_dt = datetime.datetime(2015, 3, 30, 10, 0, 0, 0).replace(tzinfo=timezone.utc)
+            self.__default_dt = datetime.datetime(2015, 3, 30, 10, 0, 0, 0, tzinfo=datetime.timezone.utc)
         return self.__default_dt
 
     @override_settings(CALLBACK_CAPPING_THRESHOLD_NOTIFICATION=CALLBACK_CAPPING_THRESHOLD_NOTIFICATION)
     def test_create_with_callmeback(self):
-        self.assertEquals(len(self.mailbox), 0)
+        self.assertEqual(len(self.mailbox), 0)
         check = make_recipe("legalaid.eligibility_check")
         self.create_callback_no_capacity_slot()
 
@@ -335,8 +335,8 @@ class CallMeBackCaseTestCase(BaseCaseTestCase, MockGovNotifyMailBox):
             },
         )
         # checking email
-        self.assertEquals(len(self.mailbox), 1)
-        self.assertEquals(self.mailbox[0]["to"], CALLBACK_CAPPING_THRESHOLD_NOTIFICATION)
+        self.assertEqual(len(self.mailbox), 1)
+        self.assertEqual(self.mailbox[0]["to"], CALLBACK_CAPPING_THRESHOLD_NOTIFICATION)
 
         # Check that logs are created in order
         first = Log.objects.order_by("-created").first()

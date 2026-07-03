@@ -51,7 +51,15 @@ if not hasattr(django_encoding, "smart_text"):
 	django_encoding.smart_text = django_encoding.smart_str
 
 # Legacy models and migrations still use removed NullBooleanField.
-django_models.NullBooleanField = django_models.BooleanField
+class _LegacyNullBooleanField(django_models.BooleanField):
+	def __init__(self, *args, **kwargs):
+		kwargs.setdefault("null", True)
+		kwargs.setdefault("blank", True)
+		kwargs.setdefault("default", None)
+		super(_LegacyNullBooleanField, self).__init__(*args, **kwargs)
+
+
+django_models.NullBooleanField = _LegacyNullBooleanField
 
 # Ensure app is imported for Celery's `shared_task` when Django starts
 from .celery import app as celery_app  # noqa: F401

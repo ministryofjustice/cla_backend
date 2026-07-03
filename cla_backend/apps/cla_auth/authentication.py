@@ -210,8 +210,8 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         if not office_codes:
             return False
 
-        if isinstance(office_codes, unicode):
-            office_codes = office_codes.encode("utf-8")
+        if isinstance(office_codes, bytes):
+            office_codes = office_codes.decode("utf-8")
 
         office_codes = office_codes.split(",")
         return any(office_code in OPERATOR_OFFICE_CODES for office_code in office_codes)

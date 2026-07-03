@@ -67,6 +67,7 @@ class ClientDataCopyCommandTest(TestCase):
             client_type=self.OLD_CLIENT_DATA["client_type"],
             client_id=self.OLD_CLIENT_DATA["client_id"],
             client_secret=self.OLD_CLIENT_DATA["client_secret"],
+            hash_client_secret=False,
             redirect_uris=self.OLD_CLIENT_DATA["redirect_uri"],
             authorization_grant_type="password",
         )

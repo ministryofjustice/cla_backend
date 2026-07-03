@@ -59,6 +59,7 @@ eligibility_check = Recipe(
     category=foreign_key(category),
     dependants_young=5,
     dependants_old=6,
+    on_passported_benefits=False,
     you=foreign_key(person),
     partner=foreign_key(person),
 )
@@ -68,6 +69,7 @@ eligibility_check_yes = Recipe(
     category=foreign_key(category),
     dependants_young=5,
     dependants_old=6,
+    on_passported_benefits=True,
     you=foreign_key(person),
     partner=foreign_key(person),
     state="yes",

@@ -1,6 +1,8 @@
 import logging
+from collections import OrderedDict
 
 from cla_auth.authentication import EntraAccessTokenAuthentication
+from cla_auth.constants import PROVIDER_MCC_ROLE
 from cla_provider.authentication import LegacyCHSAuthentication
 from cla_provider.forms import ProviderExtractForm
 from cla_provider.helpers import ProviderExtractFormatter
@@ -184,7 +186,7 @@ class CaseViewSet(CLAProviderPermissionViewSetMixin, FullCaseViewSet):
         """
         Rejects a case
         """
-        return self._form_action(request, Form=RejectCaseForm)
+        return self._form_action(request, Form=RejectCaseForm, form_kwargs={"request": request})
 
     @detail_route(methods=["post"])
     def accept(self, request, reference=None, **kwargs):
@@ -309,7 +311,30 @@ class ThirdPartyDetailsViewSet(CLAProviderPermissionViewSetMixin, BaseThirdParty
 
 
 class EventViewSet(CLAProviderPermissionViewSetMixin, BaseEventViewSet):
-    pass
+    MCC_ONLY_EVENT_CODES = {
+        "reject_case": set(["MERI", "DUPL", "CLOT"]),
+    }
+
+    def _is_mcc_user(self, request):
+        auth_data = getattr(request, "auth", None)
+        if not isinstance(auth_data, dict):
+            return False
+
+        app_roles = auth_data.get("APP_ROLES") or []
+        if isinstance(app_roles, basestring):
+            app_roles = [app_roles]
+
+        return PROVIDER_MCC_ROLE in app_roles
+
+    def filter_codes(self, request, event_key, codes):
+        if self._is_mcc_user(request):
+            return codes
+
+        hidden_codes = self.MCC_ONLY_EVENT_CODES.get(event_key)
+        if not hidden_codes:
+            return codes
+
+        return OrderedDict((code, code_data) for code, code_data in codes.items() if code not in hidden_codes)
 
 
 class GuidanceNoteViewSet(CLAProviderPermissionViewSetMixin, BaseGuidanceNoteViewSet):

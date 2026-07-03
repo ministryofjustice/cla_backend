@@ -42,8 +42,12 @@ class BaseEventViewSet(viewsets.ViewSetMixin, views.APIView):
         except ValueError:
             return DRFResponse({"detail": "Not found"}, status=status.HTTP_404_NOT_FOUND)
 
-        response_data = self.format_codes(event.get_ordered_codes())
+        codes = self.filter_codes(request, event_key, event.get_ordered_codes())
+        response_data = self.format_codes(codes)
         return DRFResponse(response_data, status=status.HTTP_200_OK)
+
+    def filter_codes(self, request, event_key, codes):
+        return codes
 
     def format_codes(self, codes):
         return [{"code": code, "description": code_data["description"]} for code, code_data in codes.items()]

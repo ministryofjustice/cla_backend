@@ -1,5 +1,6 @@
 from django.db.backends.postgresql.base import *  # noqa: F403
 import pytz
+from datetime import timedelta
 
 
 def local_tzinfo_factory(offset):
@@ -8,6 +9,8 @@ def local_tzinfo_factory(offset):
     that the datetimes returned are timezone aware and will be printed in the
     reports with timezone information.
     """
+    if isinstance(offset, timedelta):
+        offset = int(offset.total_seconds() // 60)
     return pytz.FixedOffset(offset)
 
 

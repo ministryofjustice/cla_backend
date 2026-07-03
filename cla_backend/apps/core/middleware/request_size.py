@@ -92,6 +92,15 @@ class RequestSizeMiddleware:
         - Returns HTTP 400 (Bad Request) for invalid Content-Length headers
     """
 
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        response = self.process_request(request)
+        if response is not None:
+            return response
+        return self.get_response(request)
+
     def process_request(self, request):
         """
         Process incoming HTTP request to enforce size limits on request payload.

@@ -435,7 +435,7 @@ class FullCaseViewSet(
         return params.replace(",", " ").split()
 
     def get_temporary_view_name(self):
-        return "case_search_view_{}".format(get_random_string())
+        return "case_search_view_{}".format(get_random_string(12))
 
     def list(self, request, *args, **kwargs):
         try:

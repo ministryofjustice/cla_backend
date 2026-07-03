@@ -35,13 +35,14 @@ class OneToOneUserAdminForm(forms.ModelForm):
         "UPDATE": {
             "password": ReadOnlyPasswordHashField(
                 label=_("Password"),
+                required=False,
                 help_text=_(
                     "Raw passwords are not stored, so there is no way to see "
                     "this user's password, but you can change the password "
                     'using <a href="password/">this form</a>.'
                 ),
             ),
-            "password2": ReadOnlyPasswordHashField(label=_("Password confirmation")),
+            "password2": ReadOnlyPasswordHashField(label=_("Password confirmation"), required=False),
         },
     }
 

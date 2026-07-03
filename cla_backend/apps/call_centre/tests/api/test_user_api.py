@@ -103,7 +103,7 @@ class UserTestCase(CLAOperatorAuthBaseApiTestMixin, UserAPIMixin, APITestCase):
 
         data = {
             "password": "foobarbaz1234567890",
-            "username": get_random_string(),
+            "username": get_random_string(12),
             "first_name": "elton",
             "last_name": "john",
             "email": "example@example.com",

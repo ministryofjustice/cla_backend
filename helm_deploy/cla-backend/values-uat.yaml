@@ -10,6 +10,12 @@ replicaCount: 1
 localPostgres:
   enabled: true
 
+appWaitForDb:
+  enabled: true
+
+localPostgresProbes:
+  enabled: true
+
 queueWorkers:
   enabled: false
 

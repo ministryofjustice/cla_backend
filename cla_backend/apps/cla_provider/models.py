@@ -11,7 +11,6 @@ from django.db.models.signals import post_save, pre_save
 
 from jsonfield import JSONField
 from model_utils.models import TimeStampedModel
-from uuidfield import UUIDField
 
 from core.validators import validate_first_of_month
 from cla_common.constants import FEEDBACK_ISSUE
@@ -295,7 +294,7 @@ class Feedback(TimeStampedModel):
     class Analytics:
         _allow_analytics = True
 
-    reference = UUIDField(auto=True, unique=True)
+    reference = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     case = models.ForeignKey("legalaid.Case", related_name="provider_feedback", on_delete=models.CASCADE)
 
     created_by = models.ForeignKey(Staff, on_delete=models.CASCADE)

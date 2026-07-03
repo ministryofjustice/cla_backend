@@ -12,7 +12,6 @@ psycopg2-binary==2.9.10
 sentry-sdk==2.11.0
 djangorestframework==3.16.0
 jsonfield==3.1.0
-django-uuidfield==0.5.0
 drf-nested-routers==0.94.2
 Markdown==3.7
 bleach==6.1.0

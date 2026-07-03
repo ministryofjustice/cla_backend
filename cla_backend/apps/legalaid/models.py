@@ -12,7 +12,7 @@ from django.conf import settings
 from django.core.validators import MaxValueValidator, RegexValidator
 from django.db import models
 from django.db.models import SET_NULL, CASCADE
-from django.utils.timezone import localtime, utc
+from django.utils.timezone import localtime
 from django.core.exceptions import ObjectDoesNotExist
 
 from model_utils.models import TimeStampedModel
@@ -976,16 +976,16 @@ class Case(TimeStampedModel):
 
     def view_by_provider(self, provider):
         if provider == self.provider:
-            self.provider_viewed = datetime.datetime.utcnow().replace(tzinfo=utc)
+            self.provider_viewed = datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc)
             self.save(update_fields=["provider_viewed"])
 
     def accept_by_provider(self):
-        self.provider_accepted = datetime.datetime.utcnow().replace(tzinfo=utc)
+        self.provider_accepted = datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc)
         self.provider_closed = None
         self.save(update_fields=["provider_accepted", "provider_closed"])
 
     def close_by_provider(self):
-        self.provider_closed = datetime.datetime.utcnow().replace(tzinfo=utc)
+        self.provider_closed = datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc)
         self.save(update_fields=["provider_closed"])
 
     def reopen_by_provider(self):
@@ -1025,7 +1025,7 @@ class Case(TimeStampedModel):
     def lock(self, user, save=True):
         if not self.locked_by:
             self.locked_by = user
-            self.locked_at = datetime.datetime.utcnow().replace(tzinfo=utc)
+            self.locked_at = datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc)
             if save:
                 self.save(update_fields=["locked_by", "locked_at"])
             return True

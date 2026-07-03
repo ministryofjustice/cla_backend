@@ -24,7 +24,7 @@ from .models import Export
 from .constants import EXPORT_STATUS
 from core.utils import remember_cwd
 from checker.models import ReasonForContacting
-from urlparse import urlparse
+from urllib.parse import urlparse
 from cla_backend.celery import app
 
 logger = logging.getLogger(__name__)

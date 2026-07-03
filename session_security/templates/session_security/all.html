@@ -1,0 +1,19 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'session_security/style.css' %}">
+<div id="session_security_warning" class="session_security_modal" style="display:none;">
+    <p>Your admin session is about to expire due to inactivity.</p>
+    <p>Interact with the page to keep the session alive.</p>
+</div>
+<script type="text/javascript" src="{% static 'session_security/script.js' %}"></script>
+<script type="text/javascript">
+    (function($) {
+        if (!$ || !window.yourlabs || !window.yourlabs.SessionSecurity) {
+            return;
+        }
+        new window.yourlabs.SessionSecurity({
+            pingUrl: "{% url 'session_security_ping' %}",
+            warnAfter: {{ SESSION_SECURITY_WARN_AFTER|default:1500 }},
+            expireAfter: {{ SESSION_SECURITY_EXPIRE_AFTER|default:1800 }}
+        });
+    })(window.django && window.django.jQuery ? window.django.jQuery : window.jQuery);
+</script>

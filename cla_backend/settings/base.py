@@ -28,7 +28,7 @@ sys.path.insert(0, root("libs"))
 
 SHOW_NEW_CB1 = os.environ.get("SHOW_NEW_CB1", "False").lower() == "true"
 
-HEALTHCHECKS = ["moj_irat.healthchecks.database_healthcheck", "status.healthchecks.check_disk"]
+HEALTHCHECKS = ["status.healthchecks.database_healthcheck", "status.healthchecks.check_disk"]
 
 AUTODISCOVER_HEALTHCHECKS = True
 
@@ -273,7 +273,7 @@ PROJECT_APPS = (
 if BACKEND_ENABLED:
     INSTALLED_APPS += ("rest_framework", "oauth2_provider")
 if ADMIN_ENABLED:
-    INSTALLED_APPS += ("django.contrib.admin", "pagedown", "reports")
+    INSTALLED_APPS += ("django.contrib.admin", "reports")
 
 OAUTH2_PROVIDER_APPLICATION_MODEL = "oauth2_provider.Application"
 
@@ -377,7 +377,7 @@ if AWS_STORAGE_BUCKET_NAME:
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "cla_auth.authentication.EntraAccessTokenAuthentication",
-        "oauth2_provider.ext.rest_framework.OAuth2Authentication",
+        "oauth2_provider.contrib.rest_framework.OAuth2Authentication",
     ),
     "DEFAULT_PERMISSION_CLASSES": ("core.permissions.AllowNone",),
     "DEFAULT_RENDERER_CLASSES": ("rest_framework.renderers.JSONRenderer",),

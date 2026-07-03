@@ -3,14 +3,13 @@ from django import forms
 from django.core import exceptions
 from django.utils.translation import gettext_lazy as _
 import markdown
-from pagedown.widgets import AdminPagedownWidget
 
 DEFAULT_MARKDOWN_WHITELIST = {"tags": ["strong", "b", "ul", "li", "ol", "p"], "attributes": [], "styles": []}
 
 
 class MarkdownAdminField(forms.CharField):
     """
-    Markdown Admin Field which uses AdminPagedownWidget as default widget and
+    Markdown Admin Field which uses a plain textarea widget by default and
     supports whitelist validation.
 
     The extra parameter 'markdown_whitelist' manages the specific tags,
@@ -33,7 +32,7 @@ class MarkdownAdminField(forms.CharField):
         self.extensions = kwargs.pop("extensions", [])
 
         if "widget" not in kwargs:
-            kwargs["widget"] = AdminPagedownWidget()
+            kwargs["widget"] = forms.Textarea(attrs={"rows": 12, "cols": 100})
 
         self.markdown_whitelist = kwargs.pop("markdown_whitelist", DEFAULT_MARKDOWN_WHITELIST)
 

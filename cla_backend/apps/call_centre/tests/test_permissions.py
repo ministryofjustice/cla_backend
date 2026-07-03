@@ -4,7 +4,7 @@ from cla_backend.libs.django_compat import patterns
 from django.http import HttpResponse
 from django.test import TestCase
 from rest_framework import status
-from oauth2_provider.ext.rest_framework import OAuth2Authentication
+from oauth2_provider.contrib.rest_framework import OAuth2Authentication
 from rest_framework.views import APIView
 
 from legalaid.tests.views.test_base import CLAOperatorAuthBaseApiTestMixin

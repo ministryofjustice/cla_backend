@@ -3,6 +3,8 @@ from cla_backend.libs.django_compat import patterns, url
 from . import views
 from . import api
 
+app_name = "reports"
+
 urlpatterns = patterns(
     "",
     url(r"^api/exports/$", api.ExportListView.as_view(), name="exports"),

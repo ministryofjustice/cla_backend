@@ -9,7 +9,7 @@ from reports.urls import urlpatterns
 register = template.Library()
 
 
-@register.assignment_tag
+@register.simple_tag
 def report_links():
     abbrevs = re.compile(r"(mi|eod|cb1|obiee)", flags=re.IGNORECASE)
 
@@ -24,4 +24,4 @@ def report_links():
             "url": reverse("reports:{0}".format(x.name)),
         }
 
-    return map(report_link, urlpatterns)
+    return list(map(report_link, urlpatterns))

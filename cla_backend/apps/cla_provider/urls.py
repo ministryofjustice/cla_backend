@@ -5,6 +5,8 @@ from core.drf.router import NestedSimpleRouter, NestedCLARouter
 
 from . import views
 
+app_name = "cla_provider"
+
 router = routers.DefaultRouter()
 router.register(r"category", views.CategoryViewSet)
 router.register(r"case", views.CaseViewSet)

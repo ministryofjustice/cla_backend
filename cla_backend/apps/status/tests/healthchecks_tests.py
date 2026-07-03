@@ -1,6 +1,6 @@
 import unittest
 import mock
-from moj_irat.healthchecks import registry
+from status.healthcheck_registry import registry
 from status import healthchecks
 
 

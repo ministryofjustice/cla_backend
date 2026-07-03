@@ -252,7 +252,7 @@ class ThirdPartyDetails(CloneModelMixin, TimeStampedModel):
         _allow_analytics = True
         _PII = ["personal_relationship_note"]
 
-    personal_details = models.ForeignKey(PersonalDetails)
+    personal_details = models.ForeignKey(PersonalDetails, on_delete=models.CASCADE)
     pass_phrase = models.CharField(max_length=255, blank=True, null=True)
     reason = models.CharField(max_length=30, choices=THIRDPARTY_REASON, null=True, blank=True, default="")
     personal_relationship = models.CharField(max_length=30, choices=THIRDPARTY_RELATIONSHIP)
@@ -302,7 +302,7 @@ class EODDetails(TimeStampedModel):
         _allow_analytics = True
         _PII = ["notes"]
 
-    case = models.OneToOneField("Case", related_name="eod_details")
+    case = models.OneToOneField("Case", related_name="eod_details", on_delete=models.CASCADE)
     notes = models.TextField(blank=True)
     reference = UUIDField(auto=True, unique=True)
 
@@ -342,7 +342,7 @@ class EODDetailsCategory(models.Model):
     class Analytics:
         _allow_analytics = True
 
-    eod_details = models.ForeignKey(EODDetails, related_name="categories")
+    eod_details = models.ForeignKey(EODDetails, related_name="categories", on_delete=models.CASCADE)
     category = models.CharField(max_length=30, choices=EXPRESSIONS_OF_DISSATISFACTION, blank=True, null=True)
     is_major = models.BooleanField(default=False)
 
@@ -356,9 +356,9 @@ class EODDetailsCategory(models.Model):
 
 class Person(CloneModelMixin, TimeStampedModel):
 
-    income = models.ForeignKey(Income, blank=True, null=True)
-    savings = models.ForeignKey(Savings, blank=True, null=True)
-    deductions = models.ForeignKey(Deductions, blank=True, null=True)
+    income = models.ForeignKey(Income, blank=True, null=True, on_delete=models.CASCADE)
+    savings = models.ForeignKey(Savings, blank=True, null=True, on_delete=models.CASCADE)
+    deductions = models.ForeignKey(Deductions, blank=True, null=True, on_delete=models.CASCADE)
 
     cloning_config = {"excludes": ["created", "modified"], "clone_fks": ["income", "savings", "deductions"]}
 
@@ -424,10 +424,10 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin):
 
     reference = UUIDField(auto=True, unique=True)
 
-    category = models.ForeignKey(Category, blank=True, null=True)
-    you = models.ForeignKey(Person, blank=True, null=True, related_name="you")
-    partner = models.ForeignKey(Person, blank=True, null=True, related_name="partner")
-    disputed_savings = models.ForeignKey(Savings, blank=True, null=True)
+    category = models.ForeignKey(Category, blank=True, null=True, on_delete=models.CASCADE)
+    you = models.ForeignKey(Person, blank=True, null=True, related_name="you", on_delete=models.CASCADE)
+    partner = models.ForeignKey(Person, blank=True, null=True, related_name="partner", on_delete=models.CASCADE)
+    disputed_savings = models.ForeignKey(Savings, blank=True, null=True, on_delete=models.CASCADE)
     your_problem_notes = models.TextField(blank=True)
     notes = models.TextField(blank=True)
     state = models.CharField(max_length=50, default=ELIGIBILITY_STATES.UNKNOWN, choices=ELIGIBILITY_STATES.CHOICES)
@@ -653,7 +653,7 @@ class Property(TimeStampedModel):
     value = MoneyField(default=None, null=True, blank=True)
     mortgage_left = MoneyField(default=None, null=True, blank=True)
     share = models.PositiveIntegerField(default=None, validators=[MaxValueValidator(100)], null=True, blank=True)
-    eligibility_check = models.ForeignKey(EligibilityCheck, related_query_name="property_set")
+    eligibility_check = models.ForeignKey(EligibilityCheck, related_query_name="property_set", on_delete=models.CASCADE)
     disputed = models.NullBooleanField(default=None)
     main = models.NullBooleanField(default=None)
 
@@ -666,7 +666,7 @@ class MatterType(TimeStampedModel):
     class Analytics:
         _allow_analytics = True
 
-    category = models.ForeignKey(Category)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
     code = models.CharField(max_length=4)
     description = models.CharField(max_length=255)
     level = models.PositiveSmallIntegerField(choices=MATTER_TYPE_LEVELS.CHOICES, validators=[MaxValueValidator(2)])
@@ -689,7 +689,7 @@ class MediaCodeGroup(models.Model):
 
 
 class MediaCode(TimeStampedModel):
-    group = models.ForeignKey(MediaCodeGroup)
+    group = models.ForeignKey(MediaCodeGroup, on_delete=models.CASCADE)
     name = models.CharField(max_length=128)
     code = models.CharField(max_length=20)
 
@@ -700,11 +700,11 @@ class Case(TimeStampedModel):
         _PII = ["notes", "provider_notes", "client_notes"]
 
     reference = models.CharField(max_length=128, unique=True, editable=False)
-    eligibility_check = models.OneToOneField(EligibilityCheck, null=True, blank=True)
+    eligibility_check = models.OneToOneField(EligibilityCheck, null=True, blank=True, on_delete=models.CASCADE)
     diagnosis = models.OneToOneField("diagnosis.DiagnosisTraversal", null=True, blank=True, on_delete=SET_NULL)
-    personal_details = models.ForeignKey(PersonalDetails, blank=True, null=True)
+    personal_details = models.ForeignKey(PersonalDetails, blank=True, null=True, on_delete=models.CASCADE)
 
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.CASCADE)
     audit_log = models.ManyToManyField(AuditLog, blank=True)
 
     requires_action_by = models.CharField(
@@ -728,27 +728,37 @@ class Case(TimeStampedModel):
     )
     callback_attempt = models.PositiveSmallIntegerField(default=0)
 
-    locked_by = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name="case_locked")
+    locked_by = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name="case_locked", on_delete=models.CASCADE)
     locked_at = models.DateTimeField(auto_now=False, blank=True, null=True)
-    provider = models.ForeignKey("cla_provider.Provider", blank=True, null=True)
-    organisation = models.ForeignKey("call_centre.Organisation", blank=True, null=True)
+    provider = models.ForeignKey("cla_provider.Provider", blank=True, null=True, on_delete=models.CASCADE)
+    organisation = models.ForeignKey("call_centre.Organisation", blank=True, null=True, on_delete=models.CASCADE)
     notes = models.TextField(blank=True)  # These notes are assigned by call centre operators
     provider_notes = models.TextField(blank=True)  # These notes are set by specialist providers
     client_notes = models.TextField(blank=True)  # These notes are populated by users on the public contact form
     laa_reference = models.BigIntegerField(null=True, blank=True, unique=True, editable=False)
-    thirdparty_details = models.ForeignKey("ThirdPartyDetails", blank=True, null=True)
-    adaptation_details = models.ForeignKey("AdaptationDetails", blank=True, null=True)
+    thirdparty_details = models.ForeignKey("ThirdPartyDetails", blank=True, null=True, on_delete=models.CASCADE)
+    adaptation_details = models.ForeignKey("AdaptationDetails", blank=True, null=True, on_delete=models.CASCADE)
     billable_time = models.PositiveIntegerField(default=0)
 
     matter_type1 = models.ForeignKey(
-        MatterType, limit_choices_to={"level": MATTER_TYPE_LEVELS.ONE}, blank=True, null=True, related_name="+"
+        MatterType,
+        limit_choices_to={"level": MATTER_TYPE_LEVELS.ONE},
+        blank=True,
+        null=True,
+        related_name="+",
+        on_delete=models.CASCADE,
     )
 
     matter_type2 = models.ForeignKey(
-        MatterType, limit_choices_to={"level": MATTER_TYPE_LEVELS.TWO}, blank=True, null=True, related_name="+"
+        MatterType,
+        limit_choices_to={"level": MATTER_TYPE_LEVELS.TWO},
+        blank=True,
+        null=True,
+        related_name="+",
+        on_delete=models.CASCADE,
     )
 
-    media_code = models.ForeignKey(MediaCode, blank=True, null=True)
+    media_code = models.ForeignKey(MediaCode, blank=True, null=True, on_delete=models.CASCADE)
 
     alternative_help_articles = models.ManyToManyField(
         "knowledgebase.Article", through="CaseKnowledgebaseAssignment", null=True, blank=True
@@ -767,7 +777,7 @@ class Case(TimeStampedModel):
 
     # if not None, indicates the case from which this was created
     #   that is, the original case being split
-    from_case = models.ForeignKey("self", blank=True, null=True, related_name="split_cases")
+    from_case = models.ForeignKey("self", blank=True, null=True, related_name="split_cases", on_delete=models.CASCADE)
 
     provider_assigned_at = models.DateTimeField(blank=True, null=True)
     assigned_out_of_hours = models.NullBooleanField(default=False)
@@ -1126,10 +1136,10 @@ class CaseNotesHistory(TimeStampedModel):
     class Analytics:
         _PII = ["operator_notes", "provider_notes"]
 
-    case = models.ForeignKey(Case, db_index=True)
+    case = models.ForeignKey(Case, db_index=True, on_delete=models.CASCADE)
     operator_notes = models.TextField(null=True, blank=True)
     provider_notes = models.TextField(null=True, blank=True)
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     include_in_summary = models.BooleanField(default=True)
 
     class Meta(object):
@@ -1149,6 +1159,6 @@ class CaseKnowledgebaseAssignment(TimeStampedModel):
     class Analytics:
         _allow_analytics = True
 
-    case = models.ForeignKey(Case)
-    alternative_help_article = models.ForeignKey("knowledgebase.Article")
-    assigned_by = models.ForeignKey("auth.User", blank=True, null=True)
+    case = models.ForeignKey(Case, on_delete=models.CASCADE)
+    alternative_help_article = models.ForeignKey("knowledgebase.Article", on_delete=models.CASCADE)
+    assigned_by = models.ForeignKey("auth.User", blank=True, null=True, on_delete=models.CASCADE)

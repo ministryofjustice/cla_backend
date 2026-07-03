@@ -54,7 +54,7 @@ class ReasonForContacting(TimeStampedModel):
     referrer = models.CharField(max_length=255, blank=True)
     user_agent = models.CharField(max_length=255, blank=True)
 
-    case = models.ForeignKey("legalaid.Case", blank=True, null=True)
+    case = models.ForeignKey("legalaid.Case", blank=True, null=True, on_delete=models.CASCADE)
 
     class Meta(object):
         verbose_name_plural = "reasons for contacting"

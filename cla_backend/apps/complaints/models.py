@@ -33,7 +33,7 @@ class Complaint(TimeStampedModel):
     class Analytics:
         _allow_analytics = True
 
-    eod = models.ForeignKey("legalaid.EODDetails")
+    eod = models.ForeignKey("legalaid.EODDetails", on_delete=models.CASCADE)
 
     description = models.TextField(null=True, blank=True)
     source = models.CharField(max_length=15, choices=COMPLAINT_SOURCE, blank=True)
@@ -42,7 +42,7 @@ class Complaint(TimeStampedModel):
     )
     justified = models.NullBooleanField()
     resolved = models.NullBooleanField()
-    category = models.ForeignKey("Category", blank=True, null=True)
+    category = models.ForeignKey("Category", blank=True, null=True, on_delete=models.CASCADE)
 
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -50,6 +50,7 @@ class Complaint(TimeStampedModel):
         limit_choices_to={"operator__is_manager": True},
         blank=True,
         null=True,
+        on_delete=models.CASCADE,
     )
 
     created_by = models.ForeignKey(
@@ -58,6 +59,7 @@ class Complaint(TimeStampedModel):
         limit_choices_to={"operator__isnull": False},
         blank=True,
         null=True,
+        on_delete=models.CASCADE,
     )
 
     logs = GenericRelation("cla_eventlog.ComplaintLog", related_query_name="complaint")

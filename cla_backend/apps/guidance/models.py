@@ -41,8 +41,8 @@ class Tag(models.Model):
 
 
 class NoteTagRelation(models.Model):
-    tag = models.ForeignKey("Tag")
-    note = models.ForeignKey("Note")
+    tag = models.ForeignKey("Tag", on_delete=models.CASCADE)
+    note = models.ForeignKey("Note", on_delete=models.CASCADE)
 
     class Meta(object):
         unique_together = (("tag", "note"),)

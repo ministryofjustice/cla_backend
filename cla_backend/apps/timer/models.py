@@ -46,9 +46,9 @@ class CurrentTimestampDateTimeField(models.DateTimeField):
 
 
 class Timer(models.Model):
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     stopped = CurrentTimestampDateTimeField(blank=True, null=True)
-    linked_case = models.ForeignKey(Case, blank=True, null=True)
+    linked_case = models.ForeignKey(Case, blank=True, null=True, on_delete=models.CASCADE)
     cancelled = models.BooleanField(default=False)
 
     created = CurrentTimestampDateTimeField(_("created"), default=postgres_now, editable=False)

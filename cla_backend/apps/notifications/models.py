@@ -35,13 +35,13 @@ class Notification(TimeStampedModel):
     notes = models.TextField(null=True, blank=True)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     objects = NotificationManager()
 
 
 class Schedule(TimeStampedModel):
-    notification = models.ForeignKey(Notification)
+    notification = models.ForeignKey(Notification, on_delete=models.CASCADE)
     retried = models.IntegerField(default=0)
     status = models.CharField(max_length=20, default="scheduled")
     completed = models.BooleanField(default=False)

@@ -4,6 +4,8 @@ from oauth2_provider.views import RevokeTokenView
 
 from . import views
 
+app_name = "oauth2"
+
 urlpatterns = patterns(
     "",
     url(r"^access_token/?$", csrf_exempt(views.AccessTokenView.as_view()), name="access_token"),

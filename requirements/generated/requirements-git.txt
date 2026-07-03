@@ -4,18 +4,3 @@
 #
 #    pip-compile --generate-hashes --output-file=requirements/generated/requirements-git.txt requirements/source/requirements-git.in
 #
-asgiref==3.11.1 \
-    --hash=sha256:5f184dc43b7e763efe848065441eac62229c9f7b0475f41f80e207a114eda4ce \
-    --hash=sha256:e8667a091e69529631969fd45dc268fa79b99c92c5fcdda727757e52146ec133
-    # via django
-django==6.0.6 \
-    --hash=sha256:25148b1194c47c2e685e5f5e9c5d59c78b075dfd282cb9618861ba6c1708f4d2 \
-    --hash=sha256:ad03916ba59523d781ae5c3f631960c23d69a9d9c43cecda52fc23b47e953713
-    # via django-pagedown
-django-pagedown @ https://github.com/timmyomahony/django-pagedown/archive/refs/tags/v1.1.tar.gz \
-    --hash=sha256:995f19e45c563321e0f9840300ebbd9ce66d621e8e4b4e9c27aee44183131237
-    # via -r requirements/source/requirements-git.in
-sqlparse==0.5.5 \
-    --hash=sha256:12a08b3bf3eec877c519589833aed092e2444e68240a3577e8e26148acc7b1ba \
-    --hash=sha256:e20d4a9b0b8585fdf63b10d30066c7c94c5d7a7ec47c889a2d83a3caa93ff28e
-    # via django

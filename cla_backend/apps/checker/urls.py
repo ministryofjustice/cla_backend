@@ -3,6 +3,8 @@ from rest_framework import routers
 
 from . import views
 
+app_name = "checker"
+
 router = routers.DefaultRouter()
 router.register(r"diagnosis", views.DiagnosisViewSet, base_name="diagnosis")
 router.register(r"category", views.CategoryViewSet)

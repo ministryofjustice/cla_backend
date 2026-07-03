@@ -4,6 +4,8 @@ from cla_backend.libs.django_compat import patterns, url
 
 from .views import MCCCaseViewSet
 
+app_name = "mcc"
+
 case_split = MCCCaseViewSet.as_view({"post": "split"})
 case_detailed = MCCCaseViewSet.as_view({"get": "detailed"})
 case_category_change = MCCCaseViewSet.as_view({"patch": "change_category"})

@@ -6,6 +6,8 @@ from core import routers as core_routers
 
 from . import views
 
+app_name = "call_centre"
+
 router = routers.DefaultRouter()
 adv_router = AdvancedSimpleRouter()
 router.register(r"category", views.CategoryViewSet)

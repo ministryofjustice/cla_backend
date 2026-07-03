@@ -82,7 +82,6 @@ django==5.2.1
     #   django-filter
     #   django-model-utils
     #   django-oauth-toolkit
-    #   django-pagedown
     #   django-session-security
     #   django-storages
     #   djangorestframework
@@ -110,8 +109,6 @@ django-nested-admin==3.2.4
     # via -r requirements/source/requirements-base.in
 django-oauth-toolkit==3.0.1
     # via -r requirements/source/requirements-base.in
-django-pagedown @ https://github.com/timmyomahony/django-pagedown/archive/refs/tags/v1.1.tar.gz
-    # via -r requirements/source/requirements-git.in
 django-pdb @ https://github.com/HassenPy/django-pdb/archive/refs/tags/0.3.2.tar.gz
     # via -r requirements/source/requirements-testing.in
 django-session-security==2.2.3

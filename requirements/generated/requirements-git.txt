@@ -156,9 +156,6 @@ django-extended-choices==0.3.0 \
 django-pagedown @ https://github.com/timmyomahony/django-pagedown/archive/refs/tags/v1.1.tar.gz \
     --hash=sha256:995f19e45c563321e0f9840300ebbd9ce66d621e8e4b4e9c27aee44183131237
     # via -r requirements/source/requirements-git.in
-djorm-ext-pgfulltext @ https://github.com/ministryofjustice/djorm-ext-pgfulltext/archive/refs/tags/0.1.0.tar.gz \
-    --hash=sha256:acef2387e287b5ba6f5883e15a8808637f008fe4890d12304d3100c6dccdad74
-    # via -r requirements/source/requirements-git.in
 idna==3.18 \
     --hash=sha256:7f952cbe720b688055e3f87de14f5c3e5fdaa8bc3928985c4077ca689de849a2 \
     --hash=sha256:ffb385a7e039654cef1ab9ef32c6fafe283c0c0467bba1d9029738ce4a14a848

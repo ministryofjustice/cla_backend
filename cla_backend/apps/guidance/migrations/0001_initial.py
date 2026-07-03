@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 from django.db import models, migrations
 import django.utils.timezone
 import model_utils.fields
-import djorm_pgfulltext.fields
 
 
 class Migration(migrations.Migration):
@@ -34,7 +33,7 @@ class Migration(migrations.Migration):
                 ("raw_body", models.TextField()),
                 (
                     "search_index",
-                    djorm_pgfulltext.fields.VectorField(default=b"", serialize=False, null=True, editable=False),
+                    models.TextField(default=b"", serialize=False, null=True, editable=False),
                 ),
             ],
             options={"abstract": False},

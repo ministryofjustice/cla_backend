@@ -239,12 +239,12 @@ BACKEND_ENABLED = os.environ.get("BACKEND_ENABLED", "True") == "True"
 ADMIN_ENABLED = os.environ.get("ADMIN_ENABLED", "True") == "True"
 INSTALLED_APPS = (
     "django.contrib.auth",
+    "django.contrib.postgres",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "nested_admin",
-    "djorm_pgfulltext",
     "session_security",
 )
 

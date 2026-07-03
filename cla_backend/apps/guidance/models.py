@@ -1,9 +1,33 @@
 # coding=utf-8
+import re
+
+from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 from django.db import models
 
 from model_utils.models import TimeStampedModel
-from djorm_pgfulltext.fields import VectorField
-from djorm_pgfulltext.models import SearchManager
+
+
+class NoteQuerySet(models.QuerySet):
+    def word_tree_search(self, query):
+        tokens = re.findall(r"[\w'-]+", query or "")
+        if not tokens:
+            return self
+
+        # Keep a permissive search parser while still supporting prefix matching.
+        raw_query = " & ".join("{}:*".format(token) for token in tokens)
+        search_query = SearchQuery(raw_query, search_type="raw")
+        search_vector = (
+            SearchVector("title", weight="A")
+            + SearchVector("tags__title", weight="B")
+            + SearchVector("raw_body", weight="D")
+        )
+        return (
+            self.annotate(search=search_vector)
+            .filter(search=search_query)
+            .annotate(rank=SearchRank(search_vector, search_query))
+            .order_by("-rank", "title")
+            .distinct()
+        )
 
 
 class Tag(models.Model):
@@ -35,11 +59,7 @@ class Note(TimeStampedModel):
     name = models.CharField(max_length=50)
     tags = models.ManyToManyField("Tag", related_name="notes", through="NoteTagRelation")
 
-    search_index = VectorField()
-
-    objects = SearchManager(
-        fields=(("title", "A"), ("tags__title", "B"), ("raw_body", "D")), auto_update_search_field=True
-    )
+    objects = NoteQuerySet.as_manager()
 
     def __unicode__(self):
         return self.title

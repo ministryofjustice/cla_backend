@@ -42,6 +42,68 @@ To start the containers:
 ./run_local.sh
 ```
 
+### Local Python Development (without app container)
+
+If you want to run Django directly on your host machine (while keeping Postgres/RabbitMQ in Docker), use:
+
+```bash
+# from repository root
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip setuptools wheel
+python -m pip install "pip-tools>=7.4,<8"
+```
+
+Regenerate lock files after changing anything in `requirements/source/*.in`:
+
+```bash
+pip-compile --resolver=backtracking --upgrade --generate-hashes --output-file=requirements/generated/requirements-git.txt requirements/source/requirements-git.in
+pip-compile --resolver=backtracking --upgrade --output-file=requirements/generated/requirements-production.txt requirements/source/requirements-production.in
+pip-compile --resolver=backtracking --upgrade --output-file=requirements/generated/requirements-testing.txt requirements/source/requirements-testing.in
+pip-compile --resolver=backtracking --upgrade --output-file=requirements/generated/requirements-docs.txt requirements/source/requirements-docs.in
+pip-compile --resolver=backtracking --upgrade --generate-hashes --output-file=requirements/generated/requirements-lint.txt requirements/source/requirements-lint.in
+pip-compile --resolver=backtracking --upgrade --output-file=requirements/generated/requirements-dev.txt requirements/source/requirements-dev.in
+```
+
+Install local dev dependencies:
+
+```bash
+python -m pip install -r requirements/generated/requirements-dev.txt
+
+# django-nested-admin currently imports pkg_resources
+python -m pip install "setuptools<81"
+```
+
+Start only supporting services in Docker:
+
+```bash
+docker compose up -d db rabbitmq
+```
+
+Export local runtime environment and run Django:
+
+```bash
+export DJANGO_SETTINGS_MODULE=cla_backend.settings.base
+export DB_NAME=cla_backend
+export DB_USER=postgres
+export DB_PASSWORD=postgres
+export DB_HOST=127.0.0.1
+export DB_PORT=5433
+export CELERY_BROKER_URL=amqp://127.0.0.1
+export DEBUG=True
+export SECRET_KEY=CHANGE_ME
+export ALLOWED_HOSTS='*'
+
+python manage.py migrate
+python manage.py check
+python manage.py runserver 0.0.0.0:8000
+```
+
+Notes for the Django 5 upgrade branch:
+
+- `python manage.py check` currently fails on `djorm_pgfulltext` (legacy package not compatible with Django 5).
+- The lock files compile cleanly, but runtime modernization is still in progress.
+
 You can connect to the admin application from <http://localhost:8010/admin> and log in as `cla_admin`.
 
 The `run_local.sh` script is reliable but slow, because it rebuilds and restarts all the containers. Usually you can quickly restart just the stopped containers with:
@@ -167,7 +229,7 @@ To run all tests, this could be done from within the development container (as a
 To lint with Black and flake8, install pre-commit hooks:
 
 ```bash
-virtualenv -p python2.7 env --prompt=\(cla_be\)
+python3 -m venv env
 . env/bin/activate
 pip install -r requirements/generated/requirements-lint.txt
 pre-commit install

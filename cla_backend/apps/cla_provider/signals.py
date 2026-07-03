@@ -27,7 +27,7 @@ def log_staff_action(action, instance):
         extra={
             "USERNAME": instance.user.username,
             "PROVIDER": instance.provider.name,
-            "IS_MANAGER": unicode(instance.is_manager),
+            "IS_MANAGER": str(instance.is_manager),
         },
     )
 
@@ -41,6 +41,6 @@ def log_staff_action(action, instance):
                 "datetime": date_format(localtime(now()), "SHORT_DATETIME_FORMAT"),
                 "username": instance.user.username,
                 "provider": instance.provider.name,
-                "is_manager": unicode(instance.is_manager),
+                "is_manager": str(instance.is_manager),
             },
         )

@@ -1,5 +1,5 @@
 from django.test import TestCase
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.utils.crypto import get_random_string
 
 from core.tests.mommy_utils import make_recipe, make_user

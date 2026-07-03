@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.core.management.base import NoArgsCommand
 from django.utils.html import strip_tags
-from django.utils.six import text_type
+from six import text_type
 
 from diagnosis.graph import get_graph
 

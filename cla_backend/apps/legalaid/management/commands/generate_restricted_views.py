@@ -165,7 +165,7 @@ class Command(BaseCommand):
         # Gets a dict of table names with a list of non-sensitive columns
         non_sensitive_models = get_all_non_restricted_models(apps.get_models())
 
-        for model, columns in non_sensitive_models.iteritems():
+        for model, columns in non_sensitive_models.items():
             view_name = "{model_name}_view".format(model_name=model)
             if does_view_exist(view_name):
                 delete_view(view_name)

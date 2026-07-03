@@ -49,8 +49,8 @@ class TestCSV2Fixture(TestCase):
         self.assertEqual(len(output_list), 18)
 
         article_category = output_list[0]
-        self.assertItemsEqual(article_category.keys(), [u"fields", u"model", u"pk"])
-        self.assertItemsEqual(article_category["fields"].keys(), [u"created", u"modified", u"name"])
+        self.assertCountEqual(article_category.keys(), [u"fields", u"model", u"pk"])
+        self.assertCountEqual(article_category["fields"].keys(), [u"created", u"modified", u"name"])
 
         for output_dict, expected_dict in zip(output_list, expected_values):
             for expected_key, expected_value in expected_dict.items():
@@ -87,8 +87,8 @@ class TestCSV2Fixture(TestCase):
         self.assertEqual(len(output_article_list), 1)
 
         article = output_article_list[0]
-        self.assertItemsEqual(article.keys(), [u"fields", u"model", u"pk"])
-        self.assertItemsEqual(
+        self.assertCountEqual(article.keys(), [u"fields", u"model", u"pk"])
+        self.assertCountEqual(
             article["fields"].keys(),
             [
                 u"accessibility",
@@ -175,8 +175,8 @@ class TestCSV2Fixture(TestCase):
 
         output_acm = sorted_records["knowledgebase.articlecategorymatrix"]
         output_acm_record = output_acm[0]
-        self.assertItemsEqual(output_acm_record.keys(), [u"fields", u"model", u"pk"])
-        self.assertItemsEqual(
+        self.assertCountEqual(output_acm_record.keys(), [u"fields", u"model", u"pk"])
+        self.assertCountEqual(
             output_acm_record["fields"].keys(),
             [u"article", u"article_category", u"created", u"modified", u"preferred_signpost"],
         )

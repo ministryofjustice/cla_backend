@@ -422,7 +422,7 @@ class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin, CallCentreFixedOperat
             self.assertFalse(form.is_valid(), "%s" % datetime)
 
             self.assertEqual(len(form.errors), 1)
-            self.assertItemsEqual(form.errors["datetime"], [error_msg])
+            self.assertCountEqual(form.errors["datetime"], [error_msg])
 
             # nothing has changed
             case = Case.objects.get(pk=case.pk)
@@ -489,8 +489,8 @@ class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin, CallCentreFixedOperat
         form = self.FORM(case=case, data=self.get_default_data())
 
         self.assertFalse(form.is_valid())
-        self.assertItemsEqual(form.errors.keys(), ["__all__"])
-        self.assertItemsEqual(form.errors["__all__"], [u"Reached max number of callbacks allowed"])
+        self.assertCountEqual(form.errors.keys(), ["__all__"])
+        self.assertCountEqual(form.errors["__all__"], [u"Reached max number of callbacks allowed"])
 
     @mock.patch("django.utils.timezone.now")
     def test_callback_SMS_sla_date_from_case_creation_date(self, mocked_now):
@@ -575,8 +575,8 @@ class StopCallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
         form = self.FORM(case=case, data={"action": "invalid"})
 
         self.assertFalse(form.is_valid())
-        self.assertItemsEqual(form.errors.keys(), ["action"])
-        self.assertItemsEqual(
+        self.assertCountEqual(form.errors.keys(), ["action"])
+        self.assertCountEqual(
             form.errors["action"], [u"Select a valid choice. invalid is not one of the available choices."]
         )
 
@@ -588,8 +588,8 @@ class StopCallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
         form = self.FORM(case=case, data={"action": "cancel"})
 
         self.assertFalse(form.is_valid())
-        self.assertItemsEqual(form.errors.keys(), ["__all__"])
-        self.assertItemsEqual(form.errors["__all__"], [u"Cannot cancel callback without a previous CBx"])
+        self.assertCountEqual(form.errors.keys(), ["__all__"])
+        self.assertCountEqual(form.errors["__all__"], [u"Cannot cancel callback without a previous CBx"])
 
     def test_CALLBACK_COMPLETE_not_allowed_wihout_prev_CBx(self):
         case = make_recipe("legalaid.case", callback_attempt=0)
@@ -597,5 +597,5 @@ class StopCallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
         form = self.FORM(case=case, data={"action": "complete"})
 
         self.assertFalse(form.is_valid())
-        self.assertItemsEqual(form.errors.keys(), ["__all__"])
-        self.assertItemsEqual(form.errors["__all__"], [u"Cannot mark callback as complete without previous CBx"])
+        self.assertCountEqual(form.errors.keys(), ["__all__"])
+        self.assertCountEqual(form.errors["__all__"], [u"Cannot mark callback as complete without previous CBx"])

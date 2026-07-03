@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.core.management import call_command
-from django.utils.six import StringIO
+from io import StringIO
 from core.tests.mommy_utils import make_recipe, make_user
 
 

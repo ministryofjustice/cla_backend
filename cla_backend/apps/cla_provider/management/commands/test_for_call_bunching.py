@@ -60,7 +60,7 @@ class Command(BaseCommand):
             assigned_early = case.provider_assigned_at - delta <= earliest_previous.provider_assigned_at
             if same_provider and same_category and assigned_early:
 
-                all_pks = ", ".join([unicode(c.pk) for c in previous.values()])
+                all_pks = ", ".join([str(c.pk) for c in previous.values()])
 
                 self.stdout.write(
                     "Provider %s has %s cases in %s Minutes: %s"

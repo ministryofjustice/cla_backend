@@ -30,7 +30,7 @@ class MoneyFieldModelSerializerMixin(object):
 
 class UUIDSerializer(serializers.SlugRelatedField):
     def to_representation(self, obj):
-        return unicode(getattr(obj, self.slug_field))
+        return str(getattr(obj, self.slug_field))
 
 
 class NullBooleanModelSerializerMixin(object):

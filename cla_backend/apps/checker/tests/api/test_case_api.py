@@ -33,7 +33,7 @@ class BaseCaseTestCase(
         return None
 
     def assertCaseResponseKeys(self, response):
-        self.assertItemsEqual(
+        self.assertCountEqual(
             response.data.keys(),
             [
                 "eligibility_check",
@@ -55,7 +55,7 @@ class BaseCaseTestCase(
             self.assertEqual(data, obj)
         else:
             for prop in ["title", "full_name", "postcode", "street", "mobile_phone", "home_phone"]:
-                self.assertEqual(unicode(getattr(obj, prop)), data[prop])
+                self.assertEqual(str(getattr(obj, prop)), data[prop])
 
     def assertThirdPartyDetailsEqual(self, data, obj):
         if data is None or obj is None:
@@ -63,11 +63,11 @@ class BaseCaseTestCase(
         else:
             self.assertEqual(data["personal_relationship"], obj.personal_relationship)
             for prop in ["full_name", "mobile_phone", "safe_to_contact"]:
-                self.assertEqual(unicode(getattr(obj.personal_details, prop)), data["personal_details"][prop])
+                self.assertEqual(str(getattr(obj.personal_details, prop)), data["personal_details"][prop])
 
     def assertCaseEqual(self, data, case):
         self.assertEqual(case.reference, data["reference"])
-        self.assertEqual(unicode(case.eligibility_check.reference), data["eligibility_check"])
+        self.assertEqual(str(case.eligibility_check.reference), data["eligibility_check"])
         self.assertPersonalDetailsEqual(data["personal_details"], case.personal_details)
         self.assertThirdPartyDetailsEqual(data["thirdparty_details"], case.thirdparty_details)
 
@@ -112,7 +112,7 @@ class CaseTestCase(BaseCaseTestCase):
         response = self.client.post(self.list_url, data={}, format="json")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-        self.assertItemsEqual(response.data.keys(), ["personal_details"])
+        self.assertCountEqual(response.data.keys(), ["personal_details"])
 
         self.assertEqual(Case.objects.count(), 0)
 
@@ -120,7 +120,7 @@ class CaseTestCase(BaseCaseTestCase):
         check = make_recipe("legalaid.eligibility_check")
 
         data = {
-            "eligibility_check": unicode(check.reference),
+            "eligibility_check": str(check.reference),
             "personal_details": self.get_personal_details_default_post_data(),
             "thirdparty_details": self.get_thirdparty_details_default_post_data(),
         }
@@ -178,7 +178,7 @@ class CaseTestCase(BaseCaseTestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
         errors = response.data
-        self.assertItemsEqual(errors.keys(), ["eligibility_check", "personal_details"])
+        self.assertCountEqual(errors.keys(), ["eligibility_check", "personal_details"])
         self.assertEqual(errors["eligibility_check"], [u"Object with reference=%s does not exist." % invalid_uuid])
         self.assertDictEqual(
             errors["personal_details"],
@@ -203,7 +203,7 @@ class CaseTestCase(BaseCaseTestCase):
         case = make_recipe("legalaid.case")
 
         data = {
-            "eligibility_check": unicode(case.eligibility_check.reference),
+            "eligibility_check": str(case.eligibility_check.reference),
             "personal_details": self.get_personal_details_default_post_data(),
         }
         response = self.client.post(self.list_url, data=data, format="json")
@@ -232,7 +232,7 @@ class AdaptationCaseTestCase(BaseCaseTestCase):
             eligibility_check = make_recipe("legalaid.eligibility_check")
         # for checker, language is not always passed so have option of no language key at all
         data = {
-            "eligibility_check": unicode(eligibility_check.reference),
+            "eligibility_check": str(eligibility_check.reference),
             "personal_details": self.get_personal_details_default_post_data(),
             "adaptation_details": {"text_relay": False, "notes": "", "bsl_webcam": False, "minicom": False},
         }
@@ -258,7 +258,7 @@ class AdaptationCaseTestCase(BaseCaseTestCase):
             self.assertEqual(data, obj)
         else:
             for prop in data.keys():
-                self.assertEqual(unicode(getattr(obj, prop)), unicode(data[prop]))
+                self.assertEqual(str(getattr(obj, prop)), str(data[prop]))
 
     def test_adaptations_language(self, language=None):
         data = self.set_case_data(language)
@@ -289,7 +289,7 @@ class CallMeBackCaseTestCase(BaseCaseTestCase, MockGovNotifyMailBox):
         self.create_callback_no_capacity_slot()
 
         data = {
-            "eligibility_check": unicode(check.reference),
+            "eligibility_check": str(check.reference),
             "personal_details": self.get_personal_details_default_post_data(),
             "requires_action_at": self._default_dt.isoformat(),
             "callback_type": CALLBACK_TYPES.CHECKER_SELF,
@@ -351,7 +351,7 @@ class CallMeBackCaseTestCase(BaseCaseTestCase, MockGovNotifyMailBox):
         check = make_recipe("legalaid.eligibility_check")
 
         data = {
-            "eligibility_check": unicode(check.reference),
+            "eligibility_check": str(check.reference),
             "personal_details": self.get_personal_details_default_post_data(),
             "requires_action_at": self._default_dt.isoformat(),
             "outcome_code": "TEST",

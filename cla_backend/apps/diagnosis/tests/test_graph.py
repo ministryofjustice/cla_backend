@@ -104,6 +104,6 @@ class GraphTestCase(TestCase):
         _graph = get_graph(file_name=settings.DIAGNOSIS_FILE_NAME)
         node = _graph.node["n404"]
         self.assertEqual(
-            unicode(node["description"]),
+            str(node["description"]),
             u"<p><strong>The client has received a letter of proceedings, letter of issue or have a court date.</strong></p>\n<p>No financial assessment is required.</p>",
         )

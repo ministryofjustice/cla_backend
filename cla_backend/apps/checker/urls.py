@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, url, include
+from cla_backend.libs.django_compat import patterns, url, include
 from rest_framework import routers
 
 from . import views

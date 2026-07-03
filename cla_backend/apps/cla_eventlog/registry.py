@@ -5,10 +5,10 @@ from .constants import LOG_LEVELS, LOG_TYPES, LOG_ROLES
 
 def is_code_valid(code):
     required_keys = {
-        "type": basestring,
+        "type": str,
         "level": int,
         "selectable_by": list,
-        "description": basestring,
+        "description": str,
         "stops_timer": bool,
     }
     all_keys = required_keys.keys() + ["set_requires_action_by", "order"]

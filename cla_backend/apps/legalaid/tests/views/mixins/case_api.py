@@ -1,4 +1,4 @@
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.db import connection
 from django.test import override_settings
 
@@ -70,14 +70,14 @@ class BaseFullCaseAPIMixin(SimpleResourceAPIMixin):
         ]
 
     def assertPersonalDetailsEqual(self, data, obj):
-        if isinstance(data, basestring):
-            self.assertEqual(unicode(data), unicode(obj.reference))
+        if isinstance(data, str):
+            self.assertEqual(str(data), str(obj.reference))
             return
         if data is None or obj is None:
             self.assertEqual(data, obj)
         else:
             for prop in ["title", "full_name", "postcode", "street", "mobile_phone", "home_phone"]:
-                self.assertEqual(unicode(getattr(obj, prop)), data[prop])
+                self.assertEqual(str(getattr(obj, prop)), data[prop])
 
     def assertCaseEqual(self, data, case):
         self.assertEqual(case.reference, data["reference"])
@@ -101,7 +101,7 @@ class BaseFullCaseAPIMixin(SimpleResourceAPIMixin):
 
             val = getattr(case, field)
             if val:
-                val = unicode(getattr(val, fk_pk))
+                val = str(getattr(val, fk_pk))
             self.assertEqual(val, data[field], "%s: %s - %s" % (field, val, data[field]))
 
         for field in [
@@ -153,7 +153,7 @@ class FullCaseAPIMixin(BaseFullCaseAPIMixin):
                 u"title": u"MR",
             }
         )
-        data = {u"personal_details": unicode(personal_details.reference)}
+        data = {u"personal_details": str(personal_details.reference)}
 
         serializer = self.get_case_serializer_clazz()(data=data)
         self.assertTrue(serializer.is_valid())

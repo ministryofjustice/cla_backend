@@ -23,7 +23,7 @@ class EligibilityCheckTestCase(EligibilityCheckAPIMixin, CLACheckerAuthBaseApiTe
         self.assertEligibilityCheckEqual(response.data, self.resource)
 
     def assertEligibilityCheckEqual(self, data, check):
-        self.assertEqual(data["reference"], unicode(check.reference))
+        self.assertEqual(data["reference"], str(check.reference))
         self.assertEqual(data["category"], check.category.code if check.category else None)
         self.assertEqual(data["your_problem_notes"], check.your_problem_notes)
         self.assertEqual(data["notes"], check.notes)
@@ -45,7 +45,7 @@ class EligibilityCheckTestCase(EligibilityCheckAPIMixin, CLACheckerAuthBaseApiTe
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        case_ref_url = case_ref_url.replace(unicode(self.resource_lookup_value), unicode(uuid.uuid1()))
+        case_ref_url = case_ref_url.replace(str(self.resource_lookup_value), str(uuid.uuid1()))
 
         response = self.client.get(case_ref_url, HTTP_AUTHORIZATION=self.get_http_authorization())
 

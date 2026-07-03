@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.admin.options import IS_POPUP_VAR
 from django.utils.decorators import method_decorator
-from django.utils.translation import ugettext, ugettext_lazy as _
+from django.utils.translation import gettext, gettext_lazy as _
 from django.views.decorators.debug import sensitive_post_parameters
 from django.views.decorators.http import require_POST
 from django.core.exceptions import PermissionDenied
@@ -61,7 +61,7 @@ class OneToOneUserAdmin(admin.ModelAdmin):
         obj.save()
 
     def get_urls(self):
-        from django.conf.urls import patterns
+        from cla_backend.libs.django_compat import patterns
 
         urls = patterns(
             "",
@@ -81,7 +81,7 @@ class OneToOneUserAdmin(admin.ModelAdmin):
         AccessAttempt.objects.delete_for_username(user.username)
 
         self.log_change(request, user, "Reset locked account (user %s)" % user.username)
-        msg = ugettext("Account unlocked successfully.")
+        msg = gettext("Account unlocked successfully.")
         messages.success(request, msg)
         return HttpResponseRedirect("..")
 
@@ -97,7 +97,7 @@ class OneToOneUserAdmin(admin.ModelAdmin):
                 form.save()
                 change_message = self.construct_change_message(request, form, None)
                 self.log_change(request, user, change_message)
-                msg = ugettext("Password changed successfully.")
+                msg = gettext("Password changed successfully.")
                 messages.success(request, msg)
                 return HttpResponseRedirect("..")
         else:

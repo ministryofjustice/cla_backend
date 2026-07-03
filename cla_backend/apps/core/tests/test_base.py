@@ -1,5 +1,5 @@
 import types
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from rest_framework import status
 
@@ -108,9 +108,9 @@ class SimpleResourceAPIMixin(CLABaseApiTestMixin):
                 data = data["results"]
             if isinstance(data, types.ListType):
                 for item in data:
-                    self.assertItemsEqual(item, keys)
+                    self.assertCountEqual(item, keys)
             elif isinstance(data, types.DictType):
-                self.assertItemsEqual(data.keys(), keys)
+                self.assertCountEqual(data.keys(), keys)
         else:
             raise ValueError(
                 "Must be called with response object with a .data "
@@ -124,7 +124,7 @@ class SimpleResourceAPIMixin(CLABaseApiTestMixin):
         return reverse(
             "%s:%s-%s" % (self.API_URL_NAMESPACE, self.API_URL_BASE_NAME, suffix),
             args=(),
-            kwargs={self.LOOKUP_KEY: unicode(resource_lookup_value)},
+            kwargs={self.LOOKUP_KEY: str(resource_lookup_value)},
         )
 
     def _create(self, data=None, url=None):
@@ -199,16 +199,16 @@ class NestedSimpleResourceAPIMixin(SimpleResourceAPIMixin):
         return reverse(
             "%s:%s-list" % (self.API_URL_NAMESPACE, self.API_URL_BASE_NAME),
             args=(),
-            kwargs={self.LOOKUP_KEY: unicode(self.resource_lookup_value)},
+            kwargs={self.LOOKUP_KEY: str(self.resource_lookup_value)},
         )
 
     def get_detail_url(self, resource_lookup_value, suffix="detail"):
         if self.ONE_TO_ONE_RESOURCE:
-            params = {self.LOOKUP_KEY: unicode(resource_lookup_value)}
+            params = {self.LOOKUP_KEY: str(resource_lookup_value)}
         else:
             params = {
-                self.LOOKUP_KEY: unicode(resource_lookup_value),
-                self.PARENT_LOOKUP_KEY: unicode(getattr(self.resource, self.PARENT_LOOKUP_KEY)),
+                self.LOOKUP_KEY: str(resource_lookup_value),
+                self.PARENT_LOOKUP_KEY: str(getattr(self.resource, self.PARENT_LOOKUP_KEY)),
             }
 
         return reverse("%s:%s-%s" % (self.API_URL_NAMESPACE, self.API_URL_BASE_NAME, suffix), args=(), kwargs=params)

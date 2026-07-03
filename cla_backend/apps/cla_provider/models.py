@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Q
 from django.utils import timezone
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from django.db.models.signals import post_save, pre_save
 
 from jsonfield import JSONField
@@ -150,7 +150,7 @@ class ProviderAllocation(TimeStampedModel):
         """
         if not hasattr(self, "workingdays"):
             working_day_list = []
-            for day, is_working in DEFAULT_WORKING_DAYS.iteritems():
+            for day, is_working in DEFAULT_WORKING_DAYS.items():
                 if is_working:
                     working_day_list.append(day)
             return working_day_list

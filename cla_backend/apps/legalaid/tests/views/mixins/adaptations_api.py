@@ -1,4 +1,4 @@
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from rest_framework import status
 
 from core.tests.test_base import NestedSimpleResourceAPIMixin
@@ -65,8 +65,8 @@ class AdaptationsDetailsAPIMixin(NestedSimpleResourceAPIMixin):
         expected_errors = {"language": [u"Select a valid choice. sdfsdf is not one of the available choices."]}
 
         errors = response.data
-        self.assertItemsEqual(errors.keys(), expected_errors.keys())
-        self.assertItemsEqual(errors, expected_errors)
+        self.assertCountEqual(errors.keys(), expected_errors.keys())
+        self.assertCountEqual(errors, expected_errors)
 
     def assertAdaptationDetailsEqual(self, data, obj):
         if data is None or obj is None:
@@ -83,7 +83,7 @@ class AdaptationsDetailsAPIMixin(NestedSimpleResourceAPIMixin):
                 "reference",
             ]:
                 val = obj[prop] if isinstance(obj, dict) else getattr(obj, prop)
-                self.assertEqual(unicode(val), unicode(data[prop]))
+                self.assertEqual(str(val), str(data[prop]))
 
     def test_methods_not_allowed(self):
         """

@@ -30,4 +30,4 @@ class Command(BaseCommand):
 
     @staticmethod
     def get_passphrase():
-        return raw_input("Please enter the passphrase for the CURRENT private key:")
+        return input("Please enter the passphrase for the CURRENT private key:")

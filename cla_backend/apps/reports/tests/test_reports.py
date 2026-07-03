@@ -623,7 +623,7 @@ class TestCallbackTimeSlotReport(TestCase):
                 "% Remaining capacity": "100",
             },
         }
-        for interval, callback in callbacks.iteritems():
+        for interval, callback in callbacks.items():
             # Create callback time slots
             dt = datetime.datetime.strptime(callback["Date"], date_format)
             make_recipe(self.CALLBACK_TIME_SLOT, capacity=callback["Total capacity"], date=dt, time=interval)

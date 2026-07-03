@@ -8,7 +8,7 @@ from django.template import engines
 from django.utils import translation
 from django.utils.encoding import force_text
 from django.utils.functional import lazy, SimpleLazyObject
-from django.utils.six import text_type
+from six import text_type
 from lxml import etree, objectify
 import markdown
 import networkx as nx

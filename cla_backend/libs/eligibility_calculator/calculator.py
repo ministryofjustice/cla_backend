@@ -214,7 +214,7 @@ class EligibilityChecker(object):
 
         if len(case_data.property_data) == 0:
             return True
-        for key, value in case_data.property_data[0].iteritems():
+        for key, value in case_data.property_data[0].items():
             if value is not None:
                 return True
         return False

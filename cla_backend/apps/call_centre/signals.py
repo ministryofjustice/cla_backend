@@ -26,8 +26,8 @@ def log_operator_action(action, instance):
         "Operator user {}".format(action),
         extra={
             "USERNAME": instance.user.username,
-            "IS_MANAGER": unicode(instance.is_manager),
-            "IS_CLA_SUPERUSER": unicode(instance.is_cla_superuser),
+            "IS_MANAGER": str(instance.is_manager),
+            "IS_CLA_SUPERUSER": str(instance.is_cla_superuser),
         },
     )
 
@@ -40,7 +40,7 @@ def log_operator_action(action, instance):
                 "added_or_modified": action,
                 "datetime": date_format(localtime(now()), "SHORT_DATETIME_FORMAT"),
                 "username": instance.user.username,
-                "is_manager": unicode(instance.is_manager),
-                "is_cla_superuser": unicode(instance.is_cla_superuser),
+                "is_manager": str(instance.is_manager),
+                "is_cla_superuser": str(instance.is_cla_superuser),
             },
         )

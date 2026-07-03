@@ -81,7 +81,7 @@ class ReasonForContacting(TimeStampedModel):
             for choice in REASONS_FOR_CONTACTING.CHOICES
         ]
         # unknown categories (perhaps have been removed)
-        for category, count in category_data.iteritems():
+        for category, count in category_data.items():
             if category not in REASONS_FOR_CONTACTING.CHOICES_DICT:
                 categories.append({"key": category, "description": category, "count": count})
         # calculate percentage of all responses that chose each option

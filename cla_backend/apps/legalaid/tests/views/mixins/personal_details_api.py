@@ -75,8 +75,8 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
 
         self.maxDiff = None
         errors = response.data
-        self.assertItemsEqual(errors.keys(), expected_errors.keys())
-        self.assertItemsEqual(errors, expected_errors)
+        self.assertCountEqual(errors.keys(), expected_errors.keys())
+        self.assertCountEqual(errors, expected_errors)
 
     def _test_method_phone_format_in_error(self, method, url):
         data = self._get_default_post_data()
@@ -105,7 +105,7 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
                 if value is None:
                     self.assertEqual(value, data[prop])
                 else:
-                    self.assertEqual(unicode(value), data[prop])
+                    self.assertEqual(str(value), data[prop])
             self.assertEqual(data["has_diversity"], bool(obj.diversity))
 
     def test_methods_not_allowed(self):

@@ -146,7 +146,7 @@ class EligibilityCheckTestCase(TestCase):
 
                 assert_func = self.assertEqual
                 if isinstance(val1, list) or isinstance(val2, list):
-                    assert_func = self.assertItemsEqual
+                    assert_func = self.assertCountEqual
                 if isinstance(val1, ModelMixin) or isinstance(val2, ModelMixin):
                     self.assertModelMixinEqual(val1, val2)
                     continue
@@ -691,7 +691,7 @@ class CaseTestCase(TestCase):
         self.assertEqual(case.id + settings.LAA_REFERENCE_SEED, case.laa_reference)
 
         # it is 7 digits long
-        self.assertEqual(len(unicode(case.laa_reference)), 7)
+        self.assertEqual(len(str(case.laa_reference)), 7)
 
     def test_case_doesnt_get_duplicate_reference(self):
         with mock.patch("legalaid.models._make_reference") as mr:

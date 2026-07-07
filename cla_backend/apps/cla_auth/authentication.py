@@ -172,7 +172,10 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         try:
             user = authenticate(entra_id_email=email)
         except User.MultipleObjectsReturned:
-            logger.exception("Multiple users found with the email address  %s", email)
+            duplicate_user_ids = list(
+                User.objects.filter(email__iexact=email, is_active=True).values_list("id", flat=True)
+            )
+            logger.exception("Multiple users found for user ids %s", duplicate_user_ids)
             raise exceptions.AuthenticationFailed("Multiple users found with the email address")
         except Exception:
             user = None

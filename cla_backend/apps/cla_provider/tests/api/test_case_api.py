@@ -380,14 +380,28 @@ class RejectCaseTestCase(ExplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
     def test_COI_successful(self):
         self._test_provider_closed("COI", False)
 
-    def test_MERI_successful(self):
-        self._test_provider_closed("MERI", True)
+    def _assert_mcc_only_code_rejected_for_chs(self, code):
+        data = self.get_default_post_data()
+        data["event_code"] = code
 
-    def test_DUPL_successful(self):
-        self._test_provider_closed("DUPL", True)
+        response = self.client.post(
+            self.url,
+            data=data,
+            format="json",
+            HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
 
-    def test_CLOT_successful(self):
-        self._test_provider_closed("CLOT", True)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("event_code", response.data)
+
+    def test_MERI_rejected_for_chs_user(self):
+        self._assert_mcc_only_code_rejected_for_chs("MERI")
+
+    def test_DUPL_rejected_for_chs_user(self):
+        self._assert_mcc_only_code_rejected_for_chs("DUPL")
+
+    def test_CLOT_rejected_for_chs_user(self):
+        self._assert_mcc_only_code_rejected_for_chs("CLOT")
 
 
 class AcceptCaseTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):

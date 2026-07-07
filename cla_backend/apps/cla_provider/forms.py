@@ -5,6 +5,7 @@ from django.core.exceptions import NON_FIELD_ERRORS
 from django.db import transaction
 
 from cla_common.constants import MATTER_TYPE_LEVELS
+from cla_auth.constants import PROVIDER_MCC_ROLE
 
 from cla_eventlog import event_registry
 from cla_eventlog.forms import EventSpecificLogForm, BaseCaseLogForm
@@ -19,6 +20,33 @@ class RejectCaseForm(EventSpecificLogForm):
     """
 
     LOG_EVENT_KEY = "reject_case"
+    MCC_ONLY_EVENT_CODES = set(["MERI", "DUPL", "CLOT"])
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request", None)
+        super(RejectCaseForm, self).__init__(*args, **kwargs)
+
+    def _is_mcc_user(self):
+        if self.request is None:
+            # Backward compatible default for internal/tests where no request is provided.
+            # API usage always passes request and enforces role-based filtering.
+            return True
+
+        auth_data = getattr(self.request, "auth", None)
+        if not isinstance(auth_data, dict):
+            return False
+
+        app_roles = auth_data.get("APP_ROLES") or []
+        if isinstance(app_roles, basestring):
+            app_roles = [app_roles]
+
+        return PROVIDER_MCC_ROLE in app_roles
+
+    def clean_event_code(self):
+        event_code = self.cleaned_data["event_code"]
+        if event_code in self.MCC_ONLY_EVENT_CODES and not self._is_mcc_user():
+            raise forms.ValidationError(self.fields["event_code"].error_messages["invalid_choice"])
+        return event_code
 
     def save(self, user):
         code = self.get_event_code()

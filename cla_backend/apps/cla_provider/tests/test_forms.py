@@ -1,5 +1,7 @@
 from django.test import TestCase
 import mock
+from rest_framework.request import Request
+from rest_framework.test import APIRequestFactory
 
 from cla_common.constants import REQUIRES_ACTION_BY
 
@@ -91,6 +93,31 @@ class RejectCaseFormTestCase(EventSpecificLogFormTestCaseMixin, TestCase):
 
     def test_save_CLOT_doesnt_set_provider_closed(self):
         self._test_provider_closed("CLOT", expected_None=True)
+
+
+class RejectCaseFormRoleValidationTestCase(TestCase):
+    def setUp(self):
+        super(RejectCaseFormRoleValidationTestCase, self).setUp()
+        self.case = make_recipe("legalaid.case")
+        self.factory = APIRequestFactory()
+
+    def _make_request(self, app_roles):
+        drf_request = Request(self.factory.post("/"))
+        drf_request.auth = {"APP_ROLES": app_roles}
+        return drf_request
+
+    def test_non_mcc_user_cannot_select_mcc_only_reject_code(self):
+        request = self._make_request(["Civil Legal Advice - Helpline Provider"])
+        form = RejectCaseForm(case=self.case, request=request, data={"event_code": "DUPL", "notes": "test"})
+
+        self.assertFalse(form.is_valid())
+        self.assertIn("event_code", form.errors)
+
+    def test_mcc_user_can_select_mcc_only_reject_code(self):
+        request = self._make_request(["MCC Specialist Provider"])
+        form = RejectCaseForm(case=self.case, request=request, data={"event_code": "DUPL", "notes": "test"})
+
+        self.assertTrue(form.is_valid())
 
 
 class CloseCaseFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):

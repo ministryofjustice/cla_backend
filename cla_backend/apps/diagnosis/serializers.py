@@ -77,10 +77,10 @@ class DiagnosisSerializer(ClaModelSerializer):
         current_node_id = instance.current_node_id or "start"
 
         # populating choices
-        children = self.graph.successors(current_node_id)
+        children = list(self.graph.successors(current_node_id))
         nodes = []
         for child_id in children:
-            node = self.graph.node[child_id].copy()
+            node = self.graph.nodes[child_id].copy()
             node["id"] = child_id
             nodes.append(node)
         # nodes = [(node_id, self.graph.node[node_id])
@@ -147,7 +147,7 @@ class DiagnosisSerializer(ClaModelSerializer):
     def process_obj(self, instance, validated_data):
         current_node_id = validated_data.get("current_node_id")
         if current_node_id:
-            current_node = self.graph.node[current_node_id]
+            current_node = self.graph.nodes[current_node_id]
             current_node["id"] = current_node_id
 
             current_node = dict(map(lambda item: (item[0], eval_promise(item[1])), current_node.items()))
@@ -168,7 +168,7 @@ class DiagnosisSerializer(ClaModelSerializer):
 
             # if pre end node => process end node directly
             if is_pre_end_node(self.graph, current_node_id):
-                validated_data["current_node_id"] = self.graph.successors(current_node_id)[0]
+                validated_data["current_node_id"] = list(self.graph.successors(current_node_id))[0]
                 self.process_obj(instance, validated_data)
         else:
             validated_data["nodes"] = []

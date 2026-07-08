@@ -37,8 +37,8 @@ class SingletonRouter(DefaultRouter):
         # Dynamically generated routes.
         # Generated using @detail_route or @list_route decorators on methods of the viewset
         DynamicRoute(
-            url=r"^{prefix}/{methodname}{trailing_slash}$",
-            name="{basename}-{methodnamehyphen}",
+            url=r"^{prefix}/{url_path}{trailing_slash}$",
+            name="{basename}-{url_name}",
             detail=False,
             initkwargs={},
         ),

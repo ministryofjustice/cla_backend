@@ -1,6 +1,7 @@
 import csv
 import datetime
 import codecs
+import io
 from django.db import transaction
 from django.core.exceptions import ValidationError
 from checker.models import CallbackTimeSlot, CALLBACK_TIME_SLOTS
@@ -20,7 +21,10 @@ class CallbackTimeSlotCSVImporter(object):
     def parse(cls, csv_file_handler):
         rows = []
         errors = []
-        reader = csv.reader(codecs.iterdecode(csv_file_handler, "utf-8-sig"), delimiter=",")
+        file_data = csv_file_handler.read()
+        if isinstance(file_data, bytes):
+            file_data = file_data.decode("utf-8-sig")
+        reader = csv.reader(io.StringIO(file_data), delimiter=",")
         for index, row in enumerate(reader):
             try:
                 cls.validate_row(row)

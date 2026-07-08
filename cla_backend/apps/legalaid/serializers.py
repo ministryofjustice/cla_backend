@@ -205,6 +205,7 @@ class IncomeSerializerBase(TotalsModelSerializer):
 
     class Meta(object):
         model = Income
+        fields = "__all__"
 
 
 class SavingsSerializerBase(TotalsModelSerializer):
@@ -212,6 +213,7 @@ class SavingsSerializerBase(TotalsModelSerializer):
 
     class Meta(object):
         model = Savings
+        fields = "__all__"
 
 
 class DeductionsSerializerBase(TotalsModelSerializer):
@@ -227,6 +229,7 @@ class DeductionsSerializerBase(TotalsModelSerializer):
 
     class Meta(object):
         model = Deductions
+        fields = "__all__"
 
 
 class PersonalDetailsSerializerBase(serializers.ModelSerializer):
@@ -236,6 +239,7 @@ class PersonalDetailsSerializerBase(serializers.ModelSerializer):
 
     class Meta(object):
         model = PersonalDetails
+        fields = "__all__"
 
 
 class PersonalDetailsSerializerFull(PersonalDetailsSerializerBase):
@@ -279,6 +283,7 @@ class AdaptationDetailsSerializerBase(serializers.ModelSerializer):
 
     class Meta(object):
         model = AdaptationDetails
+        fields = "__all__"
 
 
 class EODDetailsCategorySerializerBase(serializers.ModelSerializer):
@@ -321,6 +326,7 @@ class EligibilityCheckSerializerBase(ClaModelSerializer):
 
     class Meta(object):
         model = EligibilityCheck
+        fields = "__all__"
 
     def create_writable_nested_fields_many_to_many(self, instance, m2m_validated_data):
         property_set_data = m2m_validated_data.pop("property_set", None)

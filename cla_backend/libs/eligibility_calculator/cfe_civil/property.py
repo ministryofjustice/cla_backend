@@ -32,7 +32,7 @@ def translate_property(possible_property_data):
         non_mains = non_mains + main_homes[1:]
     else:
         main_home = None
-    additional_houses = map(_convert_house, non_mains)
+    additional_houses = list(map(_convert_house, non_mains))
 
     if main_home:
         return {"properties": {"main_home": main_home, "additional_properties": additional_houses}}

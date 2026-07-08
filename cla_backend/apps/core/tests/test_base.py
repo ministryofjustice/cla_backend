@@ -1,4 +1,3 @@
-import types
 from django.urls import reverse
 
 from rest_framework import status
@@ -106,10 +105,10 @@ class SimpleResourceAPIMixin(CLABaseApiTestMixin):
             data = response.data
             if paginated:
                 data = data["results"]
-            if isinstance(data, types.ListType):
+            if isinstance(data, list):
                 for item in data:
                     self.assertCountEqual(item, keys)
-            elif isinstance(data, types.DictType):
+            elif isinstance(data, dict):
                 self.assertCountEqual(data.keys(), keys)
         else:
             raise ValueError(

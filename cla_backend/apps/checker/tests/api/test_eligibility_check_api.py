@@ -27,7 +27,8 @@ class EligibilityCheckTestCase(EligibilityCheckAPIMixin, CLACheckerAuthBaseApiTe
         self.assertEqual(data["category"], check.category.code if check.category else None)
         self.assertEqual(data["your_problem_notes"], check.your_problem_notes)
         self.assertEqual(data["notes"], check.notes)
-        self.assertEqual(len(data["property_set"]), check.property_set.count())
+        expected_property_count = check.property_set.count() if check.pk else 0
+        self.assertEqual(len(data["property_set"]), expected_property_count)
         self.assertEqual(data["dependants_young"], check.dependants_young)
         self.assertEqual(data["dependants_old"], check.dependants_old)
         self.assertPersonEqual(data["you"], check.you)

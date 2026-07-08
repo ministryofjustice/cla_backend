@@ -140,7 +140,8 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
         self.assertEqual(data["category"], check.category.code if check.category else None)
         self.assertEqual(data["your_problem_notes"], check.your_problem_notes)
         self.assertEqual(data["notes"], check.notes)
-        self.assertEqual(len(data["property_set"]), check.property_set.count())
+        expected_property_count = check.property_set.count() if check.pk else 0
+        self.assertEqual(len(data["property_set"]), expected_property_count)
         self.assertEqual(data["dependants_young"], check.dependants_young)
         self.assertEqual(data["dependants_old"], check.dependants_old)
         self.assertPersonEqual(data["you"], check.you)
@@ -516,10 +517,10 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
 
     @classmethod
     def deep_update(cls, d, u):
-        import collections
+        from collections.abc import Mapping
 
         for k, v in u.items():
-            if isinstance(v, collections.Mapping):
+            if isinstance(v, Mapping):
                 r = EligibilityCheckAPIMixin.deep_update(d.get(k, {}), v)
                 d[k] = r
             else:

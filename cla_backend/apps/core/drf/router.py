@@ -47,7 +47,7 @@ class NestedCLARouter(NestedSimpleRouter):
         ),
         # Dynamically generated routes.
         # Generated using @detail_route or @list_route decorators on methods of the viewset.
-        DynamicRoute(url=r"^{prefix}/{methodname}/$", name="{basename}-{methodnamehyphen}", detail=True, initkwargs={}),
+        DynamicRoute(url=r"^{prefix}/{url_path}/$", name="{basename}-{url_name}", detail=True, initkwargs={}),
     ]
 
 

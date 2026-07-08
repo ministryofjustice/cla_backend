@@ -67,6 +67,11 @@ class ClaModelSerializer(
             if getattr(model_field, "many_to_many", False):
                 continue
 
+            # Skip reverse relations and other non-concrete relation fields
+            # that cannot be passed to model(...) constructor.
+            if not getattr(model_field, "concrete", True) or getattr(model_field, "auto_created", False):
+                continue
+
             if isinstance(field, serializers.ModelSerializer):
                 data[field_name] = self.restore_instance_for_validation(field, attrs[field_name])
             else:
@@ -129,10 +134,16 @@ class ClaModelSerializer(
             if not data:
                 continue
             m2m_serializer = self.fields.fields.get(field_name, None)
-            parent_model_field = getattr(parent_model, field_name, None)
-            if not parent_model_field:
+            try:
+                parent_model_field = parent_model._meta.get_field(field_name)
+            except FieldDoesNotExist:
                 continue
-            model_field_name = parent_model_field.related.field.name
+
+            # Reverse one-to-many relation (e.g. property_set) exposes the child FK as `.field`.
+            model_field = getattr(parent_model_field, "field", None)
+            if not model_field:
+                continue
+            model_field_name = model_field.name
 
             for item in data:
                 item[model_field_name] = parent

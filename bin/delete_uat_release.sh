@@ -14,7 +14,7 @@ echo "$RELEASES"
 if [[ $RELEASES == *"$RELEASE_NAME"* ]]
 then
   echo "Scaling down app deployment before deleting release"
-  kubectl scale deployment "$APP_DEPLOYMENT_NAME" --replicas=0 --ignore-not-found=true
+  kubectl scale deployment "$APP_DEPLOYMENT_NAME" --replicas=0 || true
 
   echo "Waiting for app pods to stop"
   kubectl wait \

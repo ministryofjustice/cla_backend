@@ -1,5 +1,17 @@
 {
-    "extends": [
-        "github>ministryofjustice/devsecops-actions"
+  "extends": [
+    "github>ministryofjustice/devsecops-actions"
+  ],
+  "pip-compile": {
+    "managerFilePatterns": [
+      "/^requirements\\/generated\\/requirements\\.txt$/",
+      "/^requirements\\/generated\\/requirements-linting\\.txt$/"
     ]
+  },
+  "pip_requirements": {
+    "enabled": false
+  },
+  "pip_setup": {
+    "enabled": false
+  }
 }

@@ -11,6 +11,10 @@ RUN apk add --no-cache \
 RUN adduser -D app && \
     cp /usr/share/zoneinfo/Europe/London /etc/localtime
 
+# Alpine's Python is "externally managed" (PEP 668); allow pip to install
+# packages system-wide inside this container image.
+ENV PIP_BREAK_SYSTEM_PACKAGES=1
+
 # Install Python 3 build/runtime dependencies and modern packaging tools.
 RUN apk add --no-cache \
       build-base \
@@ -26,7 +30,11 @@ RUN apk add --no-cache \
             py3-pip \
       libffi-dev \
       openssl-dev && \
-        python3 -m pip install --upgrade pip setuptools wheel
+        python3 -m pip install --upgrade pip wheel && \
+        python3 -m pip install 'setuptools==80.9.0'
+# setuptools is pinned (not upgraded) to match requirements-base.in: newer
+# releases drop the bundled pkg_resources module that some dependencies
+# (e.g. django-nested-admin) still import at runtime.
 
 
 WORKDIR /home/app

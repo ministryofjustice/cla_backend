@@ -45,3 +45,4 @@ django-cookies-samesite==0.9.0
 django-csp==4.0
 cryptography==43.0.1
 PyJWT==2.9.0
+speaklater==1.3

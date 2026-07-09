@@ -4,18 +4,14 @@
   ],
   "pip-compile": {
     "managerFilePatterns": [
-  "/^requirements\\/generated\\/requirements-dev\\.in$/",
-  "/^requirements\\/generated\\/requirements-docs\\.in$/",
-  "/^requirements\\/generated\\/requirements-git\\.in$/",
-  "/^requirements\\/generated\\/requirements-lint\\.in$/",
-  "/^requirements\\/generated\\/requirements-production\\.in$/",
-  "/^requirements\\/generated\\/requirements-testing\\.in$/"
-]
+      "/(^|/)requirements/generated/.*\\.txt$/"
+    ]
   },
-  "pip_requirements": {
-    "enabled": false
-  },
-  "pip_setup": {
-    "enabled": false
-  }
+  "packageRules": [
+    {
+      "matchManagers": ["pip-compile"],
+      "rangeStrategy": "pin",
+      "automerge": true
+    }
+  ]
 }

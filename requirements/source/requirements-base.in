@@ -4,7 +4,7 @@
 # After the first "pip install -r", just run "pip freeze" and add the version
 # to each package in each requirements/*.txt.
 
-Django==1.7.19
+Django==1.8.19
 django-nested-admin==3.2.4
 django-model-utils==2.2
 psycopg2==2.7.5

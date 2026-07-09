@@ -4,12 +4,12 @@
   ],
   "pip-compile": {
     "managerFilePatterns": [
-  "/^requirements\\/generated\\/requirements-dev\\.txt$/",
-  "/^requirements\\/generated\\/requirements-docs\\.txt$/",
-  "/^requirements\\/generated\\/requirements-git\\.txt$/",
-  "/^requirements\\/generated\\/requirements-lint\\.txt$/",
-  "/^requirements\\/generated\\/requirements-production\\.txt$/",
-  "/^requirements\\/generated\\/requirements-testing\\.txt$/"
+  "/^requirements\\/generated\\/requirements-dev\\..in$/",
+  "/^requirements\\/generated\\/requirements-docs\\..in$/",
+  "/^requirements\\/generated\\/requirements-git\\..in$/",
+  "/^requirements\\/generated\\/requirements-lint\\..in$/",
+  "/^requirements\\/generated\\/requirements-production\\..in$/",
+  "/^requirements\\/generated\\/requirements-testing\\..in$/"
 ]
   },
   "pip_requirements": {

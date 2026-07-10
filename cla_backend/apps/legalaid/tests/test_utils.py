@@ -35,9 +35,9 @@ class SlaCustomBusinessHoursTestCase(TestCase):
     @mock.patch("cla_common.call_centre_availability.current_datetime", return_value=datetime(year, 12, 24))
     def test_custom_day_timeslots(self, current_datetime_mock):
         slots = operator_hours.time_slots(self.xmas_eve)
-        self.assertEquals(min(slots), datetime(self.year, 12, 24, 9, 0))
-        self.assertEquals(max(slots), datetime(self.year, 12, 24, 16, 30))
+        self.assertEqual(min(slots), datetime(self.year, 12, 24, 9, 0))
+        self.assertEqual(max(slots), datetime(self.year, 12, 24, 16, 30))
 
         slots = operator_hours.time_slots(self.new_years_eve)
-        self.assertEquals(min(slots), datetime(self.year, 12, 31, 9, 0))
-        self.assertEquals(max(slots), datetime(self.year, 12, 31, 16, 30))
+        self.assertEqual(min(slots), datetime(self.year, 12, 31, 9, 0))
+        self.assertEqual(max(slots), datetime(self.year, 12, 31, 16, 30))

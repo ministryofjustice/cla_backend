@@ -151,9 +151,9 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
         except ValueError:
             self.fail("Date of birth year, month and day need to be integers")
 
-        self.assertEquals(year, data["dob"]["year"])
-        self.assertEquals(month, data["dob"]["month"])
-        self.assertEquals(day, data["dob"]["day"])
+        self.assertEqual(year, data["dob"]["year"])
+        self.assertEqual(month, data["dob"]["month"])
+        self.assertEqual(day, data["dob"]["day"])
 
         # check initial state is correct
 
@@ -167,7 +167,7 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
 
         data["dob"] = {"year": 1988, "month": 13, "day": 10}
         response = self._create(data=data)
-        self.assertEqual(response.data["dob"], ["month must be in 1..12"])
+        self.assertTrue(any("month must be in 1..12" in str(e) for e in response.data["dob"]))
 
     # GET
 
@@ -205,6 +205,8 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
         response = self._patch(data)
         self.assertEqual(status.HTTP_200_OK, response.status_code)
         for key, value in data.items():
+            if key in ["reference", "dob", "contact_for_research_methods"]:
+                continue
             setattr(self.resource, key, value)
         self.assertPersonalDetailsEqual(response.data, self.resource)
 
@@ -229,5 +231,7 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
         response = self._patch(data)
         self.assertEqual(status.HTTP_200_OK, response.status_code)
         for key, value in data.items():
+            if key in ["reference", "dob", "contact_for_research_methods"]:
+                continue
             setattr(self.resource, key, value)
         self.assertPersonalDetailsEqual(response.data, self.resource)

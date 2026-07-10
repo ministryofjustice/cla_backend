@@ -12,7 +12,7 @@ from cla_eventlog import event_registry
 class EventAPIMixin(object):
     def get_event_key(self):
         # getting the first event key in the registry as we don't know what's in there
-        return event_registry._registry.keys()[0]
+        return next(iter(event_registry._registry))
 
     def setUp(self):
         super(EventAPIMixin, self).setUp()

@@ -487,9 +487,9 @@ class CaseSerializerBase(PartialUpdateExcludeReadonlySerializerMixin, ClaModelSe
 class CaseSerializerFull(CaseSerializerBase):
     eligibility_check = UUIDSerializer(slug_field="reference", required=False, read_only=True)
 
-    full_name = serializers.CharField(source="personal_details.full_name", read_only=True)
-    postcode = serializers.CharField(source="personal_details.postcode", read_only=True)
-    case_count = serializers.IntegerField(source="personal_details.case_count", read_only=True)
+    full_name = serializers.CharField(source="personal_details.full_name", read_only=True, default=None)
+    postcode = serializers.CharField(source="personal_details.postcode", read_only=True, default=None)
+    case_count = serializers.IntegerField(source="personal_details.case_count", read_only=True, default=None)
 
     personal_details = UUIDSerializer(required=False, slug_field="reference", read_only=True)
     thirdparty_details = UUIDSerializer(required=False, slug_field="reference", read_only=True)
@@ -504,11 +504,29 @@ class CaseSerializerFull(CaseSerializerBase):
     provider = serializers.PrimaryKeyRelatedField(required=False, read_only=True)
     provider_viewed = serializers.DateTimeField(required=False, read_only=True)
 
-    eligibility_state = serializers.CharField(source="eligibility_check.state", read_only=True)
-    diagnosis_state = serializers.CharField(source="diagnosis.state", read_only=True)
+    eligibility_state = serializers.SerializerMethodField()
+    diagnosis_state = serializers.SerializerMethodField()
 
-    date_of_birth = serializers.CharField(source="personal_details.date_of_birth", read_only=True)
-    category = serializers.CharField(source="diagnosis.category.name", read_only=True)
+    date_of_birth = serializers.CharField(source="personal_details.date_of_birth", read_only=True, default=None)
+    category = serializers.SerializerMethodField()
+
+    def get_eligibility_state(self, case):
+        ec = getattr(case, "eligibility_check", None)
+        if not ec:
+            return None
+        return ec.state
+
+    def get_diagnosis_state(self, case):
+        diagnosis = getattr(case, "diagnosis", None)
+        if not diagnosis:
+            return None
+        return diagnosis.state
+
+    def get_category(self, case):
+        diagnosis = getattr(case, "diagnosis", None)
+        if not diagnosis or not diagnosis.category:
+            return None
+        return diagnosis.category.name
 
     exempt_user = serializers.BooleanField(required=False, allow_null=True)
 

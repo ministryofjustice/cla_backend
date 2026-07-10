@@ -876,20 +876,20 @@ class CaseDatabaseTestCase(SimpleTestCase):
         case = make_recipe("legalaid.case")
         case.log_denormalized_outcome_fields()
         # Test missing fields logs warning
-        self.assertEquals(mock_logger.warning.call_count, 1)
+        self.assertEqual(mock_logger.warning.call_count, 1)
         self.assertIn("LGA-275", str(mock_logger.warning.mock_calls))
         # Test occasional existing erroneous behavior logs warning
         case.outcome_code_id = 1
         case.level = LOG_LEVELS.HIGH
         case.save()
         case.log_denormalized_outcome_fields()
-        self.assertEquals(mock_logger.warning.call_count, 2)
+        self.assertEqual(mock_logger.warning.call_count, 2)
         self.assertIn("LGA-275 Outcome code missing", str(mock_logger.warning.mock_calls))
         # Test correct behaviour logs info
         case.outcome_code = "COPE"
         case.save()
         case.log_denormalized_outcome_fields()
-        self.assertEquals(mock_logger.info.call_count, 1)
+        self.assertEqual(mock_logger.info.call_count, 1)
         case.delete()
 
 

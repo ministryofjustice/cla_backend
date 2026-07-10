@@ -39,9 +39,9 @@ class NestedGenericModelMixin(object):
 
     def is_one_to_one_nested(self):
         descriptor = getattr(self.parent.model, self.PARENT_FIELD)
-        is_single_related = isinstance(descriptor, related_descriptors.ForwardOneToOneDescriptor)
-        is_single_reverse_related = isinstance(descriptor, related_descriptors.ReverseOneToOneDescriptor)
-        return not hasattr(descriptor, "related") or is_single_related or is_single_reverse_related
+        # ReverseManyToOneDescriptor is a FK reverse manager (e.g. case.casenoteshistory_set)
+        # — all other descriptor types return a single object, not a queryset.
+        return not isinstance(descriptor, related_descriptors.ReverseManyToOneDescriptor)
 
     def get_object(self):
         if self.is_one_to_one_nested():

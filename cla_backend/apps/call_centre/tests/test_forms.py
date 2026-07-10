@@ -323,7 +323,7 @@ class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin, CallCentreFixedOperat
     @mock.patch("call_centre.forms.timezone.now")
     def __call__(self, runner, mocked_now, *args, **kwargs):
         self.mocked_now = mocked_now
-        self.mocked_now.return_value = datetime.datetime(2015, 3, 24, 10, 0, 0, 0).replace(tzinfo=timezone.utc)
+        self.mocked_now.return_value = datetime.datetime(2015, 3, 24, 10, 0, 0, 0).replace(tzinfo=datetime.timezone.utc)
         self.expected_sla_72h = datetime.datetime(2015, 4, 7, 13, 30, 0, 0)
         self.default_dt = self.mocked_now().replace(day=30)
 
@@ -402,13 +402,13 @@ class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin, CallCentreFixedOperat
         self.assertEqual(
             case.requires_action_at,
             datetime.datetime(
-                year=dt.year, month=dt.month, day=dt.day, hour=dt.hour, minute=dt.minute, tzinfo=timezone.utc
+                year=dt.year, month=dt.month, day=dt.day, hour=dt.hour, minute=dt.minute, tzinfo=datetime.timezone.utc
             ),
         )
 
     @mock.patch("call_centre.forms.timezone.now")
     def test_invalid_datetime(self, mocked_now):
-        now_utc = datetime.datetime(2015, 3, 13, 10, 0).replace(tzinfo=timezone.utc)
+        now_utc = datetime.datetime(2015, 3, 13, 10, 0).replace(tzinfo=datetime.timezone.utc)
         mocked_now.return_value = now_utc
 
         case = make_recipe("legalaid.case")
@@ -463,7 +463,7 @@ class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin, CallCentreFixedOperat
 
     @mock.patch("call_centre.forms.timezone.now")
     def test_valid_datetime(self, mocked_now):
-        now_utc = datetime.datetime(2015, 3, 13, 10, 15).replace(tzinfo=timezone.utc)
+        now_utc = datetime.datetime(2015, 3, 13, 10, 15).replace(tzinfo=datetime.timezone.utc)
         mocked_now.return_value = now_utc
 
         case = make_recipe("legalaid.case")

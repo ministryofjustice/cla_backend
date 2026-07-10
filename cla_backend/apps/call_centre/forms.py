@@ -219,7 +219,7 @@ class CallMeBackForm(BaseCallMeBackForm):
     def _is_dt_out_of_hours(self, dt):
         _dt = dt
         if timezone.is_naive(_dt):
-            _dt = timezone.make_aware(_dt, timezone.utc)
+            _dt = timezone.make_aware(_dt, datetime.timezone.utc)
         _dt = timezone.localtime(_dt)
         return _dt not in operator_hours
 
@@ -230,7 +230,7 @@ class CallMeBackForm(BaseCallMeBackForm):
 
     def clean_datetime(self):
         dt = self.cleaned_data["datetime"]
-        dt = dt.replace(tzinfo=timezone.utc)
+        dt = dt.replace(tzinfo=datetime.timezone.utc)
 
         if self._is_dt_too_soon(dt):
             raise ValidationError("Specify a date not in the current half hour.")

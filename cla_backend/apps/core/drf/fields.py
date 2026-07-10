@@ -88,7 +88,7 @@ class ThreePartDateField(serializers.Field):
         if value in EMPTY_VALUES:
             return None
 
-        if type(value) in [str, unicode]:
+        if type(value) in [str]:
             try:
                 value = value.replace("'", '"')
                 value = json.loads(value)

@@ -606,7 +606,7 @@ class SuspendCaseTestCase(ExplicitEventCodeViewTestCaseMixin, MockGovNotifyMailB
         self.assertEqual(Log.objects.count(), 0)
 
     def test_RDSP_successful(self):
-        self.assertEquals(len(self.mailbox), 0)
+        self.assertEqual(len(self.mailbox), 0)
 
         # assign case to provider
         provider = make_recipe("cla_provider.provider", active=True, email_address="example@example.com")
@@ -627,7 +627,7 @@ class SuspendCaseTestCase(ExplicitEventCodeViewTestCaseMixin, MockGovNotifyMailB
         self.assertEqual(log.notes, self.get_expected_notes(data))
         self.assertEqual(log.created_by, self.user)
 
-        self.assertEquals(len(self.mailbox), 1)
+        self.assertEqual(len(self.mailbox), 1)
 
     def test_SAME_fails_if_case_hasnt_received_alternative_help(self):
         self.assertEqual(Log.objects.count(), 0)
@@ -1004,7 +1004,7 @@ class CallMeBackTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
     @mock.patch("call_centre.forms.timezone.now")
     def __call__(self, runner, mocked_now, *args, **kwargs):
         self.mocked_now = mocked_now
-        self.mocked_now.return_value = datetime.datetime(2015, 3, 23, 10, 0, 0, 0).replace(tzinfo=timezone.utc)
+        self.mocked_now.return_value = datetime.datetime(2015, 3, 23, 10, 0, 0, 0).replace(tzinfo=datetime.timezone.utc)
 
         super(CallMeBackTestCase, self).__call__(runner, *args, **kwargs)
 

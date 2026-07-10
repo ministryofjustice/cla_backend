@@ -1,5 +1,17 @@
 {
-    "extends": [
-        "github>ministryofjustice/devsecops-actions"
+  "extends": [
+    "github>ministryofjustice/devsecops-actions"
+  ],
+  "pip-compile": {
+    "managerFilePatterns": [
+      "/(^|/)requirements/generated/.*\\.txt$/"
     ]
+  },
+  "packageRules": [
+    {
+      "matchManagers": ["pip-compile"],
+      "rangeStrategy": "pin",
+      "automerge": true
+    }
+  ]
 }

@@ -42,7 +42,7 @@ class FullTextSearchTestCase(CLAOperatorAuthBaseApiTestMixin, TestCase):
             u"Zero income prompts",
             u"Disregard prompts",
         ]
-        self.assertTitlesEqual(search_results, titles)
+        self.assertCountEqual([s.title for s in search_results], titles)
 
         search_results = self._get_search_results("Homelessness")
         self.assertEqual(len(search_results), 3)

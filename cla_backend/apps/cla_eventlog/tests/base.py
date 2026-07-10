@@ -144,7 +144,7 @@ class EventTestCaseMixin(object):
         code=None,
     ):
         event = event_registry.get_event(self.EVENT_KEY)()
-        codes = event.codes.keys()
+        codes = list(event.codes.keys())
 
         self.assertCountEqual(codes, expected_available_codes)
 

@@ -1,6 +1,7 @@
 # coding=utf-8
 import re
 
+from django.contrib.postgres.aggregates import StringAgg
 from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 from django.db import models
 
@@ -16,15 +17,17 @@ class NoteQuerySet(models.QuerySet):
         # Keep a permissive search parser while still supporting prefix matching.
         raw_query = " & ".join("{}:*".format(token) for token in tokens)
         search_query = SearchQuery(raw_query, search_type="raw")
-        search_vector = (
-            SearchVector("title", weight="A")
-            + SearchVector("tags__title", weight="B")
-            + SearchVector("raw_body", weight="D")
-        )
         return (
-            self.annotate(search=search_vector)
+            self.annotate(tag_titles=StringAgg("tags__title", delimiter=" ", distinct=True))
+            .annotate(
+                search=(
+                    SearchVector("title", weight="A")
+                    + SearchVector("tag_titles", weight="B")
+                    + SearchVector("raw_body", weight="D")
+                )
+            )
             .filter(search=search_query)
-            .annotate(rank=SearchRank(search_vector, search_query))
+            .annotate(rank=SearchRank(models.F("search"), search_query))
             .order_by("-rank", "title")
             .distinct()
         )

@@ -70,11 +70,11 @@ WITH
         ,operator_first_view_after_cb1.created as operator_first_view_after_cb1__created
         ,c.created as case_created
         ,operator_first_log_after_cb1.code as "Next_Outcome"
-        ,trim((log.context->'requires_action_at')::text, '"')::timestamptz as callback_window_start
-        ,trim((log.context->'requires_action_at')::text, '"')::timestamptz + interval '30 minutes' as callback_window_end
-        ,trim((log.context->'sla_120')::text, '"')::timestamptz as sla_120
-        ,trim((log.context->'sla_480')::text, '"')::timestamptz as sla_480
-        ,trim((log.context->'sla_72h')::text, '"')::timestamptz as sla_72h
+        ,(log.context::jsonb->>'requires_action_at')::timestamptz as callback_window_start
+        ,(log.context::jsonb->>'requires_action_at')::timestamptz + interval '30 minutes' as callback_window_end
+        ,(log.context::jsonb->>'sla_120')::timestamptz as sla_120
+        ,(log.context::jsonb->>'sla_480')::timestamptz as sla_480
+        ,(log.context::jsonb->>'sla_72h')::timestamptz as sla_72h
         ,operator_first_log_after_cb1.rn
         ,operator_first_view_after_cb1.rn
         ,c.source

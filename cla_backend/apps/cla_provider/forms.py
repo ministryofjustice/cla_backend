@@ -37,7 +37,7 @@ class RejectCaseForm(EventSpecificLogForm):
             return False
 
         app_roles = auth_data.get("APP_ROLES") or []
-        if isinstance(app_roles, basestring):
+        if isinstance(app_roles, str):
             app_roles = [app_roles]
 
         return PROVIDER_MCC_ROLE in app_roles

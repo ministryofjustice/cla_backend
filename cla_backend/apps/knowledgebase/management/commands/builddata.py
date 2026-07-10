@@ -16,7 +16,6 @@ from ._csv_2_fixture import KnowledgebaseCsvParse
 
 
 class Command(BaseCommand):
-    args = "load_knowledgebase_csv CSV_FILE.csv"
     help = (
         "Create a derived dataset. At present, just load_knowledgebase_csv "
         "is implemented. It loads a CSV spreadsheet into a fixture ready "
@@ -25,19 +24,23 @@ class Command(BaseCommand):
 
     KNOWLEDGEBASE_FIXTURE = "cla_backend/apps/knowledgebase/fixtures/kb_from_spreadsheet.json"
 
+    def add_arguments(self, parser):
+        parser.add_argument("action")
+        parser.add_argument("csv_file")
+
     def handle(self, *args, **options):
 
-        if args[0] == "load_knowledgebase_csv":
+        action = options["action"]
+        csv_file = options["csv_file"]
 
-            if len(args) != 2:
-                self.stdout.write("Last argument needs to be path to CSV file")
-                sys.exit(-1)
-            if not os.access(args[1], os.R_OK):
-                self.stdout.write("File '%s' couldn't be read" % args[1])
+        if action == "load_knowledgebase_csv":
+
+            if not os.access(csv_file, os.R_OK):
+                self.stdout.write("File '%s' couldn't be read" % csv_file)
                 sys.exit(-1)
 
             # read in CSV and feed to fixture builder
-            f_in = open(args[1], "rU")
+            f_in = open(csv_file, "r")
             c = KnowledgebaseCsvParse(f_in)
             json = c.fixture_as_json()
             f_in.close()

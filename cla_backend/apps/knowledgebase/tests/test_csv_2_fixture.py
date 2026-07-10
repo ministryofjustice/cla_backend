@@ -80,10 +80,12 @@ class TestCSV2Fixture(TestCase):
         }
         output_list = json.loads(output_json)
 
-        output_article_category_list = filter(lambda x: x["model"] == "knowledgebase.articlecategory", output_list)
+        output_article_category_list = list(
+            filter(lambda x: x["model"] == "knowledgebase.articlecategory", output_list)
+        )
         self.assertEqual(len(output_article_category_list), 18)
 
-        output_article_list = filter(lambda x: x["model"] == "knowledgebase.article", output_list)
+        output_article_list = list(filter(lambda x: x["model"] == "knowledgebase.article", output_list))
         self.assertEqual(len(output_article_list), 1)
 
         article = output_article_list[0]
@@ -223,8 +225,8 @@ class TestCSV2Fixture(TestCase):
         self.assertEqual(min_pk, 1)
         self.assertEqual(max_pk, 36)
 
-        first_set_of_acm = filter(lambda x: x["fields"]["article"] == 1, article_category_matrices)
-        second_set_of_acm = filter(lambda x: x["fields"]["article"] == 2, article_category_matrices)
+        first_set_of_acm = list(filter(lambda x: x["fields"]["article"] == 1, article_category_matrices))
+        second_set_of_acm = list(filter(lambda x: x["fields"]["article"] == 2, article_category_matrices))
         self.assertEqual(len(first_set_of_acm), 18)
         self.assertEqual(len(second_set_of_acm), 18)
 

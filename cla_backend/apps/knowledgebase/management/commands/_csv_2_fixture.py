@@ -135,7 +135,7 @@ class KnowledgebaseCsvParse(object):
 
             elif django_field_name == "website":
 
-                website = r[csv_field].decode("ascii", "ignore")
+                website = self._normalize_value(r[csv_field])
                 if not website.startswith("http"):
                     website = "http://" + website
 
@@ -143,9 +143,16 @@ class KnowledgebaseCsvParse(object):
 
             else:
                 # normal field
-                d["fields"][django_field_name] = r[csv_field].decode("ascii", "ignore")
+                d["fields"][django_field_name] = self._normalize_value(r[csv_field])
 
         return record_categories, d
+
+    def _normalize_value(self, value):
+        if isinstance(value, bytes):
+            value = value.decode("ascii", "ignore")
+        else:
+            value = value.encode("ascii", "ignore").decode("ascii")
+        return value
 
     def fixture_as_json(self):
         """

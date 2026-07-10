@@ -48,7 +48,7 @@ class CSVUploadTestCase(CSVUploadAPIMixin, CLAProviderAuthBaseApiTestMixin, APIT
         super(CSVUploadTestCase, self).setUp()
         self.wrong_user = User.objects.create_user("wrong user", "wr@ng.user", "password")
         self.wrong_provider = make_recipe("cla_provider.provider")
-        self.wrong_provider.staff_set.add(Staff(user=self.wrong_user, is_manager=True))
+        self.wrong_provider.staff_set.add(Staff(user=self.wrong_user, is_manager=True), bulk=False)
         self.wrong_provider.save()
         expiry_date = datetime.datetime.now() + datetime.timedelta(days=2)
         # Create an access token from wrong user

@@ -723,7 +723,7 @@ class TestGetCasesAssignedToCode(TestCase):
     def test_manref_today(self):
         now = datetime.datetime.now()
         case = make_recipe(self.case_model, outcome_code="MANREF", modified=now)
-        assert case in self.helper.get_cases_assigned_to_code("MANREF", now.date)
+        assert case in self.helper.get_cases_assigned_to_code("MANREF", now)
 
     def test_multiple_edff(self):
         cases = []

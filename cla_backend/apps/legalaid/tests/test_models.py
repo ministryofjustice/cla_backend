@@ -995,7 +995,12 @@ class CloneModelsTestCaseMixin(object):
         for field in equal_fields:
             if check_not_None:
                 self.assertNotEqual(getattr(new_obj, field), None, field)
-            self.assertEqual(getattr(obj, field), getattr(new_obj, field))
+            old_value = getattr(obj, field)
+            new_value = getattr(new_obj, field)
+            if isinstance(old_value, MoneyInterval) and isinstance(new_value, MoneyInterval):
+                self.assertEqual(old_value.as_dict(), new_value.as_dict())
+                continue
+            self.assertEqual(old_value, new_value)
 
     def _check_model_fields_keys(self, Model, expected_fields):
         """

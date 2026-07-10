@@ -1,4 +1,5 @@
 import datetime
+from functools import reduce
 import logging
 from uuid import UUID
 
@@ -656,7 +657,7 @@ class CaseArchivedSearchFilter(SearchFilter):
         terms = super(CaseArchivedSearchFilter, self).get_search_terms(request)
         return [term.upper() for term in terms]
 
-    def construct_search(self, field_name):
+    def construct_search(self, field_name, queryset=None):
         return "%s__contains" % field_name
 
 
@@ -718,7 +719,7 @@ class ComplaintSearchFilter(SearchFilter):
         if not search_fields or not search_terms:
             return queryset
 
-        orm_lookups = [self.construct_search(six.text_type(search_field)) for search_field in search_fields]
+        orm_lookups = [self.construct_search(six.text_type(search_field), queryset) for search_field in search_fields]
 
         for search_term in search_terms:
             queries = [models.Q(**{orm_lookup: search_term}) for orm_lookup in orm_lookups]

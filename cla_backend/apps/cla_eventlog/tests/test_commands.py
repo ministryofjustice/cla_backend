@@ -2,6 +2,7 @@ import datetime
 import time
 import mock
 from django.test import TestCase
+from django.core.management import call_command
 from django.utils import timezone
 from dateutil.relativedelta import relativedelta, MO, TU
 
@@ -9,14 +10,12 @@ from core.tests.mommy_utils import make_recipe, make_user
 from cla_eventlog import event_registry
 from cla_eventlog.models import Log
 from legalaid.forms import get_sla_time
-from cla_eventlog.management.commands.add_72h_to_context import Command
 from call_centre.tests.test_utils import CallCentreFixedOperatingHours
 
 
 class Add72workingHoursToContextCommandTestCase(CallCentreFixedOperatingHours, TestCase):
     def setUp(self):
         super(Add72workingHoursToContextCommandTestCase, self).setUp()
-        self.instance = Command()
 
     def create_callback(self, requires_action_at):
         case = make_recipe("legalaid.case")
@@ -46,7 +45,7 @@ class Add72workingHoursToContextCommandTestCase(CallCentreFixedOperatingHours, T
         self.assertNotIn("sla_72h", log.context)
         # Sleep for enough time to test modified hasn't changed
         time.sleep(3)
-        self.instance.execute()
+        call_command("add_72h_to_context")
         log_updated = Log.objects.get(pk=log.pk)
         self.assertIn("sla_72h", log_updated.context)
 
@@ -63,7 +62,7 @@ class Add72workingHoursToContextCommandTestCase(CallCentreFixedOperatingHours, T
         timezone_mock.return_value = now_tz
         log = self.create_callback(now_tz)
         self.assertNotIn("sla_72h", log.context)
-        self.instance.execute()
+        call_command("add_72h_to_context")
         log = Log.objects.get(pk=log.pk)
         self.assertIn("sla_72h", log.context)
         self.assertEqual(log.context["sla_72h"], expected.isoformat())
@@ -102,7 +101,7 @@ class Add72workingHoursToContextCommandTestCase(CallCentreFixedOperatingHours, T
         timezone_mock.return_value = now_tz
         log = self.create_callback(now_tz)
         self.assertNotIn("sla_72h", log.context)
-        self.instance.execute()
+        call_command("add_72h_to_context")
         log = Log.objects.get(pk=log.pk)
         self.assertIn("sla_72h", log.context)
 

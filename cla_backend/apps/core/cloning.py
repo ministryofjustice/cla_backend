@@ -27,7 +27,7 @@ def clone_model(cls, pk, config={}):
 
         fk_field = cls._meta.get_field(field)
         fk_id = getattr(cloned, "%s_id" % fk_field.name)
-        fk_clazz = fk_field.rel.to
+        fk_clazz = fk_field.remote_field.model
         cloned_fk = fk_clazz.clone_from_obj(fk_id)
         setattr(cloned, fk_field.name, cloned_fk)
 

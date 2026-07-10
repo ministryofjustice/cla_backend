@@ -42,7 +42,8 @@ class MarkdownAdminField(forms.CharField):
         value = super(MarkdownAdminField, self).clean(*args, **kwargs)
 
         html_value = markdown.markdown(value, extensions=["markdown.extensions.%s" % e for e in self.extensions])
-        bleached_html = bleach.clean(html_value, **self.markdown_whitelist)
+        bleach_kwargs = {k: v for k, v in self.markdown_whitelist.items() if k != "styles"}
+        bleached_html = bleach.clean(html_value, **bleach_kwargs)
 
         if html_value != bleached_html:
             raise exceptions.ValidationError(

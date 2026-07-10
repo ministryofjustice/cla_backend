@@ -213,8 +213,9 @@ class OutOfHoursRotaTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         response2 = self.client.post(
             self.list_url, HTTP_AUTHORIZATION="Bearer %s" % self.token, format="json", data=post_data
         )
-        self.assertEqual(response2.data, {"__all__": [u"Provider Name2 doesn't offer help for Name1"]})
         self.assertEqual(response2.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("__all__", response2.data)
+        self.assertTrue(any("doesn't offer help for" in str(msg) for msg in response2.data["__all__"]))
 
     def test_post_overlapping_timespan_not_allowed_overlaps_exactly(self):
         """

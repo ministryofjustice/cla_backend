@@ -13,11 +13,11 @@ jobs:
   pip-compile:
     name: "Pip Compile"
     runs-on: "ubuntu-latest"
-    container: python:2.7
+    container: python:3.12
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
       - name: Install dependencies
-        run: pip install pre-commit==1.14.2
+        run: pip install pre-commit==4.3.0
 
       - name: Run pip-compile check
         run: |

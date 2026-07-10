@@ -2,6 +2,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 from django.urls import reverse
 from django.utils.crypto import get_random_string
+from django.contrib.auth.models import User
 
 from core.tests.mommy_utils import make_recipe
 from legalaid.tests.views.test_base import CLAOperatorAuthBaseApiTestMixin
@@ -10,22 +11,22 @@ from legalaid.tests.views.mixins.user_api import UserAPIMixin
 
 class UserTestCase(CLAOperatorAuthBaseApiTestMixin, UserAPIMixin, APITestCase):
     def assertUserEqual(self, data):
-        self.assertDictContainsSubset(
-            {
-                "username": u"john",
-                "first_name": u"",
-                "last_name": u"",
-                "email": u"lennon@thebeatles.com",
-                "is_manager": False,
-                "is_cla_superuser": False,
-            },
-            data,
-        )
+        expected_subset = {
+            "username": u"john",
+            "first_name": u"",
+            "last_name": u"",
+            "email": u"lennon@thebeatles.com",
+            "is_manager": False,
+            "is_cla_superuser": False,
+        }
+        for key, value in expected_subset.items():
+            self.assertEqual(data.get(key), value)
         self.assertTrue("last_login" in data)
         self.assertTrue("created" in data)
 
     def get_other_users(self):
-        return make_recipe("call_centre.operator", _quantity=3)
+        users = [User.objects.create(username=get_random_string(12)) for _ in range(3)]
+        return [make_recipe("call_centre.operator", user=user) for user in users]
 
     def test_rest_password_other_user_as_manager(self):
         other_user = self.other_users[0].user
@@ -49,7 +50,10 @@ class UserTestCase(CLAOperatorAuthBaseApiTestMixin, UserAPIMixin, APITestCase):
                 operators["bar_org"].append(operator.user.username)
             operator.save()
 
-        no_org_operators = make_recipe("call_centre.operator", _quantity=3)
+        no_org_operators = [
+            make_recipe("call_centre.operator", user=User.objects.create(username=get_random_string(12)))
+            for _ in range(3)
+        ]
         for operator in no_org_operators:
             operators["no_org"].append(operator.user.username)
 

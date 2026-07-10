@@ -559,7 +559,9 @@ class UserViewSet(CallCentrePermissionsViewSetMixin, BaseUserViewSet):
     def create(self, request, *args, **kwargs):
         operator = self.get_logged_in_user_model()
         if operator.organisation:
-            request.data["organisation"] = operator.organisation.id
+            data = request.data.copy()
+            data["organisation"] = operator.organisation.id
+            request._full_data = data
         return super(UserViewSet, self).create(request, *args, **kwargs)
 
 

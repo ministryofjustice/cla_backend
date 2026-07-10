@@ -103,7 +103,7 @@ class EventTestCaseMixin(object):
 
         # if `case.requires_action_by` is not Operator then the
         # value shouldn't change
-        values = REQUIRES_ACTION_BY.REVERTED_CHOICES_CONST_DICT.keys()
+        values = list(REQUIRES_ACTION_BY.REVERTED_CHOICES_CONST_DICT.keys())
         for rab in requires_action_by:
             values.remove(rab)
 

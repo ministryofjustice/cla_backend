@@ -1,5 +1,5 @@
 from numbers import Number
-from collections import Iterable
+from collections.abc import Iterable
 from dateutil import parser
 
 from django import template

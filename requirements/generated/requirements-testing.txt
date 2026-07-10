@@ -57,7 +57,6 @@ lxml==6.0.2
 markdown==3.7
 mock==1.0.1
 model-bakery==1.20.4
-multidict==6.7.1
 networkx==3.4.2
 notifications-python-client==12.1.0
 oauthlib==3.3.1
@@ -67,7 +66,6 @@ packaging==26.2
 parsedatetime==2.6
 polib==1.0.6
 prompt-toolkit==3.0.52
-propcache==0.5.2
 psycopg2-binary==2.9.10
 pycparser==3.0
 pycurl==7.47.0
@@ -94,13 +92,12 @@ tzdata==2026.2
 ua-parser==0.10.0
 unittest-xml-reporting==2.5.1
 urllib3==2.7.0
-vcrpy==3.0.0
+vcrpy==8.3.0
 vine==5.1.0
 wcwidth==0.8.2
 webencodings==0.5.1
 wrapt==2.2.2
 xlrd==2.0.2
-yarl==1.24.2
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools

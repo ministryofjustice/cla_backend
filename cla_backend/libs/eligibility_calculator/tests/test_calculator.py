@@ -2,7 +2,7 @@
 import unittest
 
 import mock
-import test_vcr
+from . import test_vcr
 
 from . import fixtures
 from ..calculator import EligibilityChecker

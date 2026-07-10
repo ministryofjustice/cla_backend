@@ -1,10 +1,11 @@
 from django.contrib import admin
+from django.contrib.admin.exceptions import AlreadyRegistered
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 
+from call_centre.models import Operator, Caseworker, Organisation, CLA_SUPERUSER_GROUP_NAME
 from core.admin.modeladmin import OneToOneUserAdmin
 from .forms import OperatorAdminForm, FullOperatorAdminForm, CaseworkerAdminForm
-from ..models import Operator, Caseworker, Organisation, CLA_SUPERUSER_GROUP_NAME
 
 
 class OrganisationListFilter(admin.SimpleListFilter):
@@ -185,6 +186,15 @@ class CaseworkerAdmin(OneToOneUserAdmin):
         return False
 
 
-admin.site.register(Operator, OperatorAdmin)
-admin.site.register(Caseworker, CaseworkerAdmin)
-admin.site.register(Organisation)
+for model, admin_class in (
+    (Operator, OperatorAdmin),
+    (Caseworker, CaseworkerAdmin),
+    (Organisation, None),
+):
+    try:
+        if admin_class is None:
+            admin.site.register(model)
+        else:
+            admin.site.register(model, admin_class)
+    except AlreadyRegistered:
+        pass

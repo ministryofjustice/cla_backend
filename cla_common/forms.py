@@ -2,7 +2,7 @@ import itertools
 from django import forms
 from django.forms.fields import ChoiceField
 from django.forms.forms import BaseForm
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 import inspect
 
 
@@ -38,24 +38,23 @@ class AdvancedCollectionChoiceField(ChoiceField):
         return CollectionChoiceIterator(collection=self.collection, pk_attr=self.pk_attr, label_attr=self.label_attr)
 
     def valid_value(self, value):
-        text_value = force_text(value)
+        text_value = force_str(value)
         for k, v, d in self.choices:
             if isinstance(v, (list, tuple)):
                 # This is an optgroup, so look inside the group for options
                 for k2, v2 in v:
-                    if value == k2 or text_value == force_text(k2):
+                    if value == k2 or text_value == force_str(k2):
                         return True
             else:
-                if value == k or text_value == force_text(k):
+                if value == k or text_value == force_str(k):
                     return True
         return False
 
-    choices = property(_get_choices, ChoiceField._set_choices)
+    choices = property(_get_choices, ChoiceField.choices.fset)
 
 
 def get_default_form_kwargs(form=BaseForm):
-    args, _, _, _ = inspect.getargspec(form.__init__)
-    return set(args)
+    return set(inspect.getfullargspec(form.__init__).args)
 
 
 class MultipleFormsForm(forms.Form):

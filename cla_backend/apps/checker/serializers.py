@@ -26,6 +26,7 @@ from legalaid.serializers import (
 from legalaid.models import Case, EligibilityCheck
 from checker.models import ReasonForContacting, ReasonForContactingCategory, ScopeTraversal
 from core.serializers import ClaModelSerializer, JSONField
+from cla_backend.libs.eligibility_calculator.calculator import EligibilityChecker
 
 checker_graph = SimpleLazyObject(lambda: get_graph(file_name=settings.CHECKER_DIAGNOSIS_FILE_NAME))
 
@@ -125,6 +126,26 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
     # TODO: DRF doesn't validate, fields that aren't REQ'd = True
     # we need to figure out a way to deal with it
 
+    is_gross_income_complete = serializers.SerializerMethodField()
+    is_disposable_income_complete = serializers.SerializerMethodField()
+    is_property_complete = serializers.SerializerMethodField()
+    is_savings_complete = serializers.SerializerMethodField()
+
+    def _get_case_data(self, obj):
+        return obj.to_case_data()
+
+    def get_is_gross_income_complete(self, obj):
+        return EligibilityChecker.is_gross_income_complete(self._get_case_data(obj))
+
+    def get_is_disposable_income_complete(self, obj):
+        return EligibilityChecker.is_disposable_income_complete(self._get_case_data(obj))
+
+    def get_is_property_complete(self, obj):
+        return EligibilityChecker.is_property_complete(self._get_case_data(obj))
+
+    def get_is_savings_complete(self, obj):
+        return EligibilityChecker._is_savings_complete(self._get_case_data(obj))
+
     class Meta(EligibilityCheckSerializerBase.Meta):
         fields = (
             "reference",
@@ -142,6 +163,10 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
             "on_nass_benefits",
             "specific_benefits",
             "disregards",
+            "is_gross_income_complete",
+            "is_disposable_income_complete",
+            "is_property_complete",
+            "is_savings_complete",
         )
         writable_nested_fields = ["you", "partner", "property_set"]
 

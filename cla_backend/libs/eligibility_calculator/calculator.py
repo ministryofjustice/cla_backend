@@ -152,31 +152,32 @@ class EligibilityChecker(object):
 
     @staticmethod
     def _translate_section_gross_income(case_data, request_data):
-        def is_gross_income_complete(case_data):
-            if "you" not in case_data.__dict__:
-                return False
-            person = case_data.you
-            if "income" not in person.__dict__:
-                return False
-            income = person.income
-            income_keys_if_complete = set(income.PROPERTY_META.keys())
-            # cla_public will remove the `income.child_benefits` key from CaseDict if you submit /benefits without
-            # checking the child benefit checkbox (which doesn't even appear if dependants_young=0). So this key is not
-            # required for income to be considered complete
-            income_keys_if_complete.remove("child_benefits")
-            for key in income_keys_if_complete:
-                if key not in income.__dict__:
-                    return False
-
-            if "has_partner" not in case_data.facts.__dict__:
-                # If they have a partner then their deductions can lower the disposable income further,
-                # so this section is not complete until we know the partners' figures
-                return False
-
-            return True
-
-        if not is_gross_income_complete(case_data):
+        if not EligibilityChecker.is_gross_income_complete(case_data):
             request_data["assessment"]["section_gross_income"] = "incomplete"
+
+    @staticmethod
+    def is_gross_income_complete(case_data):
+        if "you" not in case_data.__dict__:
+            return False
+        person = case_data.you
+        if "income" not in person.__dict__:
+            return False
+        income = person.income
+        income_keys_if_complete = set(income.PROPERTY_META.keys())
+        # cla_public will remove the `income.child_benefits` key from CaseDict if you submit /benefits without
+        # checking the child benefit checkbox (which doesn't even appear if dependants_young=0). So this key is not
+        # required for income to be considered complete
+        income_keys_if_complete.remove("child_benefits")
+        for key in income_keys_if_complete:
+            if key not in income.__dict__:
+                return False
+
+        if "has_partner" not in case_data.facts.__dict__:
+            # If they have a partner then their deductions can lower the disposable income further,
+            # so this section is not complete until we know the partners' figures
+            return False
+
+        return True
 
     @staticmethod
     def _translate_section_disposable_income(case_data, request_data):
@@ -184,26 +185,26 @@ class EligibilityChecker(object):
         Determine if the questions for disposable income section of the test have been completed by the user yet,
         and put this in the CFE request.
         """
-
-        def is_disposable_income_complete(case_data):
-            if "you" not in case_data.__dict__:
-                return False
-            person = case_data.you
-            if "deductions" not in person.__dict__:
-                return False
-            deductions = case_data.you.deductions
-            for key in deductions.PROPERTY_META:
-                if key not in deductions.__dict__:
-                    return False
-
-            if "has_partner" not in case_data.facts.__dict__:
-                # If they have a partner then their deductions can lower the disposable income further,
-                # so this section is not complete until we know the partners' figures
-                return False
-            return True
-
-        if not is_disposable_income_complete(case_data):
+        if not EligibilityChecker.is_disposable_income_complete(case_data):
             request_data["assessment"]["section_disposable_income"] = "incomplete"
+
+    @staticmethod
+    def is_disposable_income_complete(case_data):
+        if "you" not in case_data.__dict__:
+            return False
+        person = case_data.you
+        if "deductions" not in person.__dict__:
+            return False
+        deductions = case_data.you.deductions
+        for key in deductions.PROPERTY_META:
+            if key not in deductions.__dict__:
+                return False
+
+        if "has_partner" not in case_data.facts.__dict__:
+            # If they have a partner then their deductions can lower the disposable income further,
+            # so this section is not complete until we know the partners' figures
+            return False
+        return True
 
     @staticmethod
     def is_property_complete(case_data):

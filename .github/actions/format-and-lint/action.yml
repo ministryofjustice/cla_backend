@@ -5,7 +5,7 @@ runs:
 
       - name: Requirements
         shell: bash
-        run: python -m pip install -r requirements/generated/requirements-lint.txt
+        run: python -m pip install --root-user-action=ignore -r requirements/generated/requirements-lint.txt
 
       # Lint using flake8
       - name: Linting

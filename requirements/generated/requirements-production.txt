@@ -39,6 +39,7 @@ docopt==0.6.2
 drf-extensions==0.8.0
 drf-nested-routers==0.94.2
 et-xmlfile==2.0.0
+greenlet==3.5.3
 idna==3.18
 isodate==0.7.2
 jmespath==1.1.0

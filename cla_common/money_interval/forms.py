@@ -30,7 +30,7 @@ class MoneyIntervalWidget(widgets.MultiWidget):
     def format_output(self, rendered_widgets):
 
         # there should be a number input and a dropdown
-        return u"".join(rendered_widgets)
+        return "".join(rendered_widgets)
 
 
 class MoneyIntervalField(forms.MultiValueField):

@@ -28,8 +28,4 @@ class MCCCaseViewSet(CaseViewSet):
         """
         Updates only the category for a case
         """
-        return self._form_action(
-            request,
-            Form=ChangeCategoryForm,
-            form_kwargs={"request": request}
-        )
+        return self._form_action(request, Form=ChangeCategoryForm, form_kwargs={"request": request})

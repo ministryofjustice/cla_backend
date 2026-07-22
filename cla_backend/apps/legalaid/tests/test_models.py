@@ -151,7 +151,7 @@ class EligibilityCheckTestCase(TestCase):
                     self.assertModelMixinEqual(val1, val2)
                     continue
 
-                assert_func(val1, val2, u"%s: %s != %s" % (prop, val1, val2))
+                assert_func(val1, val2, "%s: %s != %s" % (prop, val1, val2))
 
     def test_to_case_data_without_partner(self):
         """

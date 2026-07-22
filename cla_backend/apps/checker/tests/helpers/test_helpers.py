@@ -1,6 +1,5 @@
 from unittest import TestCase
 from freezegun import freeze_time
-from django.utils import timezone
 from cla_common.constants import CALLBACK_TYPES
 from core.tests.mommy_utils import make_recipe
 import datetime

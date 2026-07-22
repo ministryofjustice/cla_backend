@@ -18,16 +18,8 @@ class ProviderAPIMixin(SimpleResourceAPIMixin):
         self.category2 = make_recipe("legalaid.category", code="housing", name="Housing")
 
         # Add categories to the provider using ProviderAllocation intermediary model
-        ProviderAllocation.objects.create(
-            provider=self.resource,
-            category=self.category1,
-            weighted_distribution=0.5
-        )
-        ProviderAllocation.objects.create(
-            provider=self.resource,
-            category=self.category2,
-            weighted_distribution=0.5
-        )
+        ProviderAllocation.objects.create(provider=self.resource, category=self.category1, weighted_distribution=0.5)
+        ProviderAllocation.objects.create(provider=self.resource, category=self.category2, weighted_distribution=0.5)
 
     def test_get_allowed(self):
         """

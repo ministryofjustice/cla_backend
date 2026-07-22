@@ -179,12 +179,14 @@ class DetailedCaseEndpointTestCase(CLAProviderAuthBaseApiTestMixin, APITestCase)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # Detailed endpoint should NOT have eligibility_check reference
-        self.assertNotIn('eligibility_check', response.data)
+        self.assertNotIn("eligibility_check", response.data)
 
         # Regular endpoint should still have eligibility_check reference
-        response = self.client.get(self.get_case_url(self.case.reference), HTTP_AUTHORIZATION=self.get_http_authorization())
+        response = self.client.get(
+            self.get_case_url(self.case.reference), HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn('eligibility_check', response.data)
+        self.assertIn("eligibility_check", response.data)
 
     def test_detailed_endpoint_state_note_ignores_minor_case_viewed_log(self):
         """Detailed endpoint state_note should match visible logs endpoint behaviour."""
@@ -204,10 +206,12 @@ class DetailedCaseEndpointTestCase(CLAProviderAuthBaseApiTestMixin, APITestCase)
         response = self.client.get(detailed_url, HTTP_AUTHORIZATION=self.get_http_authorization())
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        self.assertIn('state', response.data)
-        self.assertEqual(response.data['state'], 'new')  # Default state for test case
+        self.assertIn("state", response.data)
+        self.assertEqual(response.data["state"], "new")  # Default state for test case
 
         # Test that regular endpoint does NOT include state field
-        response = self.client.get(self.get_case_url(self.case.reference), HTTP_AUTHORIZATION=self.get_http_authorization())
+        response = self.client.get(
+            self.get_case_url(self.case.reference), HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertNotIn('state', response.data)
+        self.assertNotIn("state", response.data)

@@ -65,9 +65,9 @@ class AccessTokenView(Oauth2AccessTokenView):
             return response
         except OAuth2Error as exc:
             if exc.description == "invalid_grant":
-                logger.error("Investigate invalid_grant. CLIENT_ID {}".format(
-                    request.POST.get("client_id")
-                ), exc_info=True)
+                logger.error(
+                    "Investigate invalid_grant. CLIENT_ID {}".format(request.POST.get("client_id")), exc_info=True
+                )
             logger.info("OAuth2Error: {}".format(exc.description))
             response = self.error_response({"error": exc.description}, status=401)
             return response

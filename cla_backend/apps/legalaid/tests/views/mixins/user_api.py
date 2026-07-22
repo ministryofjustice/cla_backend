@@ -134,7 +134,7 @@ class UserAPIMixin(object):
             self.list_url, data, HTTP_AUTHORIZATION=self.get_http_authorization(token=self.manager_token)
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response)
-        self.assertEqual(response.data["password"], [u"Password must be at least 10 characters long."])
+        self.assertEqual(response.data["password"], ["Password must be at least 10 characters long."])
 
     def test_duplicate_username_validation(self):
         data = {

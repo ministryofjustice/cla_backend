@@ -99,10 +99,7 @@ class MCCChangeCategoryTestCase(CLAProviderAuthBaseApiTestMixin, APITestCase):
             reference="AA-9999-9999",
             provider=self.provider,
             requires_action_by=REQUIRES_ACTION_BY.PROVIDER,
-            eligibility_check=make_recipe(
-                "legalaid.eligibility_check",
-                category=self.case_category
-            )
+            eligibility_check=make_recipe("legalaid.eligibility_check", category=self.case_category),
         )
 
         self.resource.diagnosis = DiagnosisTraversal.objects.create_eligible(self.case_category)
@@ -119,10 +116,7 @@ class MCCChangeCategoryTestCase(CLAProviderAuthBaseApiTestMixin, APITestCase):
 
         response = self.client.patch(
             self.url,
-            data={
-                "category": self.new_category.code,
-                "notes": "Changing category via MCC"
-            },
+            data={"category": self.new_category.code, "notes": "Changing category via MCC"},
             format="json",
             HTTP_AUTHORIZATION=self.get_http_authorization(),
         )
@@ -132,10 +126,7 @@ class MCCChangeCategoryTestCase(CLAProviderAuthBaseApiTestMixin, APITestCase):
         self.resource.refresh_from_db()
         eligibility = self.resource.eligibility_check
         eligibility.refresh_from_db()
-        self.assertEqual(
-            eligibility.category,
-            self.new_category
-        )
+        self.assertEqual(eligibility.category, self.new_category)
 
         self.assertIsNotNone(self.resource.diagnosis)
 
@@ -150,15 +141,13 @@ class MCCChangeCategoryTestCase(CLAProviderAuthBaseApiTestMixin, APITestCase):
             {
                 "old_category": self.case_category.code,
                 "new_category": self.new_category.code,
-            }
+            },
         )
 
     def test_change_category_requires_note(self):
         response = self.client.patch(
             self.url,
-            data={
-                "category": self.new_category.code
-            },
+            data={"category": self.new_category.code},
             format="json",
             HTTP_AUTHORIZATION=self.get_http_authorization(),
         )
@@ -169,16 +158,10 @@ class MCCChangeCategoryTestCase(CLAProviderAuthBaseApiTestMixin, APITestCase):
         original_outcome_code = self.resource.outcome_code
         response = self.client.patch(
             self.url,
-            data={
-                "category": self.new_category.code,
-                "notes": "Changing category via MCC"
-            },
+            data={"category": self.new_category.code, "notes": "Changing category via MCC"},
             format="json",
             HTTP_AUTHORIZATION=self.get_http_authorization(),
         )
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.resource.refresh_from_db()
-        self.assertEqual(
-            self.resource.outcome_code,
-            original_outcome_code
-        )
+        self.assertEqual(self.resource.outcome_code, original_outcome_code)

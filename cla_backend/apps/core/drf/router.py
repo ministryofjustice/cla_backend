@@ -13,7 +13,9 @@ from rest_framework.routers import Route, DynamicRoute
 
 
 def replace_methodname(route_pattern, methodname):
-    return route_pattern.replace("{methodname}", methodname).replace("{methodnamehyphen}", methodname.replace("_", "-"))
+    return route_pattern.replace("{methodname}", methodname).replace(
+        "{methodnamehyphen}", methodname.replace("_", "-")
+    )
 
 
 class NestedSimpleRouter(OriginalNestedSimpleRouter):
@@ -70,7 +72,10 @@ class AdvancedSimpleRouter(BaseRouter):
         # Generated using @list_route decorator
         # on methods of the viewset.
         DynamicRoute(
-            url=r"^{prefix}/{methodname}{trailing_slash}$", name="{basename}-{methodnamehyphen}", detail=False, initkwargs={}
+            url=r"^{prefix}/{methodname}{trailing_slash}$",
+            name="{basename}-{methodnamehyphen}",
+            detail=False,
+            initkwargs={},
         ),
         # Detail route.
         Route(

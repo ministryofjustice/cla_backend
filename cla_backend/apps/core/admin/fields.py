@@ -47,7 +47,7 @@ class MarkdownAdminField(forms.CharField):
 
         if html_value != bleached_html:
             raise exceptions.ValidationError(
-                u"%s%s"
-                % (_(u"One or more tags not allowed. Allowed tags: "), ", ".join(self.markdown_whitelist["tags"]))
+                "%s%s"
+                % (_("One or more tags not allowed. Allowed tags: "), ", ".join(self.markdown_whitelist["tags"]))
             )
         return value

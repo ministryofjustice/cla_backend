@@ -13,11 +13,11 @@ class UserTestCase(CLAProviderAuthBaseApiTestMixin, UserAPIMixin, APITestCase):
         del _data["provider"]["id"]
 
         expected_subset = {
-            "username": u"john",
-            "first_name": u"",
-            "last_name": u"",
-            "email": u"lennon@thebeatles.com",
-            "provider": {"name": u"Name1"},
+            "username": "john",
+            "first_name": "",
+            "last_name": "",
+            "email": "lennon@thebeatles.com",
+            "provider": {"name": "Name1"},
             "is_manager": False,
         }
         for key, expected_value in expected_subset.items():

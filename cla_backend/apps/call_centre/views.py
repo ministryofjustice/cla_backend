@@ -338,10 +338,7 @@ class CaseViewSet(
         return provider.short_code == settings.EDUCATION_DUMMY_PROVIDER_SHORT_CODE
 
     def _build_edff_auto_notes(self, provider_obj):
-        return (
-            u"AUTO_EDFF_ROUTE: selected_provider_id={};"
-            u"selected_provider_name={};"
-        ).format(
+        return ("AUTO_EDFF_ROUTE: selected_provider_id={};" "selected_provider_name={};").format(
             provider_obj.id,
             provider_obj.name,
         )
@@ -381,11 +378,15 @@ class CaseViewSet(
 
             # https://dsdmoj.atlassian.net/browse/LGA-3974
             if self._is_education_dummy_provider(case=obj, provider=provider):
-                alt_form = AlternativeHelpForm(case=obj, data={"event_code": "EDFF", "notes": self._build_edff_auto_notes(provider)})
+                alt_form = AlternativeHelpForm(
+                    case=obj, data={"event_code": "EDFF", "notes": self._build_edff_auto_notes(provider)}
+                )
                 if alt_form.is_valid():
                     alt_form.save(request.user)
                 else:
-                    return DRFResponse({"error": "Could not save EDFF for dummy provider"}, status=status.HTTP_400_BAD_REQUEST)
+                    return DRFResponse(
+                        {"error": "Could not save EDFF for dummy provider"}, status=status.HTTP_400_BAD_REQUEST
+                    )
 
             return DRFResponse(data=provider_serialised.data)
 

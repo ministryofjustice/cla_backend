@@ -26,7 +26,9 @@ class MockView(APIView):
         return HttpResponse({"a": 1, "b": 2, "c": 3})
 
 
-urlpatterns = base_patterns + [re_path(r"^mock_view/$", MockView.as_view(authentication_classes=[OAuth2Authentication]))]
+urlpatterns = base_patterns + [
+    re_path(r"^mock_view/$", MockView.as_view(authentication_classes=[OAuth2Authentication]))
+]
 
 
 @override_settings(ROOT_URLCONF="call_centre.tests.test_permissions")

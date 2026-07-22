@@ -6,7 +6,7 @@ from cla_provider.serializers import (
     NestedScopeTraversalSerializer,
     NestedDiagnosisSerializer,
     LogSerializer,
-    CaseNotesHistorySerializer
+    CaseNotesHistorySerializer,
 )
 from legalaid.serializers import (
     AdaptationDetailsSerializerBase,
@@ -20,6 +20,7 @@ class DetailedCaseSerializer(CaseSerializer):
     Extended case serializer that includes all nested details
     for the detailed endpoint
     """
+
     personal_details = PersonalDetailsSerializerFull(read_only=True)
     adaptation_details = AdaptationDetailsSerializerBase(read_only=True)
     thirdparty_details = ThirdPartyDetailsSerializerBase(read_only=True)
@@ -33,8 +34,12 @@ class DetailedCaseSerializer(CaseSerializer):
         """Fetch all notes history for the case"""
         from legalaid.models import CaseNotesHistory
 
-        notes = CaseNotesHistory.objects.filter(case=obj).order_by('-created')
+        notes = CaseNotesHistory.objects.filter(case=obj).order_by("-created")
         return CaseNotesHistorySerializer(notes, many=True).data
 
     class Meta(CaseSerializer.Meta):
-        fields = tuple(field for field in CaseSerializer.Meta.fields if field != "eligibility_check") + ("state", "state_note", "notes_history")
+        fields = tuple(field for field in CaseSerializer.Meta.fields if field != "eligibility_check") + (
+            "state",
+            "state_note",
+            "notes_history",
+        )

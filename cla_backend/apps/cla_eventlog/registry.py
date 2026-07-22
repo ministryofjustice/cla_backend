@@ -1,6 +1,4 @@
 from collections import defaultdict
-from functools import reduce
-import operator
 from .constants import LOG_LEVELS, LOG_TYPES, LOG_ROLES
 
 
@@ -64,7 +62,7 @@ class EventRegistry(object):
 
     def get_event(self, key):
         if key not in self._registry:
-            raise ValueError(u"%s not registered" % key)
+            raise ValueError("%s not registered" % key)
         return self._registry[key]
 
     def get_selectable_events(self, role):

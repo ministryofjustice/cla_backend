@@ -2,7 +2,6 @@
 from decimal import Decimal
 from cla_common.services import translate
 
-
 TWO_DP = Decimal(".01")
 ZERO_DP = Decimal("1")
 
@@ -74,7 +73,7 @@ class MoneyInterval(object):
         return self.as_monthly().__cmp__(other.as_monthly())
 
     def __str__(self):
-        return u"{interval_value} pounds {interval_period} ({as_monthly} pounds per month)".format(
+        return "{interval_value} pounds {interval_period} ({as_monthly} pounds per month)".format(
             interval_value=self.per_interval_value, interval_period=self.interval_period, as_monthly=self.as_monthly()
         )
 

@@ -5,9 +5,9 @@ from ..templatetags.means_summary_tags import MeansSummaryFormatter
 
 class MeansSummaryFormatterTestCase(unittest.TestCase):
     """
-        Intentionally not unit testing completely as it's likely going to change
-        quite a lot.
-        Unit testing the core parts though.
+    Intentionally not unit testing completely as it's likely going to change
+    quite a lot.
+    Unit testing the core parts though.
     """
 
     def setUp(self):
@@ -34,7 +34,7 @@ class MeansSummaryFormatterTestCase(unittest.TestCase):
         self.assertEqual(section["header"], "Details you've already given")
         self.assertEqual(section["step"], "your_problem")
         self.assertEqual(
-            [unicode(s) for s in section["items"]],
+            [str(s) for s in section["items"]],
             [
                 "You are looking for help about my-category",
                 "Additional details about your problem: my-notes",
@@ -50,7 +50,7 @@ class MeansSummaryFormatterTestCase(unittest.TestCase):
 
         section = self.formatter.get_your_details(data)
         self.assertEqual(
-            [unicode(s) for s in section["items"]],
+            [str(s) for s in section["items"]],
             [
                 "You are looking for help about my-category",
                 "You don't live with a partner",
@@ -94,7 +94,7 @@ class MeansSummaryFormatterTestCase(unittest.TestCase):
         self.assertEqual(section["header"], "Your finances")
         self.assertEqual(section["step"], "your_capital")
         self.assertEqual(
-            [unicode(s) for s in section["items"]],
+            [str(s) for s in section["items"]],
             [
                 "You have 2 properties",
                 "Property 1: Your property is worth &pound1000.00",
@@ -123,7 +123,7 @@ class MeansSummaryFormatterTestCase(unittest.TestCase):
         self.assertEqual(section["header"], "Your finances")
         self.assertEqual(section["step"], "your_capital")
         self.assertEqual(
-            [unicode(s) for s in section["items"]],
+            [str(s) for s in section["items"]],
             [
                 "You don't have any money saved in a bank or building society",
                 "You don't have any money in investments, shares, ISAs",
@@ -146,16 +146,16 @@ class MeansSummaryFormatterTestCase(unittest.TestCase):
         data = {
             "you": {
                 "income": {
-                    "earnings": {"interval_period": u"per_month", "per_interval_value": 111},
+                    "earnings": {"interval_period": "per_month", "per_interval_value": 111},
                     "self_employed": True,
-                    "other_income": {"interval_period": u"per_month", "per_interval_value": 222},
+                    "other_income": {"interval_period": "per_month", "per_interval_value": 222},
                 }
             },
             "partner": {
                 "income": {
-                    "earnings": {"interval_period": u"per_month", "per_interval_value": 333},
+                    "earnings": {"interval_period": "per_month", "per_interval_value": 333},
                     "self_employed": False,
-                    "other_income": {"interval_period": u"per_month", "per_interval_value": 444},
+                    "other_income": {"interval_period": "per_month", "per_interval_value": 444},
                 }
             },
             "dependants_young": 1,
@@ -166,7 +166,7 @@ class MeansSummaryFormatterTestCase(unittest.TestCase):
         self.assertEqual(section["header"], "Your income")
         self.assertEqual(section["step"], "your_income")
         self.assertEqual(
-            [unicode(s) for s in section["items"]],
+            [str(s) for s in section["items"]],
             [
                 "Your earnings: &pound;1.11 per month",
                 "You are self employed",
@@ -181,13 +181,13 @@ class MeansSummaryFormatterTestCase(unittest.TestCase):
 
     def test_get_your_income_minimal(self):
         data = {
-            "you": {"income": {"earnings": {"interval_period": u"per_month", "per_interval_value": 0}}},
-            "partner": {"income": {"earnings": {"interval_period": u"per_month", "per_interval_value": 0}}},
+            "you": {"income": {"earnings": {"interval_period": "per_month", "per_interval_value": 0}}},
+            "partner": {"income": {"earnings": {"interval_period": "per_month", "per_interval_value": 0}}},
         }
 
         section = self.formatter.get_your_income(data)
         self.assertEqual(
-            [unicode(s) for s in section["items"]],
+            [str(s) for s in section["items"]],
             [
                 "You don't have earnings",
                 "You are not self employed",
@@ -235,7 +235,7 @@ class MeansSummaryFormatterTestCase(unittest.TestCase):
         self.assertEqual(section["step"], "your_allowances")
 
         self.assertEqual(
-            [unicode(s) for s in section["items"]],
+            [str(s) for s in section["items"]],
             [
                 "Your mortgage: &pound;1.10 per month",
                 "Your rent: &pound;0.01 per month",
@@ -271,7 +271,7 @@ class MeansSummaryFormatterTestCase(unittest.TestCase):
 
         section = self.formatter.get_your_allowances(data)
         self.assertEqual(
-            [unicode(s) for s in section["items"]],
+            [str(s) for s in section["items"]],
             [
                 "Your mortgage: &pound;0.00 per month",
                 "Your rent: &pound;0.00 per month",

@@ -241,11 +241,13 @@ class FilteredSearchCaseTestCase(BaseCaseTestCase):
         response = self.client.get(self.list_url, format="json", HTTP_AUTHORIZATION=self.get_http_authorization())
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(6, len(response.data["results"]))
-        self.assertCountEqual([c["reference"] for c in response.data["results"]], ["ref3", "ref4", "ref6", "ref7", "ref8", "ref9"])
+        self.assertCountEqual(
+            [c["reference"] for c in response.data["results"]], ["ref3", "ref4", "ref6", "ref7", "ref8", "ref9"]
+        )
 
     def test_new_cases(self):
         response = self.client.get(
-            u"%s?only=new" % self.list_url, format="json", HTTP_AUTHORIZATION=self.get_http_authorization()
+            "%s?only=new" % self.list_url, format="json", HTTP_AUTHORIZATION=self.get_http_authorization()
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(1, len(response.data["results"]))
@@ -253,7 +255,7 @@ class FilteredSearchCaseTestCase(BaseCaseTestCase):
 
     def test_opened_cases(self):
         response = self.client.get(
-            u"%s?only=opened" % self.list_url, format="json", HTTP_AUTHORIZATION=self.get_http_authorization()
+            "%s?only=opened" % self.list_url, format="json", HTTP_AUTHORIZATION=self.get_http_authorization()
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(1, len(response.data["results"]))
@@ -261,7 +263,7 @@ class FilteredSearchCaseTestCase(BaseCaseTestCase):
 
     def test_accepted_cases(self):
         response = self.client.get(
-            u"%s?only=accepted" % self.list_url, format="json", HTTP_AUTHORIZATION=self.get_http_authorization()
+            "%s?only=accepted" % self.list_url, format="json", HTTP_AUTHORIZATION=self.get_http_authorization()
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(1, len(response.data["results"]))
@@ -269,7 +271,7 @@ class FilteredSearchCaseTestCase(BaseCaseTestCase):
 
     def test_closed_cases(self):
         response = self.client.get(
-            u"%s?only=closed" % self.list_url, format="json", HTTP_AUTHORIZATION=self.get_http_authorization()
+            "%s?only=closed" % self.list_url, format="json", HTTP_AUTHORIZATION=self.get_http_authorization()
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(3, len(response.data["results"]))
@@ -277,7 +279,7 @@ class FilteredSearchCaseTestCase(BaseCaseTestCase):
 
     def test_rejected_cases(self):
         response = self.client.get(
-            u"%s?only=rejected" % self.list_url, format="json", HTTP_AUTHORIZATION=self.get_http_authorization()
+            "%s?only=rejected" % self.list_url, format="json", HTTP_AUTHORIZATION=self.get_http_authorization()
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(1, len(response.data["results"]))
@@ -285,7 +287,7 @@ class FilteredSearchCaseTestCase(BaseCaseTestCase):
 
     def test_completed_cases(self):
         response = self.client.get(
-            u"%s?only=completed" % self.list_url, format="json", HTTP_AUTHORIZATION=self.get_http_authorization()
+            "%s?only=completed" % self.list_url, format="json", HTTP_AUTHORIZATION=self.get_http_authorization()
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(2, len(response.data["results"]))
@@ -385,10 +387,7 @@ class RejectCaseTestCase(ExplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
         data["event_code"] = code
 
         response = self.client.post(
-            self.url,
-            data=data,
-            format="json",
-            HTTP_AUTHORIZATION=self.get_http_authorization()
+            self.url, data=data, format="json", HTTP_AUTHORIZATION=self.get_http_authorization()
         )
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -488,7 +487,7 @@ class ReopenCaseTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertDictEqual(response.data, {"__all__": [u"You can't reopen this case as it's still open"]})
+        self.assertDictEqual(response.data, {"__all__": ["You can't reopen this case as it's still open"]})
 
         # still no log
         self.assertEqual(Log.objects.count(), 0)
@@ -500,7 +499,7 @@ class ReopenCaseTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
         response = self.client.post(self.url, data={}, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertDictEqual(response.data, {"notes": [u"This field is required."]})
+        self.assertDictEqual(response.data, {"notes": ["This field is required."]})
 
         # still no log
         self.assertEqual(Log.objects.count(), 0)
@@ -588,7 +587,7 @@ class CaseStateTestCase(BaseCaseTestCase):
             provider_accepted=None,
             provider_closed=None,
         )
-        self.assertEqual(case.state, 'new')
+        self.assertEqual(case.state, "new")
 
     def test_case_state_opened(self):
         """Test that a case viewed by provider returns 'opened' state"""
@@ -599,7 +598,7 @@ class CaseStateTestCase(BaseCaseTestCase):
             provider_accepted=None,
             provider_closed=None,
         )
-        self.assertEqual(case.state, 'opened')
+        self.assertEqual(case.state, "opened")
 
     def test_case_state_accepted(self):
         """Test that a case accepted by provider returns 'accepted' state"""
@@ -610,7 +609,7 @@ class CaseStateTestCase(BaseCaseTestCase):
             provider_accepted=timezone.now(),
             provider_closed=None,
         )
-        self.assertEqual(case.state, 'accepted')
+        self.assertEqual(case.state, "accepted")
 
     def test_case_state_completed(self):
         """Test that a case accepted and closed by provider returns 'completed' state"""
@@ -621,7 +620,7 @@ class CaseStateTestCase(BaseCaseTestCase):
             provider_accepted=timezone.now(),
             provider_closed=timezone.now(),
         )
-        self.assertEqual(case.state, 'completed')
+        self.assertEqual(case.state, "completed")
 
     def test_case_state_rejected(self):
         """Test that a case closed without acceptance returns 'rejected' state"""
@@ -632,7 +631,7 @@ class CaseStateTestCase(BaseCaseTestCase):
             provider_accepted=None,
             provider_closed=timezone.now(),
         )
-        self.assertEqual(case.state, 'rejected')
+        self.assertEqual(case.state, "rejected")
 
     def test_case_state_note_prefers_non_minor_case_viewed_log(self):
         """State note should ignore minor CASE_VIEWED logs and use the visible log entry."""

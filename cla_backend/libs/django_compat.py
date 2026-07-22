@@ -1,5 +1,7 @@
 from django.urls import include, path, re_path
 
+__all__ = ["patterns", "include", "path", "url"]
+
 
 def patterns(prefix, *args):
     """Compatibility helper for removed django.conf.urls.patterns."""

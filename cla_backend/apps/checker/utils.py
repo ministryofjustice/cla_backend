@@ -1,6 +1,5 @@
 import csv
 import datetime
-import codecs
 import io
 from django.db import transaction
 from django.core.exceptions import ValidationError

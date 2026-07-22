@@ -30,7 +30,7 @@ class FeedbackAPITestCase(SimpleResourceAPIMixin, CLAOperatorAuthBaseApiTestMixi
         ]
 
     def test_patch_comment_allowed(self):
-        data = {"comment": self.resource.comment + u"test"}
+        data = {"comment": self.resource.comment + "test"}
         resp = self.client.patch(
             self.detail_url, data=data, format="json", HTTP_AUTHORIZATION=self.get_http_authorization()
         )

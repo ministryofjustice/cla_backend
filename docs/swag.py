@@ -1,12 +1,9 @@
 from django.core.exceptions import ImproperlyConfigured
 import docutils.nodes as n
-import docutils.parsers.rst.directives
-import os
 import sphinx.util.compat
 from sphinx import addnodes
 
 from rest_framework_swagger import docgenerator
-from rest_framework_swagger import introspectors
 from rest_framework_swagger import urlparser
 from django.conf import settings
 

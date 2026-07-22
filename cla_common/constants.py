@@ -4,7 +4,6 @@ import datetime
 
 from extended_choices import Choices
 
-
 ELIGIBILITY_STATES = Choices(
     # constant, db_id, friendly string
     ("UNKNOWN", "unknown", "Unknown"),
@@ -535,14 +534,14 @@ EXPRESSIONS_OF_DISSATISFACTION_FLAGS = {
 REASONS_FOR_CONTACTING = Choices(
     # NB: these are duplicated (for translation) in cla_public so change both when necessary!
     # constant, db_id, *english* friendly string
-    ("CANT_ANSWER", "CANT_ANSWER", u"I don’t know how to answer a question"),
-    ("MISSING_PAPERWORK", "MISSING_PAPERWORK", u"I don’t have the paperwork I need"),
-    ("PREFER_SPEAKING", "PREFER_SPEAKING", u"I’d prefer to speak to someone"),
-    ("DIFFICULTY_ONLINE", "DIFFICULTY_ONLINE", u"I have trouble using online services"),
-    ("HOW_SERVICE_HELPS", "HOW_SERVICE_HELPS", u"I don’t understand how this service can help me"),
-    ("AREA_NOT_COVERED", "AREA_NOT_COVERED", u"My problem area isn’t covered"),
-    ("PNS", "PNS", u"I’d prefer not to say"),
-    ("OTHER", "OTHER", u"Another reason"),
+    ("CANT_ANSWER", "CANT_ANSWER", "I don’t know how to answer a question"),
+    ("MISSING_PAPERWORK", "MISSING_PAPERWORK", "I don’t have the paperwork I need"),
+    ("PREFER_SPEAKING", "PREFER_SPEAKING", "I’d prefer to speak to someone"),
+    ("DIFFICULTY_ONLINE", "DIFFICULTY_ONLINE", "I have trouble using online services"),
+    ("HOW_SERVICE_HELPS", "HOW_SERVICE_HELPS", "I don’t understand how this service can help me"),
+    ("AREA_NOT_COVERED", "AREA_NOT_COVERED", "My problem area isn’t covered"),
+    ("PNS", "PNS", "I’d prefer not to say"),
+    ("OTHER", "OTHER", "Another reason"),
 )
 
 OPERATOR_HOURS = {
@@ -565,7 +564,7 @@ FINANCIAL_ASSESSMENT_STATUSES = Choices(
     ("FAST_TRACK", "FAST_TRACK", "Client told to call the helpline for the assessment."),
     # Operationally fast tracked through the check if you can get legal aid means test
     # E.g. due to risk of harm, are under 18, have trapped capital etc.
-    ("SKIPPED", "SKIPPED", "No details. Client called the helpline directly.")
+    ("SKIPPED", "SKIPPED", "No details. Client called the helpline directly."),
     # The client skipped the financial assessment due to clicking "Contact Us" directly.
 )
 

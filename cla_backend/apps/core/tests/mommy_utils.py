@@ -13,7 +13,7 @@ def make_recipe(model_def, **kwargs):
         recipe = import_from_str(f"{app.lower()}.tests.mommy_recipes.{recipe_name}")
     except ModuleNotFoundError:
         # Keep compatibility with model_bakery's default baker_recipes lookup.
-        return mommy.make_recipe(u"%s.tests.%s" % (app.lower(), recipe_name), **kwargs)
+        return mommy.make_recipe("%s.tests.%s" % (app.lower(), recipe_name), **kwargs)
 
     return recipe.make(**kwargs)
 

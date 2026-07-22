@@ -14,7 +14,13 @@ from django.contrib.auth.models import User
 from call_centre.models import Operator
 from cla_provider.models import Provider, Staff
 
-from cla_auth.constants import OPERATOR_ROLE, OPERATOR_MANAGER_ROLE, PROVIDER_ROLE, PROVIDER_MCC_ROLE, OPERATOR_OFFICE_CODES
+from cla_auth.constants import (
+    OPERATOR_ROLE,
+    OPERATOR_MANAGER_ROLE,
+    PROVIDER_ROLE,
+    PROVIDER_MCC_ROLE,
+    OPERATOR_OFFICE_CODES,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -144,13 +150,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         cert_str = "-----BEGIN CERTIFICATE-----\n%s\n-----END CERTIFICATE-----" % key_data["x5c"][0]
         cert_obj = load_pem_x509_certificate(cert_str.encode("utf-8"), default_backend())
         public_key = cert_obj.public_key()
-        return jwt.decode(
-            token,
-            public_key,
-            algorithms=["RS256"],
-            audience=self.expected_audience,
-            issuer=self.issuer
-        )
+        return jwt.decode(token, public_key, algorithms=["RS256"], audience=self.expected_audience, issuer=self.issuer)
 
     def get_or_create_user(self, payload):
         email = payload.get("USER_EMAIL")
@@ -246,11 +246,15 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         if OPERATOR_MANAGER_ROLE in silas_roles:  # User is operator manager in silas but operator in fox admin
             if not user.operator.is_manager:
                 logger.info(
-                    "ENTRA: User %s is an operator manager in silas but only operator in fox admin. promoting user to operator manager" % user.pk)
+                    "ENTRA: User %s is an operator manager in silas but only operator in fox admin. promoting user to operator manager"
+                    % user.pk
+                )
                 user.operator.is_manager = True
                 user.operator.save()
         elif user.operator.is_manager:  # User is operator  silas but is an operator manager in fox admin
             logger.info(
-                "ENTRA: User %s is operator in silas but operator manager in fox admin. demoting user operator" % user.pk)
+                "ENTRA: User %s is operator in silas but operator manager in fox admin. demoting user operator"
+                % user.pk
+            )
             user.operator.is_manager = False
             user.operator.save()

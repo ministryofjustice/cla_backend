@@ -44,7 +44,7 @@ jobs:
     needs: [pip-compile]
     name: "Format and lint"
     runs-on: "ubuntu-latest"
-    container: python:2.7
+    container: python:3.14
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
       - uses: ./.github/actions/format-and-lint
@@ -53,7 +53,7 @@ jobs:
     needs: [pip-compile]
     name: "Unit tests"
     runs-on: "ubuntu-latest"
-    container: python:2.7
+    container: python:3.14
     services:
       database:
         image: postgres:14.7-bullseye

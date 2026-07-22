@@ -3,7 +3,6 @@ from django.utils.translation import gettext_lazy as _
 import re
 from .helpers import in_pounds
 
-
 register = template.Library()
 
 
@@ -43,7 +42,7 @@ def money_interval_str(value):
     if not isinstance(value, dict) or "per_interval_value" not in value:
         return ""
 
-    return u"%s %s" % (in_pounds(value["per_interval_value"]), value["interval_period"].replace("_", " "))
+    return "%s %s" % (in_pounds(value["per_interval_value"]), value["interval_period"].replace("_", " "))
 
 
 class MeansSummaryFormatter(object):

@@ -24,14 +24,14 @@ sys.path.insert(0, os.path.abspath("../cla_backend/apps/"))
 sys.path.insert(0, os.path.abspath("../cla_backend/libs/"))
 sys.path.insert(0, os.path.abspath(".."))
 sys.path.insert(0, os.path.abspath("../../cla_docs/docs/source/"))
-from common_conf import *  # cla_docs.source.common_conf
+from common_conf import *  # noqa: F403,E402  # cla_docs.source.common_conf
 
-extensions += ["docs.swag"]
+extensions += ["docs.swag"]  # noqa: F405
 
 # -- General configuration -----------------------------------------------------
 
 # General information about the project.
-project = u"Civil Legal Aid Backend (API Server)"
+project = "Civil Legal Aid Backend (API Server)"
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

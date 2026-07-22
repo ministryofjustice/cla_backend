@@ -70,9 +70,7 @@ class ProviderExtractEntraTests(EntraTokenGeneratorMixin, APITestCase):
         return {"HTTP_AUTHORIZATION": "Bearer %s" % token}
 
     def test_valid_entra_post_returns_extract(self):
-        response = self.client.post(
-            self.detail_url, data={"CHSCRN": self.case.reference}, **self.auth_header()
-        )
+        response = self.client.post(self.detail_url, data={"CHSCRN": self.case.reference}, **self.auth_header())
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         o = objectify.fromstring(response.content)
         self.assertEqual(o.attrib["CRN"], str(self.case.laa_reference))
@@ -82,9 +80,7 @@ class ProviderExtractEntraTests(EntraTokenGeneratorMixin, APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_entra_post_unknown_crn_not_found(self):
-        response = self.client.post(
-            self.detail_url, data={"CHSCRN": "NONEXISTENT-CRN"}, **self.auth_header()
-        )
+        response = self.client.post(self.detail_url, data={"CHSCRN": "NONEXISTENT-CRN"}, **self.auth_header())
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_entra_post_case_belongs_to_other_provider_is_forbidden(self):
@@ -92,15 +88,11 @@ class ProviderExtractEntraTests(EntraTokenGeneratorMixin, APITestCase):
         other_case = make_recipe(
             "legalaid.case", provider=other_provider, requires_action_by=REQUIRES_ACTION_BY.PROVIDER
         )
-        response = self.client.post(
-            self.detail_url, data={"CHSCRN": other_case.reference}, **self.auth_header()
-        )
+        response = self.client.post(self.detail_url, data={"CHSCRN": other_case.reference}, **self.auth_header())
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_response_is_xml_with_key_fields(self):
-        response = self.client.post(
-            self.detail_url, data={"CHSCRN": self.case.reference}, **self.auth_header()
-        )
+        response = self.client.post(self.detail_url, data={"CHSCRN": self.case.reference}, **self.auth_header())
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn("text/xml", response["Content-Type"])
         o = objectify.fromstring(response.content)
@@ -113,7 +105,5 @@ class ProviderExtractEntraTests(EntraTokenGeneratorMixin, APITestCase):
 
     def test_entra_post_does_not_require_legacy_chs_fields(self):
         """No CHSOrganisationID/CHSUserName/CHSPassword needed for the Entra path."""
-        response = self.client.post(
-            self.detail_url, data={"CHSCRN": self.case.reference}, **self.auth_header()
-        )
+        response = self.client.post(self.detail_url, data={"CHSCRN": self.case.reference}, **self.auth_header())
         self.assertEqual(response.status_code, status.HTTP_200_OK)

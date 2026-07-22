@@ -19,9 +19,17 @@ def env_var_truthy_intention(name):
 
 # PATH vars
 
-here = lambda *x: os.path.join(os.path.abspath(os.path.dirname(__file__)), *x)
+
+def here(*x):
+    return os.path.join(os.path.abspath(os.path.dirname(__file__)), *x)
+
+
 PROJECT_ROOT = here("..")
-root = lambda *x: os.path.join(os.path.abspath(PROJECT_ROOT), *x)
+
+
+def root(*x):
+    return os.path.join(os.path.abspath(PROJECT_ROOT), *x)
+
 
 sys.path.insert(0, root("apps"))
 sys.path.insert(0, root("libs"))
@@ -521,10 +529,10 @@ ENTRA_EXPECTED_AUDIENCE = os.environ.get("ENTRA_EXPECTED_AUDIENCE", None)
 
 # .local.py overrides all the common settings.
 try:
-    from .local import *
+    from .local import *  # noqa: F401,F403
 except ImportError:
     pass
 
 # importing test settings file if necessary (TODO chould be done better)
 if len(sys.argv) > 1 and "test" == sys.argv[1]:
-    from .testing import *
+    from .testing import *  # noqa: F401,F403

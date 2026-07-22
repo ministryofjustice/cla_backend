@@ -23,7 +23,9 @@ class MonkeyPatch(object):
 
 @contextmanager
 def override_current_time(dt):
-    override = lambda: dt
+    def override():
+        return dt
+
     patch = MonkeyPatch(call_centre_availability, "current_datetime", override)
     yield
     patch.undo()

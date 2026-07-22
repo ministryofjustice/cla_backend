@@ -67,15 +67,15 @@ class ThirdPartyDetailsApiMixin(NestedSimpleResourceAPIMixin):
 
         expected_errors = {
             "personal_details": {
-                "full_name": [u"Ensure this field has no more than 255 characters."],
-                "home_phone": [u"Ensure this field has no more than 20 characters."],
-                "mobile_phone": [u"Ensure this field has no more than 20 characters."],
-                "postcode": [u"Ensure this field has no more than 12 characters."],
-                "street": [u"Ensure this field has no more than 255 characters."],
-                "title": [u"Ensure this field has no more than 20 characters."],
+                "full_name": ["Ensure this field has no more than 255 characters."],
+                "home_phone": ["Ensure this field has no more than 20 characters."],
+                "mobile_phone": ["Ensure this field has no more than 20 characters."],
+                "postcode": ["Ensure this field has no more than 12 characters."],
+                "street": ["Ensure this field has no more than 255 characters."],
+                "title": ["Ensure this field has no more than 20 characters."],
             },
-            "reason": [u'"XXXXXXXXX" is not a valid choice.'],
-            "personal_relationship": [u'"XXXXXXXXX" is not a valid choice.'],
+            "reason": ['"XXXXXXXXX" is not a valid choice.'],
+            "personal_relationship": ['"XXXXXXXXX" is not a valid choice.'],
         }
 
         errors = response.data
@@ -114,8 +114,8 @@ class ThirdPartyDetailsApiMixin(NestedSimpleResourceAPIMixin):
 
         errors = response.data
         self.assertIn("personal_details", errors)
-        self.assertEqual(errors["personal_details"]["mobile_phone"], [u"Enter a valid phone number"])
-        self.assertEqual(errors["personal_details"]["home_phone"], [u"Enter a valid phone number"])
+        self.assertEqual(errors["personal_details"]["mobile_phone"], ["Enter a valid phone number"])
+        self.assertEqual(errors["personal_details"]["home_phone"], ["Enter a valid phone number"])
 
     def test_methods_in_error(self):
         self._test_method_in_error("patch", self.detail_url)

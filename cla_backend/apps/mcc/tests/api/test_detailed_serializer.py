@@ -1,8 +1,5 @@
 from django.test import TestCase
-from cla_provider.serializers import (
-    CaseSerializer,
-    CaseListSerializer
-)
+from cla_provider.serializers import CaseSerializer, CaseListSerializer
 from mcc.serializers import DetailedCaseSerializer
 
 
@@ -20,14 +17,14 @@ class SerializerConfigurationTest(TestCase):
         detailed_fields = detailed_serializer.Meta.fields
 
         # CaseSerializer
-        self.assertNotIn('state', case_fields)
-        self.assertIn('eligibility_check', case_fields)
+        self.assertNotIn("state", case_fields)
+        self.assertIn("eligibility_check", case_fields)
 
         # CaseListSerializer
-        self.assertNotIn('state', list_fields)
-        self.assertNotIn('eligibility_check', list_fields)
-        self.assertIn('safe_to_contact', list_fields)
-        self.assertIn('phone_number', list_fields)
+        self.assertNotIn("state", list_fields)
+        self.assertNotIn("eligibility_check", list_fields)
+        self.assertIn("safe_to_contact", list_fields)
+        self.assertIn("phone_number", list_fields)
         self.assertIn("mcc_case_flags", list_fields)
 
         # Not at top-level on CaseListSerializer
@@ -38,8 +35,8 @@ class SerializerConfigurationTest(TestCase):
         self.assertNotIn("language", list_fields)
 
         # DetailedCaseSerializer
-        self.assertIn('state', detailed_fields)
-        self.assertNotIn('eligibility_check', detailed_fields)
+        self.assertIn("state", detailed_fields)
+        self.assertNotIn("eligibility_check", detailed_fields)
 
         # Validate that the other fields don't exist in the wrong place
         self.assertNotIn("state", set(CaseSerializer.Meta.fields))

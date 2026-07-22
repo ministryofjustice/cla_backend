@@ -52,7 +52,7 @@ class NoteTagRelation(models.Model):
         verbose_name = "Tag"
 
     def __unicode__(self):
-        return u"%s (%s)" % (self.tag.title, self.note.title)
+        return "%s (%s)" % (self.tag.title, self.note.title)
 
 
 class Note(TimeStampedModel):

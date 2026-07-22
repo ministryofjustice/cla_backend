@@ -175,7 +175,10 @@ def every_interval(time, days=0, hours=0, minutes=0):
 
 def available_days(num):
     days = every_interval(current_datetime(), days=1)
-    available_day = lambda day: available(day, ignore_time=True)
+
+    def available_day(day):
+        return available(day, ignore_time=True)
+
     return list(islice(filter(available_day, days), num))
 
 
@@ -183,9 +186,15 @@ def time_slots(day=None):
     if not day:
         day = datetime.date(9999, 1, 1)  # a weekday in the future
     start = datetime.datetime.combine(day, datetime.time(9))
-    same_day = lambda x: x.date() == day
+
+    def same_day(x):
+        return x.date() == day
+
     slots = takewhile(same_day, every_interval(start, minutes=SLOT_INTERVAL_MINS))
-    is_available = lambda slot: can_schedule_callback(slot)
+
+    def is_available(slot):
+        return can_schedule_callback(slot)
+
     return list(filter(is_available, slots))
 
 
@@ -296,7 +305,7 @@ class OpeningHours(object):
         self.day_hours.append((func, hours))
 
     def available(self, dt, ignore_time=False, tz_aware=False):
-        for (on_day, hours) in self.day_hours:
+        for on_day, hours in self.day_hours:
             if on_day(dt):
                 if hours is None:
                     continue
@@ -316,9 +325,14 @@ class OpeningHours(object):
         if not day:
             day = datetime.date(9999, 1, 1)  # a weekday in the future
         start = datetime.datetime.combine(day, datetime.time(0))
-        same_day = lambda dt: dt.date() == day
-        available = lambda dt: self.can_schedule_callback(dt)
-        return list(filter(available, takewhile(same_day, every_interval(start, minutes=SLOT_INTERVAL_MINS))))
+
+        def same_day(dt):
+            return dt.date() == day
+
+        def slot_available(dt):
+            return self.can_schedule_callback(dt)
+
+        return list(filter(slot_available, takewhile(same_day, every_interval(start, minutes=SLOT_INTERVAL_MINS))))
 
     def today_slots(self):
         return self.time_slots(current_datetime().date())
@@ -330,5 +344,8 @@ class OpeningHours(object):
     def available_days(self, num_days=6):
         start = current_datetime() + datetime.timedelta(days=1)
         days = every_interval(start, days=1)
-        available_day = lambda day: self.can_schedule_callback(day, ignore_time=True)
+
+        def available_day(day):
+            return self.can_schedule_callback(day, ignore_time=True)
+
         return list(islice(filter(available_day, days), num_days))

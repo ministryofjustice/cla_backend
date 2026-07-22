@@ -22,7 +22,7 @@ register.filter("unslug", unslug)
 def in_pounds(value):
     if isinstance(value, Number):
         value = value / 100.0
-        return u"{val:.2f}".format(val=value)
+        return "{val:.2f}".format(val=value)
     return value
 
 

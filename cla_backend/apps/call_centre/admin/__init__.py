@@ -129,7 +129,9 @@ class OperatorAdmin(OneToOneUserAdmin):
 
         # At this point, logged-in user is operator manager or simple django staff.
         # Deny changes to CLA superusers even if only the group flag remains set.
-        is_target_cla_superuser = obj.is_cla_superuser or obj.user.groups.filter(name=CLA_SUPERUSER_GROUP_NAME).exists()
+        is_target_cla_superuser = (
+            obj.is_cla_superuser or obj.user.groups.filter(name=CLA_SUPERUSER_GROUP_NAME).exists()
+        )
         if is_target_cla_superuser:
             return False
 

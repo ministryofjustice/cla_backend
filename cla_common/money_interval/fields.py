@@ -6,8 +6,12 @@ from django.utils.translation import gettext_lazy as _
 from cla_common.money_interval.models import MoneyInterval
 
 
-_interval_period_field_name = lambda name: "%s_interval_period" % name
-_per_interval_value_field_name = lambda name: "%s_per_interval_value" % name
+def _interval_period_field_name(name):
+    return "%s_interval_period" % name
+
+
+def _per_interval_value_field_name(name):
+    return "%s_per_interval_value" % name
 
 
 class MoneyIntervalFieldCreator(object):

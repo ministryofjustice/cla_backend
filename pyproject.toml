@@ -27,5 +27,5 @@ include-package-data = true
 version = {attr = "cla_common.__version__"}
 
 [tool.setuptools.packages.find]
-include = ["cla_backend*", "cla_common*", "session_security*", "uuidfield*"]
+include = ["cla_backend*", "cla_common*", "extended_choices*", "session_security*", "uuidfield*"]
 exclude = ["docs*", "docker*", "Backups*", "helm_deploy*"]

@@ -28,11 +28,10 @@ django-braces==1.15.0
 django-cookies-samesite==0.9.0
 django-csp==4.0
 django-docopt-command==0.2.0
-django-extended-choices==0.3.0
 django-filter==24.3
 django-ipware==7.0.1
 django-model-utils==5.0.0
-django-nested-admin==3.2.4
+django-nested-admin==4.1.6
 django-oauth-toolkit==3.0.1
 django-pdb @ https://github.com/HassenPy/django-pdb/archive/refs/tags/0.3.2.tar.gz
 django-session-security==2.2.3
@@ -43,7 +42,6 @@ drf-extensions==0.8.0
 drf-nested-routers==0.94.2
 et-xmlfile==2.0.0
 freezegun==1.5.2
-greenlet==3.5.3
 idna==3.18
 isodate==0.7.2
 jmespath==1.1.0

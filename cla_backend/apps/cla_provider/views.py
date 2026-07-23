@@ -66,6 +66,7 @@ from .serializers import (
     ProviderSerializer,
 )
 from .forms import ProviderExtractEntraForm, RejectCaseForm, AcceptCaseForm, OpenCaseForm, CloseCaseForm, SplitCaseForm, ReopenCaseForm
+from legalaid.utils import diversity
 
 logger = logging.getLogger(__name__)
 
@@ -305,6 +306,19 @@ class UserViewSet(CLAProviderPermissionViewSetMixin, BaseUserViewSet):
 class PersonalDetailsViewSet(CLAProviderPermissionViewSetMixin, FullPersonalDetailsViewSet):
     serializer_class = PersonalDetailsSerializer
 
+
+    # This method is for SP use only, diversity data is encrypted and should not be read by others
+    @detail_route(methods=["get"])
+    def get_diversity(self, request, reference=None, **kwargs):
+        obj = self.get_object()
+        empty = {"gender": None, "ethnicity": None, "disability": None}
+        if not obj.diversity:
+            return DRFResponse(empty)
+        try:
+            data = diversity.load_diversity_data(obj.pk, diversity.get_passphrase())
+        except Exception as e:
+            return DRFResponse({"error": "Failed to load diversity data: {}".format(str(e))}, status=500)
+        return DRFResponse(data)
 
 class ThirdPartyDetailsViewSet(CLAProviderPermissionViewSetMixin, BaseThirdPartyDetailsViewSet):
     serializer_class = ThirdPartyDetailsSerializer

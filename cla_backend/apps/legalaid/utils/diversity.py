@@ -33,6 +33,10 @@ def get_private_key():
     return _read_key_file(os.environ.get("DIVERSITY_PRIVATE_KEY_PATH", _dev_private_key))
 
 
+def get_passphrase():
+    return os.environ.get("DIVERSITY_PRIVATE_KEY_PASSPHRASE")
+
+
 def save_diversity_data(personal_details_pk, data):
     json_data = json.dumps(data)
 

@@ -32,3 +32,28 @@ class PersonalDetailsTestCase(CLAProviderAuthBaseApiTestMixin, PersonalDetailsAP
 
         response = self.client.get(self.detail_url, format="json", HTTP_AUTHORIZATION=self.get_http_authorization())
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    # GET DIVERSITY
+
+    @property
+    def get_diversity_url(self):
+        return self.get_detail_url(self.resource_lookup_value, suffix="get-diversity")
+
+    def test_get_diversity_empty_when_no_data(self):
+        # Ensure diversity is empty
+        self.resource.diversity = None
+        self.resource.save()
+
+        response = self.client.get(self.get_diversity_url, format="json", HTTP_AUTHORIZATION=self.get_http_authorization())
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertDictEqual(response.data, {"gender": None, "ethnicity": None, "disability": None})
+
+    def test_get_diversity_not_found_if_not_belonging_to_provider(self):
+        self.parent_resource.provider = None
+        self.parent_resource.requires_action_by = REQUIRES_ACTION_BY.OPERATOR
+        self.parent_resource.save()
+
+        response = self.client.get(self.get_diversity_url, format="json", HTTP_AUTHORIZATION=self.get_http_authorization())
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+

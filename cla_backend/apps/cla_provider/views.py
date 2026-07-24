@@ -349,10 +349,10 @@ class PersonalDetailsViewSet(CLAProviderPermissionViewSetMixin, FullPersonalDeta
                 status=500,
             )
         return DRFResponse({
-        "gender": data.get("gender"),
-        "ethnicity": data.get("ethnicity"),
-        "disability": data.get("disability"),
-    })
+            "gender": data.get("gender"),
+            "ethnicity": data.get("ethnicity"),
+            "disability": data.get("disability"),
+        })
 
 
 class ThirdPartyDetailsViewSet(CLAProviderPermissionViewSetMixin, BaseThirdPartyDetailsViewSet):

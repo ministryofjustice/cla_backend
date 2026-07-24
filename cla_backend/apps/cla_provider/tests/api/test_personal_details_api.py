@@ -40,7 +40,7 @@ class PersonalDetailsTestCase(CLAProviderAuthBaseApiTestMixin, PersonalDetailsAP
     @property
     def get_diversity_url(self):
         return self.get_detail_url(self.resource_lookup_value, suffix="get-diversity")
-    
+
     @mock.patch("cla_provider.views._request_has_mcc_role", return_value=True)
     def test_get_diversity_empty_when_no_data(self, _mock_mcc):
         # Ensure diversity is empty

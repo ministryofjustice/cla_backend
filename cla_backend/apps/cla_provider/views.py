@@ -70,6 +70,7 @@ from legalaid.utils import diversity
 
 logger = logging.getLogger(__name__)
 
+
 def _request_has_mcc_role(request):
     auth_data = getattr(request, "auth", None)
     if not isinstance(auth_data, dict):
@@ -80,6 +81,7 @@ def _request_has_mcc_role(request):
         app_roles = [app_roles]
 
     return PROVIDER_MCC_ROLE in app_roles
+
 
 class CLAProviderPermissionViewSetMixin(object):
     permission_classes = (CLAProviderClientIDPermission,)
@@ -321,7 +323,7 @@ class PersonalDetailsViewSet(CLAProviderPermissionViewSetMixin, FullPersonalDeta
     def get_diversity(self, request, reference=None, **kwargs):
         if not _request_has_mcc_role(request):
             return DRFResponse({"error": "You do not have permission to access diversity data"}, status=403)
-        
+
         obj = self.get_object()
         empty = {"gender": None, "ethnicity": None, "disability": None}
         if not obj.diversity:

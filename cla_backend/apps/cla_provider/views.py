@@ -329,15 +329,30 @@ class PersonalDetailsViewSet(CLAProviderPermissionViewSetMixin, FullPersonalDeta
         if not obj.diversity:
             return DRFResponse(empty)
         try:
-            data = diversity.load_diversity_data(obj.pk, diversity.get_passphrase())
-            response_data = {
-                "gender": data.get("gender"),
-                "ethnicity": data.get("ethnicity"),
-                "disability": data.get("disability"),
-            }
-        except Exception as e:
-            return DRFResponse({"error": "Failed to load diversity data: {}".format(str(e))}, status=500)
-        return DRFResponse(response_data)
+            data = diversity.load_diversity_data_for_mcc(obj.pk)
+        except diversity.DiversityDecryptionConfigurationError:
+            logger.error("MCC diversity decryption is not configured")
+            return DRFResponse(
+                {"error": "Diversity data is temporarily unavailable"},
+                status=503,
+            )
+        except Exception:
+            logger.exception(
+                "Failed to decrypt diversity data for MCC access",
+                extra={
+                    "personal_details_id": obj.pk,
+                    "user_id": request.user.pk,
+                },
+            )
+            return DRFResponse(
+                {"error": "Failed to load diversity data"},
+                status=500,
+            )
+        return DRFResponse({
+        "gender": data.get("gender"),
+        "ethnicity": data.get("ethnicity"),
+        "disability": data.get("disability"),
+    })
 
 
 class ThirdPartyDetailsViewSet(CLAProviderPermissionViewSetMixin, BaseThirdPartyDetailsViewSet):

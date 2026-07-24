@@ -43,7 +43,6 @@ class PersonalDetailsTestCase(CLAProviderAuthBaseApiTestMixin, PersonalDetailsAP
 
     @mock.patch("cla_provider.views._request_has_mcc_role", return_value=True)
     def test_get_diversity_empty_when_no_data(self, _mock_mcc):
-        # Ensure diversity is empty
         self.resource.diversity = None
         self.resource.save()
 
@@ -62,22 +61,19 @@ class PersonalDetailsTestCase(CLAProviderAuthBaseApiTestMixin, PersonalDetailsAP
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     @mock.patch("cla_provider.views._request_has_mcc_role", return_value=True)
-    def test_get_diversity_returns_decrypted_data(self, _mock_mcc):
+    @mock.patch("cla_provider.views.diversity.load_diversity_data_for_mcc")
+    def test_get_diversity_returns_decrypted_data(self, mocked_load, _mock_mcc):
         expected = {"gender": "MALE", "ethnicity": "WHITE", "disability": "NO"}
+        mocked_load.return_value = expected
+
         self.resource.diversity = "encrypted-placeholder"
         self.resource.save()
 
-        with mock.patch("cla_provider.views.diversity.get_passphrase", return_value="test-passphrase"):
-            with mock.patch("cla_provider.views.diversity.load_diversity_data", return_value=expected) as mocked_load:
-                response = self.client.get(
-                    self.get_diversity_url,
-                    format="json",
-                    HTTP_AUTHORIZATION=self.get_http_authorization(),
-                )
+        response = self.client.get(self.get_diversity_url, format="json", HTTP_AUTHORIZATION=self.get_http_authorization())
 
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
         self.assertDictEqual(response.data, expected)
-        mocked_load.assert_called_once_with(self.resource.pk, "test-passphrase")
+        mocked_load.assert_called_once_with(self.resource.pk)
 
     def test_get_diversity_returns_403_if_not_mcc(self):
         response = self.client.get(self.get_diversity_url, format="json", HTTP_AUTHORIZATION=self.get_http_authorization())

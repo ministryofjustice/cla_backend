@@ -25,6 +25,8 @@ metabase:
 envVars:
   DEBUG:
     value: "True"
+  CORS_ORIGIN_WHITELIST:
+    value: "http://localhost:3000,http://127.0.0.1:3000"
   LOAD_SEED_DATA:
     value: "True"
   LOAD_TEST_DATA:

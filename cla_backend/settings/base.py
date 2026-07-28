@@ -127,6 +127,19 @@ AWS_DELETED_OBJECTS_BUCKET_NAME = os.environ.get("AWS_DELETED_OBJECTS_BUCKET_NAM
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split()
 
+# Parse CORS allow-list from env (comma-separated), trimming blanks.
+CORS_ORIGIN_WHITELIST = [
+    origin.strip()
+    for origin in os.environ.get("CORS_ORIGIN_WHITELIST", "").split(",")
+    if origin.strip()
+]
+
+# Allow cross-origin credentials only when explicitly enabled.
+CORS_ALLOW_CREDENTIALS = os.environ.get("CORS_ALLOW_CREDENTIALS", "False") == "True"
+
+# Apply CORS only to selected API endpoints.
+CORS_URLS_REGEX = r"^/(checker|call_centre|cla_provider|oauth2|means_test|status)/.*$"
+
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
@@ -189,6 +202,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "iia425u_J_pwntnEyqBuI1xBDqOX8nZ4uC73e
 
 
 MIDDLEWARE_CLASSES = (
+    "corsheaders.middleware.CorsMiddleware",
     "core.middleware.request_size.RequestSizeMiddleware",
     "django.middleware.locale.LocaleMiddleware",
     "django.middleware.security.SecurityMiddleware",
@@ -246,6 +260,7 @@ INSTALLED_APPS = (
     "nested_admin",
     "djorm_pgfulltext",
     "session_security",
+    "corsheaders",
 )
 
 PROJECT_APPS = (

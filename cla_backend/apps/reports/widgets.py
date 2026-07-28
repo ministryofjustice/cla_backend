@@ -38,7 +38,7 @@ class MonthYearWidget(Widget):
             year_val, month_val = value.year, value.month
         except AttributeError:
             year_val = month_val = None
-            if isinstance(value, basestring):
+            if isinstance(value, str):
                 match = RE_DATE.match(value)
                 if match:
                     year_val, month_val, day_val = [int(v) for v in match.groups()]
@@ -67,7 +67,7 @@ class MonthYearWidget(Widget):
         select_html = s.render(self.year_field % name, year_val, local_attrs)
         output.append(select_html)
 
-        return mark_safe(u"\n".join(output))
+        return mark_safe("\n".join(output))
 
     def id_for_label(self, id_):
         return "%s_month" % id_

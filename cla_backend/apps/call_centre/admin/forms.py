@@ -1,7 +1,7 @@
 from django import forms
 
+from call_centre.models import Operator, Caseworker
 from core.admin.forms import OneToOneUserAdminForm
-from ..models import Operator, Caseworker
 
 
 class OperatorAdminForm(OneToOneUserAdminForm):

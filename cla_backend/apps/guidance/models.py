@@ -1,9 +1,36 @@
 # coding=utf-8
+import re
+
+from django.contrib.postgres.aggregates import StringAgg
+from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 from django.db import models
 
 from model_utils.models import TimeStampedModel
-from djorm_pgfulltext.fields import VectorField
-from djorm_pgfulltext.models import SearchManager
+
+
+class NoteQuerySet(models.QuerySet):
+    def word_tree_search(self, query):
+        tokens = re.findall(r"[\w'-]+", query or "")
+        if not tokens:
+            return self
+
+        # Keep a permissive search parser while still supporting prefix matching.
+        raw_query = " & ".join("{}:*".format(token) for token in tokens)
+        search_query = SearchQuery(raw_query, search_type="raw")
+        return (
+            self.annotate(tag_titles=StringAgg("tags__title", delimiter=" ", distinct=True))
+            .annotate(
+                search=(
+                    SearchVector("title", weight="A")
+                    + SearchVector("tag_titles", weight="B")
+                    + SearchVector("raw_body", weight="D")
+                )
+            )
+            .filter(search=search_query)
+            .annotate(rank=SearchRank(models.F("search"), search_query))
+            .order_by("-rank", "title")
+            .distinct()
+        )
 
 
 class Tag(models.Model):
@@ -17,15 +44,15 @@ class Tag(models.Model):
 
 
 class NoteTagRelation(models.Model):
-    tag = models.ForeignKey("Tag")
-    note = models.ForeignKey("Note")
+    tag = models.ForeignKey("Tag", on_delete=models.CASCADE)
+    note = models.ForeignKey("Note", on_delete=models.CASCADE)
 
     class Meta(object):
         unique_together = (("tag", "note"),)
         verbose_name = "Tag"
 
     def __unicode__(self):
-        return u"%s (%s)" % (self.tag.title, self.note.title)
+        return "%s (%s)" % (self.tag.title, self.note.title)
 
 
 class Note(TimeStampedModel):
@@ -35,11 +62,7 @@ class Note(TimeStampedModel):
     name = models.CharField(max_length=50)
     tags = models.ManyToManyField("Tag", related_name="notes", through="NoteTagRelation")
 
-    search_index = VectorField()
-
-    objects = SearchManager(
-        fields=(("title", "A"), ("tags__title", "B"), ("raw_body", "D")), auto_update_search_field=True
-    )
+    objects = NoteQuerySet.as_manager()
 
     def __unicode__(self):
         return self.title

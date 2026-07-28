@@ -1,3 +1,11 @@
+[build-system]
+requires = ["setuptools>=80", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cla-backend"
+dynamic = ["version"]
+
 [tool.black]
 line-length = 119
 verbose = true
@@ -11,3 +19,13 @@ exclude = '''
   | build
 )/
 '''
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.dynamic]
+version = {attr = "cla_common.__version__"}
+
+[tool.setuptools.packages.find]
+include = ["cla_backend*", "cla_common*", "extended_choices*", "session_security*", "uuidfield*"]
+exclude = ["docs*", "docker*", "Backups*", "helm_deploy*"]

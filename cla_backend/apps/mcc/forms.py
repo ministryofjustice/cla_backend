@@ -3,7 +3,7 @@ from cla_eventlog.forms import BaseCaseLogForm
 from django import forms
 from legalaid.models import Category
 from django.db import transaction
-from django.forms.util import ErrorList
+from django.forms.utils import ErrorList
 from django.core.exceptions import NON_FIELD_ERRORS
 
 
@@ -19,11 +19,7 @@ class ChangeCategoryForm(BaseCaseLogForm):
 
     LOG_EVENT_KEY = "change_category"
 
-    category = forms.ModelChoiceField(
-        queryset=Category.objects.all(),
-        to_field_name="code",
-        required=True
-    )
+    category = forms.ModelChoiceField(queryset=Category.objects.all(), to_field_name="code", required=True)
     NOTES_MANDATORY = True
 
     def get_context(self):
@@ -38,10 +34,7 @@ class ChangeCategoryForm(BaseCaseLogForm):
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
         super(ChangeCategoryForm, self).__init__(*args, **kwargs)
-        self._old_category = (
-            self.case.diagnosis.category
-            if getattr(self.case, "diagnosis", None)
-            else None)
+        self._old_category = self.case.diagnosis.category if getattr(self.case, "diagnosis", None) else None
 
     def clean(self):
         cleaned_data = super(ChangeCategoryForm, self).clean()

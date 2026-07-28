@@ -2,7 +2,7 @@ import datetime
 import json
 from django.core.validators import EMPTY_VALUES
 from rest_framework import serializers
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.core import validators
 from cla_common.money_interval.models import MoneyInterval
 from cla_common.money_interval.fields import MoneyIntervalField
@@ -88,7 +88,7 @@ class ThreePartDateField(serializers.Field):
         if value in EMPTY_VALUES:
             return None
 
-        if type(value) in [str, unicode]:
+        if type(value) in [str]:
             try:
                 value = value.replace("'", '"')
                 value = json.loads(value)

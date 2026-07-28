@@ -1,5 +1,6 @@
-from django.db.backends.postgresql_psycopg2.base import *  # noqa: F403
+from django.db.backends.postgresql.base import *  # noqa: F403
 import pytz
+from datetime import timedelta
 
 
 def local_tzinfo_factory(offset):
@@ -8,6 +9,8 @@ def local_tzinfo_factory(offset):
     that the datetimes returned are timezone aware and will be printed in the
     reports with timezone information.
     """
+    if isinstance(offset, timedelta):
+        offset = int(offset.total_seconds() // 60)
     return pytz.FixedOffset(offset)
 
 
@@ -18,7 +21,7 @@ class DynamicTimezoneDatabaseWrapper(DatabaseWrapper):  # noqa: F405
     ensure that all connections are UTC if `USE_TZ` is `True`.
     """
 
-    def create_cursor(self):
+    def create_cursor(self, name=None):
         cursor = self.connection.cursor()
         cursor.tzinfo_factory = local_tzinfo_factory
         return cursor

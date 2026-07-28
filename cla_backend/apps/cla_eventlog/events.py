@@ -137,7 +137,7 @@ class BaseEvent(object):
         if len(self.codes) > 1:
             raise NotImplementedError()
 
-        return self.codes.keys()[0]
+        return next(iter(self.codes))
 
     def save_log(self, log):
         log.save(force_insert=True)

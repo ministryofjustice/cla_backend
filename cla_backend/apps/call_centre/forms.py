@@ -2,8 +2,8 @@ import datetime
 
 from django import forms
 from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
-from django.utils.translation import ugettext_lazy as _
-from django.forms.util import ErrorList
+from django.utils.translation import gettext_lazy as _
+from django.forms.utils import ErrorList
 from django.utils import timezone
 
 from cla_common.call_centre_availability import OpeningHours
@@ -57,7 +57,7 @@ class ProviderAllocationForm(BaseCaseLogForm):
         cleaned_data = super(ProviderAllocationForm, self).clean()
         nfe = []
         if not self.providers:
-            nfe.append(_(u"There is no provider specified in " u"the system to handle cases of this law category."))
+            nfe.append(_("There is no provider specified in " "the system to handle cases of this law category."))
             del self._errors["provider"]
 
         if (self.case.matter_type1 and self.case.matter_type2) and (
@@ -65,7 +65,7 @@ class ProviderAllocationForm(BaseCaseLogForm):
         ):
             nfe.append(
                 _(
-                    u"Category of matter type 1: {category1} must match category of matter type 2: {category2}".format(
+                    "Category of matter type 1: {category1} must match category of matter type 2: {category2}".format(
                         category1=self.case.matter_type1.category.name, category2=self.case.matter_type2.category.name
                     )
                 )
@@ -79,8 +79,8 @@ class ProviderAllocationForm(BaseCaseLogForm):
                 if case_category != mt1_category or case_category != mt2_category:
                     nfe.append(
                         _(
-                            u"Category of Matter Types: {category1}, {category2} must match category of case: "
-                            u"{case_category}".format(
+                            "Category of Matter Types: {category1}, {category2} must match category of case: "
+                            "{case_category}".format(
                                 category1=mt1_category.name,
                                 category2=mt2_category.name,
                                 case_category=case_category.name,
@@ -93,7 +93,7 @@ class ProviderAllocationForm(BaseCaseLogForm):
         return cleaned_data
 
     def get_notes(self):
-        return u"Assigned to {provider}. {notes}".format(
+        return "Assigned to {provider}. {notes}".format(
             provider=self.cleaned_data["provider_obj"].name, notes=self.cleaned_data["notes"] or ""
         )
 
@@ -175,7 +175,7 @@ class AlternativeHelpForm(EventSpecificLogForm):
 
         notes_l = [notes, "Assigned alternative help:"]
         for provider in providers:
-            notes_l.append(unicode(provider))
+            notes_l.append(str(provider))
 
         return "\n".join(notes_l)
 
@@ -219,7 +219,7 @@ class CallMeBackForm(BaseCallMeBackForm):
     def _is_dt_out_of_hours(self, dt):
         _dt = dt
         if timezone.is_naive(_dt):
-            _dt = timezone.make_aware(_dt, timezone.utc)
+            _dt = timezone.make_aware(_dt, datetime.timezone.utc)
         _dt = timezone.localtime(_dt)
         return _dt not in operator_hours
 
@@ -230,7 +230,7 @@ class CallMeBackForm(BaseCallMeBackForm):
 
     def clean_datetime(self):
         dt = self.cleaned_data["datetime"]
-        dt = dt.replace(tzinfo=timezone.utc)
+        dt = dt.replace(tzinfo=datetime.timezone.utc)
 
         if self._is_dt_too_soon(dt):
             raise ValidationError("Specify a date not in the current half hour.")

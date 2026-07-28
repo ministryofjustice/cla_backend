@@ -205,6 +205,7 @@ class IncomeSerializerBase(TotalsModelSerializer):
 
     class Meta(object):
         model = Income
+        fields = "__all__"
 
 
 class SavingsSerializerBase(TotalsModelSerializer):
@@ -212,6 +213,7 @@ class SavingsSerializerBase(TotalsModelSerializer):
 
     class Meta(object):
         model = Savings
+        fields = "__all__"
 
 
 class DeductionsSerializerBase(TotalsModelSerializer):
@@ -227,15 +229,17 @@ class DeductionsSerializerBase(TotalsModelSerializer):
 
     class Meta(object):
         model = Deductions
+        fields = "__all__"
 
 
 class PersonalDetailsSerializerBase(serializers.ModelSerializer):
-    contact_for_research = serializers.NullBooleanField(required=False)
-    vulnerable_user = serializers.NullBooleanField(required=False)
-    announce_call = serializers.NullBooleanField(required=False)
+    contact_for_research = serializers.BooleanField(required=False, allow_null=True)
+    vulnerable_user = serializers.BooleanField(required=False, allow_null=True)
+    announce_call = serializers.BooleanField(required=False, allow_null=True)
 
     class Meta(object):
         model = PersonalDetails
+        fields = "__all__"
 
 
 class PersonalDetailsSerializerFull(PersonalDetailsSerializerBase):
@@ -252,7 +256,7 @@ class ThirdPartyPersonalDetailsSerializerBase(PersonalDetailsSerializerBase):
 
 class ThirdPartyDetailsSerializerBase(ClaModelSerializer):
     personal_details = ThirdPartyPersonalDetailsSerializerBase(required=True)
-    spoke_to = serializers.NullBooleanField(required=False)
+    spoke_to = serializers.BooleanField(required=False, allow_null=True)
 
     class Meta(object):
         model = ThirdPartyDetails
@@ -279,6 +283,7 @@ class AdaptationDetailsSerializerBase(serializers.ModelSerializer):
 
     class Meta(object):
         model = AdaptationDetails
+        fields = "__all__"
 
 
 class EODDetailsCategorySerializerBase(serializers.ModelSerializer):
@@ -309,18 +314,19 @@ class EligibilityCheckSerializerBase(ClaModelSerializer):
     disregards = JSONField(required=False, allow_null=True)
     # DRF 3.0 fails to determine that these fields are nullable when trying to map django model fields to DRF fields
     # So we are setting here explicitly so that DRF doesn't try guessing if it's nullable
-    is_you_or_your_partner_over_60 = serializers.NullBooleanField(default=None)
-    on_passported_benefits = serializers.NullBooleanField(default=None)
-    has_passported_proceedings_letter = serializers.NullBooleanField(default=None)
-    on_nass_benefits = serializers.NullBooleanField(default=None)
-    has_partner = serializers.NullBooleanField(default=None)
-    under_18_passported = serializers.NullBooleanField(default=None)
-    is_you_under_18 = serializers.NullBooleanField(default=None)
-    under_18_receive_regular_payment = serializers.NullBooleanField(default=None)
-    under_18_has_valuables = serializers.NullBooleanField(default=None)
+    is_you_or_your_partner_over_60 = serializers.BooleanField(default=None, allow_null=True)
+    on_passported_benefits = serializers.BooleanField(default=None, allow_null=True)
+    has_passported_proceedings_letter = serializers.BooleanField(default=None, allow_null=True)
+    on_nass_benefits = serializers.BooleanField(default=None, allow_null=True)
+    has_partner = serializers.BooleanField(default=None, allow_null=True)
+    under_18_passported = serializers.BooleanField(default=None, allow_null=True)
+    is_you_under_18 = serializers.BooleanField(default=None, allow_null=True)
+    under_18_receive_regular_payment = serializers.BooleanField(default=None, allow_null=True)
+    under_18_has_valuables = serializers.BooleanField(default=None, allow_null=True)
 
     class Meta(object):
         model = EligibilityCheck
+        fields = "__all__"
 
     def create_writable_nested_fields_many_to_many(self, instance, m2m_validated_data):
         property_set_data = m2m_validated_data.pop("property_set", None)
@@ -469,7 +475,7 @@ class CaseSerializerBase(PartialUpdateExcludeReadonlySerializerMixin, ClaModelSe
     def validate(self, attrs):
         attrs = super(CaseSerializerBase, self).validate(attrs)
         if attrs.get("exempt_user") and not attrs.get("exempt_user_reason"):
-            raise ValidationError({u"exempt_user_reason": [u"A reason is required if client is exempt."]})
+            raise ValidationError({"exempt_user_reason": ["A reason is required if client is exempt."]})
         return attrs
 
     class Meta(object):
@@ -481,9 +487,9 @@ class CaseSerializerBase(PartialUpdateExcludeReadonlySerializerMixin, ClaModelSe
 class CaseSerializerFull(CaseSerializerBase):
     eligibility_check = UUIDSerializer(slug_field="reference", required=False, read_only=True)
 
-    full_name = serializers.CharField(source="personal_details.full_name", read_only=True)
-    postcode = serializers.CharField(source="personal_details.postcode", read_only=True)
-    case_count = serializers.IntegerField(source="personal_details.case_count", read_only=True)
+    full_name = serializers.CharField(source="personal_details.full_name", read_only=True, default=None)
+    postcode = serializers.CharField(source="personal_details.postcode", read_only=True, default=None)
+    case_count = serializers.IntegerField(source="personal_details.case_count", read_only=True, default=None)
 
     personal_details = UUIDSerializer(required=False, slug_field="reference", read_only=True)
     thirdparty_details = UUIDSerializer(required=False, slug_field="reference", read_only=True)
@@ -498,13 +504,31 @@ class CaseSerializerFull(CaseSerializerBase):
     provider = serializers.PrimaryKeyRelatedField(required=False, read_only=True)
     provider_viewed = serializers.DateTimeField(required=False, read_only=True)
 
-    eligibility_state = serializers.CharField(source="eligibility_check.state", read_only=True)
-    diagnosis_state = serializers.CharField(source="diagnosis.state", read_only=True)
+    eligibility_state = serializers.SerializerMethodField()
+    diagnosis_state = serializers.SerializerMethodField()
 
-    date_of_birth = serializers.CharField(source="personal_details.date_of_birth", read_only=True)
-    category = serializers.CharField(source="diagnosis.category.name", read_only=True)
+    date_of_birth = serializers.CharField(source="personal_details.date_of_birth", read_only=True, default=None)
+    category = serializers.SerializerMethodField()
 
-    exempt_user = serializers.NullBooleanField(required=False)
+    def get_eligibility_state(self, case):
+        ec = getattr(case, "eligibility_check", None)
+        if not ec:
+            return None
+        return ec.state
+
+    def get_diagnosis_state(self, case):
+        diagnosis = getattr(case, "diagnosis", None)
+        if not diagnosis:
+            return None
+        return diagnosis.state
+
+    def get_category(self, case):
+        diagnosis = getattr(case, "diagnosis", None)
+        if not diagnosis or not diagnosis.category:
+            return None
+        return diagnosis.category.name
+
+    exempt_user = serializers.BooleanField(required=False, allow_null=True)
 
     scope_traversal = UUIDSerializer(required=False, slug_field="reference", read_only=True)
 
@@ -562,8 +586,8 @@ class CaseArchivedSerializerBase(serializers.ModelSerializer):
     date_of_birth = ThreePartDateField(required=False, allow_null=True)
     date_specialist_referred = ThreePartDateField(required=False, allow_null=True)
     date_specialist_closed = ThreePartDateField(required=False, allow_null=True)
-    financially_eligible = serializers.NullBooleanField(required=False)
-    in_scope = serializers.NullBooleanField(required=False)
+    financially_eligible = serializers.BooleanField(required=False, allow_null=True)
+    in_scope = serializers.BooleanField(required=False, allow_null=True)
 
     class Meta(object):
         model = CaseArchived

@@ -62,8 +62,8 @@ class CLAAuthBaseApiTestMixin(CLABaseApiTestMixin):
 
         # create provider and staff user
         self.provider = make_recipe("cla_provider.provider")
-        self.provider.staff_set.add(Staff(user=self.user))
-        self.provider.staff_set.add(Staff(user=self.mgr_user, is_manager=True))
+        Staff.objects.create(user=self.user, provider=self.provider)
+        Staff.objects.create(user=self.mgr_user, is_manager=True, provider=self.provider)
         self.provider.save()
 
         # create operator user

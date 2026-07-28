@@ -72,28 +72,38 @@ class Command(BaseCommand):
             return "\n".join(all_refs)
 
     def load_referrals(self, filename):
+        def _decode_legacy(value):
+            if isinstance(value, bytes):
+                return value.decode("ISO-8859-1")
+            return value
+
         self.referrals = defaultdict(list)
-        with open(filename, "rU") as f:
+        with open(filename, "r", newline="") as f:
             reader = csv.DictReader(f)
             for count, row in enumerate(reader):
                 if count % 20 == 0:
                     self.stderr.write(".", ending="")
-                self.referrals[row["CaseID"]].append(unicode(row["Title"], "ISO-8859-1"))
+                self.referrals[row["CaseID"]].append(_decode_legacy(row["Title"]))
 
     def load_cases(self, filename):
+        def _decode_legacy(value):
+            if isinstance(value, bytes):
+                return value.decode("ISO-8859-1")
+            return value
+
         def record_to_case_archived(row):
             full_name = row["FirstName"] + " " + row["Surname"]
             case = CaseArchived(
-                full_name=unicode(full_name, "ISO-8859-1"),
+                full_name=_decode_legacy(full_name),
                 date_of_birth=parse_dt(row["DateOfBirth"]),
-                postcode=unicode(row["PostCode"], "ISO-8859-1"),
+                postcode=_decode_legacy(row["PostCode"]),
                 laa_reference=row["CaseID"],
                 created=parse_dt(row["DateCreated"]),
-                outcome_code=unicode(row["OutcomeCode"], "ISO-8859-1"),
+                outcome_code=_decode_legacy(row["OutcomeCode"]),
                 outcome_code_date=parse_dt(row["OutcomeDate"]),
-                specialist_referred_to=unicode(row["SpecialistReferred"], "ISO-8859-1"),
+                specialist_referred_to=_decode_legacy(row["SpecialistReferred"]),
                 date_specialist_referred=parse_dt(row["DateSpecialistClosed"]),
-                area_of_law=unicode(row["AreaOfLaw"], "ISO-8859-1"),
+                area_of_law=_decode_legacy(row["AreaOfLaw"]),
                 in_scope=yesno(row["IsInScope"]),
                 financially_eligible=bool(row["Eligible"]),
                 knowledgebase_items_used=self.get_referrals(row["CaseID"]),
@@ -109,7 +119,7 @@ class Command(BaseCommand):
             return case
 
         self.cases = []
-        with open(filename, "rU") as f:
+        with open(filename, "r", newline="") as f:
             reader = csv.DictReader(f, lineterminator="\n")
             for count, row in enumerate(reader):
                 if count % 20 == 0:

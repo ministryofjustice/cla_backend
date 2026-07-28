@@ -54,7 +54,7 @@ class PartnerIncomeSerializer(IncomeSerializerBase):
     Like IncomeSerializer but without 'child_benefits'
     """
 
-    self_employed = serializers.NullBooleanField(default=None)
+    self_employed = serializers.BooleanField(default=None, allow_null=True)
 
     class Meta(IncomeSerializerBase.Meta):
         fields = (
@@ -263,6 +263,7 @@ class CaseSerializer(CaseSerializerFull):
 
 class NestedScopeTraversalSerializer(serializers.Serializer):
     """Serializer for scope_traversal in detailed endpoint"""
+
     scope_answers = JSONField(read_only=True)
     financial_assessment_status = serializers.CharField(read_only=True)
     created = serializers.DateTimeField(read_only=True)
@@ -270,6 +271,7 @@ class NestedScopeTraversalSerializer(serializers.Serializer):
 
 class NestedDiagnosisSerializer(serializers.Serializer):
     """Serializer for diagnosis in detailed endpoint"""
+
     nodes = SerializerMethodField()
     category = serializers.CharField(source="category.code", read_only=True)
 
@@ -281,8 +283,8 @@ class NestedDiagnosisSerializer(serializers.Serializer):
 
 
 class CaseListSerializer(CaseSerializer):
-    safe_to_contact = serializers.CharField(source='personal_details.safe_to_contact', read_only=True)
-    phone_number = serializers.CharField(source='personal_details.mobile_phone', read_only=True)
+    safe_to_contact = serializers.CharField(source="personal_details.safe_to_contact", read_only=True)
+    phone_number = serializers.CharField(source="personal_details.mobile_phone", read_only=True)
     mcc_case_flags = serializers.SerializerMethodField()
 
     def get_mcc_case_flags(self, obj):
@@ -360,6 +362,7 @@ class AdaptationDetailsSerializer(AdaptationDetailsSerializerBase):
 
 class CategorySerializer(serializers.ModelSerializer):
     """Serializer for Category model"""
+
     class Meta:
         model = Category
         fields = ("code", "name", "description")
@@ -374,6 +377,7 @@ class ProviderSerializer(ProviderSerializerBase):
 
 class ProviderSerializerMinimal(ProviderSerializerBase):
     """Minimal provider serializer for nested use in user serialization"""
+
     class Meta(ProviderSerializerBase.Meta):
         fields = ("id", "name")
 

@@ -7,7 +7,7 @@ from django.http import HttpResponse
 from django.utils import timezone
 from django.contrib.auth.models import User
 
-from ipware.ip import get_ip
+from ipware import get_client_ip
 from rest_framework.exceptions import Throttled
 
 from call_centre.models import Operator
@@ -65,14 +65,16 @@ class AccessTokenView(Oauth2AccessTokenView):
             return response
         except OAuth2Error as exc:
             if exc.description == "invalid_grant":
-                logger.error("Investigate invalid_grant. CLIENT_ID {}".format(
-                    request.POST.get("client_id")
-                ), exc_info=True)
+                logger.error(
+                    "Investigate invalid_grant. CLIENT_ID {}".format(request.POST.get("client_id")), exc_info=True
+                )
             logger.info("OAuth2Error: {}".format(exc.description))
             response = self.error_response({"error": exc.description}, status=401)
             return response
 
         response = super(AccessTokenView, self).dispatch(request, *args, **kwargs)
+        if response.status_code == 400:
+            response.status_code = 401
         if response.status_code > 399:
             self.on_invalid_attempt(request)
         else:
@@ -165,8 +167,9 @@ class AccessTokenView(Oauth2AccessTokenView):
             raise OAuth2Error("locked_out")
 
     def _get_request_log_extras(self, request):
+        ip_address, _ = get_client_ip(request)
         return {
-            "IP": get_ip(request),
+            "IP": ip_address,
             "CLIENT_ID": request.POST.get("client_id"),
             "GRANT_TYPE": request.POST.get("grant_type"),
             "HTTP_REFERER": request.META.get("HTTP_REFERER"),

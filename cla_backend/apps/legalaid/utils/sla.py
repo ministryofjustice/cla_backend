@@ -32,7 +32,7 @@ def get_remainder_from_end_of_day(day, dt_until):
 
 
 def get_next_business_day(start_date):
-    return filter(lambda x: x.date() > start_date, available_days(365))[0]
+    return next(x for x in available_days(365) if x.date() > start_date)
 
 
 def get_sla_time(start_time, minutes_delta):

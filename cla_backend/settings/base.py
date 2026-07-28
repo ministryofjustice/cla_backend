@@ -19,16 +19,24 @@ def env_var_truthy_intention(name):
 
 # PATH vars
 
-here = lambda *x: os.path.join(os.path.abspath(os.path.dirname(__file__)), *x)
+
+def here(*x):
+    return os.path.join(os.path.abspath(os.path.dirname(__file__)), *x)
+
+
 PROJECT_ROOT = here("..")
-root = lambda *x: os.path.join(os.path.abspath(PROJECT_ROOT), *x)
+
+
+def root(*x):
+    return os.path.join(os.path.abspath(PROJECT_ROOT), *x)
+
 
 sys.path.insert(0, root("apps"))
 sys.path.insert(0, root("libs"))
 
 SHOW_NEW_CB1 = os.environ.get("SHOW_NEW_CB1", "False").lower() == "true"
 
-HEALTHCHECKS = ["moj_irat.healthchecks.database_healthcheck", "status.healthchecks.check_disk"]
+HEALTHCHECKS = ["status.healthchecks.database_healthcheck", "status.healthchecks.check_disk"]
 
 AUTODISCOVER_HEALTHCHECKS = True
 
@@ -75,7 +83,7 @@ SPECIALIST_USER_ALERT_EMAILS = []
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "ENGINE": "django.db.backends.postgresql",
         "NAME": os.environ.get("DB_NAME", "cla_backend"),
         "USER": os.environ.get("DB_USER", "postgres"),
         "PASSWORD": os.environ.get("DB_PASSWORD", ""),
@@ -200,7 +208,6 @@ MIDDLEWARE_CLASSES = (
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "status.middleware.MaintenanceModeMiddleware",
-    "django_cookies_samesite.middleware.CookiesSameSite",
 )
 AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",
@@ -209,6 +216,9 @@ AUTHENTICATION_BACKENDS = (
 
 if not DEBUG:
     MIDDLEWARE_CLASSES += ("csp.middleware.CSPMiddleware",)
+
+# Django 2+ uses MIDDLEWARE; keep legacy MIDDLEWARE_CLASSES as source of truth.
+MIDDLEWARE = MIDDLEWARE_CLASSES
 
 ROOT_URLCONF = "cla_backend.urls"
 
@@ -239,12 +249,12 @@ BACKEND_ENABLED = os.environ.get("BACKEND_ENABLED", "True") == "True"
 ADMIN_ENABLED = os.environ.get("ADMIN_ENABLED", "True") == "True"
 INSTALLED_APPS = (
     "django.contrib.auth",
+    "django.contrib.postgres",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "nested_admin",
-    "djorm_pgfulltext",
     "session_security",
 )
 
@@ -273,9 +283,18 @@ PROJECT_APPS = (
 if BACKEND_ENABLED:
     INSTALLED_APPS += ("rest_framework", "oauth2_provider")
 if ADMIN_ENABLED:
-    INSTALLED_APPS += ("django.contrib.admin", "pagedown", "reports")
+    INSTALLED_APPS += ("django.contrib.admin", "reports")
+
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 OAUTH2_PROVIDER_APPLICATION_MODEL = "oauth2_provider.Application"
+OAUTH2_PROVIDER_ACCESS_TOKEN_MODEL = "oauth2_provider.AccessToken"
+OAUTH2_PROVIDER_REFRESH_TOKEN_MODEL = "oauth2_provider.RefreshToken"
+OAUTH2_PROVIDER_GRANT_MODEL = "oauth2_provider.Grant"
+OAUTH2_PROVIDER_ID_TOKEN_MODEL = "oauth2_provider.IDToken"
+OAUTH2_PROVIDER = {
+    "HASH_CLIENT_SECRETS": False,
+}
 
 INSTALLED_APPS += PROJECT_APPS
 
@@ -377,7 +396,7 @@ if AWS_STORAGE_BUCKET_NAME:
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "cla_auth.authentication.EntraAccessTokenAuthentication",
-        "oauth2_provider.ext.rest_framework.OAuth2Authentication",
+        "oauth2_provider.contrib.rest_framework.OAuth2Authentication",
     ),
     "DEFAULT_PERMISSION_CLASSES": ("core.permissions.AllowNone",),
     "DEFAULT_RENDERER_CLASSES": ("rest_framework.renderers.JSONRenderer",),
@@ -510,10 +529,10 @@ ENTRA_EXPECTED_AUDIENCE = os.environ.get("ENTRA_EXPECTED_AUDIENCE", None)
 
 # .local.py overrides all the common settings.
 try:
-    from .local import *
+    from .local import *  # noqa: F401,F403
 except ImportError:
     pass
 
 # importing test settings file if necessary (TODO chould be done better)
 if len(sys.argv) > 1 and "test" == sys.argv[1]:
-    from .testing import *
+    from .testing import *  # noqa: F401,F403

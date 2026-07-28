@@ -6,11 +6,12 @@ from core.drf.exceptions import ConflictException
 from django import forms
 from django.db import connection, transaction, IntegrityError
 from django.utils.crypto import get_random_string
+from django_filters.rest_framework import DjangoFilterBackend
+from core.drf.decorators import detail_route
 from rest_framework import viewsets, mixins, status
-from rest_framework.decorators import detail_route
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response as DRFResponse
-from rest_framework.filters import OrderingFilter, DjangoFilterBackend
+from rest_framework.filters import OrderingFilter
 from rest_framework_extensions.mixins import DetailSerializerMixin
 
 from core.utils import format_patch
@@ -323,7 +324,7 @@ class BaseCaseOrderingFilter(OrderingFilter):
     def filter_queryset(self, request, queryset, view):
         ordering = self.get_ordering(request, queryset, view)
 
-        if isinstance(ordering, basestring):
+        if isinstance(ordering, str):
             if "," in ordering:
                 ordering = ordering.split(",")
             else:
@@ -434,7 +435,7 @@ class FullCaseViewSet(
         return params.replace(",", " ").split()
 
     def get_temporary_view_name(self):
-        return "case_search_view_{}".format(get_random_string())
+        return "case_search_view_{}".format(get_random_string(12))
 
     def list(self, request, *args, **kwargs):
         try:
@@ -488,7 +489,7 @@ class FullCaseViewSet(
                 )
             )
             for _ in range(number_of_placeholders):
-                params.append(u"%{}%".format(search_term))
+                params.append("%{}%".format(search_term))
 
         subquery = " INTERSECT ".join(unions)
 
@@ -638,7 +639,7 @@ class BaseCSVUploadViewSet(
             raise ConflictException("Upload already exists for given month. Try overwriting.")
 
     def update(self, request, *args, **kwargs):
-        if request.method.upper() == u"PATCH":
+        if request.method.upper() == "PATCH":
             # Don't allow PATCH because they should DELETE+POST or PUT
             return self.http_method_not_allowed(request, *args, **kwargs)
         return super(BaseCSVUploadViewSet, self).update(request, *args, **kwargs)

@@ -12,11 +12,11 @@ def is_terminal(digraph, g_node_id):
     """
     if not g_node_id:
         return False
-    return not bool(digraph.successors(g_node_id))
+    return next(iter(digraph.successors(g_node_id)), None) is None
 
 
 def is_pre_end_node(digraph, g_node_id):
-    children = digraph.successors(g_node_id)
+    children = list(digraph.successors(g_node_id))
     if len(children) == 1 and is_terminal(digraph, children[0]):
         return True
     return False
@@ -26,7 +26,7 @@ def get_node_scope_value(digraph, g_node_id):
     if not is_terminal(digraph, g_node_id):
         return None
 
-    node = digraph.node[g_node_id]
+    node = digraph.nodes[g_node_id]
     label = striptags(eval_promise(node["label"]) + "    ").strip()
 
     return DIAGNOSIS_SCOPE.CHOICES_CONST_DICT.get(label, DIAGNOSIS_SCOPE.UNKNOWN)

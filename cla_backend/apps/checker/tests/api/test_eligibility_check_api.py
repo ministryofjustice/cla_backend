@@ -23,11 +23,12 @@ class EligibilityCheckTestCase(EligibilityCheckAPIMixin, CLACheckerAuthBaseApiTe
         self.assertEligibilityCheckEqual(response.data, self.resource)
 
     def assertEligibilityCheckEqual(self, data, check):
-        self.assertEqual(data["reference"], unicode(check.reference))
+        self.assertEqual(data["reference"], str(check.reference))
         self.assertEqual(data["category"], check.category.code if check.category else None)
         self.assertEqual(data["your_problem_notes"], check.your_problem_notes)
         self.assertEqual(data["notes"], check.notes)
-        self.assertEqual(len(data["property_set"]), check.property_set.count())
+        expected_property_count = check.property_set.count() if check.pk else 0
+        self.assertEqual(len(data["property_set"]), expected_property_count)
         self.assertEqual(data["dependants_young"], check.dependants_young)
         self.assertEqual(data["dependants_old"], check.dependants_old)
         self.assertPersonEqual(data["you"], check.you)
@@ -39,13 +40,13 @@ class EligibilityCheckTestCase(EligibilityCheckAPIMixin, CLACheckerAuthBaseApiTe
         case.eligibility_check = self.resource
         case.save()
 
-        case_ref_url = u"%s%s" % (self.detail_url, u"case_ref/")
+        case_ref_url = "%s%s" % (self.detail_url, "case_ref/")
 
         response = self.client.get(case_ref_url, format="json", HTTP_AUTHORIZATION=self.get_http_authorization())
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        case_ref_url = case_ref_url.replace(unicode(self.resource_lookup_value), unicode(uuid.uuid1()))
+        case_ref_url = case_ref_url.replace(str(self.resource_lookup_value), str(uuid.uuid1()))
 
         response = self.client.get(case_ref_url, HTTP_AUTHORIZATION=self.get_http_authorization())
 

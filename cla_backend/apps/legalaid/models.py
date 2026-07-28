@@ -1,18 +1,18 @@
 import json
 import logging
 import datetime
+import uuid
 import re
 from django.template.defaultfilters import date as date_filter
 from django.utils import timezone
 
 from jsonfield import JSONField
 
-from uuidfield import UUIDField
 from django.conf import settings
 from django.core.validators import MaxValueValidator, RegexValidator
 from django.db import models
 from django.db.models import SET_NULL, CASCADE
-from django.utils.timezone import localtime, utc
+from django.utils.timezone import localtime
 from django.core.exceptions import ObjectDoesNotExist
 
 from model_utils.models import TimeStampedModel
@@ -62,7 +62,7 @@ _phone_validator = RegexValidator(
 def _make_reference():
     from django.utils.crypto import get_random_string
 
-    return u"%s-%s-%s" % (
+    return "%s-%s-%s" % (
         # exclude B8G6I1l0OQDS5Z2
         get_random_string(length=2, allowed_chars="ACEFHJKMNPRTUVWXY3479"),
         get_random_string(length=4, allowed_chars="123456789"),
@@ -91,7 +91,7 @@ class Category(TimeStampedModel):
         verbose_name_plural = "categories"
 
     def __unicode__(self):
-        return u"%s" % self.name
+        return "%s" % self.name
 
 
 class Savings(CloneModelMixin, TimeStampedModel):
@@ -137,10 +137,10 @@ class ContactResearchMethod(CloneModelMixin, TimeStampedModel):
         _allow_analytics = True
 
     method = models.CharField(max_length=10)
-    reference = UUIDField(auto=True, unique=True)
+    reference = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
 
     def __unicode__(self):
-        return u"%s" % self.method
+        return "%s" % self.method
 
 
 class PersonalDetails(CloneModelMixin, TimeStampedModel):
@@ -174,7 +174,7 @@ class PersonalDetails(CloneModelMixin, TimeStampedModel):
     contact_for_research_via = models.CharField(
         max_length=10, default=RESEARCH_CONTACT_VIA.PHONE, choices=RESEARCH_CONTACT_VIA, blank=True, null=True
     )
-    contact_for_research_methods = models.ManyToManyField(ContactResearchMethod, null=True, blank=True)
+    contact_for_research_methods = models.ManyToManyField(ContactResearchMethod, blank=True)
     vulnerable_user = models.NullBooleanField(blank=True, null=True)
     safe_to_contact = models.CharField(
         max_length=30, default=CONTACT_SAFETY.SAFE, choices=CONTACT_SAFETY, blank=True, null=True
@@ -184,7 +184,7 @@ class PersonalDetails(CloneModelMixin, TimeStampedModel):
     )
     case_count = models.PositiveSmallIntegerField(default=0)
 
-    reference = UUIDField(auto=True, unique=True)
+    reference = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     diversity = models.BinaryField(blank=True, null=True, editable=False)
     diversity_modified = models.DateTimeField(auto_now=False, blank=True, null=True, editable=False)
 
@@ -199,13 +199,13 @@ class PersonalDetails(CloneModelMixin, TimeStampedModel):
         verbose_name_plural = "personal details"
 
     def __unicode__(self):
-        return u"%s" % self.full_name
+        return "%s" % self.full_name
 
     def _set_search_field(self):
-        search_field = u""
+        search_field = ""
 
         def add_string(s1, s2):
-            return u"%s###%s" % (s1, s2)
+            return "%s###%s" % (s1, s2)
 
         if self.postcode:
             search_field = add_string(search_field, self.postcode.replace(" ", ""))
@@ -227,7 +227,7 @@ class PersonalDetails(CloneModelMixin, TimeStampedModel):
         for phone in [self.home_phone, self.mobile_phone]:
             if phone:
                 try:
-                    phone = unicode(phone)
+                    phone = str(phone)
                 except UnicodeDecodeError:
                     pass
                 search_field = add_string(search_field, re.sub("[^0-9a-zA-Z]+", "", phone))
@@ -252,7 +252,7 @@ class ThirdPartyDetails(CloneModelMixin, TimeStampedModel):
         _allow_analytics = True
         _PII = ["personal_relationship_note"]
 
-    personal_details = models.ForeignKey(PersonalDetails)
+    personal_details = models.ForeignKey(PersonalDetails, on_delete=models.CASCADE)
     pass_phrase = models.CharField(max_length=255, blank=True, null=True)
     reason = models.CharField(max_length=30, choices=THIRDPARTY_REASON, null=True, blank=True, default="")
     personal_relationship = models.CharField(max_length=30, choices=THIRDPARTY_RELATIONSHIP)
@@ -261,7 +261,7 @@ class ThirdPartyDetails(CloneModelMixin, TimeStampedModel):
     no_contact_reason = models.TextField(blank=True, null=True)
     organisation_name = models.CharField(max_length=255, blank=True, null=True)
 
-    reference = UUIDField(auto=True, unique=True)
+    reference = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
 
     cloning_config = {"excludes": ["reference", "created", "modified"], "clone_fks": ["personal_details"]}
 
@@ -269,7 +269,7 @@ class ThirdPartyDetails(CloneModelMixin, TimeStampedModel):
         verbose_name_plural = "third party details"
 
     def __unicode__(self):
-        return u"%s" % self.personal_details.full_name
+        return "%s" % self.personal_details.full_name
 
 
 class AdaptationDetails(CloneModelMixin, TimeStampedModel):
@@ -284,7 +284,7 @@ class AdaptationDetails(CloneModelMixin, TimeStampedModel):
     language = models.CharField(max_length=30, choices=ADAPTATION_LANGUAGES, blank=True, null=True)
     notes = models.TextField(blank=True)
     callback_preference = models.BooleanField(default=False)
-    reference = UUIDField(auto=True, unique=True)
+    reference = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     no_adaptations_required = models.NullBooleanField(blank=True)
 
     cloning_config = {"excludes": ["reference", "created", "modified"]}
@@ -302,9 +302,9 @@ class EODDetails(TimeStampedModel):
         _allow_analytics = True
         _PII = ["notes"]
 
-    case = models.OneToOneField("Case", related_name="eod_details")
+    case = models.OneToOneField("Case", related_name="eod_details", on_delete=models.CASCADE)
     notes = models.TextField(blank=True)
-    reference = UUIDField(auto=True, unique=True)
+    reference = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
 
     objects = EODDetailsManager()
 
@@ -314,7 +314,7 @@ class EODDetails(TimeStampedModel):
         verbose_name_plural = "EOD details"
 
     def __unicode__(self):
-        return u"EOD on case %s" % self.case
+        return "EOD on case %s" % self.case
 
     @classmethod
     def get_eod_stats(cls):
@@ -332,9 +332,7 @@ class EODDetails(TimeStampedModel):
         return self.categories.filter(is_major=True).exists()
 
     def get_category_descriptions(self, include_severity=False):
-        mapper = (
-            (lambda cat: unicode(cat) + (u" (Major)" if cat.is_major else u" (Minor)")) if include_severity else unicode
-        )
+        mapper = (lambda cat: str(cat) + (" (Major)" if cat.is_major else " (Minor)")) if include_severity else str
         return list(map(mapper, self.categories.all()))
 
 
@@ -342,7 +340,7 @@ class EODDetailsCategory(models.Model):
     class Analytics:
         _allow_analytics = True
 
-    eod_details = models.ForeignKey(EODDetails, related_name="categories")
+    eod_details = models.ForeignKey(EODDetails, related_name="categories", on_delete=models.CASCADE)
     category = models.CharField(max_length=30, choices=EXPRESSIONS_OF_DISSATISFACTION, blank=True, null=True)
     is_major = models.BooleanField(default=False)
 
@@ -356,9 +354,9 @@ class EODDetailsCategory(models.Model):
 
 class Person(CloneModelMixin, TimeStampedModel):
 
-    income = models.ForeignKey(Income, blank=True, null=True)
-    savings = models.ForeignKey(Savings, blank=True, null=True)
-    deductions = models.ForeignKey(Deductions, blank=True, null=True)
+    income = models.ForeignKey(Income, blank=True, null=True, on_delete=models.CASCADE)
+    savings = models.ForeignKey(Savings, blank=True, null=True, on_delete=models.CASCADE)
+    deductions = models.ForeignKey(Deductions, blank=True, null=True, on_delete=models.CASCADE)
 
     cloning_config = {"excludes": ["created", "modified"], "clone_fks": ["income", "savings", "deductions"]}
 
@@ -422,12 +420,12 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin):
     class Analytics:
         _allow_analytics = True
 
-    reference = UUIDField(auto=True, unique=True)
+    reference = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
 
-    category = models.ForeignKey(Category, blank=True, null=True)
-    you = models.ForeignKey(Person, blank=True, null=True, related_name="you")
-    partner = models.ForeignKey(Person, blank=True, null=True, related_name="partner")
-    disputed_savings = models.ForeignKey(Savings, blank=True, null=True)
+    category = models.ForeignKey(Category, blank=True, null=True, on_delete=models.CASCADE)
+    you = models.ForeignKey(Person, blank=True, null=True, related_name="you", on_delete=models.CASCADE)
+    partner = models.ForeignKey(Person, blank=True, null=True, related_name="partner", on_delete=models.CASCADE)
+    disputed_savings = models.ForeignKey(Savings, blank=True, null=True, on_delete=models.CASCADE)
     your_problem_notes = models.TextField(blank=True)
     notes = models.TextField(blank=True)
     state = models.CharField(max_length=50, default=ELIGIBILITY_STATES.UNKNOWN, choices=ELIGIBILITY_STATES.CHOICES)
@@ -460,7 +458,7 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin):
         ordering = ("-created",)
 
     def __unicode__(self):
-        return u"EligibilityCheck(%s)" % self.reference
+        return "EligibilityCheck(%s)" % self.reference
 
     def get_dependencies(self):
         deps = {"category", "you__income", "you__savings", "you__deductions"}
@@ -653,7 +651,9 @@ class Property(TimeStampedModel):
     value = MoneyField(default=None, null=True, blank=True)
     mortgage_left = MoneyField(default=None, null=True, blank=True)
     share = models.PositiveIntegerField(default=None, validators=[MaxValueValidator(100)], null=True, blank=True)
-    eligibility_check = models.ForeignKey(EligibilityCheck, related_query_name="property_set")
+    eligibility_check = models.ForeignKey(
+        EligibilityCheck, related_query_name="property_set", on_delete=models.CASCADE
+    )
     disputed = models.NullBooleanField(default=None)
     main = models.NullBooleanField(default=None)
 
@@ -666,14 +666,14 @@ class MatterType(TimeStampedModel):
     class Analytics:
         _allow_analytics = True
 
-    category = models.ForeignKey(Category)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
     code = models.CharField(max_length=4)
     description = models.CharField(max_length=255)
     level = models.PositiveSmallIntegerField(choices=MATTER_TYPE_LEVELS.CHOICES, validators=[MaxValueValidator(2)])
 
     def __unicode__(self):
 
-        return u"MatterType{} ({}): {} - {}".format(
+        return "MatterType{} ({}): {} - {}".format(
             self.get_level_display(), self.category.code, self.code, self.description
         )
 
@@ -689,7 +689,7 @@ class MediaCodeGroup(models.Model):
 
 
 class MediaCode(TimeStampedModel):
-    group = models.ForeignKey(MediaCodeGroup)
+    group = models.ForeignKey(MediaCodeGroup, on_delete=models.CASCADE)
     name = models.CharField(max_length=128)
     code = models.CharField(max_length=20)
 
@@ -700,11 +700,11 @@ class Case(TimeStampedModel):
         _PII = ["notes", "provider_notes", "client_notes"]
 
     reference = models.CharField(max_length=128, unique=True, editable=False)
-    eligibility_check = models.OneToOneField(EligibilityCheck, null=True, blank=True)
+    eligibility_check = models.OneToOneField(EligibilityCheck, null=True, blank=True, on_delete=models.CASCADE)
     diagnosis = models.OneToOneField("diagnosis.DiagnosisTraversal", null=True, blank=True, on_delete=SET_NULL)
-    personal_details = models.ForeignKey(PersonalDetails, blank=True, null=True)
+    personal_details = models.ForeignKey(PersonalDetails, blank=True, null=True, on_delete=models.CASCADE)
 
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.CASCADE)
     audit_log = models.ManyToManyField(AuditLog, blank=True)
 
     requires_action_by = models.CharField(
@@ -728,30 +728,42 @@ class Case(TimeStampedModel):
     )
     callback_attempt = models.PositiveSmallIntegerField(default=0)
 
-    locked_by = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name="case_locked")
+    locked_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, blank=True, null=True, related_name="case_locked", on_delete=models.CASCADE
+    )
     locked_at = models.DateTimeField(auto_now=False, blank=True, null=True)
-    provider = models.ForeignKey("cla_provider.Provider", blank=True, null=True)
-    organisation = models.ForeignKey("call_centre.Organisation", blank=True, null=True)
+    provider = models.ForeignKey("cla_provider.Provider", blank=True, null=True, on_delete=models.CASCADE)
+    organisation = models.ForeignKey("call_centre.Organisation", blank=True, null=True, on_delete=models.CASCADE)
     notes = models.TextField(blank=True)  # These notes are assigned by call centre operators
     provider_notes = models.TextField(blank=True)  # These notes are set by specialist providers
     client_notes = models.TextField(blank=True)  # These notes are populated by users on the public contact form
     laa_reference = models.BigIntegerField(null=True, blank=True, unique=True, editable=False)
-    thirdparty_details = models.ForeignKey("ThirdPartyDetails", blank=True, null=True)
-    adaptation_details = models.ForeignKey("AdaptationDetails", blank=True, null=True)
+    thirdparty_details = models.ForeignKey("ThirdPartyDetails", blank=True, null=True, on_delete=models.CASCADE)
+    adaptation_details = models.ForeignKey("AdaptationDetails", blank=True, null=True, on_delete=models.CASCADE)
     billable_time = models.PositiveIntegerField(default=0)
 
     matter_type1 = models.ForeignKey(
-        MatterType, limit_choices_to={"level": MATTER_TYPE_LEVELS.ONE}, blank=True, null=True, related_name="+"
+        MatterType,
+        limit_choices_to={"level": MATTER_TYPE_LEVELS.ONE},
+        blank=True,
+        null=True,
+        related_name="+",
+        on_delete=models.CASCADE,
     )
 
     matter_type2 = models.ForeignKey(
-        MatterType, limit_choices_to={"level": MATTER_TYPE_LEVELS.TWO}, blank=True, null=True, related_name="+"
+        MatterType,
+        limit_choices_to={"level": MATTER_TYPE_LEVELS.TWO},
+        blank=True,
+        null=True,
+        related_name="+",
+        on_delete=models.CASCADE,
     )
 
-    media_code = models.ForeignKey(MediaCode, blank=True, null=True)
+    media_code = models.ForeignKey(MediaCode, blank=True, null=True, on_delete=models.CASCADE)
 
     alternative_help_articles = models.ManyToManyField(
-        "knowledgebase.Article", through="CaseKnowledgebaseAssignment", null=True, blank=True
+        "knowledgebase.Article", through="CaseKnowledgebaseAssignment", blank=True
     )
 
     outcome_code = models.CharField(max_length=50, blank=True)
@@ -767,7 +779,7 @@ class Case(TimeStampedModel):
 
     # if not None, indicates the case from which this was created
     #   that is, the original case being split
-    from_case = models.ForeignKey("self", blank=True, null=True, related_name="split_cases")
+    from_case = models.ForeignKey("self", blank=True, null=True, related_name="split_cases", on_delete=models.CASCADE)
 
     provider_assigned_at = models.DateTimeField(blank=True, null=True)
     assigned_out_of_hours = models.NullBooleanField(default=False)
@@ -791,11 +803,11 @@ class Case(TimeStampedModel):
     class Meta(object):
         ordering = ("-created",)
         permissions = (
-            ("run_reports", u"Can run reports"),
-            ("run_obiee_reports", u"Can run OBIEE reports"),
-            ("run_complaints_report", u"Can run complaints report"),
+            ("run_reports", "Can run reports"),
+            ("run_obiee_reports", "Can run OBIEE reports"),
+            ("run_complaints_report", "Can run complaints report"),
             # Used to give internal users access to reports that should not be used without the appropriate context.
-            ("run_internal_reports", u"Can run internal reports"),
+            ("run_internal_reports", "Can run internal reports"),
         )
 
     def __unicode__(self):
@@ -966,16 +978,16 @@ class Case(TimeStampedModel):
 
     def view_by_provider(self, provider):
         if provider == self.provider:
-            self.provider_viewed = datetime.datetime.utcnow().replace(tzinfo=utc)
+            self.provider_viewed = datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc)
             self.save(update_fields=["provider_viewed"])
 
     def accept_by_provider(self):
-        self.provider_accepted = datetime.datetime.utcnow().replace(tzinfo=utc)
+        self.provider_accepted = datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc)
         self.provider_closed = None
         self.save(update_fields=["provider_accepted", "provider_closed"])
 
     def close_by_provider(self):
-        self.provider_closed = datetime.datetime.utcnow().replace(tzinfo=utc)
+        self.provider_closed = datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc)
         self.save(update_fields=["provider_closed"])
 
     def reopen_by_provider(self):
@@ -991,10 +1003,12 @@ class Case(TimeStampedModel):
 
         if note:
             diagnosis.nodes = diagnosis.nodes or []
-            diagnosis.nodes.append({
-                "title": category.name,
-                "label": note,
-            })
+            diagnosis.nodes.append(
+                {
+                    "title": category.name,
+                    "label": note,
+                }
+            )
             diagnosis.save()
 
         if self.eligibility_check:
@@ -1015,14 +1029,14 @@ class Case(TimeStampedModel):
     def lock(self, user, save=True):
         if not self.locked_by:
             self.locked_by = user
-            self.locked_at = datetime.datetime.utcnow().replace(tzinfo=utc)
+            self.locked_at = datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc)
             if save:
                 self.save(update_fields=["locked_by", "locked_at"])
             return True
         else:
             if self.locked_by != user:
                 logger.warning(
-                    u"User %s tried to lock case %s locked already by %s" % (user, self.reference, self.locked_by)
+                    "User %s tried to lock case %s locked already by %s" % (user, self.reference, self.locked_by)
                 )
 
         return False
@@ -1062,7 +1076,7 @@ class Case(TimeStampedModel):
             return None
         end_time = self.requires_action_at + datetime.timedelta(minutes=30)
         if self.callback_window_type == CALLBACK_WINDOW_TYPES.HALF_HOUR_WINDOW:
-            return u"{start} - {end}".format(
+            return "{start} - {end}".format(
                 start=date_filter(localtime(self.requires_action_at), "g:iA"),
                 end=date_filter(localtime(end_time), "g:iA"),
             )
@@ -1083,15 +1097,15 @@ class Case(TimeStampedModel):
         - new: not viewed, accepted, or closed
         """
         if self.provider_closed and self.provider_accepted:
-            return 'completed'
+            return "completed"
         elif self.provider_closed and not self.provider_accepted:
-            return 'rejected'
+            return "rejected"
         elif self.provider_accepted:
-            return 'accepted'
+            return "accepted"
         elif self.provider_viewed:
-            return 'opened'
+            return "opened"
         else:
-            return 'new'
+            return "new"
 
     @property
     def state_note(self):
@@ -1105,20 +1119,22 @@ class Case(TimeStampedModel):
 
         state = self.state
         code_mapping = {
-            'opened': ['CASE_VIEWED'],
-            'accepted': ['SPOP'],
-            'rejected': ['COI', 'MIS', 'MIS-OOS', 'MIS-MEANS', 'MERI', 'DUPL', 'CLOT'],
-            'completed': ['CLSP', 'DREFER', 'REOPEN']
+            "opened": ["CASE_VIEWED"],
+            "accepted": ["SPOP"],
+            "rejected": ["COI", "MIS", "MIS-OOS", "MIS-MEANS", "MERI", "DUPL", "CLOT"],
+            "completed": ["CLSP", "DREFER", "REOPEN"],
         }
 
-        if state == 'new' or state not in code_mapping:
+        if state == "new" or state not in code_mapping:
             return None
 
         codes = code_mapping[state]
-        log = Log.objects.filter(case=self).filter(
-            Q(code__in=codes),
-            Q(level__gt=LOG_LEVELS.MINOR)
-        ).order_by('-created').first()
+        log = (
+            Log.objects.filter(case=self)
+            .filter(Q(code__in=codes), Q(level__gt=LOG_LEVELS.MINOR))
+            .order_by("-created")
+            .first()
+        )
         return log
 
 
@@ -1126,10 +1142,10 @@ class CaseNotesHistory(TimeStampedModel):
     class Analytics:
         _PII = ["operator_notes", "provider_notes"]
 
-    case = models.ForeignKey(Case, db_index=True)
+    case = models.ForeignKey(Case, db_index=True, on_delete=models.CASCADE)
     operator_notes = models.TextField(null=True, blank=True)
     provider_notes = models.TextField(null=True, blank=True)
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     include_in_summary = models.BooleanField(default=True)
 
     class Meta(object):
@@ -1149,6 +1165,6 @@ class CaseKnowledgebaseAssignment(TimeStampedModel):
     class Analytics:
         _allow_analytics = True
 
-    case = models.ForeignKey(Case)
-    alternative_help_article = models.ForeignKey("knowledgebase.Article")
-    assigned_by = models.ForeignKey("auth.User", blank=True, null=True)
+    case = models.ForeignKey(Case, on_delete=models.CASCADE)
+    alternative_help_article = models.ForeignKey("knowledgebase.Article", on_delete=models.CASCADE)
+    assigned_by = models.ForeignKey("auth.User", blank=True, null=True, on_delete=models.CASCADE)

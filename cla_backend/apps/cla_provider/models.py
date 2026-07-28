@@ -6,12 +6,11 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Q
 from django.utils import timezone
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from django.db.models.signals import post_save, pre_save
 
 from jsonfield import JSONField
 from model_utils.models import TimeStampedModel
-from uuidfield import UUIDField
 
 from core.validators import validate_first_of_month
 from cla_common.constants import FEEDBACK_ISSUE
@@ -43,7 +42,7 @@ class Provider(TimeStampedModel):
     objects = ProviderManager()
 
     def __unicode__(self):
-        return u"%s" % self.name
+        return "%s" % self.name
 
 
 class WorkingDays(models.Model):
@@ -51,7 +50,7 @@ class WorkingDays(models.Model):
     This model represents the working days for Education specialist providers, to align with the changes required as part of LGA-2904.
     """
 
-    provider_allocation = models.OneToOneField("ProviderAllocation")
+    provider_allocation = models.OneToOneField("ProviderAllocation", on_delete=models.CASCADE)
     monday = models.BooleanField(default=DEFAULT_WORKING_DAYS["monday"])
     tuesday = models.BooleanField(default=DEFAULT_WORKING_DAYS["tuesday"])
     wednesday = models.BooleanField(default=DEFAULT_WORKING_DAYS["wednesday"])
@@ -124,8 +123,8 @@ class ProviderAllocationManager(models.Manager):
 
 
 class ProviderAllocation(TimeStampedModel):
-    provider = models.ForeignKey(Provider)
-    category = models.ForeignKey("legalaid.Category")
+    provider = models.ForeignKey(Provider, on_delete=models.CASCADE)
+    category = models.ForeignKey("legalaid.Category", on_delete=models.CASCADE)
     weighted_distribution = models.FloatField()  # see XXXXXXXXXXXX
 
     def is_working_today(self):
@@ -150,7 +149,7 @@ class ProviderAllocation(TimeStampedModel):
         """
         if not hasattr(self, "workingdays"):
             working_day_list = []
-            for day, is_working in DEFAULT_WORKING_DAYS.iteritems():
+            for day, is_working in DEFAULT_WORKING_DAYS.items():
                 if is_working:
                     working_day_list.append(day)
             return working_day_list
@@ -160,7 +159,7 @@ class ProviderAllocation(TimeStampedModel):
     objects = ProviderAllocationManager()
 
     def __unicode__(self):
-        return u"%s provides %s" % (self.provider, self.category)
+        return "%s provides %s" % (self.provider, self.category)
 
 
 class ProviderPreAllocationManager(models.Manager):
@@ -184,16 +183,16 @@ class ProviderPreAllocationManager(models.Manager):
 
 
 class ProviderPreAllocation(TimeStampedModel):
-    provider = models.ForeignKey(Provider)
-    category = models.ForeignKey("legalaid.Category")
-    case = models.ForeignKey("legalaid.Case")
+    provider = models.ForeignKey(Provider, on_delete=models.CASCADE)
+    category = models.ForeignKey("legalaid.Category", on_delete=models.CASCADE)
+    case = models.ForeignKey("legalaid.Case", on_delete=models.CASCADE)
 
     objects = ProviderPreAllocationManager()
 
 
 class Staff(TimeStampedModel):
-    user = models.OneToOneField("auth.User")
-    provider = models.ForeignKey(Provider)
+    user = models.OneToOneField("auth.User", on_delete=models.CASCADE)
+    provider = models.ForeignKey(Provider, on_delete=models.CASCADE)
     is_manager = models.BooleanField(default=False)
 
     chs_organisation = models.CharField(
@@ -255,13 +254,13 @@ class OutOfHoursRotaManager(models.Manager):
 class OutOfHoursRota(TimeStampedModel):
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
-    category = models.ForeignKey("legalaid.Category")
-    provider = models.ForeignKey(Provider)
+    category = models.ForeignKey("legalaid.Category", on_delete=models.CASCADE)
+    provider = models.ForeignKey(Provider, on_delete=models.CASCADE)
 
     objects = OutOfHoursRotaManager()
 
     def __unicode__(self):
-        return u"%s provides out of hours service for %s between %s - %s" % (
+        return "%s provides out of hours service for %s between %s - %s" % (
             self.provider,
             self.category.code,
             self.start_date,
@@ -276,7 +275,7 @@ class OutOfHoursRota(TimeStampedModel):
         # is not able to provide.
         if self.category not in self.provider.law_category.all():
             raise ValidationError(
-                _(u"Provider {provider} doesn't offer help for {category}").format(
+                _("Provider {provider} doesn't offer help for {category}").format(
                     provider=self.provider, category=self.category
                 )
             )
@@ -288,17 +287,17 @@ class OutOfHoursRota(TimeStampedModel):
             overlapping = overlapping.exclude(pk=self.pk)
 
         if overlapping:
-            raise ValidationError(_(u"Overlapping rota allocation not allowed"))
+            raise ValidationError(_("Overlapping rota allocation not allowed"))
 
 
 class Feedback(TimeStampedModel):
     class Analytics:
         _allow_analytics = True
 
-    reference = UUIDField(auto=True, unique=True)
-    case = models.ForeignKey("legalaid.Case", related_name="provider_feedback")
+    reference = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    case = models.ForeignKey("legalaid.Case", related_name="provider_feedback", on_delete=models.CASCADE)
 
-    created_by = models.ForeignKey(Staff)
+    created_by = models.ForeignKey(Staff, on_delete=models.CASCADE)
     comment = models.TextField()
 
     justified = models.BooleanField(default=False)
@@ -309,8 +308,8 @@ class Feedback(TimeStampedModel):
 
 class CSVUpload(TimeStampedModel):
 
-    provider = models.ForeignKey(Provider)
-    created_by = models.ForeignKey(Staff)
+    provider = models.ForeignKey(Provider, on_delete=models.CASCADE)
+    created_by = models.ForeignKey(Staff, on_delete=models.CASCADE)
     comment = models.TextField(blank=True, null=True)
     body = JSONField()
     month = models.DateField(validators=[validate_first_of_month])

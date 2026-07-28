@@ -155,7 +155,8 @@ class ProviderAllocationHelperTestCase(TestCase):
         pd_helper = ProviderDistributionHelper(self.date)
 
         ideal = pd_helper.make_ideal(10, self.provider_allocations)
-        ideal[ideal.keys()[0]] = 0.0
+        ideal_keys = list(ideal.keys())
+        ideal[ideal_keys[0]] = 0.0
 
         mocked_helper.return_value = ideal
         mocked_random_provider_helper.return_value = "TEST"
@@ -164,7 +165,7 @@ class ProviderAllocationHelperTestCase(TestCase):
         self.assertTrue(mocked_helper.called)
         self.assertFalse(mocked_random_provider_helper.called)
         self.assertNotEqual(ret, "TEST")
-        self.assertEqual(ret.id, ideal.keys()[0])
+        self.assertEqual(ret.id, ideal_keys[0])
 
     @skip("because test is flaky... waiting for Python dev to fix")
     @mock.patch("cla_provider.helpers.ProviderAllocationHelper._get_random_provider")
@@ -174,15 +175,16 @@ class ProviderAllocationHelperTestCase(TestCase):
         pd_helper = ProviderDistributionHelper(self.date)
 
         ideal = pd_helper.make_ideal(10, self.provider_allocations)
-        ideal[ideal.keys()[0]] = 0.0
-        ideal[ideal.keys()[1]] = 0.0
+        ideal_keys = list(ideal.keys())
+        ideal[ideal_keys[0]] = 0.0
+        ideal[ideal_keys[1]] = 0.0
 
         mocked_helper.return_value = ideal
         mocked_random_provider_helper.return_value = "TEST"
 
         ret = self.helper._get_best_fit_provider(self.category)
         self.assertTrue(mocked_helper.called)
-        mocked_random_provider_helper.assert_called_once_with(self.category, limit_choices_to=ideal.keys()[:2])
+        mocked_random_provider_helper.assert_called_once_with(self.category, limit_choices_to=ideal_keys[:2])
         self.assertEqual(ret, "TEST")
 
 

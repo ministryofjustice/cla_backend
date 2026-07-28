@@ -12,7 +12,7 @@ CLA_SUPERUSER_GROUP_NAME = "CLA Superusers"
 
 
 class Caseworker(TimeStampedModel):
-    user = models.OneToOneField("auth.User")
+    user = models.OneToOneField("auth.User", on_delete=models.CASCADE)
 
     def __unicode__(self):
         return self.user.username
@@ -32,8 +32,8 @@ class Organisation(TimeStampedModel):
 
 
 class Operator(TimeStampedModel):
-    user = models.OneToOneField("auth.User")
-    organisation = models.ForeignKey(Organisation, null=True, blank=True)
+    user = models.OneToOneField("auth.User", on_delete=models.CASCADE)
+    organisation = models.ForeignKey(Organisation, null=True, blank=True, on_delete=models.CASCADE)
     is_manager = models.BooleanField(default=False)
     is_cla_superuser = models.BooleanField(default=False)
 

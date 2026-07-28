@@ -38,7 +38,7 @@ class PropertySerializer(PropertySerializerBase):
 
 
 class IncomeSerializer(IncomeSerializerBase):
-    self_employed = serializers.NullBooleanField(default=None)
+    self_employed = serializers.BooleanField(default=None, allow_null=True)
 
     class Meta(IncomeSerializerBase.Meta):
         fields = (
@@ -60,7 +60,7 @@ class PartnerIncomeSerializer(IncomeSerializerBase):
     Like IncomeSerializer but without 'child_benefits'
     """
 
-    self_employed = serializers.NullBooleanField(default=None)
+    self_employed = serializers.BooleanField(default=None, allow_null=True)
 
     class Meta(IncomeSerializerBase.Meta):
         fields = (

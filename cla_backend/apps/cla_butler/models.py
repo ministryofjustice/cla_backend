@@ -18,7 +18,7 @@ ACTION = Choices(
 
 
 class DiversityDataCheck(TimeStampedModel):
-    personal_details = models.ForeignKey(PersonalDetails)
+    personal_details = models.ForeignKey(PersonalDetails, on_delete=models.CASCADE)
     detail = models.TextField(null=True, blank=True)
     action = models.CharField(max_length=20, choices=ACTION)
     status = models.CharField(max_length=10, choices=STATUS)

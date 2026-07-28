@@ -1,7 +1,8 @@
 import datetime
+import json
 
 from django.contrib.auth.models import User
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.core.cache import cache
 from django.test import TestCase
 from django.conf import settings
@@ -39,8 +40,7 @@ class LoginTestCase(TestCase):
         self.staff_user = User.objects.create_user(self.staff_username, self.staff_email, self.staff_password)
 
         self.prov = make_recipe("cla_provider.provider")
-        self.prov.staff_set.add(Staff(user=self.staff_user))
-        self.prov.save()
+        Staff.objects.create(user=self.staff_user, provider=self.prov)
 
         # create an operator API client
         self.op_client = Application.objects.create(
@@ -108,7 +108,7 @@ class LoginTestCase(TestCase):
     def test_operator_invalid_password(self):
         response = self.client.post(self.url, data=self.get_operator_data(password="invalid"))
         self.assertEqual(response.status_code, 401)
-        self.assertEqual(response.content, self.INVALID_CREDENTIALS_ERROR)
+        self.assert_error_response(response, self.INVALID_CREDENTIALS_ERROR)
 
     def test_staff_success(self):
         response = self.client.post(self.url, data=self.get_provider_data())
@@ -118,7 +118,7 @@ class LoginTestCase(TestCase):
     def test_staff_invalid_password(self):
         response = self.client.post(self.url, data=self.get_provider_data(password="invalid"))
         self.assertEqual(response.status_code, 401)
-        self.assertEqual(response.content, self.INVALID_CREDENTIALS_ERROR)
+        self.assert_error_response(response, self.INVALID_CREDENTIALS_ERROR)
 
     def test_locks_user_out_after_n_attempts(self):
         self.assertEqual(AccessAttempt.objects.count(), 0)
@@ -126,18 +126,18 @@ class LoginTestCase(TestCase):
         for index in range(settings.LOGIN_FAILURE_LIMIT):
             response = self.client.post(self.url, data=self.get_operator_data(password="invalid"))
             self.assertEqual(response.status_code, 401)
-            self.assertEqual(response.content, self.INVALID_CREDENTIALS_ERROR)
+            self.assert_error_response(response, self.INVALID_CREDENTIALS_ERROR)
         self.assertEqual(AccessAttempt.objects.count(), settings.LOGIN_FAILURE_LIMIT)
 
         # the n-th time, the user's account will be locked out
         response = self.client.post(self.url, data=self.get_operator_data(password="invalid"))
         self.assertEqual(response.status_code, 401)
-        self.assertEqual(response.content, '{"error": "locked_out"}')
+        self.assert_error_response(response, '{"error": "locked_out"}')
 
         # from now on, even if the password is corrent, the account is locked
         response = self.client.post(self.url, data=self.get_operator_data())
         self.assertEqual(response.status_code, 401)
-        self.assertEqual(response.content, '{"error": "locked_out"}')
+        self.assert_error_response(response, '{"error": "locked_out"}')
 
         with mock.patch("cla_auth.views.timezone") as mocked_timezone:
             mocked_timezone.now.return_value = timezone.now() + datetime.timedelta(
@@ -207,4 +207,8 @@ class LoginTestCase(TestCase):
     def assert_unauthorised_response(self, data, expected_error):
         response = self.client.post(self.url, data=data)
         self.assertEqual(response.status_code, 401)
-        self.assertEqual(response.content, expected_error)
+        self.assert_error_response(response, expected_error)
+
+    def assert_error_response(self, response, expected_error):
+        content = response.content.decode("utf-8") if isinstance(response.content, bytes) else response.content
+        self.assertEqual(json.loads(content), json.loads(expected_error))

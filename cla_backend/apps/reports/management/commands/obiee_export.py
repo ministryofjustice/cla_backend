@@ -21,4 +21,4 @@ class Command(DocOptCommand):
             args["<export_path>"], args["<diversity_keyphrase>"], args["--datetime-from"], args["--datetime-to"]
         ).export()
 
-        self.stdout.write(u"Export created at: %s" % fp)
+        self.stdout.write("Export created at: %s" % fp)

@@ -1,4 +1,4 @@
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.db import connection
 from django.test import override_settings
 
@@ -23,12 +23,12 @@ class BaseFullCaseAPIMixin(SimpleResourceAPIMixin):
     def setUp(self):
         super(BaseFullCaseAPIMixin, self).setUp()
 
-        self.list_dashboard_url = u"%s?dashboard=1" % reverse("%s:case-list" % self.API_URL_NAMESPACE)
+        self.list_dashboard_url = "%s?dashboard=1" % reverse("%s:case-list" % self.API_URL_NAMESPACE)
 
-        self.list_person_ref_url = u"%s?person_ref=1" % reverse("%s:case-list" % self.API_URL_NAMESPACE)
+        self.list_person_ref_url = "%s?person_ref=1" % reverse("%s:case-list" % self.API_URL_NAMESPACE)
 
     def get_list_person_ref_url(self, person_ref):
-        return u"%s?person_ref=%s" % (reverse("%s:case-list" % self.API_URL_NAMESPACE), person_ref)
+        return "%s?person_ref=%s" % (reverse("%s:case-list" % self.API_URL_NAMESPACE), person_ref)
 
     def get_case_serializer_clazz(self):
         raise NotImplementedError()
@@ -70,14 +70,14 @@ class BaseFullCaseAPIMixin(SimpleResourceAPIMixin):
         ]
 
     def assertPersonalDetailsEqual(self, data, obj):
-        if isinstance(data, basestring):
-            self.assertEqual(unicode(data), unicode(obj.reference))
+        if isinstance(data, str):
+            self.assertEqual(str(data), str(obj.reference))
             return
         if data is None or obj is None:
             self.assertEqual(data, obj)
         else:
             for prop in ["title", "full_name", "postcode", "street", "mobile_phone", "home_phone"]:
-                self.assertEqual(unicode(getattr(obj, prop)), data[prop])
+                self.assertEqual(str(getattr(obj, prop)), data[prop])
 
     def assertCaseEqual(self, data, case):
         self.assertEqual(case.reference, data["reference"])
@@ -101,7 +101,7 @@ class BaseFullCaseAPIMixin(SimpleResourceAPIMixin):
 
             val = getattr(case, field)
             if val:
-                val = unicode(getattr(val, fk_pk))
+                val = str(getattr(val, fk_pk))
             self.assertEqual(val, data[field], "%s: %s - %s" % (field, val, data[field]))
 
         for field in [
@@ -136,7 +136,7 @@ class FullCaseAPIMixin(BaseFullCaseAPIMixin):
     def test_case_serializer_with_eligibility_check_reference(self):
         eligibility_check = make_recipe("legalaid.eligibility_check")
 
-        data = {u"eligibility_check": eligibility_check.reference}
+        data = {"eligibility_check": eligibility_check.reference}
         serializer = self.get_case_serializer_clazz()(data=data)
         self.assertTrue(serializer.is_valid())
         self.assertDictEqual(serializer.errors, {})
@@ -145,15 +145,15 @@ class FullCaseAPIMixin(BaseFullCaseAPIMixin):
         personal_details = make_recipe(
             "legalaid.personal_details",
             **{
-                u"full_name": u"John Doe",
-                u"home_phone": u"9876543210",
-                u"mobile_phone": u"0123456789",
-                u"postcode": u"SW1H 9AJ",
-                u"street": u"102 Petty France",
-                u"title": u"MR",
+                "full_name": "John Doe",
+                "home_phone": "9876543210",
+                "mobile_phone": "0123456789",
+                "postcode": "SW1H 9AJ",
+                "street": "102 Petty France",
+                "title": "MR",
             }
         )
-        data = {u"personal_details": unicode(personal_details.reference)}
+        data = {"personal_details": str(personal_details.reference)}
 
         serializer = self.get_case_serializer_clazz()(data=data)
         self.assertTrue(serializer.is_valid())
@@ -162,13 +162,13 @@ class FullCaseAPIMixin(BaseFullCaseAPIMixin):
     def test_case_serializer_with_media_code(self):
         media_code = make_recipe("legalaid.media_code")
 
-        data = {u"media_code": media_code.code}
+        data = {"media_code": media_code.code}
         serializer = self.get_case_serializer_clazz()(data=data)
         self.assertTrue(serializer.is_valid())
         self.assertDictEqual(serializer.errors, {})
 
     def test_case_serializer_with_source(self):
-        data = {u"source": CASE_SOURCE.VOICEMAIL}
+        data = {"source": CASE_SOURCE.VOICEMAIL}
         serializer = self.get_case_serializer_clazz()(data=data)
         self.assertTrue(serializer.is_valid())
         self.assertDictEqual(serializer.errors, {})

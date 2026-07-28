@@ -146,12 +146,12 @@ class EligibilityCheckTestCase(TestCase):
 
                 assert_func = self.assertEqual
                 if isinstance(val1, list) or isinstance(val2, list):
-                    assert_func = self.assertItemsEqual
+                    assert_func = self.assertCountEqual
                 if isinstance(val1, ModelMixin) or isinstance(val2, ModelMixin):
                     self.assertModelMixinEqual(val1, val2)
                     continue
 
-                assert_func(val1, val2, u"%s: %s != %s" % (prop, val1, val2))
+                assert_func(val1, val2, "%s: %s != %s" % (prop, val1, val2))
 
     def test_to_case_data_without_partner(self):
         """
@@ -691,7 +691,7 @@ class CaseTestCase(TestCase):
         self.assertEqual(case.id + settings.LAA_REFERENCE_SEED, case.laa_reference)
 
         # it is 7 digits long
-        self.assertEqual(len(unicode(case.laa_reference)), 7)
+        self.assertEqual(len(str(case.laa_reference)), 7)
 
     def test_case_doesnt_get_duplicate_reference(self):
         with mock.patch("legalaid.models._make_reference") as mr:
@@ -876,20 +876,20 @@ class CaseDatabaseTestCase(SimpleTestCase):
         case = make_recipe("legalaid.case")
         case.log_denormalized_outcome_fields()
         # Test missing fields logs warning
-        self.assertEquals(mock_logger.warning.call_count, 1)
+        self.assertEqual(mock_logger.warning.call_count, 1)
         self.assertIn("LGA-275", str(mock_logger.warning.mock_calls))
         # Test occasional existing erroneous behavior logs warning
         case.outcome_code_id = 1
         case.level = LOG_LEVELS.HIGH
         case.save()
         case.log_denormalized_outcome_fields()
-        self.assertEquals(mock_logger.warning.call_count, 2)
+        self.assertEqual(mock_logger.warning.call_count, 2)
         self.assertIn("LGA-275 Outcome code missing", str(mock_logger.warning.mock_calls))
         # Test correct behaviour logs info
         case.outcome_code = "COPE"
         case.save()
         case.log_denormalized_outcome_fields()
-        self.assertEquals(mock_logger.info.call_count, 1)
+        self.assertEqual(mock_logger.info.call_count, 1)
         case.delete()
 
 
@@ -995,7 +995,12 @@ class CloneModelsTestCaseMixin(object):
         for field in equal_fields:
             if check_not_None:
                 self.assertNotEqual(getattr(new_obj, field), None, field)
-            self.assertEqual(getattr(obj, field), getattr(new_obj, field))
+            old_value = getattr(obj, field)
+            new_value = getattr(new_obj, field)
+            if isinstance(old_value, MoneyInterval) and isinstance(new_value, MoneyInterval):
+                self.assertEqual(old_value.as_dict(), new_value.as_dict())
+                continue
+            self.assertEqual(old_value, new_value)
 
     def _check_model_fields_keys(self, Model, expected_fields):
         """

@@ -39,8 +39,8 @@ class DiagnosisSerializerTestCase(TestCase):
         )
         serializer = DiagnosisSerializer(instance=traversal)
         data = serializer.data
-        self.assertItemsEqual(data["nodes"], [self.mocked_graph.get_node_dict("2a")])
-        self.assertItemsEqual(
+        self.assertCountEqual(data["nodes"], [self.mocked_graph.get_node_dict("2a")])
+        self.assertCountEqual(
             data["choices"], [self.mocked_graph.get_node_dict("3aa"), self.mocked_graph.get_node_dict("3ab")]
         )
         self.assertEqual(data["current_node_id"], "2a")
@@ -60,8 +60,8 @@ class DiagnosisSerializerTestCase(TestCase):
         )
         serializer = DiagnosisSerializer(instance=traversal)
         data = serializer.data
-        self.assertItemsEqual(data["nodes"], [self.mocked_graph.get_node_dict("2a")])
-        self.assertItemsEqual(data["choices"], [])
+        self.assertCountEqual(data["nodes"], [self.mocked_graph.get_node_dict("2a")])
+        self.assertCountEqual(data["choices"], [])
         self.assertEqual(data["current_node_id"], "2a")
         self.assertEqual(data["state"], DIAGNOSIS_SCOPE.UNKNOWN)
         self.assertEqual(data["category"], None)
@@ -89,7 +89,7 @@ class DiagnosisSerializerTestCase(TestCase):
         )
         serializer = DiagnosisSerializer(instance=traversal)
         data = serializer.data
-        self.assertItemsEqual(
+        self.assertCountEqual(
             data["nodes"],
             [
                 self.mocked_graph.get_node_dict("2a"),
@@ -97,10 +97,10 @@ class DiagnosisSerializerTestCase(TestCase):
                 self.mocked_graph.get_node_dict("INSCOPE"),
             ],
         )
-        self.assertItemsEqual(data["choices"], [])
-        self.assertItemsEqual(data["category"], self.category.code)
-        self.assertItemsEqual(data["matter_type1"], self.matter_type1.code)
-        self.assertItemsEqual(data["matter_type2"], self.matter_type2.code)
+        self.assertCountEqual(data["choices"], [])
+        self.assertCountEqual(data["category"], self.category.code)
+        self.assertCountEqual(data["matter_type1"], self.matter_type1.code)
+        self.assertCountEqual(data["matter_type2"], self.matter_type2.code)
         self.assertEqual(data["version_in_conflict"], False)
 
     def test_get_with_new_diagnosis(self):
@@ -113,7 +113,7 @@ class DiagnosisSerializerTestCase(TestCase):
         serializer = DiagnosisSerializer(instance=traversal)
         data = serializer.data
         self.assertEqual(data["nodes"], None)
-        self.assertItemsEqual(
+        self.assertCountEqual(
             data["choices"], [self.mocked_graph.get_node_dict("2a"), self.mocked_graph.get_node_dict("2b")]
         )
         self.assertEqual(data["current_node_id"], "")
@@ -139,7 +139,7 @@ class DiagnosisSerializerTestCase(TestCase):
 
         traversal = DiagnosisTraversal.objects.get(pk=traversal.pk)
         self.assertEqual(traversal.current_node_id, "3aa")
-        self.assertItemsEqual(
+        self.assertCountEqual(
             traversal.nodes, [self.mocked_graph.get_node_dict("2a"), self.mocked_graph.get_node_dict("3aa")]
         )
 
@@ -154,7 +154,7 @@ class DiagnosisSerializerTestCase(TestCase):
 
         traversal = DiagnosisTraversal.objects.get(pk=traversal.pk)
         self.assertEqual(traversal.current_node_id, "INSCOPE")
-        self.assertItemsEqual(
+        self.assertCountEqual(
             traversal.nodes,
             [
                 self.mocked_graph.get_node_dict("2a"),
@@ -181,7 +181,7 @@ class DiagnosisSerializerTestCase(TestCase):
 
         traversal = DiagnosisTraversal.objects.get(pk=traversal.pk)
         self.assertEqual(traversal.current_node_id, "2a")
-        self.assertItemsEqual(traversal.nodes, [self.mocked_graph.get_node_dict("2a")])
+        self.assertCountEqual(traversal.nodes, [self.mocked_graph.get_node_dict("2a")])
 
     def test_move_up_fails_if_current_node_is_root(self):
         traversal = DiagnosisTraversal.objects.create(graph_version="v1")
@@ -209,7 +209,7 @@ class DiagnosisSerializerTestCase(TestCase):
 
         traversal = DiagnosisTraversal.objects.get(pk=traversal.pk)
         self.assertEqual(traversal.current_node_id, "2a")
-        self.assertItemsEqual(traversal.nodes, [self.mocked_graph.get_node_dict("2a")])
+        self.assertCountEqual(traversal.nodes, [self.mocked_graph.get_node_dict("2a")])
         self.assertEqual(traversal.category, None)
         self.assertEqual(traversal.matter_type1, None)
         self.assertEqual(traversal.matter_type2, None)

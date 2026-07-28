@@ -25,7 +25,7 @@ class Command(BaseCommand):
             reader = csv.DictReader(f)
             for row in reader:
                 article = Article.objects.get(pk=row["id"])
-                for field_name, value in row.iteritems():
+                for field_name, value in row.items():
                     value = value.strip().decode("ascii", "ignore")
                     try:
                         getattr(self, "set_%s" % field_name)(article, value)

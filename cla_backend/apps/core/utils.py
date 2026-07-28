@@ -1,5 +1,6 @@
 import contextlib
 import os
+from functools import reduce
 
 
 class NoDefaultProvided(object):

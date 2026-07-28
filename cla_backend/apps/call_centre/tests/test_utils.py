@@ -20,7 +20,7 @@ class FormatPatchTestCase(TestCase):
 
         patch = jsonpatch.JsonPatch.from_diff(self.initial, b)
         formatted = format_patch(patch)
-        self.assertIsInstance(formatted, basestring)
+        self.assertIsInstance(formatted, str)
         self.assertEqual(formatted, "Changed foo to 2")
 
 

@@ -62,11 +62,11 @@ WITH
         ,operator_first_view_after_cb1.created as operator_first_view_after_cb1__created
         ,c.created as case_created
         ,operator_first_log_after_cb1.code as "Next_Outcome"
-        ,trim((log.context->'requires_action_at')::text, '"')::timestamptz as requires_action_at
+        ,(log.context::jsonb->>'requires_action_at')::timestamptz as requires_action_at
         ,trim((log.context->'sla_15')::text, '"')::timestamptz as sla_15
         ,CAST(log.context->>'sla_30' AS TIMESTAMPTZ) as sla_30
-        ,trim((log.context->'sla_120')::text, '"')::timestamptz as sla_120
-        ,trim((log.context->'sla_480')::text, '"')::timestamptz as sla_480
+        ,(log.context::jsonb->>'sla_120')::timestamptz as sla_120
+        ,(log.context::jsonb->>'sla_480')::timestamptz as sla_480
         ,operator_first_log_after_cb1.rn
         ,operator_first_view_after_cb1.rn
         ,c.source

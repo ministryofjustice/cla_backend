@@ -1,5 +1,5 @@
 from django.test import TestCase
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.utils.crypto import get_random_string
 
 from core.tests.mommy_utils import make_recipe, make_user
@@ -41,7 +41,7 @@ class OperatorAdminViewTestCase(TestCase):
 
     def _get_operator_post_data(self):
         return {
-            "username": get_random_string(),
+            "username": get_random_string(12),
             "password": "123456789",
             "password2": "123456789",
             "first_name": "New Name",
@@ -221,7 +221,7 @@ class OperatorAdminViewTestCase(TestCase):
         # set is_manager to True and save
         # check everything is OK
         post_data = {
-            "username": get_random_string(),
+            "username": get_random_string(12),
             "password": "123456789",
             "password2": "123456789",
             "first_name": "New Name",
@@ -239,7 +239,7 @@ class OperatorAdminViewTestCase(TestCase):
         # set is_cla_superuser to True and save
         # check everything is OK
         post_data = {
-            "username": get_random_string(),
+            "username": get_random_string(12),
             "password": "123456789",
             "password2": "123456789",
             "first_name": "New Name",
@@ -258,7 +258,7 @@ class OperatorAdminViewTestCase(TestCase):
         # set is_cla_superuser to True and save
         # check everything is OK
         post_data = {
-            "username": get_random_string(),
+            "username": get_random_string(12),
             "password": "123456789",
             "password2": "123456789",
             "first_name": "New Name",
@@ -414,7 +414,7 @@ class OperatorAdminViewTestCase(TestCase):
         # check everything is OK
         post_data = self._get_operator_post_data()
         post_data["username"] = changing_op.user.username
-        post_data["first_name"] = get_random_string()
+        post_data["first_name"] = get_random_string(12)
         post_data["organisation"] = changing_op.organisation.id
 
         self._test_change_form(loggedin_op.user, changing_op, should_see_is_cla_superuser=False, post_data=post_data)
@@ -429,7 +429,7 @@ class OperatorAdminViewTestCase(TestCase):
         # AssertionError should be raise by self._test_change_form
         post_data = self._get_operator_post_data()
         post_data["username"] = changing_op.user.username
-        post_data["first_name"] = get_random_string()
+        post_data["first_name"] = get_random_string(12)
         post_data["organisation"] = self.bar_organisation.id
 
         with self.assertRaises(AssertionError):
@@ -447,7 +447,7 @@ class OperatorAdminViewTestCase(TestCase):
         # check everything is OK
         post_data = self._get_operator_post_data()
         post_data["username"] = changing_op.user.username
-        post_data["first_name"] = get_random_string()
+        post_data["first_name"] = get_random_string(12)
         post_data["organisation"] = self.bar_organisation.id
 
         self._test_change_form(loggedin_op.user, changing_op, should_see_is_cla_superuser=True, post_data=post_data)
@@ -597,7 +597,7 @@ class CaseworkerAdminViewTestCase(TestCase):
         # go to cw add form
         # check everything is OK
         post_data = {
-            "username": get_random_string(),
+            "username": get_random_string(12),
             "password": "123456789",
             "password2": "123456789",
             "first_name": "New Name",
@@ -613,7 +613,7 @@ class CaseworkerAdminViewTestCase(TestCase):
         # go to cw add form
         # check everything is OK
         post_data = {
-            "username": get_random_string(),
+            "username": get_random_string(12),
             "password": "123456789",
             "password2": "123456789",
             "first_name": "New Name",

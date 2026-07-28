@@ -1,10 +1,11 @@
 from django.contrib import admin
+from django.contrib.admin.exceptions import AlreadyRegistered
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 
+from call_centre.models import Operator, Caseworker, Organisation, CLA_SUPERUSER_GROUP_NAME
 from core.admin.modeladmin import OneToOneUserAdmin
 from .forms import OperatorAdminForm, FullOperatorAdminForm, CaseworkerAdminForm
-from ..models import Operator, Caseworker, Organisation
 
 
 class OrganisationListFilter(admin.SimpleListFilter):
@@ -126,9 +127,12 @@ class OperatorAdmin(OneToOneUserAdmin):
         if self._is_loggedin_superuser(request):
             return True
 
-        # at this point, logged-in user is operator manager or simple django staff
-        # so he can only change the obj if the obj is not a cla superuser
-        if obj.is_cla_superuser:
+        # At this point, logged-in user is operator manager or simple django staff.
+        # Deny changes to CLA superusers even if only the group flag remains set.
+        is_target_cla_superuser = (
+            obj.is_cla_superuser or obj.user.groups.filter(name=CLA_SUPERUSER_GROUP_NAME).exists()
+        )
+        if is_target_cla_superuser:
             return False
 
         return True
@@ -184,6 +188,15 @@ class CaseworkerAdmin(OneToOneUserAdmin):
         return False
 
 
-admin.site.register(Operator, OperatorAdmin)
-admin.site.register(Caseworker, CaseworkerAdmin)
-admin.site.register(Organisation)
+for model, admin_class in (
+    (Operator, OperatorAdmin),
+    (Caseworker, CaseworkerAdmin),
+    (Organisation, None),
+):
+    try:
+        if admin_class is None:
+            admin.site.register(model)
+        else:
+            admin.site.register(model, admin_class)
+    except AlreadyRegistered:
+        pass

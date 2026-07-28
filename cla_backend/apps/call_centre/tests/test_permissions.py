@@ -1,10 +1,10 @@
 import datetime
 
-from django.conf.urls import patterns
 from django.http import HttpResponse
-from django.test import TestCase
+from django.test import TestCase, override_settings
+from django.urls import re_path
 from rest_framework import status
-from oauth2_provider.ext.rest_framework import OAuth2Authentication
+from oauth2_provider.contrib.rest_framework import OAuth2Authentication
 from rest_framework.views import APIView
 
 from legalaid.tests.views.test_base import CLAOperatorAuthBaseApiTestMixin
@@ -26,13 +26,13 @@ class MockView(APIView):
         return HttpResponse({"a": 1, "b": 2, "c": 3})
 
 
-urlpatterns = base_patterns + patterns(
-    "", (r"^mock_view/$", MockView.as_view(authentication_classes=[OAuth2Authentication]))
-)
+urlpatterns = base_patterns + [
+    re_path(r"^mock_view/$", MockView.as_view(authentication_classes=[OAuth2Authentication]))
+]
 
 
+@override_settings(ROOT_URLCONF="call_centre.tests.test_permissions")
 class CallCentreClientIDPermissionTestCase(CLAOperatorAuthBaseApiTestMixin, TestCase):
-    urls = "call_centre.tests.test_permissions"
 
     def test_oauth2_permission_ok(self):
         response = self.client.get("/mock_view/", HTTP_AUTHORIZATION="Bearer %s" % self.token.token)

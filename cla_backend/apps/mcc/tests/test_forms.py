@@ -82,7 +82,9 @@ class SplitMCCCaseFormTestCase(TestCase):
         if child_provider is None:
             child_mcc_form = SplitMCCCaseForm(case=child, request=self.request, data=split_data)
             self.assertFalse(child_mcc_form.is_valid())
-            self.assertDictEqual(child_mcc_form.errors, {"__all__": ["Only Providers assigned to the Case can split it."]})
+            self.assertDictEqual(
+                child_mcc_form.errors, {"__all__": ["Only Providers assigned to the Case can split it."]}
+            )
         else:
             child_request = mock.MagicMock(user=mock.MagicMock(staff=mock.MagicMock(provider=child_provider)))
             child_mcc_form = SplitMCCCaseForm(case=child, request=child_request, data=split_data)

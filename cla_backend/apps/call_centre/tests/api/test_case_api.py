@@ -2,7 +2,7 @@ import datetime
 from django.test.utils import override_settings
 
 from dateutil.parser import parse
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.utils import timezone
 import mock
 from rest_framework.test import APITestCase
@@ -112,12 +112,12 @@ class CreateCaseTestCase(BaseCaseTestCase):
         matter_type2 = make_recipe("legalaid.matter_type2")
 
         data = {
-            "personal_details": unicode(pd.reference),
-            "eligibility_check": unicode(eligibility_check.reference),
-            "thirdparty_details": unicode(thirdparty_details.reference),
-            "adaptation_details": unicode(adaptation_details.reference),
-            "diagnosis": unicode(diagnosis.reference),
-            "provider": unicode(provider.id),
+            "personal_details": str(pd.reference),
+            "eligibility_check": str(eligibility_check.reference),
+            "thirdparty_details": str(thirdparty_details.reference),
+            "adaptation_details": str(adaptation_details.reference),
+            "diagnosis": str(diagnosis.reference),
+            "provider": str(provider.id),
             "notes": "my notes",
             "billable_time": 234,
             "created": "2014-08-05T10:41:55.979Z",
@@ -222,7 +222,7 @@ class CreateCaseTestCase(BaseCaseTestCase):
     def test_case_serializer_with_eligibility_check_reference(self):
         eligibility_check = make_recipe("legalaid.eligibility_check")
 
-        data = {u"eligibility_check": eligibility_check.reference}
+        data = {"eligibility_check": eligibility_check.reference}
         serializer = CaseSerializer(data=data)
         self.assertTrue(serializer.is_valid())
         self.assertDictEqual(serializer.errors, {})
@@ -231,15 +231,15 @@ class CreateCaseTestCase(BaseCaseTestCase):
         personal_details = make_recipe(
             "legalaid.personal_details",
             **{
-                u"full_name": u"John Doe",
-                u"home_phone": u"9876543210",
-                u"mobile_phone": u"0123456789",
-                u"postcode": u"SW1H 9AJ",
-                u"street": u"102 Petty France",
-                u"title": u"MR",
+                "full_name": "John Doe",
+                "home_phone": "9876543210",
+                "mobile_phone": "0123456789",
+                "postcode": "SW1H 9AJ",
+                "street": "102 Petty France",
+                "title": "MR",
             }
         )
-        data = {u"personal_details": unicode(personal_details.reference)}
+        data = {"personal_details": str(personal_details.reference)}
 
         serializer = CaseSerializer(data=data)
         self.assertTrue(serializer.is_valid())
@@ -248,7 +248,7 @@ class CreateCaseTestCase(BaseCaseTestCase):
     def test_case_serializer_with_media_code(self):
         media_code = make_recipe("legalaid.media_code")
 
-        data = {u"media_code": media_code.code}
+        data = {"media_code": media_code.code}
         serializer = CaseSerializer(data=data)
         self.assertTrue(serializer.is_valid())
         self.assertDictEqual(serializer.errors, {})
@@ -407,7 +407,7 @@ class SuggestProviderTestCase(BaseCaseTestCase):
             self.assertIsNone(response.data["suggested_provider"])
         else:
             name = response.data["suggested_provider"]["name"]
-            self.assertIn(name, [unicode(x.name) for x in self.suggested_cat_providers])
+            self.assertIn(name, [str(x.name) for x in self.suggested_cat_providers])
         #  now check the suitable_providers
         if category_assigned:
             # this should be all the providers in suggested category
@@ -418,7 +418,7 @@ class SuggestProviderTestCase(BaseCaseTestCase):
             suitable_providers = [
                 ProviderSerializer(p).data for p in self.suggested_cat_providers + self.other_cat_providers
             ]
-            self.assertItemsEqual(response.data["suitable_providers"], suitable_providers)
+            self.assertCountEqual(response.data["suitable_providers"], suitable_providers)
 
 
 class AssignCaseTestCase(BaseCaseTestCase):
@@ -601,12 +601,12 @@ class SuspendCaseTestCase(ExplicitEventCodeViewTestCaseMixin, MockGovNotifyMailB
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertDictEqual(
-            response.data, {"event_code": [u"You can only use RDSP if the case is assigned to a specialist"]}
+            response.data, {"event_code": ["You can only use RDSP if the case is assigned to a specialist"]}
         )
         self.assertEqual(Log.objects.count(), 0)
 
     def test_RDSP_successful(self):
-        self.assertEquals(len(self.mailbox), 0)
+        self.assertEqual(len(self.mailbox), 0)
 
         # assign case to provider
         provider = make_recipe("cla_provider.provider", active=True, email_address="example@example.com")
@@ -627,7 +627,7 @@ class SuspendCaseTestCase(ExplicitEventCodeViewTestCaseMixin, MockGovNotifyMailB
         self.assertEqual(log.notes, self.get_expected_notes(data))
         self.assertEqual(log.created_by, self.user)
 
-        self.assertEquals(len(self.mailbox), 1)
+        self.assertEqual(len(self.mailbox), 1)
 
     def test_SAME_fails_if_case_hasnt_received_alternative_help(self):
         self.assertEqual(Log.objects.count(), 0)
@@ -637,7 +637,7 @@ class SuspendCaseTestCase(ExplicitEventCodeViewTestCaseMixin, MockGovNotifyMailB
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertDictEqual(
-            response.data, {"event_code": [u"You can only use SAME if the client has received alternative help"]}
+            response.data, {"event_code": ["You can only use SAME if the client has received alternative help"]}
         )
         self.assertEqual(Log.objects.count(), 0)
 
@@ -764,14 +764,14 @@ class SearchCaseTestCase(BaseSearchCaseAPIMixin, BaseCaseTestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(2, len(response.data["results"]))
-        self.assertItemsEqual([c["reference"] for c in response.data["results"]], ["ref1", "ref3"])
+        self.assertCountEqual([c["reference"] for c in response.data["results"]], ["ref1", "ref3"])
 
         # searching for pd2 AND dashboard=1 should ignore dashboard param
         url = "%s&dashboard=1" % self.get_list_person_ref_url(pd2.reference)
         response = self.client.get(url, format="json", HTTP_AUTHORIZATION=self.get_http_authorization())
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(1, len(response.data["results"]))
-        self.assertItemsEqual([case["reference"] for case in response.data["results"]], ["ref2"])
+        self.assertCountEqual([case["reference"] for case in response.data["results"]], ["ref2"])
 
 
 class FilteredSearchCaseTestCase(BaseCaseTestCase):
@@ -806,13 +806,13 @@ class FilteredSearchCaseTestCase(BaseCaseTestCase):
 
     def getAndAssertValidResponse(self, filter_name, expected):
         response = self.client.get(
-            u"%s?only=%s" % (self.list_url, filter_name),
+            "%s?only=%s" % (self.list_url, filter_name),
             format="json",
             HTTP_AUTHORIZATION=self.get_http_authorization(),
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(expected), response.data["count"])
-        self.assertItemsEqual([c["reference"] for c in response.data["results"]], expected)
+        self.assertCountEqual([c["reference"] for c in response.data["results"]], expected)
 
     def test_all_cases(self):
         self.getAndAssertValidResponse("", ["ref1", "ref2", "ref3", "ref4", "ref5"])
@@ -856,7 +856,7 @@ class FutureCallbacksCaseTestCase(BaseCaseTestCase):
         response = self.client.get(url, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(2, len(response.data))
-        self.assertItemsEqual([case["reference"] for case in response.data], ["ref5", "ref3"])
+        self.assertCountEqual([case["reference"] for case in response.data], ["ref5", "ref3"])
 
 
 class SearchForPersonalDetailsTestCase(BaseCaseTestCase):
@@ -889,7 +889,7 @@ class SearchForPersonalDetailsTestCase(BaseCaseTestCase):
 
     def get_search_for_pd_url(self, person_q, case_reference=None):
         case_reference = case_reference or self.resource.reference
-        return u"%s?person_q=%s" % (
+        return "%s?person_q=%s" % (
             reverse("call_centre:case-search-for-personal-details", args=(), kwargs={"reference": case_reference}),
             person_q,
         )
@@ -925,8 +925,8 @@ class SearchForPersonalDetailsTestCase(BaseCaseTestCase):
         response = self.client.get(url, HTTP_AUTHORIZATION=self.get_http_authorization())
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 2)
-        self.assertItemsEqual(response.data[0].keys(), ["reference", "full_name", "postcode", "dob"])
-        self.assertItemsEqual(
+        self.assertCountEqual(response.data[0].keys(), ["reference", "full_name", "postcode", "dob"])
+        self.assertCountEqual(
             [(p["full_name"], p["postcode"]) for p in response.data], [("John Doe", "SW1H 9AJ"), ("John Smith", None)]
         )
 
@@ -1004,7 +1004,9 @@ class CallMeBackTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
     @mock.patch("call_centre.forms.timezone.now")
     def __call__(self, runner, mocked_now, *args, **kwargs):
         self.mocked_now = mocked_now
-        self.mocked_now.return_value = datetime.datetime(2015, 3, 23, 10, 0, 0, 0).replace(tzinfo=timezone.utc)
+        self.mocked_now.return_value = datetime.datetime(2015, 3, 23, 10, 0, 0, 0).replace(
+            tzinfo=datetime.timezone.utc
+        )
 
         super(CallMeBackTestCase, self).__call__(runner, *args, **kwargs)
 

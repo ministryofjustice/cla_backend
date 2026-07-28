@@ -52,3 +52,4 @@ class ComplaintSerializerBase(serializers.ModelSerializer):
 class ComplaintLogSerializerBase(LogSerializerBase):
     class Meta:
         model = ComplaintLog
+        fields = "__all__"

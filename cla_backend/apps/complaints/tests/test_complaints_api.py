@@ -4,7 +4,7 @@ import mock
 import pytz
 
 from django.contrib.auth.models import User
-from django.core.urlresolvers import NoReverseMatch
+from django.urls import NoReverseMatch
 from rest_framework import status
 from rest_framework.test import APITestCase
 
@@ -15,7 +15,7 @@ from complaints.models import Complaint
 from core.tests.mommy_utils import make_recipe
 from core.tests.test_base import SimpleResourceAPIMixin
 from legalaid.tests.views.test_base import CLAOperatorAuthBaseApiTestMixin, CLAProviderAuthBaseApiTestMixin
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 utc = pytz.utc
 
@@ -53,14 +53,14 @@ class SearchComplaintTestCase(
 
     def setUp(self):
         super(CLAOperatorAuthBaseApiTestMixin, self).setUp()
-        self.list_dashboard_url = u"%s?dashboard=True&page_size=20" % reverse(
+        self.list_dashboard_url = "%s?dashboard=True&page_size=20" % reverse(
             "%s:%s-list" % (self.API_URL_NAMESPACE, self.API_URL_BASE_NAME)
         )
         self.complaints = [
             self._create(
                 {
                     "category": self.complaint_cat.pk,
-                    "eod": unicode(self.eod_1.reference),
+                    "eod": str(self.eod_1.reference),
                     "description": "TEST DESCRIPTION",
                     "source": "EMAIL",
                     "level": LOG_LEVELS.MINOR,
@@ -70,7 +70,7 @@ class SearchComplaintTestCase(
             self._create(
                 {
                     "category": self.complaint_cat.pk,
-                    "eod": unicode(self.eod_1.reference),
+                    "eod": str(self.eod_1.reference),
                     "description": "TEST DESCRIPTION_2",
                     "source": "EMAIL",
                     "level": LOG_LEVELS.MINOR,
@@ -80,7 +80,7 @@ class SearchComplaintTestCase(
             self._create(
                 {
                     "category": self.complaint_cat.pk,
-                    "eod": unicode(self.eod_2.reference),
+                    "eod": str(self.eod_2.reference),
                     "description": "TEST DESCRIPTION_3",
                     "source": "EMAIL",
                     "level": LOG_LEVELS.MINOR,
@@ -186,7 +186,7 @@ class ComplaintTestCase(ComplaintTestMixin, CLAOperatorAuthBaseApiTestMixin, Sim
     def test_escalate_eod(self):
         complaint_count = Complaint.objects.all().count()
         eod = make_recipe("legalaid.eod_details")
-        response = self._create({"eod": unicode(eod.reference), "description": "TEST DESCRIPTION"})
+        response = self._create({"eod": str(eod.reference), "description": "TEST DESCRIPTION"})
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Complaint.objects.all().count(), complaint_count + 1)
 
@@ -201,7 +201,7 @@ class ComplaintTestCase(ComplaintTestMixin, CLAOperatorAuthBaseApiTestMixin, Sim
         response = self._create(
             {
                 "category": complaint_cat.pk,
-                "eod": unicode(eod.reference),
+                "eod": str(eod.reference),
                 "description": "TEST DESCRIPTION",
                 "source": "EMAIL",
                 "level": LOG_LEVELS.MINOR,

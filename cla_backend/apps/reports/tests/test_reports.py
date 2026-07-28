@@ -623,7 +623,7 @@ class TestCallbackTimeSlotReport(TestCase):
                 "% Remaining capacity": "100",
             },
         }
-        for interval, callback in callbacks.iteritems():
+        for interval, callback in callbacks.items():
             # Create callback time slots
             dt = datetime.datetime.strptime(callback["Date"], date_format)
             make_recipe(self.CALLBACK_TIME_SLOT, capacity=callback["Total capacity"], date=dt, time=interval)
@@ -690,7 +690,7 @@ class TestMIScopeReport(TestCase):
             "Client notes": "This is a free text field\nI can type whatever I want\nYes\nNo\nDiscrimination\n\n",
             "Workflow status": "Operator",
         }
-        self.assertDictContainsSubset(expected, dict(report[0]))
+        self.assertEqual({key: dict(report[0]).get(key) for key in expected}, expected)
 
     def test_report_client_notes_no_user_problem(self):
         eligible_case = make_recipe("legalaid.eligible_case", source="WEB")
@@ -713,7 +713,7 @@ class TestMIScopeReport(TestCase):
             "Client notes": "",
             "Workflow status": "Operator",
         }
-        self.assertDictContainsSubset(expected, dict(report[0]))
+        self.assertEqual({key: dict(report[0]).get(key) for key in expected}, expected)
 
     def test_report_client_just_user_problem(self):
         eligible_case = make_recipe("legalaid.eligible_case", source="WEB")
@@ -736,7 +736,7 @@ class TestMIScopeReport(TestCase):
             "Client notes": "This is a free text field",
             "Workflow status": "Operator",
         }
-        self.assertDictContainsSubset(expected, dict(report[0]))
+        self.assertEqual({key: dict(report[0]).get(key) for key in expected}, expected)
 
     def test_report_client_public_diagnosis_note(self):
         eligible_case = make_recipe("legalaid.eligible_case", source="WEB")
@@ -759,21 +759,21 @@ class TestMIScopeReport(TestCase):
             "Client notes": "",
             "Workflow status": "Operator",
         }
-        self.assertDictContainsSubset(expected, dict(report[0]))
+        self.assertEqual({key: dict(report[0]).get(key) for key in expected}, expected)
 
     def test_report_workflow_status_pending(self):
         eligible_case = make_recipe("legalaid.case", source="WEB")
         self.assertEqual(eligible_case.source, "WEB")
         report = self.get_report()
         expected = {"Workflow status": "Pending"}
-        self.assertDictContainsSubset(expected, dict(report[0]))
+        self.assertEqual({key: dict(report[0]).get(key) for key in expected}, expected)
 
     def test_report_workflow_status_operator(self):
         eligible_case = make_recipe("legalaid.eligible_case", source="WEB")
         self.assertEqual(eligible_case.source, "WEB")
         report = self.get_report()
         expected = {"Workflow status": "Operator"}
-        self.assertDictContainsSubset(expected, dict(report[0]))
+        self.assertEqual({key: dict(report[0]).get(key) for key in expected}, expected)
 
     def test_report_workflow_status_read_approved_by_SP(self):
         eligible_case = make_recipe(
@@ -787,7 +787,7 @@ class TestMIScopeReport(TestCase):
         self.assertEqual(eligible_case.source, "WEB")
         report = self.get_report()
         expected = {"Workflow status": "Read and approved by SP"}
-        self.assertDictContainsSubset(expected, dict(report[0]))
+        self.assertEqual({key: dict(report[0]).get(key) for key in expected}, expected)
 
     def test_report_workflow_status_read_NOT_approved_by_SP(self):
         eligible_case = make_recipe(
@@ -799,14 +799,14 @@ class TestMIScopeReport(TestCase):
 
         report = self.get_report()
         expected = {"Workflow status": "Read and NOT approved by SP"}
-        self.assertDictContainsSubset(expected, dict(report[0]))
+        self.assertEqual({key: dict(report[0]).get(key) for key in expected}, expected)
 
     def test_report_workflow_status_NOT_read_by_SP(self):
         eligible_case = make_recipe("legalaid.eligible_case", source="WEB", provider_assigned_at=self.today)
         self.assertEqual(eligible_case.source, "WEB")
         report = self.get_report()
         expected = {"Workflow status": "NOT read by SP"}
-        self.assertDictContainsSubset(expected, dict(report[0]))
+        self.assertEqual({key: dict(report[0]).get(key) for key in expected}, expected)
 
     def get_notes(self):
         return """User problem:

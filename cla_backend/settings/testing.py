@@ -1,5 +1,5 @@
-from datetime import date, time
-from .base import *
+from datetime import time
+from .base import *  # noqa: F403
 
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
@@ -10,11 +10,11 @@ TEST_MODE = True
 
 OBIEE_ZIP_PASSWORD = "test"
 
-REST_FRAMEWORK["DEFAULT_THROTTLE_RATES"]["login"] = "10000000000/sec"
+REST_FRAMEWORK["DEFAULT_THROTTLE_RATES"]["login"] = "10000000000/sec"  # noqa: F405
 
 TEST_RUNNER = "core.testing.CLADiscoverRunner"
 
-DATABASES["default"]["ENGINE"] = "cla_backend.apps.reports.db.backend"
+DATABASES["default"]["ENGINE"] = "cla_backend.apps.reports.db.backend"  # noqa: F405
 
 ALLOWED_HOSTS = ["*"]
 
@@ -28,7 +28,7 @@ class DisableMigrations(object):
         return True
 
     def __getitem__(self, item):
-        return "notmigrations"
+        return None
 
 
 MIGRATION_MODULES = DisableMigrations()

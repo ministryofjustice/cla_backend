@@ -15,12 +15,12 @@ logger = logging.getLogger(__name__)
 
 
 class Log(TimeStampedModel):
-    case = models.ForeignKey("legalaid.Case")
-    timer = models.ForeignKey("timer.Timer", null=True, blank=True)
+    case = models.ForeignKey("legalaid.Case", on_delete=models.CASCADE)
+    timer = models.ForeignKey("timer.Timer", null=True, blank=True, on_delete=models.CASCADE)
     code = models.CharField(db_index=True, max_length=50)
     type = models.CharField(db_index=True, choices=LOG_TYPES.CHOICES, max_length=20)
     level = models.PositiveSmallIntegerField(db_index=True, choices=LOG_LEVELS.CHOICES)
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     notes = models.TextField(null=True, blank=True)
 
     # patch is a json field with the following structure:
@@ -36,7 +36,7 @@ class Log(TimeStampedModel):
     patch = JSONField(null=True, blank=True)
     context = JSONField(null=True, blank=True, help_text="Field to store extra event data for reporting")
 
-    content_type = models.ForeignKey(ContentType, null=True, blank=True)
+    content_type = models.ForeignKey(ContentType, null=True, blank=True, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField(null=True, blank=True)
     content_object = GenericForeignKey()
 
@@ -44,7 +44,7 @@ class Log(TimeStampedModel):
         ordering = ("-created",)
 
     def __unicode__(self):
-        return u"%s - %s:%s" % (self.case, self.type, self.code)
+        return "%s - %s:%s" % (self.case, self.type, self.code)
 
     def is_consecutive_outcome_today(self):
         """LGA-125 Debounce consecutive outcome codes since start of today"""
@@ -94,7 +94,7 @@ class ComplaintLog(Log):
         proxy = True
 
     def __unicode__(self):
-        return u"%s: %s - %s:%s" % (self.complaint, self.case, self.type, self.code)
+        return "%s: %s - %s:%s" % (self.complaint, self.case, self.type, self.code)
 
     @property
     def complaint(self):

@@ -78,7 +78,7 @@ class NotifyTestCase(MockGovNotifyMailBox, TestCase):
             "datetime": date_format(localtime(now()), "SHORT_DATETIME_FORMAT"),
             "username": staff.user.username,
             "provider": staff.provider.name,
-            "is_manager": unicode(False),
+            "is_manager": str(False),
         }
         self.assert_last_email(
             expected_email_address=settings.OPERATOR_USER_ALERT_EMAILS[-1],
@@ -98,7 +98,7 @@ class NotifyTestCase(MockGovNotifyMailBox, TestCase):
             "datetime": date_format(localtime(now()), "SHORT_DATETIME_FORMAT"),
             "username": staff.user.username,
             "provider": staff.provider.name,
-            "is_manager": unicode(False),
+            "is_manager": str(False),
         }
         self.assert_last_email(
             expected_email_address=settings.OPERATOR_USER_ALERT_EMAILS[-1],

@@ -1,7 +1,7 @@
 import jsonpatch
 
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models.fields.related import SingleRelatedObjectDescriptor, ReverseSingleRelatedObjectDescriptor
+from django.db.models.fields import related_descriptors
 from django.http import Http404
 
 from rest_framework.exceptions import MethodNotAllowed
@@ -39,9 +39,9 @@ class NestedGenericModelMixin(object):
 
     def is_one_to_one_nested(self):
         descriptor = getattr(self.parent.model, self.PARENT_FIELD)
-        is_single_related = isinstance(descriptor, SingleRelatedObjectDescriptor)
-        is_single_reverse_related = isinstance(descriptor, ReverseSingleRelatedObjectDescriptor)
-        return not hasattr(descriptor, "related") or is_single_related or is_single_reverse_related
+        # ReverseManyToOneDescriptor is a FK reverse manager (e.g. case.casenoteshistory_set)
+        # — all other descriptor types return a single object, not a queryset.
+        return not isinstance(descriptor, related_descriptors.ReverseManyToOneDescriptor)
 
     def get_object(self):
         if self.is_one_to_one_nested():

@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from django.conf import settings
-from django.conf.urls import patterns, include, url
+from cla_backend.libs.django_compat import patterns, include, path, url
 from django.conf.urls.static import static
 from status.views import MaintenanceModeView
 
@@ -24,13 +24,17 @@ if settings.ADMIN_ENABLED:
         "",
         url(r"^maintenance$", view=MaintenanceModeView.as_view(), name="maintenance_page"),
         url(r"^status/", include("status.urls", namespace="status")),
-        url(r"^admin/", include(admin.site.urls)),
+        path("admin/", admin.site.urls),
         url(r"^admin/reports/", include("reports.urls", namespace="reports")),
         url(r"session_security/", include("session_security.urls")),
         url(r"^_nested_admin/", include("nested_admin.urls")),
     )
 
 if settings.BACKEND_ENABLED:
+    from cla_eventlog import autodiscover as eventlog_autodiscover
+
+    eventlog_autodiscover()
+
     urlpatterns += patterns(
         "",
         url(r"^checker/api/v1/", include("checker.urls", namespace="checker")),

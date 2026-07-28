@@ -60,7 +60,7 @@ class GraphTestCase(TestCase):
 
     def test_end_nodes_have_category(self):
         def move_down(node_id, context, nodes):
-            node = self.graph.node[node_id]
+            node = self.graph.nodes[node_id]
             node["id"] = node_id
 
             nodes = list(nodes)
@@ -82,28 +82,28 @@ class GraphTestCase(TestCase):
 
     def test_nodes_have_heading(self):
         checker_graph = get_graph(file_name=settings.CHECKER_DIAGNOSIS_FILE_NAME)
-        node = checker_graph.node["n43n2"]
-        self.assertEqual(node["heading"], u"Choose the option that best describes your debt problem")
+        node = checker_graph.nodes["n43n2"]
+        self.assertEqual(node["heading"], "Choose the option that best describes your debt problem")
 
     def test_checker_hlpas(self):
         checker_graph = get_graph(file_name=settings.CHECKER_DIAGNOSIS_FILE_NAME)
         node_ids = ["n70", "n71", "n1", "n0", "n83"]
         for node_id in node_ids:
-            node = checker_graph.node[node_id]
-            self.assertDictContainsSubset(node["context"], {"hlpas": "true"})
+            node = checker_graph.nodes[node_id]
+            self.assertEqual(node["context"].get("hlpas"), "true")
 
     def test_nodes_have_subheading(self):
         _graph = get_graph(file_name=settings.DIAGNOSIS_FILE_NAME)
-        node = _graph.node["n97"]
+        node = _graph.nodes["n97"]
         self.assertEqual(
             node["context"]["subheading"],
-            u"If a local authority is involved in taking a child into care and the applicant has received a letter of proceedings or letter of issue sent or client has a court date, a financial assessment is not required",
+            "If a local authority is involved in taking a child into care and the applicant has received a letter of proceedings or letter of issue sent or client has a court date, a financial assessment is not required",
         )
 
     def test_nodes_have_description(self):
         _graph = get_graph(file_name=settings.DIAGNOSIS_FILE_NAME)
-        node = _graph.node["n404"]
+        node = _graph.nodes["n404"]
         self.assertEqual(
-            unicode(node["description"]),
-            u"<p><strong>The client has received a letter of proceedings, letter of issue or have a court date.</strong></p>\n<p>No financial assessment is required.</p>",
+            str(node["description"]),
+            "<p><strong>The client has received a letter of proceedings, letter of issue or have a court date.</strong></p>\n<p>No financial assessment is required.</p>",
         )

@@ -1,4 +1,6 @@
-from .base import *
+import os
+
+from .base import *  # noqa: F403
 
 DEBUG = True
 
@@ -20,7 +22,7 @@ LOGGING = {
 # See cla_backend/apps/reports/db/backend/base.py
 # Only need to override the default connection if running locally.
 # If override both keys then reports fail with error database connection isn't set to UTC
-DATABASES["default"] = {
+DATABASES["default"] = {  # noqa: F405
     "ENGINE": "django.db.backends.postgresql_psycopg2",
     "NAME": os.environ.get("DB_NAME", "cla_backend"),
     "USER": os.environ.get("DB_USER", "postgres"),

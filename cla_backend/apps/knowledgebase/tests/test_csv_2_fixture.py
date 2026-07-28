@@ -27,30 +27,30 @@ class TestCSV2Fixture(TestCase):
         output_json = csv.fixture_as_json()
         output_list = json.loads(output_json)
         expected_values = [
-            {u"name": u"Debt"},
-            {u"name": u"Education"},
-            {u"name": u"Discrimination"},
-            {u"name": u"Housing"},
-            {u"name": u"Family"},
-            {u"name": u"Welfare benefits"},
-            {u"name": u"Action against police"},
-            {u"name": u"Clinical negligence"},
-            {u"name": u"Community care"},
-            {u"name": u"Consumer"},
-            {u"name": u"Crime"},
-            {u"name": u"Employment"},
-            {u"name": u"Immigration and asylum"},
-            {u"name": u"Mental health"},
-            {u"name": u"Miscellaneous"},
-            {u"name": u"Personal injury"},
-            {u"name": u"Public"},
-            {u"name": u"Generic"},
+            {"name": "Debt"},
+            {"name": "Education"},
+            {"name": "Discrimination"},
+            {"name": "Housing"},
+            {"name": "Family"},
+            {"name": "Welfare benefits"},
+            {"name": "Action against police"},
+            {"name": "Clinical negligence"},
+            {"name": "Community care"},
+            {"name": "Consumer"},
+            {"name": "Crime"},
+            {"name": "Employment"},
+            {"name": "Immigration and asylum"},
+            {"name": "Mental health"},
+            {"name": "Miscellaneous"},
+            {"name": "Personal injury"},
+            {"name": "Public"},
+            {"name": "Generic"},
         ]
         self.assertEqual(len(output_list), 18)
 
         article_category = output_list[0]
-        self.assertItemsEqual(article_category.keys(), [u"fields", u"model", u"pk"])
-        self.assertItemsEqual(article_category["fields"].keys(), [u"created", u"modified", u"name"])
+        self.assertCountEqual(article_category.keys(), ["fields", "model", "pk"])
+        self.assertCountEqual(article_category["fields"].keys(), ["created", "modified", "name"])
 
         for output_dict, expected_dict in zip(output_list, expected_values):
             for expected_key, expected_value in expected_dict.items():
@@ -64,48 +64,50 @@ class TestCSV2Fixture(TestCase):
         csv = KnowledgebaseCsvParse(file)
         output_json = csv.fixture_as_json()
         expected_values = {
-            "resource_type": u"LEGAL",
-            "website": u"https://www.google.com",
-            "geographic_coverage": u"Baz",
-            "type_of_service": u"Baz",
-            "description": u"Bar",
-            "service_name": u"Bar",
-            "organisation": u"Foo",
-            "accessibility": u"Foo",
-            "when_to_use": u"Baz",
-            "how_to_use": u"Foo",
-            "address": u"Foo",
-            "keywords": u"Bar",
-            "opening_hours": u"Bar",
+            "resource_type": "LEGAL",
+            "website": "https://www.google.com",
+            "geographic_coverage": "Baz",
+            "type_of_service": "Baz",
+            "description": "Bar",
+            "service_name": "Bar",
+            "organisation": "Foo",
+            "accessibility": "Foo",
+            "when_to_use": "Baz",
+            "how_to_use": "Foo",
+            "address": "Foo",
+            "keywords": "Bar",
+            "opening_hours": "Bar",
         }
         output_list = json.loads(output_json)
 
-        output_article_category_list = filter(lambda x: x["model"] == "knowledgebase.articlecategory", output_list)
+        output_article_category_list = list(
+            filter(lambda x: x["model"] == "knowledgebase.articlecategory", output_list)
+        )
         self.assertEqual(len(output_article_category_list), 18)
 
-        output_article_list = filter(lambda x: x["model"] == "knowledgebase.article", output_list)
+        output_article_list = list(filter(lambda x: x["model"] == "knowledgebase.article", output_list))
         self.assertEqual(len(output_article_list), 1)
 
         article = output_article_list[0]
-        self.assertItemsEqual(article.keys(), [u"fields", u"model", u"pk"])
-        self.assertItemsEqual(
+        self.assertCountEqual(article.keys(), ["fields", "model", "pk"])
+        self.assertCountEqual(
             article["fields"].keys(),
             [
-                u"accessibility",
-                u"address",
-                u"created",
-                u"description",
-                u"geographic_coverage",
-                u"how_to_use",
-                u"keywords",
-                u"modified",
-                u"opening_hours",
-                u"organisation",
-                u"resource_type",
-                u"service_name",
-                u"type_of_service",
-                u"website",
-                u"when_to_use",
+                "accessibility",
+                "address",
+                "created",
+                "description",
+                "geographic_coverage",
+                "how_to_use",
+                "keywords",
+                "modified",
+                "opening_hours",
+                "organisation",
+                "resource_type",
+                "service_name",
+                "type_of_service",
+                "website",
+                "when_to_use",
             ],
         )
 
@@ -122,7 +124,7 @@ class TestCSV2Fixture(TestCase):
         output_json = csv.fixture_as_json()
         output_list = json.loads(output_json)
         output_article = output_list[-1]
-        self.assertEqual(output_article["fields"]["resource_type"], u"LEGAL")
+        self.assertEqual(output_article["fields"]["resource_type"], "LEGAL")
 
     def test_fixture_handling_with_entry_type_of_other_resource_for_clients(self):
         csv_file_path = os.path.abspath("cla_backend/apps/knowledgebase/tests/CSVData/csv_with_entry_type.csv")
@@ -131,7 +133,7 @@ class TestCSV2Fixture(TestCase):
         output_json = csv.fixture_as_json()
         output_list = json.loads(output_json)
         output_article = output_list[-1]
-        self.assertEqual(output_article["fields"]["resource_type"], u"OTHER")
+        self.assertEqual(output_article["fields"]["resource_type"], "OTHER")
         self.load_JSON_fixture_into_DB(csv_file_path)
 
     def test_fixture_with_complete_article(self):
@@ -141,24 +143,24 @@ class TestCSV2Fixture(TestCase):
         output_json = csv.fixture_as_json()
         output_list = json.loads(output_json)
         expectedList = [
-            {u"article": 1, u"article_category": 1, u"preferred_signpost": False},
-            {u"article": 1, u"article_category": 2, u"preferred_signpost": True},
-            {u"article": 1, u"article_category": 3, u"preferred_signpost": False},
-            {u"article": 1, u"article_category": 4, u"preferred_signpost": False},
-            {u"article": 1, u"article_category": 5, u"preferred_signpost": False},
-            {u"article": 1, u"article_category": 6, u"preferred_signpost": True},
-            {u"article": 1, u"article_category": 7, u"preferred_signpost": False},
-            {u"article": 1, u"article_category": 8, u"preferred_signpost": True},
-            {u"article": 1, u"article_category": 9, u"preferred_signpost": False},
-            {u"article": 1, u"article_category": 10, u"preferred_signpost": True},
-            {u"article": 1, u"article_category": 11, u"preferred_signpost": True},
-            {u"article": 1, u"article_category": 12, u"preferred_signpost": False},
-            {u"article": 1, u"article_category": 13, u"preferred_signpost": True},
-            {u"article": 1, u"article_category": 14, u"preferred_signpost": False},
-            {u"article": 1, u"article_category": 15, u"preferred_signpost": False},
-            {u"article": 1, u"article_category": 16, u"preferred_signpost": False},
-            {u"article": 1, u"article_category": 17, u"preferred_signpost": True},
-            {u"article": 1, u"article_category": 18, u"preferred_signpost": True},
+            {"article": 1, "article_category": 1, "preferred_signpost": False},
+            {"article": 1, "article_category": 2, "preferred_signpost": True},
+            {"article": 1, "article_category": 3, "preferred_signpost": False},
+            {"article": 1, "article_category": 4, "preferred_signpost": False},
+            {"article": 1, "article_category": 5, "preferred_signpost": False},
+            {"article": 1, "article_category": 6, "preferred_signpost": True},
+            {"article": 1, "article_category": 7, "preferred_signpost": False},
+            {"article": 1, "article_category": 8, "preferred_signpost": True},
+            {"article": 1, "article_category": 9, "preferred_signpost": False},
+            {"article": 1, "article_category": 10, "preferred_signpost": True},
+            {"article": 1, "article_category": 11, "preferred_signpost": True},
+            {"article": 1, "article_category": 12, "preferred_signpost": False},
+            {"article": 1, "article_category": 13, "preferred_signpost": True},
+            {"article": 1, "article_category": 14, "preferred_signpost": False},
+            {"article": 1, "article_category": 15, "preferred_signpost": False},
+            {"article": 1, "article_category": 16, "preferred_signpost": False},
+            {"article": 1, "article_category": 17, "preferred_signpost": True},
+            {"article": 1, "article_category": 18, "preferred_signpost": True},
         ]
         output_list = json.loads(output_json)
 
@@ -175,10 +177,10 @@ class TestCSV2Fixture(TestCase):
 
         output_acm = sorted_records["knowledgebase.articlecategorymatrix"]
         output_acm_record = output_acm[0]
-        self.assertItemsEqual(output_acm_record.keys(), [u"fields", u"model", u"pk"])
-        self.assertItemsEqual(
+        self.assertCountEqual(output_acm_record.keys(), ["fields", "model", "pk"])
+        self.assertCountEqual(
             output_acm_record["fields"].keys(),
-            [u"article", u"article_category", u"created", u"modified", u"preferred_signpost"],
+            ["article", "article_category", "created", "modified", "preferred_signpost"],
         )
 
         output_acm_sorted = sorted(output_acm, key=lambda x: x["fields"]["article_category"])
@@ -223,8 +225,8 @@ class TestCSV2Fixture(TestCase):
         self.assertEqual(min_pk, 1)
         self.assertEqual(max_pk, 36)
 
-        first_set_of_acm = filter(lambda x: x["fields"]["article"] == 1, article_category_matrices)
-        second_set_of_acm = filter(lambda x: x["fields"]["article"] == 2, article_category_matrices)
+        first_set_of_acm = list(filter(lambda x: x["fields"]["article"] == 1, article_category_matrices))
+        second_set_of_acm = list(filter(lambda x: x["fields"]["article"] == 2, article_category_matrices))
         self.assertEqual(len(first_set_of_acm), 18)
         self.assertEqual(len(second_set_of_acm), 18)
 

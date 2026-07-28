@@ -1,4 +1,19 @@
 import os
+from django.db import connection, DatabaseError
+
+
+def database_healthcheck():
+    cursor = None
+    try:
+        cursor = connection.cursor()
+        cursor.execute("SELECT 1")
+        row = cursor.fetchone()
+        return bool(row and row[0] == 1)
+    except DatabaseError:
+        return False
+    finally:
+        if cursor is not None:
+            cursor.close()
 
 
 def check_disk():

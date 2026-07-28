@@ -1,4 +1,6 @@
-from registry import event_registry
+from importlib import import_module
+
+from .registry import event_registry
 
 
 def autodiscover():
@@ -9,7 +11,6 @@ def autodiscover():
     """
     import copy
     from django.conf import settings
-    from django.utils.importlib import import_module
     from django.utils.module_loading import module_has_submodule
 
     for app in settings.PROJECT_APPS:
@@ -30,6 +31,3 @@ def autodiscover():
             # attempting to import it, otherwise we want it to bubble up.
             if module_has_submodule(mod, "events"):
                 raise
-
-
-autodiscover()

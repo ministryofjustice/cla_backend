@@ -1,9 +1,9 @@
 import json
 
 from rest_framework import mixins, status
-from rest_framework.decorators import detail_route
 from rest_framework.response import Response
 
+from core.drf.decorators import detail_route
 from core.drf.mixins import NestedGenericModelMixin, ClaCreateModelMixin, ClaUpdateModelMixin
 from core.drf.viewsets import CompatGenericViewSet
 from cla_eventlog import event_registry

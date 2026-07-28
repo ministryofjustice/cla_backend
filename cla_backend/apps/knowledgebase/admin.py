@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.shortcuts import render
-from django.conf.urls import patterns, url
-from django.core.urlresolvers import reverse
+from cla_backend.libs.django_compat import patterns, url
+from django.urls import reverse
 from django.core.exceptions import PermissionDenied
 from django.http.response import HttpResponseRedirect
 from django.contrib import messages

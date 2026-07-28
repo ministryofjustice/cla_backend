@@ -14,12 +14,17 @@ from cryptography.hazmat.primitives import hashes
 
 from cla_auth.authentication import EntraAccessTokenAuthentication
 from core.tests.mommy_utils import make_recipe
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from cla_common.constants import REQUIRES_ACTION_BY
 
-from cla_auth.constants import OPERATOR_ROLE, OPERATOR_MANAGER_ROLE, PROVIDER_ROLE, PROVIDER_MCC_ROLE, OPERATOR_OFFICE_CODES
+from cla_auth.constants import (
+    OPERATOR_ROLE,
+    OPERATOR_MANAGER_ROLE,
+    PROVIDER_ROLE,
+    PROVIDER_MCC_ROLE,
+    OPERATOR_OFFICE_CODES,
+)
 from call_centre.models import Operator
-
 
 User = get_user_model()
 
@@ -40,11 +45,11 @@ class EntraTokenGeneratorMixin(object):
 
         subject = issuer = x509.Name(
             [
-                x509.NameAttribute(NameOID.COUNTRY_NAME, u"US"),
-                x509.NameAttribute(NameOID.STATE_OR_PROVINCE_NAME, u"CA"),
-                x509.NameAttribute(NameOID.LOCALITY_NAME, u"San Francisco"),
-                x509.NameAttribute(NameOID.ORGANIZATION_NAME, u"Test"),
-                x509.NameAttribute(NameOID.COMMON_NAME, u"test.com"),
+                x509.NameAttribute(NameOID.COUNTRY_NAME, "US"),
+                x509.NameAttribute(NameOID.STATE_OR_PROVINCE_NAME, "CA"),
+                x509.NameAttribute(NameOID.LOCALITY_NAME, "San Francisco"),
+                x509.NameAttribute(NameOID.ORGANIZATION_NAME, "Test"),
+                x509.NameAttribute(NameOID.COMMON_NAME, "test.com"),
             ]
         )
 
@@ -90,7 +95,7 @@ class EntraTokenGeneratorMixin(object):
 
         office_codes = ""
         if app_roles == OPERATOR_ROLE or app_roles == OPERATOR_MANAGER_ROLE:
-            office_codes = unicode(",".join(OPERATOR_OFFICE_CODES))
+            office_codes = str(",".join(OPERATOR_OFFICE_CODES))
 
         payload = {
             "iss": self.issuer,
@@ -302,19 +307,13 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
     def test_perform_operator_office_codes_check__operator(self):
         """Operators must have a given office code"""
 
-        payload = {
-            "APP_ROLES": OPERATOR_ROLE,
-            "LAA_ACCOUNTS": unicode(",".join(OPERATOR_OFFICE_CODES))
-        }
+        payload = {"APP_ROLES": OPERATOR_ROLE, "LAA_ACCOUNTS": str(",".join(OPERATOR_OFFICE_CODES))}
         self.assertTrue(self.auth.perform_operator_office_codes_check(payload))
 
     def test_perform_operator_office_codes_check__operator_manager(self):
         """Operator managers must have a given office code"""
 
-        payload = {
-            "APP_ROLES": OPERATOR_MANAGER_ROLE,
-            "LAA_ACCOUNTS": unicode(",".join(OPERATOR_OFFICE_CODES))
-        }
+        payload = {"APP_ROLES": OPERATOR_MANAGER_ROLE, "LAA_ACCOUNTS": str(",".join(OPERATOR_OFFICE_CODES))}
         self.assertTrue(self.auth.perform_operator_office_codes_check(payload))
 
     def test_perform_operator_office_codes_check__provider(self):

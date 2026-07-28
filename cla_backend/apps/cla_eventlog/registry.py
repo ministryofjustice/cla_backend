@@ -1,17 +1,16 @@
 from collections import defaultdict
-import operator
 from .constants import LOG_LEVELS, LOG_TYPES, LOG_ROLES
 
 
 def is_code_valid(code):
     required_keys = {
-        "type": basestring,
+        "type": str,
         "level": int,
         "selectable_by": list,
-        "description": basestring,
+        "description": str,
         "stops_timer": bool,
     }
-    all_keys = required_keys.keys() + ["set_requires_action_by", "order"]
+    all_keys = list(required_keys.keys()) + ["set_requires_action_by", "order"]
 
     for key, type_ in required_keys.items():
         if key not in code:
@@ -63,7 +62,7 @@ class EventRegistry(object):
 
     def get_event(self, key):
         if key not in self._registry:
-            raise ValueError(u"%s not registered" % key)
+            raise ValueError("%s not registered" % key)
         return self._registry[key]
 
     def get_selectable_events(self, role):
@@ -79,7 +78,10 @@ class EventRegistry(object):
         """
         :return: all codes in the registry as a unified dictionary
         """
-        return dict(reduce(operator.add, [event_cls.codes.items() for event_cls in self._registry.values()]))
+        all_codes = {}
+        for event_cls in self._registry.values():
+            all_codes.update(event_cls.codes)
+        return all_codes
 
     def filter(self, **kwargs):
         """

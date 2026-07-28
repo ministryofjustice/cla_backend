@@ -1,5 +1,3 @@
-import types
-
 from . import exceptions
 
 
@@ -34,7 +32,7 @@ class ModelMixin(object):
 
 
 def _is_a_subclass_of_model_mixin(property_meta_value):
-    is_a_class = isinstance(property_meta_value, types.TypeType)
+    is_a_class = isinstance(property_meta_value, type)
     return is_a_class and issubclass(property_meta_value, ModelMixin)
 
 
@@ -133,7 +131,7 @@ class CaseData(ModelMixin, object):
     }
 
     def to_dict(self):
-        from django.db.models.query import ValuesQuerySet
+        from django.db.models.query import QuerySet
 
         def dump_object(obj):
             props = {}
@@ -146,7 +144,7 @@ class CaseData(ModelMixin, object):
                 missing_value = None
                 if isinstance(value, ModelMixin):
                     value, missing_value = dump_object(value)
-                elif isinstance(value, ValuesQuerySet):
+                elif isinstance(value, QuerySet):
                     value = list(value)
                 props[key] = value
                 if missing_value:

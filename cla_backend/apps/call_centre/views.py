@@ -1,4 +1,5 @@
 import datetime
+from functools import reduce
 import logging
 from uuid import UUID
 
@@ -10,14 +11,14 @@ from django.db.models import Q
 from django.db import transaction
 from django.utils import six, timezone
 from django.shortcuts import get_object_or_404
+from django_filters.rest_framework import DjangoFilterBackend
 from cla_eventlog import event_registry
 from historic.models import CaseArchived
 from legalaid.permissions import IsManagerOrMePermission
 
 from rest_framework import viewsets, mixins, status
-from rest_framework.decorators import detail_route, list_route
 from rest_framework.response import Response as DRFResponse
-from rest_framework.filters import OrderingFilter, DjangoFilterBackend, SearchFilter, BaseFilterBackend
+from rest_framework.filters import OrderingFilter, SearchFilter, BaseFilterBackend
 import operator
 from django.db import models
 
@@ -27,6 +28,7 @@ from cla_eventlog.views import BaseEventViewSet, BaseLogViewSet
 from cla_provider.helpers import ProviderAllocationHelper, notify_case_assigned
 
 from core.drf.mixins import FormActionMixin, ClaCreateModelMixin, ClaUpdateModelMixin
+from core.drf.decorators import detail_route, list_route
 from core.drf.viewsets import CompatGenericViewSet
 from core.drf.paginator import StandardResultsSetPagination
 from notifications.views import BaseNotificationViewSet
@@ -336,10 +338,7 @@ class CaseViewSet(
         return provider.short_code == settings.EDUCATION_DUMMY_PROVIDER_SHORT_CODE
 
     def _build_edff_auto_notes(self, provider_obj):
-        return (
-            u"AUTO_EDFF_ROUTE: selected_provider_id={};"
-            u"selected_provider_name={};"
-        ).format(
+        return ("AUTO_EDFF_ROUTE: selected_provider_id={};" "selected_provider_name={};").format(
             provider_obj.id,
             provider_obj.name,
         )
@@ -379,11 +378,15 @@ class CaseViewSet(
 
             # https://dsdmoj.atlassian.net/browse/LGA-3974
             if self._is_education_dummy_provider(case=obj, provider=provider):
-                alt_form = AlternativeHelpForm(case=obj, data={"event_code": "EDFF", "notes": self._build_edff_auto_notes(provider)})
+                alt_form = AlternativeHelpForm(
+                    case=obj, data={"event_code": "EDFF", "notes": self._build_edff_auto_notes(provider)}
+                )
                 if alt_form.is_valid():
                     alt_form.save(request.user)
                 else:
-                    return DRFResponse({"error": "Could not save EDFF for dummy provider"}, status=status.HTTP_400_BAD_REQUEST)
+                    return DRFResponse(
+                        {"error": "Could not save EDFF for dummy provider"}, status=status.HTTP_400_BAD_REQUEST
+                    )
 
             return DRFResponse(data=provider_serialised.data)
 
@@ -558,7 +561,9 @@ class UserViewSet(CallCentrePermissionsViewSetMixin, BaseUserViewSet):
     def create(self, request, *args, **kwargs):
         operator = self.get_logged_in_user_model()
         if operator.organisation:
-            request.data["organisation"] = operator.organisation.id
+            data = request.data.copy()
+            data["organisation"] = operator.organisation.id
+            request._full_data = data
         return super(UserViewSet, self).create(request, *args, **kwargs)
 
 
@@ -653,7 +658,7 @@ class CaseArchivedSearchFilter(SearchFilter):
         terms = super(CaseArchivedSearchFilter, self).get_search_terms(request)
         return [term.upper() for term in terms]
 
-    def construct_search(self, field_name):
+    def construct_search(self, field_name, queryset=None):
         return "%s__contains" % field_name
 
 
@@ -715,7 +720,7 @@ class ComplaintSearchFilter(SearchFilter):
         if not search_fields or not search_terms:
             return queryset
 
-        orm_lookups = [self.construct_search(six.text_type(search_field)) for search_field in search_fields]
+        orm_lookups = [self.construct_search(six.text_type(search_field), queryset) for search_field in search_fields]
 
         for search_term in search_terms:
             queries = [models.Q(**{orm_lookup: search_term}) for orm_lookup in orm_lookups]

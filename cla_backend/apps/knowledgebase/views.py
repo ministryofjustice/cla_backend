@@ -1,4 +1,5 @@
 import django_filters
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from rest_framework import filters
 
@@ -21,7 +22,7 @@ class BaseArticleViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = ArticleSerializer
     pagination_class = StandardResultsSetPagination
 
-    filter_backends = (filters.SearchFilter, filters.DjangoFilterBackend, filters.OrderingFilter)
+    filter_backends = (filters.SearchFilter, DjangoFilterBackend, filters.OrderingFilter)
 
     filter_class = ArticleCategoryFilter
 

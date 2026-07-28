@@ -1,4 +1,4 @@
-from .base import *
+from .base import *  # noqa: F401,F403
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -10,7 +10,7 @@ MANAGERS = ADMINS
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "ENGINE": "django.db.backends.postgresql",
         "NAME": "cla_backend",
         "USER": "",
         "PASSWORD": "",

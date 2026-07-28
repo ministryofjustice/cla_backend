@@ -103,7 +103,7 @@ class EventTestCaseMixin(object):
 
         # if `case.requires_action_by` is not Operator then the
         # value shouldn't change
-        values = REQUIRES_ACTION_BY.REVERTED_CHOICES_CONST_DICT.keys()
+        values = list(REQUIRES_ACTION_BY.REVERTED_CHOICES_CONST_DICT.keys())
         for rab in requires_action_by:
             values.remove(rab)
 
@@ -144,9 +144,9 @@ class EventTestCaseMixin(object):
         code=None,
     ):
         event = event_registry.get_event(self.EVENT_KEY)()
-        codes = event.codes.keys()
+        codes = list(event.codes.keys())
 
-        self.assertItemsEqual(codes, expected_available_codes)
+        self.assertCountEqual(codes, expected_available_codes)
 
         # building process params and overridding potential ones through process_kwargs
         chosen_code = code or codes[0]

@@ -2,7 +2,7 @@ import copy
 import uuid
 import mock
 import random
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from rest_framework import status
 
@@ -48,7 +48,7 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
         return make_recipe(
             "legalaid.eligibility_check",
             category=make_recipe("legalaid.category"),
-            notes=u"lorem ipsum",
+            notes="lorem ipsum",
             you=make_recipe(
                 "legalaid.person",
                 income=make_recipe("legalaid.income"),
@@ -58,7 +58,7 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
         )
 
     def _update(self, ref, data):
-        url = self.get_detail_url(unicode(ref))
+        url = self.get_detail_url(str(ref))
         return self.client.patch(url, data=data, HTTP_AUTHORIZATION=self.get_http_authorization(), format="json")
 
     def get_reference_from_response(self, data):
@@ -68,7 +68,7 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
         return reverse(
             "%s:eligibility_check-is-eligible" % self.API_URL_NAMESPACE,
             args=(),
-            kwargs={self.LOOKUP_KEY: unicode(reference)},
+            kwargs={self.LOOKUP_KEY: str(reference)},
         )
 
     def assertIncomeEqual(self, data, obj, partner=False):
@@ -136,11 +136,12 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
         self.assertDeductionsEqual(d_deductions, o_deductions)
 
     def assertEligibilityCheckEqual(self, data, check):
-        self.assertEqual(data["reference"], unicode(check.reference))
+        self.assertEqual(data["reference"], str(check.reference))
         self.assertEqual(data["category"], check.category.code if check.category else None)
         self.assertEqual(data["your_problem_notes"], check.your_problem_notes)
         self.assertEqual(data["notes"], check.notes)
-        self.assertEqual(len(data["property_set"]), check.property_set.count())
+        expected_property_count = check.property_set.count() if check.pk else 0
+        self.assertEqual(len(data["property_set"]), expected_property_count)
         self.assertEqual(data["dependants_young"], check.dependants_young)
         self.assertEqual(data["dependants_old"], check.dependants_old)
         self.assertPersonEqual(data["you"], check.you)
@@ -288,10 +289,10 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
 
         self.assertResponseKeys(response)
         self.assertEqual(len(data["property_set"]), 2)
-        self.assertItemsEqual([p["value"] for p in response.data["property_set"]], [111, 999])
-        self.assertItemsEqual([p["mortgage_left"] for p in response.data["property_set"]], [222, 888])
-        self.assertItemsEqual([p["share"] for p in response.data["property_set"]], [33, 77])
-        self.assertItemsEqual([p["disputed"] for p in response.data["property_set"]], [True, False])
+        self.assertCountEqual([p["value"] for p in response.data["property_set"]], [111, 999])
+        self.assertCountEqual([p["mortgage_left"] for p in response.data["property_set"]], [222, 888])
+        self.assertCountEqual([p["share"] for p in response.data["property_set"]], [33, 77])
+        self.assertCountEqual([p["disputed"] for p in response.data["property_set"]], [True, False])
 
     def test_create_with_more_main_properties_fails(self):
         data = {
@@ -303,7 +304,7 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
         response = self._create(data=data)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertDictEqual(response.data, {"property_set": [u"Only one main property allowed"]})
+        self.assertDictEqual(response.data, {"property_set": ["Only one main property allowed"]})
 
     def _get_valid_post_data(self):
         data = {
@@ -460,66 +461,66 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
         errors = response.data
-        self.assertItemsEqual(
+        self.assertCountEqual(
             errors.keys(),
             ["category", "your_problem_notes", "property_set", "dependants_young", "dependants_old", "you", "partner"],
         )
-        self.assertEqual(errors["category"], [u"Object with code=-1 does not exist."])
-        self.assertEqual(errors["your_problem_notes"], [u"Ensure this field has no more than 500 characters."])
-        self.assertItemsEqual(
+        self.assertEqual(errors["category"], ["Object with code=-1 does not exist."])
+        self.assertEqual(errors["your_problem_notes"], ["Ensure this field has no more than 500 characters."])
+        self.assertCountEqual(
             errors["property_set"],
             [
                 {},
                 {
-                    "share": [u"Ensure this value is greater than or equal to 0."],
-                    "value": [u"Ensure this value is greater than or equal to 0."],
-                    "mortgage_left": [u"Ensure this value is greater than or equal to 0."],
+                    "share": ["Ensure this value is greater than or equal to 0."],
+                    "value": ["Ensure this value is greater than or equal to 0."],
+                    "mortgage_left": ["Ensure this value is greater than or equal to 0."],
                 },
-                {"share": [u"Ensure this value is less than or equal to 100."]},
+                {"share": ["Ensure this value is less than or equal to 100."]},
             ],
         )
-        self.assertEqual(errors["dependants_young"], [u"Ensure this value is greater than or equal to 0."])
-        self.assertEqual(errors["dependants_old"], [u"Ensure this value is greater than or equal to 0."])
+        self.assertEqual(errors["dependants_young"], ["Ensure this value is greater than or equal to 0."])
+        self.assertEqual(errors["dependants_old"], ["Ensure this value is greater than or equal to 0."])
         self.maxDiff = None
-        self.assertItemsEqual(
+        self.assertCountEqual(
             errors["you"],
             {
                 "savings": [
                     {
-                        "credit_balance": [u"Ensure this value is greater than or equal to 0."],
-                        "asset_balance": [u"Ensure this value is greater than or equal to 0."],
-                        "investment_balance": [u"Ensure this value is greater than or equal to 0."],
-                        "bank_balance": [u"Ensure this value is greater than or equal to 0."],
+                        "credit_balance": ["Ensure this value is greater than or equal to 0."],
+                        "asset_balance": ["Ensure this value is greater than or equal to 0."],
+                        "investment_balance": ["Ensure this value is greater than or equal to 0."],
+                        "bank_balance": ["Ensure this value is greater than or equal to 0."],
                     }
                 ],
                 "deductions": [
-                    {"criminal_legalaid_contributions": [u"Ensure this value is greater than or equal to 0."]}
+                    {"criminal_legalaid_contributions": ["Ensure this value is greater than or equal to 0."]}
                 ],
             },
         )
-        self.assertItemsEqual(
+        self.assertCountEqual(
             errors["partner"],
             {
                 "savings": [
                     {
-                        "credit_balance": [u"Ensure this value is greater than or equal to 0."],
-                        "asset_balance": [u"Ensure this value is greater than or equal to 0."],
-                        "investment_balance": [u"Ensure this value is greater than or equal to 0."],
-                        "bank_balance": [u"Ensure this value is greater than or equal to 0."],
+                        "credit_balance": ["Ensure this value is greater than or equal to 0."],
+                        "asset_balance": ["Ensure this value is greater than or equal to 0."],
+                        "investment_balance": ["Ensure this value is greater than or equal to 0."],
+                        "bank_balance": ["Ensure this value is greater than or equal to 0."],
                     }
                 ],
                 "deductions": [
-                    {"criminal_legalaid_contributions": [u"Ensure this value is greater than or equal to 0."]}
+                    {"criminal_legalaid_contributions": ["Ensure this value is greater than or equal to 0."]}
                 ],
             },
         )
 
     @classmethod
     def deep_update(cls, d, u):
-        import collections
+        from collections.abc import Mapping
 
-        for k, v in u.iteritems():
-            if isinstance(v, collections.Mapping):
+        for k, v in u.items():
+            if isinstance(v, Mapping):
                 r = EligibilityCheckAPIMixin.deep_update(d.get(k, {}), v)
                 d[k] = r
             else:
@@ -537,14 +538,14 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
                 "error": {
                     "you": {
                         "income": {
-                            "earnings": [u"Ensure this value is less than or equal to 9999999999."],
-                            "self_employment_drawings": [u"Ensure this value is less than or equal to 9999999999."],
-                            "child_benefits": [u"Ensure this value is less than or equal to 9999999999."],
-                            "benefits": [u"Ensure this value is less than or equal to 9999999999."],
-                            "tax_credits": [u"Ensure this value is less than or equal to 9999999999."],
-                            "pension": [u"Ensure this value is less than or equal to 9999999999."],
-                            "maintenance_received": [u"Ensure this value is less than or equal to 9999999999."],
-                            "other_income": [u"Ensure this value is less than or equal to 9999999999."],
+                            "earnings": ["Ensure this value is less than or equal to 9999999999."],
+                            "self_employment_drawings": ["Ensure this value is less than or equal to 9999999999."],
+                            "child_benefits": ["Ensure this value is less than or equal to 9999999999."],
+                            "benefits": ["Ensure this value is less than or equal to 9999999999."],
+                            "tax_credits": ["Ensure this value is less than or equal to 9999999999."],
+                            "pension": ["Ensure this value is less than or equal to 9999999999."],
+                            "maintenance_received": ["Ensure this value is less than or equal to 9999999999."],
+                            "other_income": ["Ensure this value is less than or equal to 9999999999."],
                         }
                     }
                 },
@@ -573,13 +574,13 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
                 "error": {
                     "partner": {
                         "income": {
-                            "earnings": [u"Ensure this value is less than or equal to 9999999999."],
-                            "self_employment_drawings": [u"Ensure this value is less than or equal to 9999999999."],
-                            "benefits": [u"Ensure this value is less than or equal to 9999999999."],
-                            "tax_credits": [u"Ensure this value is less than or equal to 9999999999."],
-                            "pension": [u"Ensure this value is less than or equal to 9999999999."],
-                            "maintenance_received": [u"Ensure this value is less than or equal to 9999999999."],
-                            "other_income": [u"Ensure this value is less than or equal to 9999999999."],
+                            "earnings": ["Ensure this value is less than or equal to 9999999999."],
+                            "self_employment_drawings": ["Ensure this value is less than or equal to 9999999999."],
+                            "benefits": ["Ensure this value is less than or equal to 9999999999."],
+                            "tax_credits": ["Ensure this value is less than or equal to 9999999999."],
+                            "pension": ["Ensure this value is less than or equal to 9999999999."],
+                            "maintenance_received": ["Ensure this value is less than or equal to 9999999999."],
+                            "other_income": ["Ensure this value is less than or equal to 9999999999."],
                         }
                     }
                 },
@@ -610,7 +611,7 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
             for field_name in ["income_tax", "national_insurance", "maintenance", "childcare", "mortgage", "rent"]:
                 a = {
                     "error": {
-                        who: {"deductions": {field_name: [u"Ensure this value is less than or equal to 9999999999."]}}
+                        who: {"deductions": {field_name: ["Ensure this value is less than or equal to 9999999999."]}}
                     },
                     "data": {
                         who: {
@@ -781,10 +782,10 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
         self.assertTrue(properties[0].id in property_ids)
         self.assertFalse(set([p.id for p in properties[1:]]).intersection(set(property_ids)))
 
-        self.assertItemsEqual([p["value"] for p in response.data["property_set"]], [111, 999])
-        self.assertItemsEqual([p["mortgage_left"] for p in response.data["property_set"]], [222, 888])
-        self.assertItemsEqual([p["share"] for p in response.data["property_set"]], [33, 77])
-        self.assertItemsEqual([p["disputed"] for p in response.data["property_set"]], [True, True])
+        self.assertCountEqual([p["value"] for p in response.data["property_set"]], [111, 999])
+        self.assertCountEqual([p["mortgage_left"] for p in response.data["property_set"]], [222, 888])
+        self.assertCountEqual([p["share"] for p in response.data["property_set"]], [33, 77])
+        self.assertCountEqual([p["disputed"] for p in response.data["property_set"]], [True, True])
 
         # checking the db just in case
         self.assertEqual(self.resource.property_set.count(), 2)

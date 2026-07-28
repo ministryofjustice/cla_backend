@@ -1,9 +1,10 @@
 # coding=utf-8
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.contenttypes.models import ContentType
-from django.utils.text import capfirst, force_text
+from django.utils.encoding import force_str
+from django.utils.text import capfirst
+from core.drf.decorators import detail_route
 from rest_framework import mixins, status, views as rest_views
-from rest_framework.decorators import detail_route
 from rest_framework.response import Response as DRFResponse
 
 from cla_eventlog import event_registry
@@ -149,11 +150,11 @@ class BaseComplaintViewSet(
 
     def post_save(self, obj, created=False):
         if created:
-            description = u"Original expressions of dissatisfaction:\n%s\n\n%s" % (
-                u"\n".join(map(lambda desc: u"- %s" % desc, obj.eod.get_category_descriptions(include_severity=True))),
+            description = "Original expressions of dissatisfaction:\n%s\n\n%s" % (
+                "\n".join(map(lambda desc: "- %s" % desc, obj.eod.get_category_descriptions(include_severity=True))),
                 obj.eod.notes,
             )
-            notes = u"Complaint created.\n\n{description}".format(description=description.strip()).strip()
+            notes = "Complaint created.\n\n{description}".format(description=description.strip()).strip()
 
             event = event_registry.get_event("complaint")()
             event.process(
@@ -167,7 +168,7 @@ class BaseComplaintViewSet(
             event.process(
                 obj.eod.case,
                 created_by=self.request.user,
-                notes=u"Complaint owner set to %s" % (obj.owner.get_full_name() or obj.owner.username),
+                notes="Complaint owner set to %s" % (obj.owner.get_full_name() or obj.owner.username),
                 complaint=obj,
                 code="OWNER_SET",
             )
@@ -192,12 +193,12 @@ class BaseComplaintViewSet(
             )
 
         last_closed = closed_logs.order_by("-created").first()
-        notes = u"Complaint reopened.\nOriginally {action_name} {closed_date} by {closed_by}.".format(
+        notes = "Complaint reopened.\nOriginally {action_name} {closed_date} by {closed_by}.".format(
             action_name="voided" if last_closed.code == "COMPLAINT_VOID" else "closed",
             closed_date=last_closed.created.strftime("%d/%m/%Y %H:%M"),
             closed_by=last_closed.created_by.username,
         )
-        notes += u"\n\n" + last_closed.notes
+        notes += "\n\n" + last_closed.notes
 
         event = event_registry.get_event("complaint")()
         event.process(
@@ -223,7 +224,7 @@ class BaseComplaintConstantsView(rest_views.APIView):
     @classmethod
     def get_field_choices(cls, key):
         return [
-            {"value": choice[0], "description": capfirst(force_text(choice[1]))}
+            {"value": choice[0], "description": capfirst(force_str(choice[1]))}
             for choice in Complaint._meta.get_field(key).choices
         ]
 

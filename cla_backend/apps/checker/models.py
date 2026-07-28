@@ -1,11 +1,11 @@
 import datetime
+import uuid
 from datetime import timedelta
 from django.db import models
 from django.db.models import Count
 from django.utils import timezone
 from extended_choices import Choices
 from model_utils.models import TimeStampedModel
-from uuidfield import UUIDField
 from jsonfield import JSONField
 from cla_common.constants import (
     REASONS_FOR_CONTACTING,
@@ -49,12 +49,12 @@ class ReasonForContacting(TimeStampedModel):
     class Analytics:
         _allow_analytics = True
 
-    reference = UUIDField(auto=True, unique=True)
+    reference = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     other_reasons = models.TextField(blank=True)
     referrer = models.CharField(max_length=255, blank=True)
     user_agent = models.CharField(max_length=255, blank=True)
 
-    case = models.ForeignKey("legalaid.Case", blank=True, null=True)
+    case = models.ForeignKey("legalaid.Case", blank=True, null=True, on_delete=models.CASCADE)
 
     class Meta(object):
         verbose_name_plural = "reasons for contacting"
@@ -81,7 +81,7 @@ class ReasonForContacting(TimeStampedModel):
             for choice in REASONS_FOR_CONTACTING.CHOICES
         ]
         # unknown categories (perhaps have been removed)
-        for category, count in category_data.iteritems():
+        for category, count in category_data.items():
             if category not in REASONS_FOR_CONTACTING.CHOICES_DICT:
                 categories.append({"key": category, "description": category, "count": count})
         # calculate percentage of all responses that chose each option
@@ -190,14 +190,14 @@ class ReasonForContacting(TimeStampedModel):
     @property
     def reason_categories(self):
         if self.reasons.count():
-            return u", ".join(map(unicode, self.reasons.all()))
-        return u"(No categories specified)"
+            return ", ".join(map(str, self.reasons.all()))
+        return "(No categories specified)"
 
     def __unicode__(self):
         reason_count = self.reasons.count()
-        description = u"%d reasons" % reason_count if reason_count else u"No reasons specified"
+        description = "%d reasons" % reason_count if reason_count else "No reasons specified"
         if self.case:
-            return description + u" (Case: %s)" % self.case.reference
+            return description + " (Case: %s)" % self.case.reference
         return description
 
 
@@ -331,6 +331,6 @@ class ScopeTraversal(CloneModelMixin, TimeStampedModel):
     subcategory = JSONField(default=dict)  # {"name": Subcategory Name, "description": Subcategory description}
     financial_assessment_status = models.CharField(null=True, max_length=32, choices=FINANCIAL_ASSESSMENT_STATUSES)
     fast_track_reason = models.CharField(null=True, max_length=32, choices=FAST_TRACK_REASON)
-    reference = UUIDField(auto=True, unique=True)
+    reference = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
 
     cloning_config = {"excludes": ["created", "modified", "reference"]}

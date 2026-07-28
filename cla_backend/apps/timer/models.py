@@ -1,7 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.db import connection
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from legalaid.models import Case
 from .managers import RunningTimerManager
@@ -46,9 +46,9 @@ class CurrentTimestampDateTimeField(models.DateTimeField):
 
 
 class Timer(models.Model):
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     stopped = CurrentTimestampDateTimeField(blank=True, null=True)
-    linked_case = models.ForeignKey(Case, blank=True, null=True)
+    linked_case = models.ForeignKey(Case, blank=True, null=True, on_delete=models.CASCADE)
     cancelled = models.BooleanField(default=False)
 
     created = CurrentTimestampDateTimeField(_("created"), default=postgres_now, editable=False)
@@ -58,7 +58,7 @@ class Timer(models.Model):
     running_objects = RunningTimerManager()
 
     def __unicode__(self):
-        return u"Timer created at %s" % self.created
+        return "Timer created at %s" % self.created
 
     @classmethod
     def start(cls, user):
@@ -74,11 +74,11 @@ class Timer(models.Model):
 
     def stop(self, cancelled=False):
         if self.is_stopped():
-            raise ValueError(u"The timer has already been stopped")
+            raise ValueError("The timer has already been stopped")
 
         last_log = self.log_set.order_by("created").last()  # get last log
         if not last_log and not cancelled:
-            raise ValueError(u"You can't stop a timer without a log")
+            raise ValueError("You can't stop a timer without a log")
 
         # stop and update this model
         self.stopped = postgres_now()

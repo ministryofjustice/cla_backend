@@ -39,7 +39,7 @@ class TestValidateRow(TestCase):
             [",", "0900", "6"],
         ]
         for row in malformed_csv_dates:
-            self.assertRaisesRegexp(
+            self.assertRaisesRegex(
                 ValidationError, "Write the date in this format: dd/mm/yyyy", self.csv_importer.validate_row, row
             )
 
@@ -54,7 +54,7 @@ class TestValidateRow(TestCase):
             ["1/2/2015", ",", "5"],
         ]
         for row in malformed_csv_times:
-            self.assertRaisesRegexp(
+            self.assertRaisesRegex(
                 ValidationError, "Check the time is correct, for example, 1500", self.csv_importer.validate_row, row
             )
 
@@ -65,7 +65,7 @@ class TestValidateRow(TestCase):
             ["12/5/1999", "1330", "a"],
         ]
         for row in malformed_csv_capacity:
-            self.assertRaisesRegexp(
+            self.assertRaisesRegex(
                 ValidationError,
                 "Write capacity as a number, for example: 1, 2, 10",
                 self.csv_importer.validate_row,
@@ -73,7 +73,7 @@ class TestValidateRow(TestCase):
             )
 
         negative_csv_capacity = ["01/01/2000", "0900", "-5"]
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValidationError, "The capacity must be 0 or more", self.csv_importer.validate_row, negative_csv_capacity
         )
 

@@ -1,5 +1,5 @@
 import os
-from .testing import *
+from .testing import *  # noqa: F401,F403
 from .testing import LOGGING
 
 ADMINS = (("CLA", "cla-alerts@digital.justice.gov.uk"),)

@@ -1,9 +1,9 @@
 from django.contrib import admin
+from django.contrib.admin.exceptions import AlreadyRegistered
 import nested_admin
 
+from cla_provider.models import Provider, ProviderAllocation, Staff, OutOfHoursRota, WorkingDays
 from core.admin.modeladmin import OneToOneUserAdmin
-
-from ..models import Provider, ProviderAllocation, Staff, OutOfHoursRota, WorkingDays
 
 from .forms import StaffAdminForm
 from .formsets import ProviderAllocationInlineFormset, WorkingDaysInlineFormset
@@ -47,9 +47,18 @@ class ProviderAdmin(nested_admin.NestedModelAdmin):
     list_display = ["name", "law_categories", "active"]
 
     def law_categories(self, obj):
-        return u", ".join(obj.providerallocation_set.values_list("category__code", flat=True))
+        return ", ".join(obj.providerallocation_set.values_list("category__code", flat=True))
 
 
-admin.site.register(Provider, ProviderAdmin)
-admin.site.register(OutOfHoursRota)
-admin.site.register(Staff, StaffAdmin)
+for model, admin_class in (
+    (Provider, ProviderAdmin),
+    (OutOfHoursRota, None),
+    (Staff, StaffAdmin),
+):
+    try:
+        if admin_class is None:
+            admin.site.register(model)
+        else:
+            admin.site.register(model, admin_class)
+    except AlreadyRegistered:
+        pass

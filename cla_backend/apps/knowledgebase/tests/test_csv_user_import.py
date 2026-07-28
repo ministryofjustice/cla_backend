@@ -194,7 +194,7 @@ class KnowledgebaseCSVImporterTester(TestCase):
         for column, field_name in ARTICLE_COLUMN_FIELD_MAPPING:
             expected_value = row[column]
             model_value = getattr(article, field_name)
-            if type(model_value) == datetime.datetime:
+            if isinstance(model_value, datetime.datetime):
                 model_value = str(model_value)
             error_msg = "Article.%s expected value %s` got %s instead" % (field_name, expected_value, model_value)
             self.assertEqual(expected_value, model_value, error_msg)

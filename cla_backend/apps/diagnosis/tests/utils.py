@@ -31,6 +31,7 @@ class MockedGraph(mock.MagicMock):
                 "help": None,
             },
         }
+        self.nodes = self.node
         self.children = {"start": ["2a", "2b"], "2a": ["3aa", "3ab"], "2b": ["3ba"], "3ab": ["INSCOPE"]}
         self.graph = {"version": "v1"}
 

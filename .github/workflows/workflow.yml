@@ -13,23 +13,38 @@ jobs:
   pip-compile:
     name: "Pip Compile"
     runs-on: "ubuntu-latest"
-    container: python:2.7
+    container: python:3.14
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
       - name: Install dependencies
-        run: pip install pre-commit==1.14.2
+        run: pip install pip-tools==7.5.3
 
       - name: Run pip-compile check
         run: |
+          set -euo pipefail
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
-          export PIP_NO_BUILD_ISOLATION=0
-          ls requirements/source/* | xargs pre-commit run pip-compile --files
+          pip-compile --quiet --no-header --no-annotate --strip-extras --generate-hashes --output-file=requirements/generated/requirements-git.txt requirements/source/requirements-git.in
+          pip-compile --quiet --no-header --no-annotate --strip-extras --output-file=requirements/generated/requirements-production.txt requirements/source/requirements-production.in
+          pip-compile --quiet --no-header --no-annotate --strip-extras --output-file=requirements/generated/requirements-testing.txt requirements/source/requirements-testing.in
+          pip-compile --quiet --no-header --no-annotate --strip-extras --output-file=requirements/generated/requirements-docs.txt requirements/source/requirements-docs.in
+          pip-compile --quiet --no-header --no-annotate --strip-extras --generate-hashes --output-file=requirements/generated/requirements-lint.txt requirements/source/requirements-lint.in
+          pip-compile --quiet --no-header --no-annotate --strip-extras --output-file=requirements/generated/requirements-dev.txt requirements/source/requirements-dev.in
+
+          if ! git diff --quiet -- requirements/generated/requirements-*.txt; then
+            echo "pip-compile produced changes in generated requirements files."
+            echo "Changed files:"
+            git diff --name-only -- requirements/generated/requirements-*.txt
+            echo ""
+            echo "Diff summary:"
+            git diff --shortstat -- requirements/generated/requirements-*.txt
+            exit 1
+          fi
 
   format-and-lint:
     needs: [pip-compile]
     name: "Format and lint"
     runs-on: "ubuntu-latest"
-    container: python:2.7
+    container: python:3.14
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
       - uses: ./.github/actions/format-and-lint
@@ -38,7 +53,7 @@ jobs:
     needs: [pip-compile]
     name: "Unit tests"
     runs-on: "ubuntu-latest"
-    container: python:2.7
+    container: python:3.14
     services:
       database:
         image: postgres:14.7-bullseye

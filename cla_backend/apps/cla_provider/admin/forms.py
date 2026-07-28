@@ -3,9 +3,8 @@ from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.contrib.admin import widgets
 from django.forms import PasswordInput
 
+from cla_provider.models import Staff
 from core.admin.forms import OneToOneUserAdminForm
-
-from ..models import Staff
 
 
 class StaffAdminForm(OneToOneUserAdminForm):

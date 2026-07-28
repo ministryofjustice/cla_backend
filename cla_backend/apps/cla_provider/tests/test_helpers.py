@@ -117,7 +117,7 @@ class ProviderAllocationHelperTestCase(TestCase):
 
         helper = ProviderAllocationHelper()
         cat1_providers = helper.get_qualifying_providers(category1)
-        self.assertItemsEqual(cat1_providers, [cat1_provider1, cat1_provider2])
+        self.assertCountEqual(cat1_providers, [cat1_provider1, cat1_provider2])
 
         # Set cat1_provider2.active == False => only one prov returned
         cat1_provider2.active = False
@@ -125,7 +125,7 @@ class ProviderAllocationHelperTestCase(TestCase):
 
         helper = ProviderAllocationHelper()
         cat1_providers = helper.get_qualifying_providers(category1)
-        self.assertItemsEqual(cat1_providers, [cat1_provider1])
+        self.assertCountEqual(cat1_providers, [cat1_provider1])
 
     def test_get_suggested_provider_random(self):
 
@@ -723,7 +723,7 @@ class TestGetCasesAssignedToCode(TestCase):
     def test_manref_today(self):
         now = datetime.datetime.now()
         case = make_recipe(self.case_model, outcome_code="MANREF", modified=now)
-        assert case in self.helper.get_cases_assigned_to_code("MANREF", now.date)
+        assert case in self.helper.get_cases_assigned_to_code("MANREF", now)
 
     def test_multiple_edff(self):
         cases = []

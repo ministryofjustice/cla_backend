@@ -14,8 +14,8 @@ from django.shortcuts import get_object_or_404
 from guidance.views import BaseGuidanceNoteViewSet
 from legalaid.permissions import IsManagerOrMePermission
 
+from core.drf.decorators import detail_route
 from rest_framework import mixins
-from rest_framework.decorators import detail_route
 from rest_framework.response import Response as DRFResponse
 from rest_framework.filters import SearchFilter
 
@@ -65,7 +65,15 @@ from .serializers import (
     CSVUploadDetailSerializer,
     ProviderSerializer,
 )
-from .forms import ProviderExtractEntraForm, RejectCaseForm, AcceptCaseForm, OpenCaseForm, CloseCaseForm, SplitCaseForm, ReopenCaseForm
+from .forms import (
+    ProviderExtractEntraForm,
+    RejectCaseForm,
+    AcceptCaseForm,
+    OpenCaseForm,
+    CloseCaseForm,
+    SplitCaseForm,
+    ReopenCaseForm,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -114,7 +122,12 @@ class CaseViewSet(CLAProviderPermissionViewSetMixin, FullCaseViewSet):
     serializer_detail_class = CaseSerializer
 
     queryset = Case.objects.exclude(provider=None).select_related(
-        "diagnosis", "eligibility_check", "personal_details", "scope_traversal", "adaptation_details", "thirdparty_details"
+        "diagnosis",
+        "eligibility_check",
+        "personal_details",
+        "scope_traversal",
+        "adaptation_details",
+        "thirdparty_details",
     )
     queryset_detail = Case.objects.exclude(provider=None).select_related(
         "eligibility_check",
@@ -233,9 +246,12 @@ class CaseViewSet(CLAProviderPermissionViewSetMixin, FullCaseViewSet):
 
 class ProviderExtract(APIView):
     permission_classes = (IsProviderPermission,)
-    authentication_classes = (LegacyCHSAuthentication, EntraAccessTokenAuthentication,)
+    authentication_classes = (
+        LegacyCHSAuthentication,
+        EntraAccessTokenAuthentication,
+    )
 
-    http_method_names = [u"post", "options"]
+    http_method_names = ["post", "options"]
 
     def options(self, request):
         """
@@ -321,7 +337,7 @@ class EventViewSet(CLAProviderPermissionViewSetMixin, BaseEventViewSet):
             return False
 
         app_roles = auth_data.get("APP_ROLES") or []
-        if isinstance(app_roles, basestring):
+        if isinstance(app_roles, str):
             app_roles = [app_roles]
 
         return PROVIDER_MCC_ROLE in app_roles
@@ -417,6 +433,7 @@ class ProviderViewSet(CLAProviderPermissionViewSetMixin, viewsets.ReadOnlyModelV
     ViewSet for Provider that returns provider firm name and contracted categories.
     Only returns the provider associated with the logged-in staff member.
     """
+
     serializer_class = ProviderSerializer
     queryset = Provider.objects.all()
 

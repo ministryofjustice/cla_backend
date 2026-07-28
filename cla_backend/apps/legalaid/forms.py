@@ -30,7 +30,7 @@ class BaseCallMeBackForm(BaseCaseLogForm):
     def get_notes(self):
         dt = timezone.localtime(self.get_requires_action_at())
         end = dt + datetime.timedelta(minutes=30)
-        return u"Callback scheduled for {start} - {end}. {notes}".format(
+        return "Callback scheduled for {start} - {end}. {notes}".format(
             start=dt.strftime("%d/%m/%Y %H:%M"), end=end.strftime("%H:%M"), notes=self.cleaned_data["notes"] or ""
         )
 

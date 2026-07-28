@@ -31,8 +31,8 @@ checker_graph = SimpleLazyObject(lambda: get_graph(file_name=settings.CHECKER_DI
 
 
 class PropertySerializer(PropertySerializerBase):
-    disputed = serializers.NullBooleanField(default=None)
-    main = serializers.NullBooleanField(default=None)
+    disputed = serializers.BooleanField(default=None, allow_null=True)
+    main = serializers.BooleanField(default=None, allow_null=True)
 
     @property
     def errors(self):
@@ -63,7 +63,7 @@ class PartnerIncomeSerializer(IncomeSerializerBase):
     Like IncomeSerializer but without 'child_benefits'
     """
 
-    self_employed = serializers.NullBooleanField(default=None)
+    self_employed = serializers.BooleanField(default=None, allow_null=True)
 
     class Meta(IncomeSerializerBase.Meta):
         fields = (

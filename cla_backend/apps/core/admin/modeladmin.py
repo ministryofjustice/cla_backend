@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.admin.options import IS_POPUP_VAR
 from django.utils.decorators import method_decorator
-from django.utils.translation import ugettext, ugettext_lazy as _
+from django.utils.translation import gettext, gettext_lazy as _
 from django.views.decorators.debug import sensitive_post_parameters
 from django.views.decorators.http import require_POST
 from django.core.exceptions import PermissionDenied
@@ -11,6 +11,7 @@ from django.http import HttpResponseRedirect
 from django.utils.html import escape
 from django.contrib import messages
 from django.contrib.auth.forms import AdminPasswordChangeForm
+from django.urls import re_path
 
 from cla_auth.models import AccessAttempt
 
@@ -21,6 +22,9 @@ require_POST_m = method_decorator(require_POST)
 class OneToOneUserAdmin(admin.ModelAdmin):
     change_password_form = AdminPasswordChangeForm
     change_user_password_template = None
+
+    def has_view_permission(self, request, obj=None):
+        return self.has_change_permission(request, obj=obj)
 
     def username_display(self, one2one_model):
         return one2one_model.user.username
@@ -55,49 +59,58 @@ class OneToOneUserAdmin(admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         user = obj.user
+
+        # Keep user fields synchronized even if admin form/model save flow changes.
+        if hasattr(form, "get_user_fields"):
+            for field in form.get_user_fields():
+                if field in form.cleaned_data:
+                    setattr(user, field, form.cleaned_data[field])
+
         user.save()
 
         obj.user = user
         obj.save()
 
     def get_urls(self):
-        from django.conf.urls import patterns
-
-        urls = patterns(
-            "",
-            (r"^(\d+)/password/$", self.admin_site.admin_view(self.user_change_password)),
-            (r"^(\d+)/reset-lockout/$", self.admin_site.admin_view(self.reset_lockout)),
-        )
+        urls = [
+            re_path(r"^(\d+)/change/password/$", self.admin_site.admin_view(self.user_change_password)),
+            re_path(r"^(\d+)/password/$", self.admin_site.admin_view(self.user_change_password)),
+            re_path(r"^(\d+)/change/reset-lockout/$", self.admin_site.admin_view(self.reset_lockout)),
+            re_path(r"^(\d+)/reset-lockout/$", self.admin_site.admin_view(self.reset_lockout)),
+        ]
         return urls + super(OneToOneUserAdmin, self).get_urls()
 
     @require_POST_m
     def reset_lockout(self, request, id):
-        if not self.has_change_permission(request):
+        one2one_model = get_object_or_404(self.get_queryset(request), pk=id)
+        if not self.has_change_permission(request, one2one_model):
             raise PermissionDenied
 
-        one2one_model = get_object_or_404(self.get_queryset(request), pk=id)
         user = one2one_model.user
 
         AccessAttempt.objects.delete_for_username(user.username)
 
         self.log_change(request, user, "Reset locked account (user %s)" % user.username)
-        msg = ugettext("Account unlocked successfully.")
+        msg = gettext("Account unlocked successfully.")
         messages.success(request, msg)
         return HttpResponseRedirect("..")
 
     @sensitive_post_parameters_m
     def user_change_password(self, request, id, form_url=""):
+        one2one_model = get_object_or_404(self.get_queryset(request), pk=id)
         if not self.has_change_permission(request):
             raise PermissionDenied
-        one2one_model = get_object_or_404(self.get_queryset(request), pk=id)
+
         user = one2one_model.user
         if request.method == "POST":
+            if not self.has_change_permission(request, one2one_model):
+                raise PermissionDenied
             form = self.change_password_form(user, request.POST)
             if form.is_valid():
                 form.save()
                 change_message = self.construct_change_message(request, form, None)
                 self.log_change(request, user, change_message)
-                msg = ugettext("Password changed successfully.")
+                msg = gettext("Password changed successfully.")
                 messages.success(request, msg)
                 return HttpResponseRedirect("..")
         else:
@@ -111,7 +124,7 @@ class OneToOneUserAdmin(admin.ModelAdmin):
             "adminForm": adminForm,
             "form_url": form_url,
             "form": form,
-            "is_popup": IS_POPUP_VAR in request.REQUEST,
+            "is_popup": IS_POPUP_VAR in request.GET,
             "add": True,
             "change": False,
             "has_delete_permission": False,
@@ -126,5 +139,4 @@ class OneToOneUserAdmin(admin.ModelAdmin):
             request,
             self.change_user_password_template or "admin/auth/user/change_password.html",
             context,
-            current_app=self.admin_site.name,
         )

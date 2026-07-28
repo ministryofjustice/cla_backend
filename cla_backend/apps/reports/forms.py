@@ -714,7 +714,7 @@ class MIDigitalCaseTypesExtractWithCategory(SQLFileDateRangeReport):
             "email",
             "bsl_required",
             "other_comms_needs",
-            "other_comms_notes"
+            "other_comms_notes",
         ]
 
 

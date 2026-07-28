@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.contrib.admin import widgets
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 
 class OneToOneUserAdminForm(forms.ModelForm):
@@ -35,13 +35,14 @@ class OneToOneUserAdminForm(forms.ModelForm):
         "UPDATE": {
             "password": ReadOnlyPasswordHashField(
                 label=_("Password"),
+                required=False,
                 help_text=_(
                     "Raw passwords are not stored, so there is no way to see "
                     "this user's password, but you can change the password "
                     'using <a href="password/">this form</a>.'
                 ),
             ),
-            "password2": ReadOnlyPasswordHashField(label=_("Password confirmation")),
+            "password2": ReadOnlyPasswordHashField(label=_("Password confirmation"), required=False),
         },
     }
 

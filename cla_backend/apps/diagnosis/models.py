@@ -1,6 +1,7 @@
+import uuid
+
 from django.db import models
 from jsonfield import JSONField
-from uuidfield import UUIDField
 from model_utils.models import TimeStampedModel
 
 from cla_common.constants import DIAGNOSIS_SCOPE, MATTER_TYPE_LEVELS
@@ -19,19 +20,20 @@ class DiagnosisTraversal(TimeStampedModel):
     class Analytics:
         _allow_analytics = True
 
-    reference = UUIDField(auto=True, unique=True)
+    reference = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     nodes = JSONField(null=True, blank=True)
     current_node_id = models.CharField(blank=True, max_length=50)
     graph_version = models.CharField(blank=True, max_length=50)
 
     state = models.CharField(db_index=True, blank=True, null=True, max_length=50, default=DIAGNOSIS_SCOPE.UNKNOWN)
-    category = models.ForeignKey("legalaid.Category", null=True, blank=True)
+    category = models.ForeignKey("legalaid.Category", null=True, blank=True, on_delete=models.CASCADE)
     matter_type1 = models.ForeignKey(
         "legalaid.MatterType",
         blank=True,
         null=True,
         limit_choices_to={"level": MATTER_TYPE_LEVELS.ONE},
         related_name="+",
+        on_delete=models.CASCADE,
     )
     matter_type2 = models.ForeignKey(
         "legalaid.MatterType",
@@ -39,6 +41,7 @@ class DiagnosisTraversal(TimeStampedModel):
         null=True,
         limit_choices_to={"level": MATTER_TYPE_LEVELS.TWO},
         related_name="+",
+        on_delete=models.CASCADE,
     )
 
     objects = DiagnosisTraversalManager()

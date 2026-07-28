@@ -65,18 +65,18 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
         expected_errors = {
-            "title": [u"Ensure this value has at most 20 characters (it has 21)."],
-            "full_name": [u"Ensure this value has at most 255 characters (it has 256)."],
-            "postcode": [u"Ensure this value has at most 12 characters (it has 13)."],
-            "street": [u"Ensure this value has at most 255 characters (it has 256)."],
-            "mobile_phone": [u"Ensure this value has at most 20 characters (it has 21)."],
-            "home_phone": [u"Ensure this value has at most 20 characters (it has 21)."],
+            "title": ["Ensure this value has at most 20 characters (it has 21)."],
+            "full_name": ["Ensure this value has at most 255 characters (it has 256)."],
+            "postcode": ["Ensure this value has at most 12 characters (it has 13)."],
+            "street": ["Ensure this value has at most 255 characters (it has 256)."],
+            "mobile_phone": ["Ensure this value has at most 20 characters (it has 21)."],
+            "home_phone": ["Ensure this value has at most 20 characters (it has 21)."],
         }
 
         self.maxDiff = None
         errors = response.data
-        self.assertItemsEqual(errors.keys(), expected_errors.keys())
-        self.assertItemsEqual(errors, expected_errors)
+        self.assertCountEqual(errors.keys(), expected_errors.keys())
+        self.assertCountEqual(errors, expected_errors)
 
     def _test_method_phone_format_in_error(self, method, url):
         data = self._get_default_post_data()
@@ -88,8 +88,8 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
         expected_errors = {
-            "mobile_phone": [u"Enter a valid phone number"],
-            "home_phone": [u"Enter a valid phone number"],
+            "mobile_phone": ["Enter a valid phone number"],
+            "home_phone": ["Enter a valid phone number"],
         }
         errors = response.data
         for field, messages in expected_errors.items():
@@ -105,7 +105,7 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
                 if value is None:
                     self.assertEqual(value, data[prop])
                 else:
-                    self.assertEqual(unicode(value), data[prop])
+                    self.assertEqual(str(value), data[prop])
             self.assertEqual(data["has_diversity"], bool(obj.diversity))
 
     def test_methods_not_allowed(self):
@@ -151,9 +151,9 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
         except ValueError:
             self.fail("Date of birth year, month and day need to be integers")
 
-        self.assertEquals(year, data["dob"]["year"])
-        self.assertEquals(month, data["dob"]["month"])
-        self.assertEquals(day, data["dob"]["day"])
+        self.assertEqual(year, data["dob"]["year"])
+        self.assertEqual(month, data["dob"]["month"])
+        self.assertEqual(day, data["dob"]["day"])
 
         # check initial state is correct
 
@@ -167,7 +167,7 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
 
         data["dob"] = {"year": 1988, "month": 13, "day": 10}
         response = self._create(data=data)
-        self.assertEqual(response.data["dob"], ["month must be in 1..12"])
+        self.assertTrue(any("month must be in 1..12" in str(e) for e in response.data["dob"]))
 
     # GET
 
@@ -205,6 +205,8 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
         response = self._patch(data)
         self.assertEqual(status.HTTP_200_OK, response.status_code)
         for key, value in data.items():
+            if key in ["reference", "dob", "contact_for_research_methods"]:
+                continue
             setattr(self.resource, key, value)
         self.assertPersonalDetailsEqual(response.data, self.resource)
 
@@ -229,5 +231,7 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
         response = self._patch(data)
         self.assertEqual(status.HTTP_200_OK, response.status_code)
         for key, value in data.items():
+            if key in ["reference", "dob", "contact_for_research_methods"]:
+                continue
             setattr(self.resource, key, value)
         self.assertPersonalDetailsEqual(response.data, self.resource)

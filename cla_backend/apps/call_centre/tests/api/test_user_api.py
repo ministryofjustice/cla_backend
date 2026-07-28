@@ -1,7 +1,8 @@
 from rest_framework import status
 from rest_framework.test import APITestCase
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.utils.crypto import get_random_string
+from django.contrib.auth.models import User
 
 from core.tests.mommy_utils import make_recipe
 from legalaid.tests.views.test_base import CLAOperatorAuthBaseApiTestMixin
@@ -10,22 +11,22 @@ from legalaid.tests.views.mixins.user_api import UserAPIMixin
 
 class UserTestCase(CLAOperatorAuthBaseApiTestMixin, UserAPIMixin, APITestCase):
     def assertUserEqual(self, data):
-        self.assertDictContainsSubset(
-            {
-                "username": u"john",
-                "first_name": u"",
-                "last_name": u"",
-                "email": u"lennon@thebeatles.com",
-                "is_manager": False,
-                "is_cla_superuser": False,
-            },
-            data,
-        )
+        expected_subset = {
+            "username": "john",
+            "first_name": "",
+            "last_name": "",
+            "email": "lennon@thebeatles.com",
+            "is_manager": False,
+            "is_cla_superuser": False,
+        }
+        for key, value in expected_subset.items():
+            self.assertEqual(data.get(key), value)
         self.assertTrue("last_login" in data)
         self.assertTrue("created" in data)
 
     def get_other_users(self):
-        return make_recipe("call_centre.operator", _quantity=3)
+        users = [User.objects.create(username=get_random_string(12)) for _ in range(3)]
+        return [make_recipe("call_centre.operator", user=user) for user in users]
 
     def test_rest_password_other_user_as_manager(self):
         other_user = self.other_users[0].user
@@ -49,7 +50,10 @@ class UserTestCase(CLAOperatorAuthBaseApiTestMixin, UserAPIMixin, APITestCase):
                 operators["bar_org"].append(operator.user.username)
             operator.save()
 
-        no_org_operators = make_recipe("call_centre.operator", _quantity=3)
+        no_org_operators = [
+            make_recipe("call_centre.operator", user=User.objects.create(username=get_random_string(12)))
+            for _ in range(3)
+        ]
         for operator in no_org_operators:
             operators["no_org"].append(operator.user.username)
 
@@ -103,7 +107,7 @@ class UserTestCase(CLAOperatorAuthBaseApiTestMixin, UserAPIMixin, APITestCase):
 
         data = {
             "password": "foobarbaz1234567890",
-            "username": get_random_string(),
+            "username": get_random_string(12),
             "first_name": "elton",
             "last_name": "john",
             "email": "example@example.com",
@@ -147,7 +151,7 @@ class UserTestCase(CLAOperatorAuthBaseApiTestMixin, UserAPIMixin, APITestCase):
         bar_org = make_recipe("call_centre.organisation", name="Organisation Bar")
         operators = self._assign_operators_to_organisation(foo_org, bar_org)
         # flatten dict of lists
-        expected_usernames = list({x for v in operators.itervalues() for x in v})
+        expected_usernames = list({x for v in operators.values() for x in v})
 
         self.operator_manager.is_cla_superuser = True
         self.operator_manager.save()
@@ -158,7 +162,7 @@ class UserTestCase(CLAOperatorAuthBaseApiTestMixin, UserAPIMixin, APITestCase):
         response = self.client.get(url, HTTP_AUTHORIZATION=self.get_http_authorization(token=self.manager_token))
 
         actual_usernames = [operator["username"] for operator in response.data]
-        self.assertItemsEqual(expected_usernames, actual_usernames)
+        self.assertCountEqual(expected_usernames, actual_usernames)
 
     def test_cannot_reset_operator_password_of_another_organisation(self):
         foo_org = make_recipe("call_centre.organisation", name="Organisation Foo")

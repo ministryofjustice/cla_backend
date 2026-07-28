@@ -54,4 +54,4 @@ class Command(BaseCommand):
 
     @staticmethod
     def get_old_key_passphrase():
-        return raw_input("Please enter the passphrase for the PREVIOUS private key:")
+        return input("Please enter the passphrase for the PREVIOUS private key:")

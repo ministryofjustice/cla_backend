@@ -2,7 +2,7 @@ import pytz
 from django.core.management import call_command, CommandError
 from django.test import TestCase
 from django.utils import timezone
-from django.utils.six import StringIO
+from io import StringIO
 from freezegun import freeze_time
 
 from core.tests.mommy_utils import make_recipe

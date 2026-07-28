@@ -124,7 +124,7 @@ class KnowledgebaseCsvParse(object):
             "model": "knowledgebase.article",
             "fields": {"created": self.datetime_now, "modified": self.datetime_now},
         }
-        for csv_field, django_field_name in self.field_mapping.iteritems():
+        for csv_field, django_field_name in self.field_mapping.items():
 
             if csv_field in self.csv_article_category_fields:
                 # these are the ArticleCategory related fields
@@ -135,7 +135,7 @@ class KnowledgebaseCsvParse(object):
 
             elif django_field_name == "website":
 
-                website = r[csv_field].decode("ascii", "ignore")
+                website = self._normalize_value(r[csv_field])
                 if not website.startswith("http"):
                     website = "http://" + website
 
@@ -143,9 +143,16 @@ class KnowledgebaseCsvParse(object):
 
             else:
                 # normal field
-                d["fields"][django_field_name] = r[csv_field].decode("ascii", "ignore")
+                d["fields"][django_field_name] = self._normalize_value(r[csv_field])
 
         return record_categories, d
+
+    def _normalize_value(self, value):
+        if isinstance(value, bytes):
+            value = value.decode("ascii", "ignore")
+        else:
+            value = value.encode("ascii", "ignore").decode("ascii")
+        return value
 
     def fixture_as_json(self):
         """
@@ -166,7 +173,7 @@ class KnowledgebaseCsvParse(object):
             fixture.append(article)
 
             # map ArticleCategory records via ArticleCategoryMatrix
-            for csv_field, spreadsheet_value in record_categories.iteritems():
+            for csv_field, spreadsheet_value in record_categories.items():
                 if len(spreadsheet_value) > 0:
                     if spreadsheet_value != "x" and not spreadsheet_value.startswith("Preferred"):
                         self.log("Odd value %s in %s" % (spreadsheet_value, csv_field))
@@ -185,7 +192,7 @@ class KnowledgebaseCsvParse(object):
                     }
                     fixture.append(d)
 
-        for stat, s_count in stats.iteritems():
+        for stat, s_count in stats.items():
             self.log("%s records %s" % (s_count, stat))
 
         return json.dumps(fixture, indent=4)

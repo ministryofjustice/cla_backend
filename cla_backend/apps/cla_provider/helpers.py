@@ -216,13 +216,13 @@ class ProviderAllocationHelper(object):
             return self._get_random_provider(category)
         if len(groups) > 1:
             # there is more than one score take the top one
-            first_group = dict(groups.items()[0][1])
+            first_group = dict(next(iter(groups.values())))
             if len(first_group) > 1:
                 # if there is more than one provider with the same score,
                 # randomly pick one from those with the same score
                 return self._get_random_provider(category, limit_choices_to=first_group.keys())
             # if there is only one provider then
-            return Provider.objects.get(pk=first_group.keys()[0])
+            return Provider.objects.get(pk=next(iter(first_group)))
 
         # else everyone doesn't have any allocation so just pick randomly
         return self._get_random_provider(category)
@@ -349,10 +349,10 @@ class ProviderAllocationHelper(object):
         provider_allocations = ProviderAllocation.objects.filter(
             category=education_category, provider__active=True
         ).all()
-        provider_allocations = filter(ProviderAllocation.is_working_today, provider_allocations)
+        provider_allocations = list(filter(ProviderAllocation.is_working_today, provider_allocations))
 
         if get_current_day_as_string() == "thursday":
-            provider_allocations = filter(self.is_provider_under_capacity, provider_allocations)
+            provider_allocations = list(filter(self.is_provider_under_capacity, provider_allocations))
         return provider_allocations
 
     def get_suggested_provider(self, category):

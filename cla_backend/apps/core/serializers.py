@@ -1,5 +1,5 @@
 from django.db import models
-from django.core.exceptions import ValidationError as DjangoValidationError
+from django.core.exceptions import FieldDoesNotExist, ValidationError as DjangoValidationError
 from rest_framework.exceptions import ValidationError
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
@@ -11,7 +11,6 @@ from core import fields
 from legalaid.fields import MoneyField, MoneyFieldDRF
 from cla_common.money_interval.fields import MoneyIntervalField
 from core.drf.fields import MoneyIntervalDRFField
-from django.db.models.fields import FieldDoesNotExist
 
 
 class MoneyIntervalModelSerializerMixin(object):
@@ -30,7 +29,7 @@ class MoneyFieldModelSerializerMixin(object):
 
 class UUIDSerializer(serializers.SlugRelatedField):
     def to_representation(self, obj):
-        return unicode(getattr(obj, self.slug_field))
+        return str(getattr(obj, self.slug_field))
 
 
 class NullBooleanModelSerializerMixin(object):
@@ -59,9 +58,18 @@ class ClaModelSerializer(
             if field_name not in attrs or not attrs[field_name]:
                 continue
             try:
-                model._meta.get_field(field_name, many_to_many=False)
+                model_field = model._meta.get_field(field_name)
             except FieldDoesNotExist:
                 # Don't include many-to-many fields
+                continue
+
+            # Don't include many-to-many fields
+            if getattr(model_field, "many_to_many", False):
+                continue
+
+            # Skip reverse relations and other non-concrete relation fields
+            # that cannot be passed to model(...) constructor.
+            if not getattr(model_field, "concrete", True) or getattr(model_field, "auto_created", False):
                 continue
 
             if isinstance(field, serializers.ModelSerializer):
@@ -126,10 +134,16 @@ class ClaModelSerializer(
             if not data:
                 continue
             m2m_serializer = self.fields.fields.get(field_name, None)
-            parent_model_field = getattr(parent_model, field_name, None)
-            if not parent_model_field:
+            try:
+                parent_model_field = parent_model._meta.get_field(field_name)
+            except FieldDoesNotExist:
                 continue
-            model_field_name = parent_model_field.related.field.name
+
+            # Reverse one-to-many relation (e.g. property_set) exposes the child FK as `.field`.
+            model_field = getattr(parent_model_field, "field", None)
+            if not model_field:
+                continue
+            model_field_name = model_field.name
 
             for item in data:
                 item[model_field_name] = parent

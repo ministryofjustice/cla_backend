@@ -1,8 +1,8 @@
 import textwrap
-from django.core.management.base import NoArgsCommand
+from django.core.management.base import BaseCommand
 
 
-class Command(NoArgsCommand):
+class Command(BaseCommand):
     """
     Installs pgcrypto if it is missing.
     Currently called from migrations.startup init script inside the docker container.
@@ -10,7 +10,7 @@ class Command(NoArgsCommand):
 
     help = textwrap.dedent(__doc__).strip()
 
-    def handle_noargs(self, **options):
+    def handle(self, *args, **options):
         from django.db import connections, DEFAULT_DB_ALIAS
 
         connection = connections[DEFAULT_DB_ALIAS]

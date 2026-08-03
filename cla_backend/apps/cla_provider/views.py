@@ -66,8 +66,21 @@ from .serializers import (
     ProviderSerializer,
 )
 from .forms import ProviderExtractEntraForm, RejectCaseForm, AcceptCaseForm, OpenCaseForm, CloseCaseForm, SplitCaseForm, ReopenCaseForm
+from legalaid.utils import diversity
 
 logger = logging.getLogger(__name__)
+
+
+def _request_has_mcc_role(request):
+    auth_data = getattr(request, "auth", None)
+    if not isinstance(auth_data, dict):
+        return False
+
+    app_roles = auth_data.get("APP_ROLES") or []
+    if isinstance(app_roles, basestring):
+        app_roles = [app_roles]
+
+    return PROVIDER_MCC_ROLE in app_roles
 
 
 class CLAProviderPermissionViewSetMixin(object):
@@ -305,6 +318,42 @@ class UserViewSet(CLAProviderPermissionViewSetMixin, BaseUserViewSet):
 class PersonalDetailsViewSet(CLAProviderPermissionViewSetMixin, FullPersonalDetailsViewSet):
     serializer_class = PersonalDetailsSerializer
 
+    # This method is for MCC use only, diversity data is encrypted and should not be read by others
+    @detail_route(methods=["get"])
+    def get_diversity(self, request, reference=None, **kwargs):
+        if not _request_has_mcc_role(request):
+            return DRFResponse({"error": "You do not have permission to access diversity data"}, status=403)
+
+        obj = self.get_object()
+        empty = {"gender": None, "ethnicity": None, "disability": None}
+        if not obj.diversity:
+            return DRFResponse(empty)
+        try:
+            data = diversity.load_diversity_data_for_mcc(obj.pk)
+        except diversity.DiversityDecryptionConfigurationError:
+            logger.error("MCC diversity decryption is not configured")
+            return DRFResponse(
+                {"error": "Diversity data is temporarily unavailable"},
+                status=503,
+            )
+        except Exception:
+            logger.exception(
+                "Failed to decrypt diversity data for MCC access",
+                extra={
+                    "personal_details_id": obj.pk,
+                    "user_id": request.user.pk,
+                },
+            )
+            return DRFResponse(
+                {"error": "Failed to load diversity data"},
+                status=500,
+            )
+        return DRFResponse({
+            "gender": data.get("gender"),
+            "ethnicity": data.get("ethnicity"),
+            "disability": data.get("disability"),
+        })
+
 
 class ThirdPartyDetailsViewSet(CLAProviderPermissionViewSetMixin, BaseThirdPartyDetailsViewSet):
     serializer_class = ThirdPartyDetailsSerializer
@@ -316,15 +365,7 @@ class EventViewSet(CLAProviderPermissionViewSetMixin, BaseEventViewSet):
     }
 
     def _is_mcc_user(self, request):
-        auth_data = getattr(request, "auth", None)
-        if not isinstance(auth_data, dict):
-            return False
-
-        app_roles = auth_data.get("APP_ROLES") or []
-        if isinstance(app_roles, basestring):
-            app_roles = [app_roles]
-
-        return PROVIDER_MCC_ROLE in app_roles
+        return _request_has_mcc_role(request)
 
     def filter_codes(self, request, event_key, codes):
         if self._is_mcc_user(request):

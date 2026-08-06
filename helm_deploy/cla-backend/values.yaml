@@ -145,10 +145,6 @@ envVars:
     secret:
       name: previous-diversity-keys
       key: private
-  DIVERSITY_PRIVATE_KEY_PASSPHRASE:
-    secret:
-      name: diversity-mcc-passphrase
-      key: passphrase
   ADMIN_ENABLED:
     value: "True"
   BACKEND_ENABLED:

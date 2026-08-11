@@ -10,6 +10,10 @@ _dev_public_key = os.path.join(os.path.dirname(__file__), "keys", "diversity_dev
 _dev_private_key = os.path.join(os.path.dirname(__file__), "keys", "diversity_dev_private.key")
 
 
+class DiversityDecryptionConfigurationError(Exception):
+    pass
+
+
 def _read_key_file(file_path):
     with open(file_path) as f:
         return f.read()
@@ -31,6 +35,10 @@ def get_private_key():
     if key:
         return _format_env_key(key)
     return _read_key_file(os.environ.get("DIVERSITY_PRIVATE_KEY_PATH", _dev_private_key))
+
+
+def get_passphrase():
+    return os.environ.get("DIVERSITY_PRIVATE_KEY_PASSPHRASE")
 
 
 def save_diversity_data(personal_details_pk, data):
@@ -64,3 +72,17 @@ def reencrypt(personal_details_pk, previous_private_key, previous_passphrase):
     WHERE id = %s
     """.format(table_name=PersonalDetails._meta.db_table)
     cursor.execute(sql, [previous_private_key, previous_passphrase, get_public_key(), personal_details_pk])
+
+
+def load_diversity_data_for_mcc(personal_details_pk):
+    passphrase = get_passphrase()
+
+    if not passphrase:
+        raise DiversityDecryptionConfigurationError(
+            "Automated diversity decryption is not configured"
+        )
+
+    return load_diversity_data(
+        personal_details_pk=personal_details_pk,
+        passphrase=passphrase,
+    )

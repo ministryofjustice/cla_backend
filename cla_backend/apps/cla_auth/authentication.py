@@ -14,7 +14,7 @@ from django.contrib.auth.models import User
 from call_centre.models import Operator
 from cla_provider.models import Provider, Staff
 
-from cla_auth.constants import OPERATOR_ROLE, OPERATOR_MANAGER_ROLE, PROVIDER_ROLE, PROVIDER_MCC_ROLE, OPERATOR_OFFICE_CODES
+from cla_auth.constants import OPERATOR_ROLE, OPERATOR_MANAGER_ROLE, PROVIDER_ROLE, PROVIDER_MCC_ROLE, ENTRA_ALLOWED_OFFICE_CODES
 
 logger = logging.getLogger(__name__)
 
@@ -214,7 +214,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
             office_codes = office_codes.encode("utf-8")
 
         office_codes = office_codes.split(",")
-        return any(office_code in OPERATOR_OFFICE_CODES for office_code in office_codes)
+        return any(office_code in ENTRA_ALLOWED_OFFICE_CODES for office_code in office_codes)
 
     def authenticate(self, request, retried=False):
         token = request.META.get("HTTP_AUTHORIZATION")

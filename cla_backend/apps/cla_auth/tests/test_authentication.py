@@ -17,7 +17,7 @@ from core.tests.mommy_utils import make_recipe
 from django.core.urlresolvers import reverse
 from cla_common.constants import REQUIRES_ACTION_BY
 
-from cla_auth.constants import OPERATOR_ROLE, OPERATOR_MANAGER_ROLE, PROVIDER_ROLE, PROVIDER_MCC_ROLE, OPERATOR_OFFICE_CODES
+from cla_auth.constants import OPERATOR_ROLE, OPERATOR_MANAGER_ROLE, PROVIDER_ROLE, PROVIDER_MCC_ROLE, ENTRA_ALLOWED_OFFICE_CODES
 from call_centre.models import Operator
 
 
@@ -90,7 +90,7 @@ class EntraTokenGeneratorMixin(object):
 
         office_codes = ""
         if app_roles == OPERATOR_ROLE or app_roles == OPERATOR_MANAGER_ROLE:
-            office_codes = unicode(",".join(OPERATOR_OFFICE_CODES))
+            office_codes = unicode(",".join(ENTRA_ALLOWED_OFFICE_CODES))
 
         payload = {
             "iss": self.issuer,
@@ -304,7 +304,7 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
 
         payload = {
             "APP_ROLES": OPERATOR_ROLE,
-            "LAA_ACCOUNTS": unicode(",".join(OPERATOR_OFFICE_CODES))
+            "LAA_ACCOUNTS": unicode(",".join(ENTRA_ALLOWED_OFFICE_CODES))
         }
         self.assertTrue(self.auth.perform_operator_office_codes_check(payload))
 
@@ -313,7 +313,7 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
 
         payload = {
             "APP_ROLES": OPERATOR_MANAGER_ROLE,
-            "LAA_ACCOUNTS": unicode(",".join(OPERATOR_OFFICE_CODES))
+            "LAA_ACCOUNTS": unicode(",".join(ENTRA_ALLOWED_OFFICE_CODES))
         }
         self.assertTrue(self.auth.perform_operator_office_codes_check(payload))
 

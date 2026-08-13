@@ -14,7 +14,7 @@ from django.contrib.auth.models import User
 from call_centre.models import Operator
 from cla_provider.models import Provider, Staff
 
-from cla_auth.constants import OPERATOR_ROLE, OPERATOR_MANAGER_ROLE, PROVIDER_ROLE, PROVIDER_MCC_ROLE, OPERATOR_OFFICE_CODES
+from cla_auth.constants import OPERATOR_ROLE, OPERATOR_MANAGER_ROLE, PROVIDER_ROLE, PROVIDER_MCC_ROLE, ENTRA_ALLOWED_OFFICE_CODES
 
 logger = logging.getLogger(__name__)
 
@@ -158,7 +158,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
             logger.error("Token payload is missing USER_EMAIL", exc_info=True)
             raise exceptions.AuthenticationFailed("Token payload is missing USER_EMAIL")
 
-        if not self.perform_operator_office_codes_check(payload):
+        if not self.perform_allowed_office_codes_check(payload):
             logger.error("User does not have list of expected offices", exc_info=True)
             raise exceptions.AuthenticationFailed("User does not have list of expected offices")
 
@@ -196,8 +196,8 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         return app_role, None
 
     @staticmethod
-    def perform_operator_office_codes_check(payload):
-        """Check if operator offices are in matched list of office codes"""
+    def perform_allowed_office_codes_check(payload):
+        """Check whether role-gated users include at least one allowed office code."""
 
         raw_roles = payload.get("APP_ROLES")
         app_role = raw_roles if isinstance(raw_roles, list) else [raw_roles]
@@ -214,7 +214,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
             office_codes = office_codes.encode("utf-8")
 
         office_codes = office_codes.split(",")
-        return any(office_code in OPERATOR_OFFICE_CODES for office_code in office_codes)
+        return any(office_code in ENTRA_ALLOWED_OFFICE_CODES for office_code in office_codes)
 
     def authenticate(self, request, retried=False):
         token = request.META.get("HTTP_AUTHORIZATION")

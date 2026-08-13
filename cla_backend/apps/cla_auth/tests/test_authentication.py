@@ -306,7 +306,7 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
             "APP_ROLES": OPERATOR_ROLE,
             "LAA_ACCOUNTS": unicode(",".join(ENTRA_ALLOWED_OFFICE_CODES))
         }
-        self.assertTrue(self.auth.perform_operator_office_codes_check(payload))
+        self.assertTrue(self.auth.perform_allowed_office_codes_check(payload))
 
     def test_perform_operator_office_codes_check__operator_manager(self):
         """Operator managers must have a given office code"""
@@ -315,7 +315,7 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
             "APP_ROLES": OPERATOR_MANAGER_ROLE,
             "LAA_ACCOUNTS": unicode(",".join(ENTRA_ALLOWED_OFFICE_CODES))
         }
-        self.assertTrue(self.auth.perform_operator_office_codes_check(payload))
+        self.assertTrue(self.auth.perform_allowed_office_codes_check(payload))
 
     def test_perform_operator_office_codes_check__provider(self):
         """Only operator and operator manager are checked if they have a given LAA_ACCOUNTS"""
@@ -324,14 +324,14 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
             "APP_ROLES": PROVIDER_ROLE,
             "LAA_ACCOUNTS": "",
         }
-        self.assertTrue(self.auth.perform_operator_office_codes_check(payload))
+        self.assertTrue(self.auth.perform_allowed_office_codes_check(payload))
 
     def test_perform_operator_office_codes_check__invalid_laa_accounts(self):
         payload = {
             "APP_ROLES": OPERATOR_ROLE,
             "LAA_ACCOUNTS": "HELLO",
         }
-        self.assertFalse(self.auth.perform_operator_office_codes_check(payload))
+        self.assertFalse(self.auth.perform_allowed_office_codes_check(payload))
 
     @patch("cla_auth.authentication.EntraAccessTokenAuthentication._public_keys")
     def test_email_case_insensitivity(self, mock_public_keys):

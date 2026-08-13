@@ -197,7 +197,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
 
     @staticmethod
     def perform_allowed_office_codes_check(payload):
-        """Check if operator offices are in matched list of office codes"""
+        """Check whether role-gated users include at least one allowed office code."""
 
         raw_roles = payload.get("APP_ROLES")
         app_role = raw_roles if isinstance(raw_roles, list) else [raw_roles]

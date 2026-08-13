@@ -299,8 +299,8 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
         with self.assertRaises(exceptions.AuthenticationFailed):
             self.auth.authenticate(request)
 
-    def test_perform_operator_office_codes_check__operator(self):
-        """Operators must have a given office code"""
+    def test_perform_allowed_office_codes_check__operator(self):
+        """Operators must have at least one allowed office code"""
 
         payload = {
             "APP_ROLES": OPERATOR_ROLE,
@@ -308,8 +308,8 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
         }
         self.assertTrue(self.auth.perform_allowed_office_codes_check(payload))
 
-    def test_perform_operator_office_codes_check__operator_manager(self):
-        """Operator managers must have a given office code"""
+    def test_perform_allowed_office_codes_check__operator_manager(self):
+        """Operator managers must have at least one allowed office code"""
 
         payload = {
             "APP_ROLES": OPERATOR_MANAGER_ROLE,
@@ -317,8 +317,8 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
         }
         self.assertTrue(self.auth.perform_allowed_office_codes_check(payload))
 
-    def test_perform_operator_office_codes_check__provider(self):
-        """Only operator and operator manager are checked if they have a given LAA_ACCOUNTS"""
+    def test_perform_allowed_office_codes_check__provider(self):
+        """Only operator and operator manager roles are office-code gated"""
 
         payload = {
             "APP_ROLES": PROVIDER_ROLE,
@@ -326,7 +326,7 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
         }
         self.assertTrue(self.auth.perform_allowed_office_codes_check(payload))
 
-    def test_perform_operator_office_codes_check__invalid_laa_accounts(self):
+    def test_perform_allowed_office_codes_check__invalid_laa_accounts(self):
         payload = {
             "APP_ROLES": OPERATOR_ROLE,
             "LAA_ACCOUNTS": "HELLO",

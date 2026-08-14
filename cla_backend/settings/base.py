@@ -115,6 +115,7 @@ if os.environ.get("STATIC_FILES_BACKEND") == "s3":
 AWS_S3_REGION_NAME = os.environ.get("AWS_S3_REGION_NAME", "eu-west-1")
 AWS_DEFAULT_ACL = None
 AWS_QUERYSTRING_AUTH = False
+AWS_S3_CUSTOM_DOMAIN = os.environ.get("CLOUDFRONT_URL", None)
 
 # This bucket needs to a private bucket as it will contain sensitive reports
 AWS_REPORTS_STORAGE_BUCKET_NAME = os.environ.get("AWS_REPORTS_STORAGE_BUCKET_NAME")

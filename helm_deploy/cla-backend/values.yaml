@@ -173,6 +173,10 @@ envVars:
     secret:
       name: s3
       key: static_files_bucket_name
+  CLOUDFRONT_URL:
+    secret:
+      name: cloudfront-static-assets
+      key: cloudfront_url
   AWS_DELETED_OBJECTS_BUCKET_NAME:
     secret:
       name: s3

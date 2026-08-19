@@ -3,14 +3,6 @@ from storages.backends.s3boto3 import S3Boto3Storage
 from botocore.exceptions import ClientError
 
 
-class ClientError(ClientError):
-    pass
-
-
-class StaticS3Storage(S3Boto3Storage):
-    default_acl = "public-read"
-
-
 class ReportsS3:
     @classmethod
     def clean_name(cls, name):

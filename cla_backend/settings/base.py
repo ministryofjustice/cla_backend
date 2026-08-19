@@ -110,11 +110,12 @@ EXPORT_DIR = "/exports/"
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 if os.environ.get("STATIC_FILES_BACKEND") == "s3":
-    STATICFILES_STORAGE = "cla_backend.libs.aws.s3.StaticS3Storage"
+    STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 
 AWS_S3_REGION_NAME = os.environ.get("AWS_S3_REGION_NAME", "eu-west-1")
 AWS_DEFAULT_ACL = None
 AWS_QUERYSTRING_AUTH = False
+AWS_S3_CUSTOM_DOMAIN = os.environ.get("CLOUDFRONT_URL", None)
 
 # This bucket needs to a private bucket as it will contain sensitive reports
 AWS_REPORTS_STORAGE_BUCKET_NAME = os.environ.get("AWS_REPORTS_STORAGE_BUCKET_NAME")
@@ -366,12 +367,11 @@ if "localhost" in ALLOWED_HOSTS:
 CSP_FONT_SRC = ["'self'", "data:"]
 CSP_STYLE_SRC = ["'self'", "'unsafe-inline'"]
 
-if AWS_STORAGE_BUCKET_NAME:
-    AWS_STORAGE_BUCKET_HOSTNAME = AWS_STORAGE_BUCKET_NAME + ".s3.amazonaws.com"
-    CSP_DEFAULT_SRC.append(AWS_STORAGE_BUCKET_HOSTNAME)
-    CSP_FONT_SRC.append(AWS_STORAGE_BUCKET_HOSTNAME)
-    CSP_STYLE_SRC.append(AWS_STORAGE_BUCKET_HOSTNAME)
-    CSP_SCRIPT_SRC.append(AWS_STORAGE_BUCKET_HOSTNAME)
+if AWS_S3_CUSTOM_DOMAIN:
+    CSP_DEFAULT_SRC.append(AWS_S3_CUSTOM_DOMAIN)
+    CSP_FONT_SRC.append(AWS_S3_CUSTOM_DOMAIN)
+    CSP_STYLE_SRC.append(AWS_S3_CUSTOM_DOMAIN)
+    CSP_SCRIPT_SRC.append(AWS_S3_CUSTOM_DOMAIN)
 
 # Django rest-framework-overrides
 REST_FRAMEWORK = {

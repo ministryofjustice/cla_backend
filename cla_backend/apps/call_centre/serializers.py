@@ -330,6 +330,12 @@ class CaseSerializer(CaseSerializerFull):
 
 
 class CaseListSerializer(CaseSerializer):
+    mobile_phone = serializers.CharField(
+        source="personal_details.mobile_phone",
+        read_only=True,
+        allow_null=True,
+    )
+
     class Meta(CaseSerializer.Meta):
         fields = (
             "reference",
@@ -353,6 +359,7 @@ class CaseListSerializer(CaseSerializer):
             "flagged_with_eod",
             "is_urgent",
             "organisation_name",
+            "mobile_phone",
         )
 
 

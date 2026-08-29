@@ -23,6 +23,8 @@ ingress:
 envVars:
   DEBUG:
     value: "False"
+  CORS_ORIGIN_WHITELIST:
+    value: "https://training.cases.civillegaladvice.service.gov.uk"
   LOAD_SEED_DATA:
     value: "True"
   LOAD_END_TO_END_FIXTURES:

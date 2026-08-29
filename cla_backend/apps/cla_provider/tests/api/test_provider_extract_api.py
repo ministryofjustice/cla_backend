@@ -1,6 +1,7 @@
 from mock import patch
 from lxml import objectify
 from django.core.urlresolvers import reverse
+from django.test import override_settings
 from rest_framework import status
 from rest_framework.test import APITestCase
 
@@ -117,3 +118,54 @@ class ProviderExtractEntraTests(EntraTokenGeneratorMixin, APITestCase):
             self.detail_url, data={"CHSCRN": self.case.reference}, **self.auth_header()
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    @override_settings(CORS_ORIGIN_WHITELIST=["https://allowed.example"])
+    def test_options_with_allowed_origin_returns_cors_headers(self):
+        response = self.client.options(self.detail_url, HTTP_ORIGIN="https://allowed.example")
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.get("Access-Control-Allow-Origin"), "https://allowed.example")
+
+    @override_settings(CORS_ORIGIN_WHITELIST=["https://allowed.example"])
+    def test_options_with_disallowed_origin_omits_cors_headers(self):
+        response = self.client.options(self.detail_url, HTTP_ORIGIN="https://blocked.example")
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertNotIn("Access-Control-Allow-Origin", response)
+
+    @override_settings(CORS_ORIGIN_WHITELIST=["https://allowed.example"])
+    def test_post_with_allowed_origin_returns_cors_headers(self):
+        response = self.client.post(
+            self.detail_url,
+            data={"CHSCRN": self.case.reference},
+            HTTP_ORIGIN="https://allowed.example",
+            **self.auth_header()
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.get("Access-Control-Allow-Origin"), "https://allowed.example")
+
+    @override_settings(CORS_ORIGIN_WHITELIST=["https://allowed.example"])
+    def test_post_with_disallowed_origin_omits_cors_headers(self):
+        response = self.client.post(
+            self.detail_url,
+            data={"CHSCRN": self.case.reference},
+            HTTP_ORIGIN="https://blocked.example",
+            **self.auth_header()
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertNotIn("Access-Control-Allow-Origin", response)
+
+    @override_settings(CORS_ORIGIN_WHITELIST=["https://allowed.example"], CORS_ALLOW_CREDENTIALS=True)
+    def test_post_with_allowed_origin_includes_credentials_header_when_enabled(self):
+        response = self.client.post(
+            self.detail_url,
+            data={"CHSCRN": self.case.reference},
+            HTTP_ORIGIN="https://allowed.example",
+            **self.auth_header()
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.get("Access-Control-Allow-Origin"), "https://allowed.example")
+        self.assertEqual(response.get("Access-Control-Allow-Credentials"), "true")

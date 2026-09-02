@@ -4,6 +4,7 @@ from rest_framework.request import Request
 from rest_framework.test import APIRequestFactory
 
 from cla_common.constants import REQUIRES_ACTION_BY
+from cla_auth.constants import PROVIDER_MCC_ROLE
 
 from core.tests.mommy_utils import make_recipe, make_user
 
@@ -60,6 +61,97 @@ class OpenCaseFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
 class RejectCaseFormTestCase(EventSpecificLogFormTestCaseMixin, TestCase):
     FORM = RejectCaseForm
 
+    def _make_request(self, app_roles):
+        request = Request(APIRequestFactory().post("/"))
+        request.auth = {"APP_ROLES": app_roles}
+        return request
+
+    def _make_case(self):
+        category = make_recipe("legalaid.category")
+        matter_type1 = make_recipe(
+            "legalaid.matter_type1",
+            category=category,
+        )
+        matter_type2 = make_recipe(
+            "legalaid.matter_type2",
+            category=category,
+        )
+        provider = make_recipe(
+            "cla_provider.provider",
+            law_category=[category],
+        )
+        eligibility_check = make_recipe(
+            "legalaid.eligibility_check",
+            category=category,
+        )
+
+        case = make_recipe(
+            "legalaid.case",
+            provider=provider,
+            eligibility_check=eligibility_check,
+            matter_type1=matter_type1,
+            matter_type2=matter_type2,
+            requires_action_by=REQUIRES_ACTION_BY.PROVIDER,
+        )
+
+        return case, provider
+    
+    def _test_mcc_copies_case_to_operator(self, code):
+        case, provider = self._make_case()
+        request = self._make_request([PROVIDER_MCC_ROLE])
+        initial_case_count = Case.objects.count()
+
+        form = RejectCaseForm(
+            case=case,
+            request=request,
+            data={
+                "event_code": code,
+                "notes": "MCC rejection",
+            },
+        )
+
+        self.assertTrue(form.is_valid(), form.errors)
+
+        user = make_user()
+        new_case = form.save(user)
+
+        self.assertEqual(Case.objects.count(), initial_case_count + 1)
+
+        case.refresh_from_db()
+        new_case.refresh_from_db()
+
+        # Original remains with the specialist
+        self.assertEqual(case.provider, provider)
+        self.assertEqual(case.requires_action_by, REQUIRES_ACTION_BY.PROVIDER,)
+
+        # Copy goes to the operator
+        self.assertEqual(new_case.from_case, case)
+        self.assertIsNone(new_case.provider)
+        self.assertIsNone(new_case.provider_assigned_at)
+        self.assertEqual(new_case.requires_action_by, REQUIRES_ACTION_BY.OPERATOR,)
+
+        # Same category and matter types are retained
+        self.assertEqual(
+            new_case.eligibility_check.category,
+            case.eligibility_check.category,
+        )
+        self.assertEqual(new_case.matter_type1, case.matter_type1)
+        self.assertEqual(new_case.matter_type2, case.matter_type2)
+
+        # MIS/COI is recorded against the operator copy
+        self.assertTrue(
+            new_case.log_set.filter(
+                code=code,
+                notes="MCC rejection",
+            ).exists()
+        )
+
+    def test_mcc_MIS_copies_case_to_operator(self):
+        self._test_mcc_copies_case_to_operator("MIS")
+
+    def test_mcc_COI_copies_case_to_operator(self):
+        self._test_mcc_copies_case_to_operator("COI")
+
     def _test_provider_closed(self, code, expected_None):
         case = make_recipe("legalaid.case")
         data = self.get_default_data()
@@ -80,10 +172,46 @@ class RejectCaseFormTestCase(EventSpecificLogFormTestCaseMixin, TestCase):
         self._test_provider_closed("MIS-MEANS", expected_None=True)
 
     def test_save_MIS_doesnt_set_provider_closed(self):
-        self._test_provider_closed("MIS", expected_None=False)
+        request = self._make_request(["Civil Legal Advice - Helpline Provider"])
+
+        case = make_recipe("legalaid.case")
+
+        form = RejectCaseForm(
+            case=case,
+            request=request,
+            data={
+            "event_code": "MIS",
+            "notes": "test",
+            },
+        )
+
+        self.assertTrue(form.is_valid())
+        form.save(make_user())
+
+        case.refresh_from_db()
+
+        self.assertEqual(case.provider_closed, None)
 
     def test_save_COI_doesnt_set_provider_closed(self):
-        self._test_provider_closed("COI", expected_None=False)
+        request = self._make_request(["Civil Legal Advice - Helpline Provider"])
+        
+        case = make_recipe("legalaid.case")
+        
+        form = RejectCaseForm(
+            case=case,
+            request=request,
+            data={
+            "event_code": "COI",
+            "notes": "test",
+            },
+        )
+        
+        self.assertTrue(form.is_valid())
+        form.save(make_user())
+        
+        case.refresh_from_db()
+        
+        self.assertEqual(case.provider_closed, None)
 
     def test_save_MERI_doesnt_set_provider_closed(self):
         self._test_provider_closed("MERI", expected_None=True)

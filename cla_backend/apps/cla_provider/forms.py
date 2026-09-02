@@ -52,6 +52,8 @@ class RejectCaseForm(EventSpecificLogForm):
         code = self.get_event_code()
         event = event_registry.get_event(self.get_event_key())()
         code_data = event.codes[code]
+        
+        if self._is_mcc_user() and code in {"MIS", "COI"}: return self._copy_case_to_operator(user, code)
 
         val = super(RejectCaseForm, self).save(user)
 
@@ -67,6 +69,38 @@ class RejectCaseForm(EventSpecificLogForm):
             self.case.save(update_fields=["provider", "provider_assigned_at"])
 
         return val
+    
+    @transaction.atomic
+    def _copy_case_to_operator(self, user, code):
+        original_case = self.case
+
+        new_case = original_case.split(
+            user=user,
+            category=original_case.eligibility_check.category,
+            matter_type1=original_case.matter_type1,
+            matter_type2=original_case.matter_type2,
+            assignment_internal=False,
+    )
+
+        # Log that the copied case was created
+        case_event = event_registry.get_event("case")()
+        case_event.process(
+            new_case,
+            status="created",
+            created_by=user,
+            notes="Case created by Specialist following {}".format(code),
+    )
+
+        # Record MIS/COI against the new operator case.
+        reject_event = event_registry.get_event(self.get_event_key())()
+        reject_event.process(
+            new_case,
+            code=code,
+            created_by=user,
+            notes=self.get_notes(),
+            context=self.get_context(),
+    )
+        return new_case
 
 
 class AcceptCaseForm(BaseCaseLogForm):

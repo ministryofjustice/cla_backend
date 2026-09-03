@@ -207,9 +207,12 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
             return True
 
         office_codes = payload.get("LAA_ACCOUNTS")
+        if CONTRACT_MANAGER_ROLE in app_role:
+            # Contract managers should not carry office codes in Entra payload.
+            return not office_codes
+
         if not office_codes:
-            # Contract managers may not have office codes in Entra.
-            return CONTRACT_MANAGER_ROLE in app_role
+            return False
 
         if isinstance(office_codes, unicode):
             office_codes = office_codes.encode("utf-8")

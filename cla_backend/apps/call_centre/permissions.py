@@ -1,10 +1,10 @@
 from core.permissions import ClientIDPermission
 from rest_framework.permissions import BasePermission
-from cla_auth.constants import OPERATOR_ROLE, OPERATOR_MANAGER_ROLE
+from cla_auth.constants import OPERATOR_ROLE, OPERATOR_MANAGER_ROLE, CONTRACT_MANAGER_ROLE
 
 
 class CallCentreClientIDPermission(ClientIDPermission):
-    entra_roles = [OPERATOR_ROLE, OPERATOR_MANAGER_ROLE]
+    entra_roles = [OPERATOR_ROLE, OPERATOR_MANAGER_ROLE, CONTRACT_MANAGER_ROLE]
     client_name = "operator"
 
 

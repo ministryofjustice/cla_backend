@@ -14,7 +14,7 @@ from django.contrib.auth.models import User
 from call_centre.models import Operator
 from cla_provider.models import Provider, Staff
 
-from cla_auth.constants import OPERATOR_ROLE, OPERATOR_MANAGER_ROLE, PROVIDER_ROLE, PROVIDER_MCC_ROLE, ENTRA_ALLOWED_OFFICE_CODES
+from cla_auth.constants import OPERATOR_ROLE, OPERATOR_MANAGER_ROLE, CONTRACT_MANAGER_ROLE, PROVIDER_ROLE, PROVIDER_MCC_ROLE, ENTRA_ALLOWED_OFFICE_CODES
 
 logger = logging.getLogger(__name__)
 
@@ -185,11 +185,11 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
 
         is_manager = True if OPERATOR_MANAGER_ROLE in app_role else False
 
-        if OPERATOR_ROLE in app_role or OPERATOR_MANAGER_ROLE in app_role:
+        if OPERATOR_ROLE in app_role or OPERATOR_MANAGER_ROLE in app_role or CONTRACT_MANAGER_ROLE in app_role:
             user = self._create_operator(payload, is_manager=is_manager)
             return app_role, user
 
-        if PROVIDER_ROLE in app_role or PROVIDER_MCC_ROLE in app_role:
+        if PROVIDER_ROLE in app_role or PROVIDER_MCC_ROLE in app_role or CONTRACT_MANAGER_ROLE in app_role:
             user = self._create_provider(payload)
             return app_role, user
 
@@ -202,13 +202,14 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         raw_roles = payload.get("APP_ROLES")
         app_role = raw_roles if isinstance(raw_roles, list) else [raw_roles]
 
-        if not (OPERATOR_ROLE in app_role or OPERATOR_MANAGER_ROLE in app_role):
+        if not (OPERATOR_ROLE in app_role or OPERATOR_MANAGER_ROLE in app_role or CONTRACT_MANAGER_ROLE in app_role):
             # We don't care about specialist providers or other types of users
             return True
 
         office_codes = payload.get("LAA_ACCOUNTS")
         if not office_codes:
-            return False
+            # Contract managers may not have office codes in Entra.
+            return CONTRACT_MANAGER_ROLE in app_role
 
         if isinstance(office_codes, unicode):
             office_codes = office_codes.encode("utf-8")

@@ -300,19 +300,21 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
             self.auth.authenticate(request)
 
     @patch("cla_auth.authentication.EntraAccessTokenAuthentication._public_keys")
-    def test_contract_manager_missing_user_not_created(self, mock_public_keys):
-        """Contract managers must already exist and are not auto-created."""
+    def test_contract_manager_user_auto_created_without_offices(self, mock_public_keys):
+        """Contract managers are auto-created when office codes are not present."""
         mock_public_keys.return_value = self.mock_jwks["keys"]
 
-        token = self._create_token(app_roles=CONTRACT_MANAGER_ROLE, email="contract.manager@test.com")
+        email = "contract.manager@test.com"
+        token = self._create_token(app_roles=CONTRACT_MANAGER_ROLE, email=email)
 
         request = self.factory.get("/")
         request.META["HTTP_AUTHORIZATION"] = "Bearer %s" % token
 
-        with self.assertRaises(exceptions.AuthenticationFailed) as context:
-            self.auth.authenticate(request)
+        user, _ = self.auth.authenticate(request)
 
-        self.assertIn("Contract manager user does not exist", str(context.exception))
+        self.assertIsNotNone(user)
+        self.assertEqual(user.email, email)
+        self.assertTrue(hasattr(user, "operator"))
 
     def test_perform_allowed_office_codes_check__operator(self):
         """Operators must have at least one allowed office code"""

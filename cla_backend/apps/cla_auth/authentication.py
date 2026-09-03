@@ -189,7 +189,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
             user = self._create_operator(payload, is_manager=is_manager)
             return app_role, user
 
-        if PROVIDER_ROLE in app_role or PROVIDER_MCC_ROLE in app_role or CONTRACT_MANAGER_ROLE in app_role:
+        if PROVIDER_ROLE in app_role or PROVIDER_MCC_ROLE in app_role:
             user = self._create_provider(payload)
             return app_role, user
 

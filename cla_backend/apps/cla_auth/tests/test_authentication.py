@@ -17,7 +17,7 @@ from core.tests.mommy_utils import make_recipe
 from django.core.urlresolvers import reverse
 from cla_common.constants import REQUIRES_ACTION_BY
 
-from cla_auth.constants import OPERATOR_ROLE, OPERATOR_MANAGER_ROLE, PROVIDER_ROLE, PROVIDER_MCC_ROLE, ENTRA_ALLOWED_OFFICE_CODES
+from cla_auth.constants import OPERATOR_ROLE, OPERATOR_MANAGER_ROLE, CONTRACT_MANAGER_ROLE, PROVIDER_ROLE, PROVIDER_MCC_ROLE, ENTRA_ALLOWED_OFFICE_CODES
 from call_centre.models import Operator
 
 
@@ -299,6 +299,23 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
         with self.assertRaises(exceptions.AuthenticationFailed):
             self.auth.authenticate(request)
 
+    @patch("cla_auth.authentication.EntraAccessTokenAuthentication._public_keys")
+    def test_contract_manager_user_auto_created_without_offices(self, mock_public_keys):
+        """Contract managers are auto-created when office codes are not present."""
+        mock_public_keys.return_value = self.mock_jwks["keys"]
+
+        email = "contract.manager@test.com"
+        token = self._create_token(app_roles=CONTRACT_MANAGER_ROLE, email=email)
+
+        request = self.factory.get("/")
+        request.META["HTTP_AUTHORIZATION"] = "Bearer %s" % token
+
+        user, _ = self.auth.authenticate(request)
+
+        self.assertIsNotNone(user)
+        self.assertEqual(user.email, email)
+        self.assertTrue(hasattr(user, "operator"))
+
     def test_perform_allowed_office_codes_check__operator(self):
         """Operators must have at least one allowed office code"""
 
@@ -325,6 +342,24 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
             "LAA_ACCOUNTS": "",
         }
         self.assertTrue(self.auth.perform_allowed_office_codes_check(payload))
+
+    def test_perform_allowed_office_codes_check__contract_manager_without_offices(self):
+        """Contract managers are allowed even when no office code is present."""
+
+        payload = {
+            "APP_ROLES": CONTRACT_MANAGER_ROLE,
+            "LAA_ACCOUNTS": "",
+        }
+        self.assertTrue(self.auth.perform_allowed_office_codes_check(payload))
+
+    def test_perform_allowed_office_codes_check__contract_manager_with_offices(self):
+        """Contract managers should fail office gate when office codes are present."""
+
+        payload = {
+            "APP_ROLES": CONTRACT_MANAGER_ROLE,
+            "LAA_ACCOUNTS": unicode(",".join(ENTRA_ALLOWED_OFFICE_CODES)),
+        }
+        self.assertFalse(self.auth.perform_allowed_office_codes_check(payload))
 
     def test_perform_allowed_office_codes_check__invalid_laa_accounts(self):
         payload = {

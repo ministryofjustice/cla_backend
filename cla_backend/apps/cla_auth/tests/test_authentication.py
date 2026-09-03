@@ -299,6 +299,21 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
         with self.assertRaises(exceptions.AuthenticationFailed):
             self.auth.authenticate(request)
 
+    @patch("cla_auth.authentication.EntraAccessTokenAuthentication._public_keys")
+    def test_contract_manager_missing_user_not_created(self, mock_public_keys):
+        """Contract managers must already exist and are not auto-created."""
+        mock_public_keys.return_value = self.mock_jwks["keys"]
+
+        token = self._create_token(app_roles=CONTRACT_MANAGER_ROLE, email="contract.manager@test.com")
+
+        request = self.factory.get("/")
+        request.META["HTTP_AUTHORIZATION"] = "Bearer %s" % token
+
+        with self.assertRaises(exceptions.AuthenticationFailed) as context:
+            self.auth.authenticate(request)
+
+        self.assertIn("Contract manager user does not exist", str(context.exception))
+
     def test_perform_allowed_office_codes_check__operator(self):
         """Operators must have at least one allowed office code"""
 
@@ -334,6 +349,15 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
             "LAA_ACCOUNTS": "",
         }
         self.assertTrue(self.auth.perform_allowed_office_codes_check(payload))
+
+    def test_perform_allowed_office_codes_check__contract_manager_with_offices(self):
+        """Contract managers should fail office gate when office codes are present."""
+
+        payload = {
+            "APP_ROLES": CONTRACT_MANAGER_ROLE,
+            "LAA_ACCOUNTS": unicode(",".join(ENTRA_ALLOWED_OFFICE_CODES)),
+        }
+        self.assertFalse(self.auth.perform_allowed_office_codes_check(payload))
 
     def test_perform_allowed_office_codes_check__invalid_laa_accounts(self):
         payload = {

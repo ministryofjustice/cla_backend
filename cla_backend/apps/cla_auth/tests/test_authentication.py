@@ -17,7 +17,7 @@ from core.tests.mommy_utils import make_recipe
 from django.core.urlresolvers import reverse
 from cla_common.constants import REQUIRES_ACTION_BY
 
-from cla_auth.constants import OPERATOR_ROLE, OPERATOR_MANAGER_ROLE, PROVIDER_ROLE, PROVIDER_MCC_ROLE, ENTRA_ALLOWED_OFFICE_CODES
+from cla_auth.constants import OPERATOR_ROLE, OPERATOR_MANAGER_ROLE, CONTRACT_MANAGER_ROLE, PROVIDER_ROLE, PROVIDER_MCC_ROLE, ENTRA_ALLOWED_OFFICE_CODES
 from call_centre.models import Operator
 
 
@@ -322,6 +322,15 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
 
         payload = {
             "APP_ROLES": PROVIDER_ROLE,
+            "LAA_ACCOUNTS": "",
+        }
+        self.assertTrue(self.auth.perform_allowed_office_codes_check(payload))
+
+    def test_perform_allowed_office_codes_check__contract_manager_without_offices(self):
+        """Contract managers are allowed even when no office code is present."""
+
+        payload = {
+            "APP_ROLES": CONTRACT_MANAGER_ROLE,
             "LAA_ACCOUNTS": "",
         }
         self.assertTrue(self.auth.perform_allowed_office_codes_check(payload))

@@ -72,6 +72,31 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         except Exception:
             return None
 
+    def _create_contract_manager(self, payload, is_manager=False, is_staff=False, is_superuser=False):
+        user_email = payload.get("USER_EMAIL")
+        if not user_email:
+            raise exceptions.AuthenticationFailed("Cannot create Contract Manager: USER_EMAIL missing from token payload")
+
+        try:
+            user_name = self.get_unique_username(payload)
+
+            with transaction.atomic():
+                user = User(
+                    username=user_name,
+                    email=user_email,
+                    is_active=True,
+                    is_staff=is_staff,
+                )
+                user.set_unusable_password()
+                user.save()
+
+                contract_manager = Operator(user=user, is_manager=is_manager, is_cla_superuser=is_superuser)
+                contract_manager.save()
+
+            return contract_manager.user
+        except Exception:
+            return None
+
     def _create_provider(self, payload):
         user_email = payload.get("USER_EMAIL")
         firm_name = payload.get("FIRM_NAME")
@@ -185,12 +210,16 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
 
         is_manager = True if OPERATOR_MANAGER_ROLE in app_role else False
 
-        if OPERATOR_ROLE in app_role or OPERATOR_MANAGER_ROLE in app_role or CONTRACT_MANAGER_ROLE in app_role:
+        if OPERATOR_ROLE in app_role or OPERATOR_MANAGER_ROLE in app_role:
             user = self._create_operator(payload, is_manager=is_manager)
             return app_role, user
 
         if PROVIDER_ROLE in app_role or PROVIDER_MCC_ROLE in app_role:
             user = self._create_provider(payload)
+            return app_role, user
+
+        if CONTRACT_MANAGER_ROLE in app_role:
+            user = self._create_contract_manager(payload, is_superuser=True, is_manager=True, is_staff=True)
             return app_role, user
 
         return app_role, None

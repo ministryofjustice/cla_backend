@@ -315,6 +315,9 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
         self.assertIsNotNone(user)
         self.assertEqual(user.email, email)
         self.assertTrue(hasattr(user, "operator"))
+        self.assertTrue(user.is_staff)
+        self.assertTrue(user.operator.is_manager)
+        self.assertTrue(user.operator.is_cla_superuser)
 
     def test_perform_allowed_office_codes_check__operator(self):
         """Operators must have at least one allowed office code"""

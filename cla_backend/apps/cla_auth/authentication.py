@@ -177,6 +177,36 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
             issuer=self.issuer
         )
 
+    @staticmethod
+    def _normalize_roles(raw_roles):
+        return raw_roles if isinstance(raw_roles, list) else [raw_roles]
+
+    def _get_authenticated_user_by_email(self, email):
+        try:
+            return authenticate(entra_id_email=email)
+        except User.MultipleObjectsReturned:
+            duplicate_user_ids = list(
+                User.objects.filter(email__iexact=email, is_active=True).values_list("id", flat=True)
+            )
+            logger.exception("Multiple users found for user ids %s", duplicate_user_ids)
+            raise exceptions.AuthenticationFailed("Multiple users found with the email address")
+        except Exception:
+            return None
+
+    def _create_user_for_roles(self, payload, app_role):
+        is_manager = OPERATOR_MANAGER_ROLE in app_role
+
+        if OPERATOR_ROLE in app_role or OPERATOR_MANAGER_ROLE in app_role:
+            return self._create_operator(payload, is_manager=is_manager)
+
+        if PROVIDER_ROLE in app_role or PROVIDER_MCC_ROLE in app_role:
+            return self._create_provider(payload)
+
+        if CONTRACT_MANAGER_ROLE in app_role:
+            return self._create_contract_manager(payload, is_superuser=True, is_manager=True, is_staff=True)
+
+        return None
+
     def get_or_create_user(self, payload):
         email = payload.get("USER_EMAIL")
         if not email:
@@ -192,37 +222,14 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
             logger.error("ENTRA: Token payload is missing APP_ROLES", exc_info=True)
             raise exceptions.AuthenticationFailed("Token payload is missing APP_ROLES")
 
-        app_role = raw_roles if isinstance(raw_roles, list) else [raw_roles]
+        app_role = self._normalize_roles(raw_roles)
 
-        try:
-            user = authenticate(entra_id_email=email)
-        except User.MultipleObjectsReturned:
-            duplicate_user_ids = list(
-                User.objects.filter(email__iexact=email, is_active=True).values_list("id", flat=True)
-            )
-            logger.exception("Multiple users found for user ids %s", duplicate_user_ids)
-            raise exceptions.AuthenticationFailed("Multiple users found with the email address")
-        except Exception:
-            user = None
+        user = self._get_authenticated_user_by_email(email)
 
         if user:
             return app_role, user
 
-        is_manager = True if OPERATOR_MANAGER_ROLE in app_role else False
-
-        if OPERATOR_ROLE in app_role or OPERATOR_MANAGER_ROLE in app_role:
-            user = self._create_operator(payload, is_manager=is_manager)
-            return app_role, user
-
-        if PROVIDER_ROLE in app_role or PROVIDER_MCC_ROLE in app_role:
-            user = self._create_provider(payload)
-            return app_role, user
-
-        if CONTRACT_MANAGER_ROLE in app_role:
-            user = self._create_contract_manager(payload, is_superuser=True, is_manager=True, is_staff=True)
-            return app_role, user
-
-        return app_role, None
+        return app_role, self._create_user_for_roles(payload, app_role)
 
     @staticmethod
     def perform_allowed_office_codes_check(payload):

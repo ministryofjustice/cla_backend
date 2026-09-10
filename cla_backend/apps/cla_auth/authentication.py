@@ -14,7 +14,7 @@ from django.contrib.auth.models import User
 from call_centre.models import Operator
 from cla_provider.models import Provider, Staff
 
-from cla_auth.constants import OPERATOR_ROLE, OPERATOR_MANAGER_ROLE, PROVIDER_ROLE, PROVIDER_MCC_ROLE, ENTRA_ALLOWED_OFFICE_CODES
+from cla_auth.constants import OPERATOR_ROLE, OPERATOR_MANAGER_ROLE, CONTRACT_MANAGER_ROLE, PROVIDER_ROLE, PROVIDER_MCC_ROLE, ENTRA_ALLOWED_OFFICE_CODES
 
 logger = logging.getLogger(__name__)
 
@@ -69,6 +69,31 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
                 operator.save()
 
             return operator.user
+        except Exception:
+            return None
+
+    def _create_contract_manager(self, payload, is_manager=False, is_staff=False, is_superuser=False):
+        user_email = payload.get("USER_EMAIL")
+        if not user_email:
+            raise exceptions.AuthenticationFailed("Cannot create Contract Manager: USER_EMAIL missing from token payload")
+
+        try:
+            user_name = self.get_unique_username(payload)
+
+            with transaction.atomic():
+                user = User(
+                    username=user_name,
+                    email=user_email,
+                    is_active=True,
+                    is_staff=is_staff,
+                )
+                user.set_unusable_password()
+                user.save()
+
+                contract_manager = Operator(user=user, is_manager=is_manager, is_cla_superuser=is_superuser)
+                contract_manager.save()
+
+            return contract_manager.user
         except Exception:
             return None
 
@@ -152,6 +177,20 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
             issuer=self.issuer
         )
 
+    def _create_user_for_roles(self, payload, app_role):
+        is_manager = OPERATOR_MANAGER_ROLE in app_role
+
+        if OPERATOR_ROLE in app_role or OPERATOR_MANAGER_ROLE in app_role:
+            return self._create_operator(payload, is_manager=is_manager)
+
+        if PROVIDER_ROLE in app_role or PROVIDER_MCC_ROLE in app_role:
+            return self._create_provider(payload)
+
+        if CONTRACT_MANAGER_ROLE in app_role:
+            return self._create_contract_manager(payload, is_superuser=True, is_manager=True, is_staff=True)
+
+        return None
+
     def get_or_create_user(self, payload):
         email = payload.get("USER_EMAIL")
         if not email:
@@ -183,17 +222,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         if user:
             return app_role, user
 
-        is_manager = True if OPERATOR_MANAGER_ROLE in app_role else False
-
-        if OPERATOR_ROLE in app_role or OPERATOR_MANAGER_ROLE in app_role:
-            user = self._create_operator(payload, is_manager=is_manager)
-            return app_role, user
-
-        if PROVIDER_ROLE in app_role or PROVIDER_MCC_ROLE in app_role:
-            user = self._create_provider(payload)
-            return app_role, user
-
-        return app_role, None
+        return app_role, self._create_user_for_roles(payload, app_role)
 
     @staticmethod
     def perform_allowed_office_codes_check(payload):
@@ -207,6 +236,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
             return True
 
         office_codes = payload.get("LAA_ACCOUNTS")
+
         if not office_codes:
             return False
 

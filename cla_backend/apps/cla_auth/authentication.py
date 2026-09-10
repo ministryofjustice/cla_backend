@@ -231,14 +231,11 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         raw_roles = payload.get("APP_ROLES")
         app_role = raw_roles if isinstance(raw_roles, list) else [raw_roles]
 
-        if not (OPERATOR_ROLE in app_role or OPERATOR_MANAGER_ROLE in app_role or CONTRACT_MANAGER_ROLE in app_role):
+        if not (OPERATOR_ROLE in app_role or OPERATOR_MANAGER_ROLE in app_role):
             # We don't care about specialist providers or other types of users
             return True
 
         office_codes = payload.get("LAA_ACCOUNTS")
-        if CONTRACT_MANAGER_ROLE in app_role:
-            # Contract managers should not carry office codes in Entra payload.
-            return not office_codes
 
         if not office_codes:
             return False

@@ -356,13 +356,13 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
         self.assertTrue(self.auth.perform_allowed_office_codes_check(payload))
 
     def test_perform_allowed_office_codes_check__contract_manager_with_offices(self):
-        """Contract managers should fail office gate when office codes are present."""
+        """Contract managers are allowed even when office codes are present."""
 
         payload = {
             "APP_ROLES": CONTRACT_MANAGER_ROLE,
             "LAA_ACCOUNTS": unicode(",".join(ENTRA_ALLOWED_OFFICE_CODES)),
         }
-        self.assertFalse(self.auth.perform_allowed_office_codes_check(payload))
+        self.assertTrue(self.auth.perform_allowed_office_codes_check(payload))
 
     def test_perform_allowed_office_codes_check__invalid_laa_accounts(self):
         payload = {

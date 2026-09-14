@@ -53,7 +53,7 @@ class RejectCaseForm(EventSpecificLogForm):
         event = event_registry.get_event(self.get_event_key())()
         code_data = event.codes[code]
 
-        if self._is_mcc_user() and code in {"MIS", "COI"}: 
+        if self._is_mcc_user() and code in {"MIS", "COI"}:
             return self._copy_case_to_operator(user, code)
 
         val = super(RejectCaseForm, self).save(user)

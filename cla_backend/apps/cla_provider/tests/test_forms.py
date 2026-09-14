@@ -95,7 +95,7 @@ class RejectCaseFormTestCase(EventSpecificLogFormTestCaseMixin, TestCase):
         )
 
         return case, provider
-    
+
     def _test_mcc_copies_case_to_operator(self, code):
         case, provider = self._make_case()
         request = self._make_request([PROVIDER_MCC_ROLE])
@@ -180,8 +180,8 @@ class RejectCaseFormTestCase(EventSpecificLogFormTestCaseMixin, TestCase):
             case=case,
             request=request,
             data={
-            "event_code": "MIS",
-            "notes": "test",
+                "event_code": "MIS",
+                "notes": "test",
             },
         )
 
@@ -194,23 +194,23 @@ class RejectCaseFormTestCase(EventSpecificLogFormTestCaseMixin, TestCase):
 
     def test_save_COI_doesnt_set_provider_closed(self):
         request = self._make_request(["Civil Legal Advice - Helpline Provider"])
-        
+
         case = make_recipe("legalaid.case")
-        
+
         form = RejectCaseForm(
             case=case,
             request=request,
             data={
-            "event_code": "COI",
-            "notes": "test",
+                "event_code": "COI",
+                "notes": "test",
             },
         )
-        
+
         self.assertTrue(form.is_valid())
         form.save(make_user())
-        
+
         case.refresh_from_db()
-        
+
         self.assertEqual(case.provider_closed, None)
 
     def test_save_MERI_doesnt_set_provider_closed(self):

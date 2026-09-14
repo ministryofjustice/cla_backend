@@ -138,11 +138,27 @@ class RejectCaseFormTestCase(EventSpecificLogFormTestCaseMixin, TestCase):
         self.assertEqual(new_case.matter_type1, case.matter_type1)
         self.assertEqual(new_case.matter_type2, case.matter_type2)
 
-        # MIS/COI is recorded against the operator copy
+        # MIS/COI is recorded against the original provider case
         self.assertTrue(
+            case.log_set.filter(
+            code=code,
+            notes="MCC rejection",
+            ).exists()
+        )
+        
+        self.assertTrue(
+            case.log_set.filter(
+            code=code,
+            notes="MCC rejection",
+            ).exists()
+        )
+
+        self.assertIsNotNone(case.provider_closed)
+        
+        self.assertFalse(
             new_case.log_set.filter(
-                code=code,
-                notes="MCC rejection",
+            code=code,
+            notes="MCC rejection",
             ).exists()
         )
 
@@ -221,6 +237,100 @@ class RejectCaseFormTestCase(EventSpecificLogFormTestCaseMixin, TestCase):
 
     def test_save_CLOT_doesnt_set_provider_closed(self):
         self._test_provider_closed("CLOT", expected_None=True)
+    
+    def _test_mcc_copies_case_to_operator(self, code):
+        case, provider = self._make_case()
+        request = self._make_request([PROVIDER_MCC_ROLE])
+        initial_case_count = Case.objects.count()
+
+        form = RejectCaseForm(
+            case=case,
+            request=request,
+            data={
+                "event_code": code,
+                "notes": "MCC rejection",
+            },
+        )
+
+        self.assertTrue(form.is_valid(), form.errors)
+
+        user = make_user()
+        new_case = form.save(user)
+
+        self.assertEqual(
+            Case.objects.count(),
+            initial_case_count + 1,
+        )
+
+        case.refresh_from_db()
+        new_case.refresh_from_db()
+
+        # Original case remains available to the provider for billing.
+        self.assertEqual(case.provider, provider)
+        self.assertEqual(
+            case.requires_action_by,
+            REQUIRES_ACTION_BY.PROVIDER,
+        )
+        self.assertIsNotNone(case.provider_closed)
+
+        # Original case records the provider's outcome.
+        self.assertTrue(
+            case.log_set.filter(
+                code=code,
+                notes="MCC rejection",
+            ).exists()
+        )
+
+        # The operator copy is linked to the original.
+        self.assertEqual(new_case.from_case, case)
+
+        # The operator copy is unassigned and available to the operator.
+        self.assertIsNone(new_case.provider)
+        self.assertIsNone(new_case.provider_assigned_at)
+        self.assertEqual(
+            new_case.requires_action_by,
+            REQUIRES_ACTION_BY.OPERATOR,
+        )
+
+        # Category and matter types are retained.
+        self.assertEqual(
+            new_case.eligibility_check.category,
+            case.eligibility_check.category,
+        )
+        self.assertEqual(
+            new_case.matter_type1,
+            case.matter_type1,
+        )
+        self.assertEqual(
+            new_case.matter_type2,
+            case.matter_type2,
+        )
+
+        # MIS/COI must not be duplicated on the operator copy.
+        self.assertFalse(
+            new_case.log_set.filter(code=code).exists()
+        )
+
+        # The operator copy records its creation and referral.
+        new_case_logs = new_case.log_set.order_by("created")
+
+        self.assertEqual(new_case_logs.count(), 2)
+
+        created_log = new_case_logs[0]
+        self.assertEqual(created_log.code, "CASE_CREATED")
+        self.assertEqual(
+            created_log.notes,
+            "Case created by Specialist following {}".format(code),
+        )
+        self.assertEqual(created_log.created_by, user)
+
+        referral_log = new_case_logs[1]
+        self.assertEqual(referral_log.code, "REF-EXT")
+        self.assertEqual(
+            referral_log.notes,
+            "Case referred to Operator following {}".format(code),
+        )
+        self.assertEqual(referral_log.created_by, user)
 
 
 class RejectCaseFormRoleValidationTestCase(TestCase):

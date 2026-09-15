@@ -96,78 +96,6 @@ class RejectCaseFormTestCase(EventSpecificLogFormTestCaseMixin, TestCase):
 
         return case, provider
 
-    def _test_mcc_copies_case_to_operator(self, code):
-        case, provider = self._make_case()
-        request = self._make_request([PROVIDER_MCC_ROLE])
-        initial_case_count = Case.objects.count()
-
-        form = RejectCaseForm(
-            case=case,
-            request=request,
-            data={
-                "event_code": code,
-                "notes": "MCC rejection",
-            },
-        )
-
-        self.assertTrue(form.is_valid(), form.errors)
-
-        user = make_user()
-        new_case = form.save(user)
-
-        self.assertEqual(Case.objects.count(), initial_case_count + 1)
-
-        case.refresh_from_db()
-        new_case.refresh_from_db()
-
-        # Original remains with the specialist
-        self.assertEqual(case.provider, provider)
-        self.assertEqual(case.requires_action_by, REQUIRES_ACTION_BY.PROVIDER,)
-
-        # Copy goes to the operator
-        self.assertEqual(new_case.from_case, case)
-        self.assertIsNone(new_case.provider)
-        self.assertIsNone(new_case.provider_assigned_at)
-        self.assertEqual(new_case.requires_action_by, REQUIRES_ACTION_BY.OPERATOR,)
-
-        # Same category and matter types are retained
-        self.assertEqual(
-            new_case.eligibility_check.category,
-            case.eligibility_check.category,
-        )
-        self.assertEqual(new_case.matter_type1, case.matter_type1)
-        self.assertEqual(new_case.matter_type2, case.matter_type2)
-
-        # MIS/COI is recorded against the original provider case
-        self.assertTrue(
-            case.log_set.filter(
-            code=code,
-            notes="MCC rejection",
-            ).exists()
-        )
-        
-        self.assertTrue(
-            case.log_set.filter(
-            code=code,
-            notes="MCC rejection",
-            ).exists()
-        )
-
-        self.assertIsNotNone(case.provider_closed)
-        
-        self.assertFalse(
-            new_case.log_set.filter(
-            code=code,
-            notes="MCC rejection",
-            ).exists()
-        )
-
-    def test_mcc_MIS_copies_case_to_operator(self):
-        self._test_mcc_copies_case_to_operator("MIS")
-
-    def test_mcc_COI_copies_case_to_operator(self):
-        self._test_mcc_copies_case_to_operator("COI")
-
     def _test_provider_closed(self, code, expected_None):
         case = make_recipe("legalaid.case")
         data = self.get_default_data()
@@ -331,6 +259,12 @@ class RejectCaseFormTestCase(EventSpecificLogFormTestCaseMixin, TestCase):
             "Case referred to Operator following {}".format(code),
         )
         self.assertEqual(referral_log.created_by, user)
+        
+    def test_mcc_MIS_copies_case_to_operator(self):
+        self._test_mcc_copies_case_to_operator("MIS")
+    
+    def test_mcc_COI_copies_case_to_operator(self):
+        self._test_mcc_copies_case_to_operator("COI")
 
 
 class RejectCaseFormRoleValidationTestCase(TestCase):

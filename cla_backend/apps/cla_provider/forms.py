@@ -94,8 +94,8 @@ class RejectCaseForm(EventSpecificLogForm):
         new_case.set_requires_action_by(REQUIRES_ACTION_BY.OPERATOR)
         new_case.save(
             update_fields=[
-               "provider",
-               "provider_assigned_at",
+                "provider",
+                "provider_assigned_at",
             ]
         )
 

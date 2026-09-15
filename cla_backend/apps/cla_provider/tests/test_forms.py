@@ -165,7 +165,7 @@ class RejectCaseFormTestCase(EventSpecificLogFormTestCaseMixin, TestCase):
 
     def test_save_CLOT_doesnt_set_provider_closed(self):
         self._test_provider_closed("CLOT", expected_None=True)
-    
+
     def _test_mcc_copies_case_to_operator(self, code):
         case, provider = self._make_case()
         request = self._make_request([PROVIDER_MCC_ROLE])
@@ -259,10 +259,10 @@ class RejectCaseFormTestCase(EventSpecificLogFormTestCaseMixin, TestCase):
             "Case referred to Operator following {}".format(code),
         )
         self.assertEqual(referral_log.created_by, user)
-        
+
     def test_mcc_MIS_copies_case_to_operator(self):
         self._test_mcc_copies_case_to_operator("MIS")
-    
+
     def test_mcc_COI_copies_case_to_operator(self):
         self._test_mcc_copies_case_to_operator("COI")
 

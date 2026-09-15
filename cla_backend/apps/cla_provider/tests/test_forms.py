@@ -248,7 +248,7 @@ class RejectCaseFormTestCase(EventSpecificLogFormTestCaseMixin, TestCase):
         self.assertEqual(created_log.code, "CASE_CREATED")
         self.assertEqual(
             created_log.notes,
-            "Case created by Specialist following {}".format(code),
+            "Case created by Specialist",
         )
         self.assertEqual(created_log.created_by, user)
 
@@ -256,7 +256,7 @@ class RejectCaseFormTestCase(EventSpecificLogFormTestCaseMixin, TestCase):
         self.assertEqual(referral_log.code, code)
         self.assertEqual(
             referral_log.notes,
-            "Case referred to Operator following {}".format(code),
+            "MCC rejection",
         )
         self.assertEqual(referral_log.created_by, user)
 

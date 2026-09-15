@@ -105,7 +105,7 @@ class RejectCaseForm(EventSpecificLogForm):
             new_case,
             status="created",
             created_by=user,
-            notes="Case created by Specialist following {}".format(code),
+            notes="Case created by Specialist"
         )
 
         # Record MIS/COI against the additional operator case.
@@ -114,7 +114,7 @@ class RejectCaseForm(EventSpecificLogForm):
             new_case,
             code=code,
             created_by=user,
-            notes="Case referred to Operator following {}".format(code),
+            notes=self.get_notes(),
             context=self.get_context(),
         )
 

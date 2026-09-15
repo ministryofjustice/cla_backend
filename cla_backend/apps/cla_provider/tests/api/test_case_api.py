@@ -1,5 +1,3 @@
-import mock
-
 from django.core.urlresolvers import reverse
 from django.utils import timezone
 
@@ -24,7 +22,6 @@ from cla_eventlog.constants import LOG_LEVELS, LOG_TYPES
 from cla_eventlog.tests.test_views import ExplicitEventCodeViewTestCaseMixin, ImplicitEventCodeViewTestCaseMixin
 
 from cla_provider.serializers import CaseSerializer
-from cla_provider.forms import RejectCaseForm
 
 
 class BaseCaseTestCase(CLAProviderAuthBaseApiTestMixin, BaseFullCaseAPIMixin, APITestCase):
@@ -348,8 +345,7 @@ class UpdateCaseTestCase(BaseUpdateCaseTestCase, BaseCaseTestCase):
 
 class RejectCaseTestCase(ExplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
     def get_event_code(self):
-        form = RejectCaseForm(case=mock.MagicMock())
-        return form.fields["event_code"].choices[0][0]
+        return "MIS-OOS"
 
     def get_url(self, reference=None):
         reference = reference or self.resource.reference

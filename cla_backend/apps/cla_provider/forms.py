@@ -23,7 +23,7 @@ class RejectCaseForm(EventSpecificLogForm):
     """
 
     LOG_EVENT_KEY = "reject_case"
-    MCC_ONLY_EVENT_CODES = set(["MERI", "DUPL", "CLOT"])
+    MCC_ONLY_EVENT_CODES = set(["MERI", "DUPL", "CLOT", "SPDUP"])
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request", None)
@@ -94,8 +94,8 @@ class RejectCaseForm(EventSpecificLogForm):
         new_case.set_requires_action_by(REQUIRES_ACTION_BY.OPERATOR)
         new_case.save(
             update_fields=[
-               "provider",
-               "provider_assigned_at",
+                "provider",
+                "provider_assigned_at",
             ]
         )
 
@@ -105,16 +105,16 @@ class RejectCaseForm(EventSpecificLogForm):
             new_case,
             status="created",
             created_by=user,
-            notes="Case created by Specialist following {}".format(code),
+            notes="Case created by Specialist"
         )
 
-        # Record REF-EXT against the additional operator case.
-        split_event = event_registry.get_event("split_case")()
-        split_event.process(
+        # Record MIS/COI against the additional operator case.
+        reject_event = event_registry.get_event(self.get_event_key())()
+        reject_event.process(
             new_case,
-            code="REF-EXT",
+            code=code,
             created_by=user,
-            notes="Case referred to Operator following {}".format(code),
+            notes=self.get_notes(),
             context=self.get_context(),
         )
 

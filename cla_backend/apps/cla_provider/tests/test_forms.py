@@ -165,7 +165,7 @@ class RejectCaseFormTestCase(EventSpecificLogFormTestCaseMixin, TestCase):
 
     def test_save_CLOT_doesnt_set_provider_closed(self):
         self._test_provider_closed("CLOT", expected_None=True)
-    
+
     def _test_mcc_copies_case_to_operator(self, code):
         case, provider = self._make_case()
         request = self._make_request([PROVIDER_MCC_ROLE])
@@ -234,8 +234,8 @@ class RejectCaseFormTestCase(EventSpecificLogFormTestCaseMixin, TestCase):
             case.matter_type2,
         )
 
-        # MIS/COI must not be duplicated on the operator copy.
-        self.assertFalse(
+        # MIS/COI must be duplicated on the operator copy.
+        self.assertTrue(
             new_case.log_set.filter(code=code).exists()
         )
 
@@ -248,21 +248,21 @@ class RejectCaseFormTestCase(EventSpecificLogFormTestCaseMixin, TestCase):
         self.assertEqual(created_log.code, "CASE_CREATED")
         self.assertEqual(
             created_log.notes,
-            "Case created by Specialist following {}".format(code),
+            "Case created by Specialist",
         )
         self.assertEqual(created_log.created_by, user)
 
         referral_log = new_case_logs[1]
-        self.assertEqual(referral_log.code, "REF-EXT")
+        self.assertEqual(referral_log.code, code)
         self.assertEqual(
             referral_log.notes,
-            "Case referred to Operator following {}".format(code),
+            "MCC rejection",
         )
         self.assertEqual(referral_log.created_by, user)
-        
+
     def test_mcc_MIS_copies_case_to_operator(self):
         self._test_mcc_copies_case_to_operator("MIS")
-    
+
     def test_mcc_COI_copies_case_to_operator(self):
         self._test_mcc_copies_case_to_operator("COI")
 

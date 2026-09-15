@@ -348,8 +348,7 @@ class UpdateCaseTestCase(BaseUpdateCaseTestCase, BaseCaseTestCase):
 
 class RejectCaseTestCase(ExplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
     def get_event_code(self):
-        form = RejectCaseForm(case=mock.MagicMock())
-        return form.fields["event_code"].choices[0][0]
+        return "MIS-OOS"
 
     def get_url(self, reference=None):
         reference = reference or self.resource.reference

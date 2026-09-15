@@ -23,7 +23,7 @@ class RejectCaseForm(EventSpecificLogForm):
     """
 
     LOG_EVENT_KEY = "reject_case"
-    MCC_ONLY_EVENT_CODES = set(["MERI", "DUPL", "CLOT"])
+    MCC_ONLY_EVENT_CODES = set(["MERI", "DUPL", "CLOT", "SPDUP"])
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request", None)

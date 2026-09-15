@@ -234,8 +234,8 @@ class RejectCaseFormTestCase(EventSpecificLogFormTestCaseMixin, TestCase):
             case.matter_type2,
         )
 
-        # MIS/COI must not be duplicated on the operator copy.
-        self.assertFalse(
+        # MIS/COI must be duplicated on the operator copy.
+        self.assertTrue(
             new_case.log_set.filter(code=code).exists()
         )
 
@@ -253,7 +253,7 @@ class RejectCaseFormTestCase(EventSpecificLogFormTestCaseMixin, TestCase):
         self.assertEqual(created_log.created_by, user)
 
         referral_log = new_case_logs[1]
-        self.assertEqual(referral_log.code, "REF-EXT")
+        self.assertEqual(referral_log.code, code)
         self.assertEqual(
             referral_log.notes,
             "Case referred to Operator following {}".format(code),

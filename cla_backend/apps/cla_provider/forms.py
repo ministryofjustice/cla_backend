@@ -108,11 +108,11 @@ class RejectCaseForm(EventSpecificLogForm):
             notes="Case created by Specialist following {}".format(code),
         )
 
-        # Record REF-EXT against the additional operator case.
-        split_event = event_registry.get_event("split_case")()
-        split_event.process(
+        # Record MIS/COI against the additional operator case.
+        reject_event = event_registry.get_event(self.get_event_key())()
+        reject_event.process(
             new_case,
-            code="REF-EXT",
+            code=code,
             created_by=user,
             notes="Case referred to Operator following {}".format(code),
             context=self.get_context(),

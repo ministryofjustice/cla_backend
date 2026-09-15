@@ -71,6 +71,15 @@ class RejectCaseEvent(BaseEvent):
             "order": 70,
             "set_requires_action_by": None,
         },
+        "SPDUP": {
+            "type": LOG_TYPES.OUTCOME,
+            "level": LOG_LEVELS.HIGH,
+            "selectable_by": [LOG_ROLES.SPECIALIST],
+            "description": "Other",
+            "stops_timer": False,
+            "order": 80,
+            "set_requires_action_by": REQUIRES_ACTION_BY.OPERATOR,
+        },
     }
 
     def get_log_code(self, **kwargs):

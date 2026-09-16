@@ -273,13 +273,17 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         if not hasattr(user, "operator"):
             return
 
+        if CONTRACT_MANAGER_ROLE in silas_roles:  
+            #Skipping sync for contract managers because theyre superuser in fox admin
+            return
+        
         if OPERATOR_MANAGER_ROLE in silas_roles:  # User is operator manager in silas but operator in fox admin
             if not user.operator.is_manager:
                 logger.info(
                     "ENTRA: User %s is an operator manager in silas but only operator in fox admin. promoting user to operator manager" % user.pk)
                 user.operator.is_manager = True
                 user.operator.save()
-        elif user.operator.is_manager:  # User is operator  silas but is an operator manager in fox admin
+        elif user.operator.is_manager:  # User is operator silas but is an operator manager in fox admin
             logger.info(
                 "ENTRA: User %s is operator in silas but operator manager in fox admin. demoting user operator" % user.pk)
             user.operator.is_manager = False

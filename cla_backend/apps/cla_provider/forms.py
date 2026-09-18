@@ -14,6 +14,7 @@ from cla_eventlog import event_registry
 from cla_eventlog.forms import EventSpecificLogForm, BaseCaseLogForm
 
 from legalaid.models import Category, MatterType
+from diagnosis.models import DiagnosisTraversal
 
 
 class RejectCaseForm(EventSpecificLogForm):
@@ -87,6 +88,36 @@ class RejectCaseForm(EventSpecificLogForm):
             matter_type2=original_case.matter_type2,
             assignment_internal=False,
         )
+
+        if original_case.diagnosis and new_case.diagnosis:
+            new_case.diagnosis.nodes = original_case.diagnosis.nodes
+            new_case.diagnosis.current_node_id = (
+                original_case.diagnosis.current_node_id
+            )
+            new_case.diagnosis.graph_version = (
+                original_case.diagnosis.graph_version
+            )
+            new_case.diagnosis.state = original_case.diagnosis.state
+            new_case.diagnosis.category = original_case.diagnosis.category
+            new_case.diagnosis.matter_type1 = (
+                original_case.diagnosis.matter_type1
+            )
+            new_case.diagnosis.matter_type2 = (
+                original_case.diagnosis.matter_type2
+            )
+            
+            new_case.diagnosis.save(
+                update_fields=[
+                    "nodes",
+                    "current_node_id",
+                    "graph_version",
+                    "state",
+                    "category",
+                    "matter_type1",
+                    "matter_type2",
+                    "modified",
+                ]
+            )
 
         # Ensure the additional case is available to the operator.
         new_case.provider = None

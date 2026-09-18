@@ -85,10 +85,20 @@ class RejectCaseFormTestCase(EventSpecificLogFormTestCaseMixin, TestCase):
             category=category,
         )
 
+        diagnosis = DiagnosisTraversal.objects.create_eligible(category)
+        diagnosis.nodes = [ 
+            {
+                "title": "Test Node",
+                "label": "Test Label",
+                }
+        ]
+        diagnosis.save()
+
         case = make_recipe(
             "legalaid.case",
             provider=provider,
             eligibility_check=eligibility_check,
+            diagnosis=diagnosis,
             matter_type1=matter_type1,
             matter_type2=matter_type2,
             requires_action_by=REQUIRES_ACTION_BY.PROVIDER,
@@ -190,8 +200,8 @@ class RejectCaseFormTestCase(EventSpecificLogFormTestCaseMixin, TestCase):
             initial_case_count + 1,
         )
 
-        case.refresh_from_db()
-        new_case.refresh_from_db()
+        case = Case.objects.get(pk=case.pk)
+        new_case = Case.objects.get(pk=new_case.pk)
 
         # Original case remains available to the provider for billing.
         self.assertEqual(case.provider, provider)
@@ -259,6 +269,19 @@ class RejectCaseFormTestCase(EventSpecificLogFormTestCaseMixin, TestCase):
             "MCC rejection",
         )
         self.assertEqual(referral_log.created_by, user)
+        self.assertIsNotNone(case.diagnosis)
+        self.assertIsNotNone(new_case.diagnosis)
+
+        # Should be a copy, not the same database record
+        self.assertNotEqual(
+            case.diagnosis.pk,
+            new_case.diagnosis.pk,
+        )
+
+        self.assertEqual(
+            new_case.diagnosis.nodes,
+            case.diagnosis.nodes,
+        )
 
     def test_mcc_MIS_copies_case_to_operator(self):
         self._test_mcc_copies_case_to_operator("MIS")

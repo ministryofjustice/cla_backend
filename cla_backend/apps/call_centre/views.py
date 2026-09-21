@@ -72,6 +72,7 @@ from .serializers import (
     CaseSerializer,
     ProviderSerializer,
     OutOfHoursRotaSerializer,
+    CaseContactDetailsSerializer,
     OperatorSerializer,
     AdaptationDetailsSerializer,
     PersonalDetailsSerializer,
@@ -270,6 +271,13 @@ class CaseViewSet(
         response = super(CaseViewSet, self).retrieve(request, *args, **kwargs)
         self.instance.audit_log.add(AuditLog.objects.create(user=request.user, action=AuditLog.ACTIONS.VIEWED))
         return response
+
+    @list_route()
+    def contact_details(self, request, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(queryset)
+        serializer = CaseContactDetailsSerializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
 
     @list_route()
     def future_callbacks(self, request, **kwargs):

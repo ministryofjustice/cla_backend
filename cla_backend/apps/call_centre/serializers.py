@@ -29,7 +29,7 @@ from legalaid.serializers import (
 )
 
 from .models import Operator
-from legalaid.models import PersonalDetails
+from legalaid.models import Case, PersonalDetails
 
 
 class PropertySerializer(PropertySerializerBase):
@@ -354,6 +354,20 @@ class CaseListSerializer(CaseSerializer):
             "is_urgent",
             "organisation_name",
         )
+
+
+class CaseContactDetailsSerializer(serializers.ModelSerializer):
+    case_reference = serializers.CharField(source="reference", read_only=True)
+    personal_details = serializers.CharField(source="personal_details.reference", read_only=True)
+    full_name = serializers.CharField(source="personal_details.full_name", read_only=True, allow_null=True)
+    date_of_birth = serializers.CharField(source="personal_details.date_of_birth", read_only=True, allow_null=True)
+    postcode = serializers.CharField(source="personal_details.postcode", read_only=True, allow_null=True)
+    mobile_phone = serializers.CharField(source="personal_details.mobile_phone", read_only=True, allow_null=True)
+    home_phone = serializers.CharField(source="personal_details.home_phone", read_only=True, allow_null=True)
+
+    class Meta(object):
+        model = Case
+        fields = ("case_reference", "personal_details", "full_name", "date_of_birth", "postcode", "mobile_phone", "home_phone")
 
 
 class CreateCaseSerializer(CaseSerializer):

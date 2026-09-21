@@ -14,7 +14,6 @@ from cla_eventlog import event_registry
 from cla_eventlog.forms import EventSpecificLogForm, BaseCaseLogForm
 
 from legalaid.models import Category, MatterType
-from diagnosis.models import DiagnosisTraversal
 
 
 class RejectCaseForm(EventSpecificLogForm):
@@ -105,7 +104,7 @@ class RejectCaseForm(EventSpecificLogForm):
             new_case.diagnosis.matter_type2 = (
                 original_case.diagnosis.matter_type2
             )
-            
+
             new_case.diagnosis.save(
                 update_fields=[
                     "nodes",

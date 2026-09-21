@@ -86,11 +86,11 @@ class RejectCaseFormTestCase(EventSpecificLogFormTestCaseMixin, TestCase):
         )
 
         diagnosis = DiagnosisTraversal.objects.create_eligible(category)
-        diagnosis.nodes = [ 
+        diagnosis.nodes = [
             {
                 "title": "Test Node",
                 "label": "Test Label",
-                }
+            }
         ]
         diagnosis.save()
 

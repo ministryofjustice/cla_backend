@@ -1,6 +1,6 @@
 {% load i18n %}<?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:java="http://www.yworks.com/xml/yfiles-common/1.0/java" xmlns:sys="http://www.yworks.com/xml/yfiles-common/markup/primitives/2.0" xmlns:x="http://www.yworks.com/xml/yfiles-common/markup/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:y="http://www.yworks.com/xml/graphml" xmlns:yed="http://www.yworks.com/xml/yed/3" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://www.yworks.com/xml/schema/graphml/1.1/ygraphml.xsd">
-  <!--Created by yEd 3.23.2-->
+  <!--Created by yEd 3.25.1-->
   <key for="port" id="d0" yfiles.type="portgraphics"/>
   <key for="port" id="d1" yfiles.type="portgeometry"/>
   <key for="port" id="d2" yfiles.type="portuserdata"/>
@@ -3250,6 +3250,36 @@ Remember to record details of the conversation in your CHS notes.]*{% endblocktr
       <data key="d10" xml:space="preserve">n190</data>
       <data key="d11" xml:space="preserve"/>
       </node>
+    <node id="n358">
+      <data key="d3" xml:space="preserve">{% trans "Inquest" %}</data>
+      <data key="d4" xml:space="preserve">Inquest</data>
+      <data key="d7" xml:space="preserve">11</data>
+      <data key="d10" xml:space="preserve">n992</data>
+      </node>
+    <node id="n359">
+      <data key="d3" xml:space="preserve">{% blocktrans %}Please read the following to the client:
+
+*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.
+
+We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?
+
+[Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
+
+Remember to record details of the conversation in your CHS notes.]*{% endblocktrans %}</data>
+      <data key="d4" xml:space="preserve">Inquest</data>
+      <data key="d7" xml:space="preserve">11</data>
+      <data key="d10" xml:space="preserve">n993</data>
+      </node>
+    <node id="n360">
+      <data key="d3" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d4" xml:space="preserve">OUTOFSCOPE DISCLAIME</data>
+      <data key="d6">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">inquest</category>
+</context>
+      </data>
+      <data key="d10" xml:space="preserve">n994</data>
+      </node>
     <edge id="e0" source="n1" target="n2">
       </edge>
     <edge id="e1" source="n2" target="n3">
@@ -4217,6 +4247,15 @@ Remember to record details of the conversation in your CHS notes.]*{% endblocktr
     <edge id="e482" source="n179" target="n357">
       </edge>
     <edge id="e483" source="n357" target="n356">
+      </edge>
+    <edge id="e484" source="n1" target="n358">
+      <data key="d16"/>
+      </edge>
+    <edge id="e485" source="n358" target="n359">
+      <data key="d16"/>
+      </edge>
+    <edge id="e486" source="n359" target="n360">
+      <data key="d16"/>
       </edge>
   </graph>
   <data key="d14">

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:java="http://www.yworks.com/xml/yfiles-common/1.0/java" xmlns:sys="http://www.yworks.com/xml/yfiles-common/markup/primitives/2.0" xmlns:x="http://www.yworks.com/xml/yfiles-common/markup/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:y="http://www.yworks.com/xml/graphml" xmlns:yed="http://www.yworks.com/xml/yed/3" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://www.yworks.com/xml/schema/graphml/1.1/ygraphml.xsd">
-  <!--Created by yEd 3.23.2-->
+  <!--Created by yEd 3.25.1-->
   <key for="port" id="d0" yfiles.type="portgraphics"/>
   <key for="port" id="d1" yfiles.type="portgeometry"/>
   <key for="port" id="d2" yfiles.type="portuserdata"/>
@@ -6497,6 +6497,63 @@ Remember to record details of the conversation in your CHS notes.]*]]></data>
         </y:ShapeNode>
       </data>
     </node>
+    <node id="n358">
+      <data key="d3" xml:space="preserve"><![CDATA[Inquest]]></data>
+      <data key="d4" xml:space="preserve"><![CDATA[Inquest]]></data>
+      <data key="d7" xml:space="preserve">11</data>
+      <data key="d10" xml:space="preserve"><![CDATA[n992]]></data>
+      <data key="d13">
+        <y:ShapeNode>
+          <y:Geometry height="30.0" width="150.0" x="10686.123129198222" y="0.0"/>
+          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="47.1953125" x="51.40234375" xml:space="preserve" y="5.93359375">Inquest<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n359">
+      <data key="d3" xml:space="preserve"><![CDATA[Please read the following to the client:
+
+*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.
+
+We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?
+
+[Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
+
+Remember to record details of the conversation in your CHS notes.]*]]></data>
+      <data key="d4" xml:space="preserve"><![CDATA[Inquest]]></data>
+      <data key="d7" xml:space="preserve">11</data>
+      <data key="d10" xml:space="preserve"><![CDATA[n993]]></data>
+      <data key="d13">
+        <y:ShapeNode>
+          <y:Geometry height="30.0" width="150.0" x="10892.405166372091" y="0.0"/>
+          <y:Fill color="#FFFFFF" transparent="false"/>
+          <y:BorderStyle color="#000000" type="dashed" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="122.7109375" x="13.64453125" xml:space="preserve" y="5.93359375">NON CLA Disclaimer<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n360">
+      <data key="d3" xml:space="preserve"><![CDATA[OUTOFSCOPE]]></data>
+      <data key="d4" xml:space="preserve"><![CDATA[OUTOFSCOPE DISCLAIME]]></data>
+      <data key="d6">
+        <context xml:space="preserve" xmlns="">
+	<category xml:space="preserve">inquest</category>
+</context>
+      </data>
+      <data key="d10" xml:space="preserve"><![CDATA[n994]]></data>
+      <data key="d13">
+        <y:ShapeNode>
+          <y:Geometry height="30.0" width="150.0" x="11098.68720354596" y="0.0"/>
+          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="148.1875" x="0.90625" xml:space="preserve" y="5.93359375">OUTOFSCOPE DISCLAIME<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
     <edge id="e0" source="n1" target="n2">
       <data key="d17">
         <y:PolyLineEdge>
@@ -12269,6 +12326,41 @@ Remember to record details of the conversation in your CHS notes.]*]]></data>
       </data>
     </edge>
     <edge id="e483" source="n357" target="n356">
+      <data key="d17">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e484" source="n1" target="n358">
+      <data key="d16"/>
+      <data key="d17">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0">
+            <y:Point x="10578.781038045458" y="14.999999999999998"/>
+          </y:Path>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e485" source="n358" target="n359">
+      <data key="d16"/>
+      <data key="d17">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e486" source="n359" target="n360">
+      <data key="d16"/>
       <data key="d17">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>

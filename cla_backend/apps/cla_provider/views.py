@@ -361,7 +361,7 @@ class ThirdPartyDetailsViewSet(CLAProviderPermissionViewSetMixin, BaseThirdParty
 
 class EventViewSet(CLAProviderPermissionViewSetMixin, BaseEventViewSet):
     MCC_ONLY_EVENT_CODES = {
-        "reject_case": set(["MERI", "DUPL", "CLOT", "SPDUP"]),
+        "reject_case": set(["MERI", "DUPL", "CLOT", "SPDUP", "FAFA"]),
     }
 
     def _is_mcc_user(self, request):

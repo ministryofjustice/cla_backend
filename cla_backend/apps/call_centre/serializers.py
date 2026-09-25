@@ -330,6 +330,8 @@ class CaseSerializer(CaseSerializerFull):
 
 
 class CaseListSerializer(CaseSerializer):
+    mobile_phone = serializers.CharField(source="personal_details.mobile_phone", read_only=True, allow_null=True)
+
     class Meta(CaseSerializer.Meta):
         fields = (
             "reference",
@@ -343,6 +345,7 @@ class CaseListSerializer(CaseSerializer):
             "postcode",
             "rejected",
             "date_of_birth",
+            "mobile_phone",
             "category",
             "outcome_code",
             "outcome_description",

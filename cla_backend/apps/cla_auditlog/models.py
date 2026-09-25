@@ -1,7 +1,7 @@
 from django.db import models
 
 from model_utils.models import TimeStampedModel
-from extended_choices import Choices
+from cla_common.choices import Choices
 
 
 class AuditLog(TimeStampedModel):

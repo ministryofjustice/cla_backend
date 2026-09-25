@@ -71,6 +71,24 @@ class RejectCaseEvent(BaseEvent):
             "order": 70,
             "set_requires_action_by": None,
         },
+        "SPDUP": {
+            "type": LOG_TYPES.OUTCOME,
+            "level": LOG_LEVELS.HIGH,
+            "selectable_by": [LOG_ROLES.SPECIALIST],
+            "description": "Duplicate case",
+            "stops_timer": False,
+            "order": 80,
+            "set_requires_action_by": REQUIRES_ACTION_BY.OPERATOR,
+        },
+        "FAFA": {
+            "type": LOG_TYPES.OUTCOME,
+            "level": LOG_LEVELS.HIGH,
+            "selectable_by": [],
+            "description": "Face-to-face advice needed",
+            "stops_timer": False,
+            "order": 90,
+            "set_requires_action_by": None,
+        },
     }
 
     def get_log_code(self, **kwargs):

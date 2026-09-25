@@ -4,7 +4,10 @@ from django.forms.util import ErrorList
 from django.core.exceptions import NON_FIELD_ERRORS
 from django.db import transaction
 
-from cla_common.constants import MATTER_TYPE_LEVELS
+from cla_common.constants import (
+    MATTER_TYPE_LEVELS,
+    REQUIRES_ACTION_BY,
+)
 from cla_auth.constants import PROVIDER_MCC_ROLE
 
 from cla_eventlog import event_registry
@@ -20,7 +23,7 @@ class RejectCaseForm(EventSpecificLogForm):
     """
 
     LOG_EVENT_KEY = "reject_case"
-    MCC_ONLY_EVENT_CODES = set(["MERI", "DUPL", "CLOT"])
+    MCC_ONLY_EVENT_CODES = set(["MERI", "DUPL", "CLOT", "SPDUP", "FAFA"])
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request", None)
@@ -53,6 +56,9 @@ class RejectCaseForm(EventSpecificLogForm):
         event = event_registry.get_event(self.get_event_key())()
         code_data = event.codes[code]
 
+        if self._is_mcc_user() and code in {"MIS", "COI"}:
+            return self._copy_case_to_operator(user, code)
+
         val = super(RejectCaseForm, self).save(user)
 
         # if requires_action by == None:
@@ -67,6 +73,107 @@ class RejectCaseForm(EventSpecificLogForm):
             self.case.save(update_fields=["provider", "provider_assigned_at"])
 
         return val
+
+    @transaction.atomic
+    def _copy_case_to_operator(self, user, code):
+        original_case = self.case
+        original_provider = original_case.provider
+        original_provider_assigned_at = original_case.provider_assigned_at
+
+        new_case = original_case.split(
+            user=user,
+            category=original_case.eligibility_check.category,
+            matter_type1=original_case.matter_type1,
+            matter_type2=original_case.matter_type2,
+            assignment_internal=False,
+        )
+
+        if original_case.diagnosis and new_case.diagnosis:
+            new_case.diagnosis.nodes = original_case.diagnosis.nodes
+            new_case.diagnosis.current_node_id = (
+                original_case.diagnosis.current_node_id
+            )
+            new_case.diagnosis.graph_version = (
+                original_case.diagnosis.graph_version
+            )
+            new_case.diagnosis.state = original_case.diagnosis.state
+            new_case.diagnosis.category = original_case.diagnosis.category
+            new_case.diagnosis.matter_type1 = (
+                original_case.diagnosis.matter_type1
+            )
+            new_case.diagnosis.matter_type2 = (
+                original_case.diagnosis.matter_type2
+            )
+
+            new_case.diagnosis.save(
+                update_fields=[
+                    "nodes",
+                    "current_node_id",
+                    "graph_version",
+                    "state",
+                    "category",
+                    "matter_type1",
+                    "matter_type2",
+                    "modified",
+                ]
+            )
+
+        # Ensure the additional case is available to the operator.
+        new_case.provider = None
+        new_case.provider_assigned_at = None
+        new_case.set_requires_action_by(REQUIRES_ACTION_BY.OPERATOR)
+        new_case.save(
+            update_fields=[
+                "provider",
+                "provider_assigned_at",
+            ]
+        )
+
+        # Record creation against the additional operator case.
+        case_event = event_registry.get_event("case")()
+        case_event.process(
+            new_case,
+            status="created",
+            created_by=user,
+            notes="Case created by Specialist"
+        )
+
+        # Record MIS/COI against the additional operator case.
+        reject_event = event_registry.get_event(self.get_event_key())()
+        reject_event.process(
+            new_case,
+            code=code,
+            created_by=user,
+            notes=self.get_notes(),
+            context=self.get_context(),
+        )
+
+        # Record MIS/COI against the original provider case.
+        reject_event = event_registry.get_event(self.get_event_key())()
+        reject_event.process(
+            original_case,
+            code=code,
+            created_by=user,
+            notes=self.get_notes(),
+            context=self.get_context(),
+        )
+
+        # MIS and COI normally set requires_action_by to OPERATOR.
+        # In this flow, the original must remain with the provider for billing.
+        original_case.provider = original_provider
+        original_case.provider_assigned_at = original_provider_assigned_at
+        original_case.set_requires_action_by(REQUIRES_ACTION_BY.PROVIDER)
+        original_case.save(
+            update_fields=[
+                "provider",
+                "provider_assigned_at",
+            ]
+        )
+
+        # Close the original provider case while retaining provider ownership.
+        original_case.close_by_provider()
+
+        return new_case
 
 
 class AcceptCaseForm(BaseCaseLogForm):

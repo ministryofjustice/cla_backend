@@ -11,7 +11,7 @@ def is_code_valid(code):
         "description": basestring,
         "stops_timer": bool,
     }
-    all_keys = required_keys.keys() + ["set_requires_action_by", "order"]
+    all_keys = required_keys.keys() + ["set_requires_action_by", "set_requires_action_by_override", "order"]
 
     for key, type_ in required_keys.items():
         if key not in code:

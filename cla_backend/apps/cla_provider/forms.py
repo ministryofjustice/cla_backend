@@ -121,7 +121,6 @@ class RejectCaseForm(EventSpecificLogForm):
         # Ensure the additional case is available to the operator.
         new_case.provider = None
         new_case.provider_assigned_at = None
-        new_case.set_requires_action_by(REQUIRES_ACTION_BY.OPERATOR)
         new_case.save(
             update_fields=[
                 "provider",
@@ -147,6 +146,9 @@ class RejectCaseForm(EventSpecificLogForm):
             notes=self.get_notes(),
             context=self.get_context(),
         )
+
+        original_case_context = dict(self.get_context() or {})
+        original_case_context["override_requires_action_by"] = True
 
         # Record MIS/COI against the original provider case.
         reject_event = event_registry.get_event(self.get_event_key())()

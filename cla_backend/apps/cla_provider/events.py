@@ -34,6 +34,7 @@ class RejectCaseEvent(BaseEvent):
             "stops_timer": False,
             "order": 30,
             "set_requires_action_by": REQUIRES_ACTION_BY.OPERATOR,
+            "set_requires_action_by_override": REQUIRES_ACTION_BY.PROVIDER,
         },
         "MIS": {
             "type": LOG_TYPES.OUTCOME,
@@ -43,6 +44,7 @@ class RejectCaseEvent(BaseEvent):
             "stops_timer": False,
             "order": 40,
             "set_requires_action_by": REQUIRES_ACTION_BY.OPERATOR,
+            "set_requires_action_by_override": REQUIRES_ACTION_BY.PROVIDER,
         },
         "MERI": {
             "type": LOG_TYPES.OUTCOME,

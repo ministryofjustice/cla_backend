@@ -204,7 +204,7 @@ nodeenv==1.10.0
     # via pre-commit
 notifications-python-client==6.0.0
     # via -r requirements/source/requirements-base.in
-oauthlib==1.1.2
+oauthlib==4.0.0
     # via django-oauth-toolkit
 openpyxl==2.6.4
     # via csvkit

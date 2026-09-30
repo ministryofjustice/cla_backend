@@ -196,6 +196,11 @@ class RejectCaseFormTestCase(EventSpecificLogFormTestCaseMixin, TestCase):
         new_case = form.save(user)
 
         self.assertEqual(
+            case.requires_action_by,
+            REQUIRES_ACTION_BY.PROVIDER,
+        )
+
+        self.assertEqual(
             Case.objects.count(),
             initial_case_count + 1,
         )

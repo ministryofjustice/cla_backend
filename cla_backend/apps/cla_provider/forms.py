@@ -125,6 +125,7 @@ class RejectCaseForm(EventSpecificLogForm):
             update_fields=[
                 "provider",
                 "provider_assigned_at",
+                "requires_action_by",
             ]
         )
 
@@ -147,9 +148,6 @@ class RejectCaseForm(EventSpecificLogForm):
             context=self.get_context(),
         )
 
-        original_case_context = dict(self.get_context() or {})
-        original_case_context["override_requires_action_by"] = True
-
         # Record MIS/COI against the original provider case.
         reject_event = event_registry.get_event(self.get_event_key())()
         reject_event.process(
@@ -169,6 +167,7 @@ class RejectCaseForm(EventSpecificLogForm):
             update_fields=[
                 "provider",
                 "provider_assigned_at",
+                "requires_action_by",
             ]
         )
 

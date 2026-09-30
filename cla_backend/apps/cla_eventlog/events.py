@@ -176,11 +176,6 @@ class BaseEvent(object):
         # update set_requires_action_by if the code wantes
         if "set_requires_action_by" in code_data:
             set_requires_action_by = code_data["set_requires_action_by"]
-            if (context 
-                and context.get("override_requires_action_by") 
-                and "set_requires_action_by_override" in code_data
-            ):
-                set_requires_action_by = (code_data["set_requires_action_by_override"])
             if callable(set_requires_action_by):
                 set_requires_action_by = set_requires_action_by(case)
             case.set_requires_action_by(set_requires_action_by)

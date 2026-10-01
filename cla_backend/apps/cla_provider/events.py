@@ -53,22 +53,13 @@ class RejectCaseEvent(BaseEvent):
             "order": 50,
             "set_requires_action_by": None,
         },
-        "DUPL": {
-            "type": LOG_TYPES.OUTCOME,
-            "level": LOG_LEVELS.HIGH,
-            "selectable_by": [LOG_ROLES.SPECIALIST],
-            "description": "Duplicate case",
-            "stops_timer": False,
-            "order": 60,
-            "set_requires_action_by": None,
-        },
         "CLOT": {
             "type": LOG_TYPES.OUTCOME,
             "level": LOG_LEVELS.HIGH,
             "selectable_by": [LOG_ROLES.SPECIALIST],
             "description": "Other",
             "stops_timer": False,
-            "order": 70,
+            "order": 60,
             "set_requires_action_by": None,
         },
         "SPDUP": {
@@ -77,7 +68,7 @@ class RejectCaseEvent(BaseEvent):
             "selectable_by": [LOG_ROLES.SPECIALIST],
             "description": "Duplicate case returned to operator",
             "stops_timer": False,
-            "order": 80,
+            "order": 70,
             "set_requires_action_by": REQUIRES_ACTION_BY.OPERATOR,
         },
         "FAFA": {
@@ -86,7 +77,7 @@ class RejectCaseEvent(BaseEvent):
             "selectable_by": [],
             "description": "Face-to-face advice needed",
             "stops_timer": False,
-            "order": 90,
+            "order": 80,
             "set_requires_action_by": None,
         },
     }

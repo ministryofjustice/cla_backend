@@ -170,9 +170,6 @@ class RejectCaseFormTestCase(EventSpecificLogFormTestCaseMixin, TestCase):
     def test_save_MERI_doesnt_set_provider_closed(self):
         self._test_provider_closed("MERI", expected_None=True)
 
-    def test_save_DUPL_doesnt_set_provider_closed(self):
-        self._test_provider_closed("DUPL", expected_None=True)
-
     def test_save_CLOT_doesnt_set_provider_closed(self):
         self._test_provider_closed("CLOT", expected_None=True)
 
@@ -308,14 +305,14 @@ class RejectCaseFormRoleValidationTestCase(TestCase):
 
     def test_non_mcc_user_cannot_select_mcc_only_reject_code(self):
         request = self._make_request(["Civil Legal Advice - Helpline Provider"])
-        form = RejectCaseForm(case=self.case, request=request, data={"event_code": "DUPL", "notes": "test"})
+        form = RejectCaseForm(case=self.case, request=request, data={"event_code": "FAFA", "notes": "test"})
 
         self.assertFalse(form.is_valid())
         self.assertIn("event_code", form.errors)
 
     def test_mcc_user_can_select_mcc_only_reject_code(self):
         request = self._make_request(["MCC Specialist Provider"])
-        form = RejectCaseForm(case=self.case, request=request, data={"event_code": "DUPL", "notes": "test"})
+        form = RejectCaseForm(case=self.case, request=request, data={"event_code": "FAFA", "notes": "test"})
 
         self.assertTrue(form.is_valid())
 

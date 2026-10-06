@@ -679,7 +679,7 @@ For loss of home please click 'back' and select the first category.{% endblocktr
       <data key="d11" xml:space="preserve"/>
       </node>
     <node id="n75">
-      <data key="d3" xml:space="preserve">{% trans "Client has photos of disrepair AND the disrepair puts them or their family at serious risk of harm or injury (this includes an injury or illness that has already happened)" %}</data>
+      <data key="d3" xml:space="preserve">{% trans "Client has confirmed that they have reason to believe the disrepair puts them or their family at serious risk of harm or injury (this includes an injury or illness that has already happened) but does not have a report by an expert (e.g. a surveyor) or photos of the disrepair" %}</data>
       <data key="d4" xml:space="preserve">Client has photos of</data>
       <data key="d7" xml:space="preserve">1</data>
       <data key="d10" xml:space="preserve">n75</data>
@@ -695,7 +695,7 @@ For loss of home please click 'back' and select the first category.{% endblocktr
       <data key="d10" xml:space="preserve">n76</data>
       </node>
     <node id="n77">
-      <data key="d3" xml:space="preserve">{% trans "Client has report by an expert (e.g. a surveyor) on the disrepair AND the disrepair puts them or their family at serious risk of harm, injury or illness" %}</data>
+      <data key="d3" xml:space="preserve">{% trans "Client has confirmed that they have reason to believe the disrepair puts them or their family at serious risk of harm, injury or illness and has a report by an expert (e.g. a surveyor) or photos of the disrepair" %}</data>
       <data key="d4" xml:space="preserve">Client has report by</data>
       <data key="d7" xml:space="preserve">2</data>
       <data key="d10" xml:space="preserve">n77</data>
@@ -1709,7 +1709,7 @@ Generally, only cases that relate to infants with a brain injury are in scope fo
       <data key="d10" xml:space="preserve">n203</data>
       </node>
     <node id="n196">
-      <data key="d3" xml:space="preserve">{% trans "Client does not have BOTH evidence of the disrepair AND reason to believe the disrepair poses a serious risk of harm, injury or illness to them or their family" %}</data>
+      <data key="d3" xml:space="preserve">{% trans "Client does not have reason to believe the disrepair poses a serious risk of harm, injury or illness to them or their family and does not have evidence of the disrepair" %}</data>
       <data key="d4" xml:space="preserve">Not both</data>
       <data key="d10" xml:space="preserve">n204</data>
       </node>

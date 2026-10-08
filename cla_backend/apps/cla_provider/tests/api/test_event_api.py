@@ -27,8 +27,9 @@ class RejectCaseEventVisibilityTestCase(CLAProviderAuthBaseApiTestMixin, APITest
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         returned_codes = [item["code"] for item in response.data]
         self.assertNotIn("MERI", returned_codes)
-        self.assertNotIn("DUPL", returned_codes)
+        self.assertNotIn("SPDUP", returned_codes)
         self.assertNotIn("CLOT", returned_codes)
+        self.assertNotIn("FAFA", returned_codes)
 
     @mock.patch("cla_provider.views.EventViewSet._is_mcc_user", return_value=True)
     def test_mcc_users_see_mcc_only_reject_codes(self, _mock_is_mcc_user):
@@ -41,5 +42,6 @@ class RejectCaseEventVisibilityTestCase(CLAProviderAuthBaseApiTestMixin, APITest
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         returned_codes = [item["code"] for item in response.data]
         self.assertIn("MERI", returned_codes)
-        self.assertIn("DUPL", returned_codes)
         self.assertIn("CLOT", returned_codes)
+        self.assertIn("SPDUP", returned_codes)
+        self.assertIn("FAFA", returned_codes)

@@ -191,6 +191,38 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
 
         return None
 
+    # Normalises the firm name for comparison (all caps vs lower case)
+    @staticmethod
+    def _normalise_firm_name(value):
+        if value is None:
+            return None
+
+        if isinstance(value, unicode):
+            value = value.encode("utf-8")
+
+        return value.strip().lower()
+
+    def _perform_provider_firm_check(self, payload, user, app_roles):
+        if PROVIDER_ROLE not in app_roles and PROVIDER_MCC_ROLE not in app_roles:
+            return True
+
+        firm_name = payload.get("FIRM_NAME")
+
+        if not firm_name:
+            raise exceptions.AuthenticationFailed("Token payload is missing FIRM_NAME")
+
+        try:
+            provider_staff = user.staff
+        except Staff.DoesNotExist:
+            raise exceptions.AuthenticationFailed("User does not have provider staff record")
+
+        local_firm_name = provider_staff.provider.name if provider_staff.provider else None
+
+        if self._normalise_firm_name(local_firm_name) != self._normalise_firm_name(firm_name):
+            raise exceptions.AuthenticationFailed("User does not belong to the specified provider firm")
+
+        return True
+
     def get_or_create_user(self, payload):
         email = payload.get("USER_EMAIL")
         if not email:
@@ -220,9 +252,14 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
             user = None
 
         if user:
+            self._perform_provider_firm_check(payload, user, app_role)
             return app_role, user
 
-        return app_role, self._create_user_for_roles(payload, app_role)
+        user = self._create_user_for_roles(payload, app_role)
+        if user:
+            self._perform_provider_firm_check(payload, user, app_role)
+
+        return app_role, user
 
     @staticmethod
     def perform_allowed_office_codes_check(payload):

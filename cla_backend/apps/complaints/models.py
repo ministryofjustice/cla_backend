@@ -183,6 +183,9 @@ class Complaint(TimeStampedModel):
 
 
 class Category(TimeStampedModel):
+    class Analytics:
+        _allow_analytics = True
+
     name = models.CharField(max_length=255)
 
     class Meta:

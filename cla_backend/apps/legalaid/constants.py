@@ -1,4 +1,4 @@
-from extended_choices import Choices
+from cla_common.choices import Choices
 
 DISREGARD_SELECTION = Choices(
     # This populates the "Have you had a big payment that you do not normally get?" radio button group on cla_frontend

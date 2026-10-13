@@ -28,7 +28,7 @@ cffi==1.15.1
     # via cryptography
 chardet==4.0.0
     # via requests
-https://github.com/ministryofjustice/cla_common/archive/refs/tags/0.3.25.tar.gz
+https://github.com/ministryofjustice/cla_common/archive/refs/tags/0.3.26.tar.gz
     # via -r requirements/source/requirements-git.in
 configparser==4.0.2
     # via importlib-metadata
@@ -56,10 +56,6 @@ django-csp==3.7
     # via -r requirements/source/requirements-base.in
 django-docopt-command==0.2.0
     # via -r requirements/source/requirements-base.in
-django-extended-choices==0.3.0
-    # via
-    #   -r requirements/source/requirements-base.in
-    #   cla-common
 django-filter==0.9.2
     # via -r requirements/source/requirements-base.in
 django-ipware==0.1.0

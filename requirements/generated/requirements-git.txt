@@ -142,9 +142,9 @@ charset-normalizer==3.4.6 \
 cla-common @ https://github.com/ministryofjustice/cla_common/archive/refs/tags/0.3.25.tar.gz \
     --hash=sha256:955ac3f69d72f01913fb959822e6856b4017a8c1335eefd3e1911a84465b417e
     # via -r requirements/source/requirements-git.in
-django==1.8.19 \
-    --hash=sha256:33d44a5cf9d333247a9a374ae1478b78b83c9b78eb316fc04adde62053b4c047 \
-    --hash=sha256:674c525d3aa90ed683313b64aa27490c31874e16155e6b44772d84e76c83c46c
+django==5.2.17 \
+    --hash=sha256:9d4d93be539a18ab80d058eb515900e10951e04c537c5a6b394fc49528d3251f \
+    --hash=sha256:f04fb3b36ee119e1af4fa1d397d5fd6cf12700f49321e84d4f4c642c5b1973db
     # via
     #   django-moj-irat
     #   django-pagedown

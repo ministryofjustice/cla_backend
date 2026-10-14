@@ -371,6 +371,60 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
         }
         self.assertFalse(self.auth.perform_allowed_office_codes_check(payload))
 
+    def test_perform_provider_firm_check__non_provider_role(self):
+        user = self.create_user(username="operator-user", email="operator@test.com", is_active=True)
+
+        payload = {"FIRM_NAME": "Any Firm"}
+        self.assertTrue(self.auth._perform_provider_firm_check(payload, user, [OPERATOR_ROLE]))
+
+    def test_perform_provider_firm_check__missing_firm_name(self):
+        user = self.create_user(username="provider-user", email="provider@test.com", is_active=True)
+        make_recipe("cla_provider.staff", user=user)
+
+        payload = {"USER_EMAIL": user.email}
+        with self.assertRaises(exceptions.AuthenticationFailed):
+            self.auth._perform_provider_firm_check(payload, user, [PROVIDER_ROLE])
+
+    def test_perform_provider_firm_check__missing_staff_record(self):
+        user = self.create_user(username="provider-user-2", email="provider2@test.com", is_active=True)
+        payload = {"FIRM_NAME": "Provider One"}
+
+        with self.assertRaises(exceptions.AuthenticationFailed):
+            self.auth._perform_provider_firm_check(payload, user, [PROVIDER_ROLE])
+
+    def test_perform_provider_firm_check__firm_name_mismatch(self):
+        provider = make_recipe("cla_provider.provider", name="Provider One", active=True)
+        user = self.create_user(username="provider-user-3", email="provider3@test.com", is_active=True)
+        make_recipe("cla_provider.staff", user=user, provider=provider)
+
+        payload = {"FIRM_NAME": "Provider Two"}
+        with self.assertRaises(exceptions.AuthenticationFailed):
+            self.auth._perform_provider_firm_check(payload, user, [PROVIDER_ROLE])
+
+    def test_perform_provider_firm_check__firm_name_matches_case_insensitive(self):
+        provider = make_recipe("cla_provider.provider", name="THE FIRM NAME LTD", active=True)
+        user = self.create_user(username="provider-user-4", email="provider4@test.com", is_active=True)
+        make_recipe("cla_provider.staff", user=user, provider=provider)
+
+        payload = {"FIRM_NAME": "  the firm name ltd  "}
+        self.assertTrue(self.auth._perform_provider_firm_check(payload, user, [PROVIDER_ROLE]))
+
+    @patch("cla_auth.authentication.EntraAccessTokenAuthentication._public_keys")
+    def test_authenticate_provider_firm_mismatch_fails(self, mock_public_keys):
+        mock_public_keys.return_value = self.mock_jwks["keys"]
+
+        provider = make_recipe("cla_provider.provider", name="FIRM ONE", active=True)
+        user = self.create_user(username="provider-auth-user", email="provider-auth@test.com", is_active=True)
+        make_recipe("cla_provider.staff", user=user, provider=provider)
+
+        token = self._create_token(firm_name="FIRM TWO", app_roles=PROVIDER_ROLE, email=user.email)
+
+        request = self.factory.get("/")
+        request.META["HTTP_AUTHORIZATION"] = "Bearer %s" % token
+
+        with self.assertRaises(exceptions.AuthenticationFailed):
+            self.auth.authenticate(request)
+
     @patch("cla_auth.authentication.EntraAccessTokenAuthentication._public_keys")
     def test_email_case_insensitivity(self, mock_public_keys):
         """Test case-insensitive email addresses"""

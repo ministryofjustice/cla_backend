@@ -139,8 +139,7 @@ charset-normalizer==3.4.6 \
     --hash=sha256:f98059e4fcd3e3e4e2d632b7cf81c2faae96c43c60b569e9c621468082f1d104 \
     --hash=sha256:fcce033e4021347d80ed9c66dcf1e7b1546319834b74445f561d2e2221de5659
     # via requests
-cla-common @ https://github.com/ministryofjustice/cla_common/archive/refs/tags/0.3.25.tar.gz \
-    --hash=sha256:955ac3f69d72f01913fb959822e6856b4017a8c1335eefd3e1911a84465b417e
+cla-common @ https://github.com/ministryofjustice/cla_common/archive/refs/tags/0.3.26.tar.gz
     # via -r requirements/source/requirements-git.in
 django==1.8.19 \
     --hash=sha256:33d44a5cf9d333247a9a374ae1478b78b83c9b78eb316fc04adde62053b4c047 \
@@ -148,9 +147,6 @@ django==1.8.19 \
     # via
     #   django-moj-irat
     #   django-pagedown
-django-extended-choices==0.3.0 \
-    --hash=sha256:4565a9713e50b95947a1727754838c6220e30334969b68a491c4b5ab67b51cc7
-    # via cla-common
 django-moj-irat @ https://github.com/said-moj/django-moj-irat/archive/refs/tags/0.3.1.tar.gz \
     --hash=sha256:e8d4b8db097a8cc27356c84bf25289541024bc7be03ba06084b4d272e6f8cec6
     # via -r requirements/source/requirements-git.in

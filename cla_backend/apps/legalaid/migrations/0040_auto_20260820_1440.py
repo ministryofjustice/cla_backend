@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db import migrations, models
+from django.db import migrations
+
 
 def create_inquest_category(apps, schema_editor):
     Category = apps.get_model("legalaid", "Category")
@@ -10,7 +11,6 @@ def create_inquest_category(apps, schema_editor):
         code="inquest",
         mandatory=False,
         order=99,
-
     )
 
 

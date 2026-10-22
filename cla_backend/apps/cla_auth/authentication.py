@@ -289,7 +289,6 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
 
         return any(office_code in ENTRA_ALLOWED_OFFICE_CODES for office_code in office_codes)
 
-
     def authenticate(self, request, retried=False):
         token = request.META.get("HTTP_AUTHORIZATION")
 

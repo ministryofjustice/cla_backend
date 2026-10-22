@@ -79,7 +79,7 @@ class EntraTokenGeneratorMixin(object):
         expired=False,
         email="test@example.com",
         kid="test-kid-123",
-        office_code = ""
+        office_code=""
     ):
         """Helper to create JWT tokens"""
 
@@ -552,9 +552,7 @@ class EntraAuthorizationTestCase(EntraTokenGeneratorMixin, TestCase):
         response = self.client.get(url, **headers)
         self.assertEqual(response.status_code, 403)
 
-
     def test_multiple_office_code(self):
-
         """User has multiple roles associated with them"""
         provider_name = "THE FIRM NAME LTD"
         provider = make_recipe("cla_provider.provider", name=provider_name, active=True)
@@ -570,4 +568,3 @@ class EntraAuthorizationTestCase(EntraTokenGeneratorMixin, TestCase):
         headers = {"HTTP_AUTHORIZATION": "Bearer %s" % token}
         response = self.client.get(url, **headers)
         self.assertEqual(response.status_code, 200)
-

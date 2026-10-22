@@ -280,7 +280,9 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         if isinstance(office_codes, unicode):
             office_codes = office_codes.encode("utf-8")
 
-        office_codes = office_codes.split(",")
+        if not isinstance(office_codes, list):
+            office_codes = office_codes.split(",")
+
         return any(office_code in ENTRA_ALLOWED_OFFICE_CODES for office_code in office_codes)
 
     def authenticate(self, request, retried=False):

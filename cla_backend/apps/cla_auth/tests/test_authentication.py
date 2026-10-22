@@ -79,6 +79,7 @@ class EntraTokenGeneratorMixin(object):
         expired=False,
         email="test@example.com",
         kid="test-kid-123",
+        office_code = ""
     ):
         """Helper to create JWT tokens"""
 
@@ -88,7 +89,7 @@ class EntraTokenGeneratorMixin(object):
         else:
             exp = now_epoch + 3600
 
-        office_codes = ""
+        office_codes = office_code
         if app_roles == OPERATOR_ROLE or app_roles == OPERATOR_MANAGER_ROLE:
             office_codes = unicode(",".join(ENTRA_ALLOWED_OFFICE_CODES))
 
@@ -550,3 +551,23 @@ class EntraAuthorizationTestCase(EntraTokenGeneratorMixin, TestCase):
         headers = {"HTTP_AUTHORIZATION": "Bearer %s" % token}
         response = self.client.get(url, **headers)
         self.assertEqual(response.status_code, 403)
+
+
+    def test_multiple_office_code(self):
+
+        """User has multiple roles associated with them"""
+        provider_name = "THE FIRM NAME LTD"
+        provider = make_recipe("cla_provider.provider", name=provider_name, active=True)
+        case = make_recipe(
+            "legalaid.case",
+            reference="AB-00-11-22",
+            personal_details=make_recipe("legalaid.personal_details"),
+            provider=provider,
+            requires_action_by=REQUIRES_ACTION_BY.PROVIDER,
+        )
+        token = self._create_token(firm_name=provider_name, app_roles=PROVIDER_ROLE, email="test@localhost", office_code=["OF1", "OF2"])
+        url = reverse("cla_provider:case-detail", kwargs=dict(reference=case.reference))
+        headers = {"HTTP_AUTHORIZATION": "Bearer %s" % token}
+        response = self.client.get(url, **headers)
+        self.assertEqual(response.status_code, 200)
+

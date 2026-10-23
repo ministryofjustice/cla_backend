@@ -272,15 +272,21 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
             # We don't care about specialist providers or other types of users
             return True
 
-        office_codes = payload.get("LAA_ACCOUNTS")
+        office_code_data = payload.get("LAA_ACCOUNTS")
 
-        if not office_codes:
-            return False
+        def normalize_codes(office_codes):
+            if office_codes is None:
+                return []
+            if not isinstance(office_codes, (list, tuple, set)):
+                office_codes = [office_codes]
 
-        if isinstance(office_codes, unicode):
-            office_codes = office_codes.encode("utf-8")
+            codes = []
+            for item in office_codes:
+                codes.extend(part.strip() for part in str(item).split(",") if part.strip())
+            return codes
 
-        office_codes = office_codes.split(",")
+        office_codes = normalize_codes(office_code_data)
+
         return any(office_code in ENTRA_ALLOWED_OFFICE_CODES for office_code in office_codes)
 
     def authenticate(self, request, retried=False):

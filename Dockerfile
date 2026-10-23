@@ -33,6 +33,7 @@ RUN apk add --no-cache \
 WORKDIR /home/app
 
 COPY ./requirements/generated/ ./requirements
+COPY ./docker/update_ca_bundle.sh /usr/local/bin/update_ca_bundle.sh
 
 # cython pyyaml bug requires fixing cython to <3.0 otherwise pyyaml won't build
 RUN echo 'Cython < 3.0' > /tmp/constraint.txt
@@ -48,6 +49,7 @@ FROM base AS development
 RUN apk add --no-cache libffi-dev
 
 RUN PIP_CONSTRAINT=/tmp/constraint.txt pip install -r ./requirements/requirements-dev.txt --no-cache-dir
+RUN update_ca_bundle.sh
 COPY . .
 
 # Make sure static assets directory has correct permissions
@@ -74,6 +76,7 @@ FROM base AS production
 
 # Make sure static assets directory has correct permissions
 RUN PIP_CONSTRAINT=/tmp/constraint.txt pip install -r ./requirements/requirements-production.txt --no-cache-dir
+RUN update_ca_bundle.sh
 COPY . .
 
 # Make sure static assets directory has correct permissions

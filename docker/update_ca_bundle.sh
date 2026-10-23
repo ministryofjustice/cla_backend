@@ -10,7 +10,7 @@ URL=https://files.pythonhosted.org/packages/c4/51/29046e48f693c54e5b7412216d447a
 SHA256=42d35340cc5b9ba78e818ddbff0c5b1c2b779de448a340fd1b989f5fa8670e1b
 WHEEL=/tmp/certifi-${VERSION}-py3-none-any.whl
 
-curl -sSfL -o "$WHEEL" "$URL"
+curl -sSfL --proto '=https' --proto-redir '=https' -o "$WHEEL" "$URL"
 echo "$SHA256  $WHEEL" | sha256sum -c -
 
 BUNDLE=$(python -c "import certifi; print(certifi.where())")

@@ -14,6 +14,17 @@ class GraphTestCase(TestCase):
         self.checker_graph = get_graph(file_name=settings.CHECKER_DIAGNOSIS_FILE_NAME)
         call_command("loaddata", "initial_category")
         call_command("loaddata", "initial_mattertype")
+        self.add_additional_categories()
+
+    def add_additional_categories(self):
+        # Cannot put these into initial_category as initial categories are added during application standup
+        # on non-prod environments but the inquest category is added in a migration.
+        Category.objects.create(
+            name="Inquest",
+            code="inquest",
+            mandatory=False,
+            order=99,
+        )
 
     def assertCategoryInContext(self, context, nodes):
         # checking that the category is set and is valid

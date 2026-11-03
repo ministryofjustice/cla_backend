@@ -1,4 +1,4 @@
-from extended_choices import Choices
+from cla_common.choices import Choices
 
 LOG_LEVELS = Choices(
     # constant, db_id, friendly string

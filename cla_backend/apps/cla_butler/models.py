@@ -2,7 +2,7 @@ from model_utils.models import TimeStampedModel
 from django.db import models
 from django.db.models import Q
 from legalaid.models import PersonalDetails
-from extended_choices import Choices
+from cla_common.choices import Choices
 
 STATUS = Choices(
     # constant, db_id, friendly string

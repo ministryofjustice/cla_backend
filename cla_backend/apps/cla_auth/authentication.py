@@ -106,7 +106,6 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         if firm_name != PROVIDER_NAME:
             logging.info("User try assign provider role when they are" % firm_name)
             raise exceptions.AuthenticationFailed("Only HGS can have provider role attached, update silas to match this")
-        
 
         if not user_email or not firm_name:
             return None

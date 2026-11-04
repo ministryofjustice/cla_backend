@@ -18,6 +18,8 @@ from cla_auth.constants import OPERATOR_ROLE, OPERATOR_MANAGER_ROLE, CONTRACT_MA
 
 logger = logging.getLogger(__name__)
 
+PROVIDER_NAME ="HINDUJA GLOBAL SOLUTIONS UK LTD"
+ 
 
 class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
     def __init__(self):
@@ -100,6 +102,10 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
     def _create_provider(self, payload):
         user_email = payload.get("USER_EMAIL")
         firm_name = payload.get("FIRM_NAME")
+
+        if firm_name != PROVIDER_NAME:
+            raise exceptions.AuthenticationFailed("Only HGS can have provider role attached, update silas to match this")
+        
 
         if not user_email or not firm_name:
             return None
@@ -210,6 +216,9 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
 
         if not firm_name:
             raise exceptions.AuthenticationFailed("Token payload is missing FIRM_NAME")
+
+        if firm_name != PROVIDER_NAME:
+             raise exceptions.AuthenticationFailed("Only HGS can have provider role attached, update silas to match this")
 
         try:
             provider_staff = user.staff

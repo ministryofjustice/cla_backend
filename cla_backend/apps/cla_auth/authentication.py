@@ -104,6 +104,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         firm_name = payload.get("FIRM_NAME")
 
         if firm_name != PROVIDER_NAME:
+            logging.info("User try assign provider role when they are" % firm_name)
             raise exceptions.AuthenticationFailed("Only HGS can have provider role attached, update silas to match this")
         
 
@@ -215,6 +216,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         firm_name = payload.get("FIRM_NAME")
 
         if not firm_name:
+            logging.info("User try assign provider role when they are" % firm_name)
             raise exceptions.AuthenticationFailed("Token payload is missing FIRM_NAME")
 
         if firm_name != PROVIDER_NAME:

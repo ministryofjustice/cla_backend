@@ -18,7 +18,7 @@ from cla_auth.constants import OPERATOR_ROLE, OPERATOR_MANAGER_ROLE, CONTRACT_MA
 
 logger = logging.getLogger(__name__)
 
-PROVIDER_NAME ="HINDUJA GLOBAL SOLUTIONS UK LTD"
+OPERATOR_FIRM_NAME ="HINDUJA GLOBAL SOLUTIONS UK LTD"
  
 
 class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
@@ -51,9 +51,15 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
 
     def _create_operator(self, payload, is_manager=False):
         user_email = payload.get("USER_EMAIL")
-        if not user_email:
+        firm_name = payload.get("FIRM_NAME")
+        
+        if not user_email or not firm_name:
             raise exceptions.AuthenticationFailed("Cannot create operator: USER_EMAIL missing from token payload")
-
+        
+        if firm_name != OPERATOR_FIRM_NAME:
+            logging.info("User try assign provider role when they are" % firm_name)
+            raise exceptions.AuthenticationFailed("Only HGS can have provider role attached, update silas to match this")
+        
         try:
             user_name = self.get_unique_username(payload)
 
@@ -76,9 +82,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
 
     def _create_contract_manager(self, payload, is_manager=False, is_staff=False, is_superuser=False):
         user_email = payload.get("USER_EMAIL")
-        if not user_email:
-            raise exceptions.AuthenticationFailed("Cannot create Contract Manager: USER_EMAIL missing from token payload")
-
+      
         try:
             user_name = self.get_unique_username(payload)
 
@@ -102,10 +106,6 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
     def _create_provider(self, payload):
         user_email = payload.get("USER_EMAIL")
         firm_name = payload.get("FIRM_NAME")
-
-        if firm_name != PROVIDER_NAME:
-            logging.info("User try assign provider role when they are" % firm_name)
-            raise exceptions.AuthenticationFailed("Only HGS can have provider role attached, update silas to match this")
 
         if not user_email or not firm_name:
             return None
@@ -218,7 +218,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
             logging.info("User try assign provider role when they are" % firm_name)
             raise exceptions.AuthenticationFailed("Token payload is missing FIRM_NAME")
 
-        if firm_name != PROVIDER_NAME:
+        if firm_name != OPERATOR_FIRM_NAME:
              raise exceptions.AuthenticationFailed("Only HGS can have provider role attached, update silas to match this")
 
         try:
@@ -301,6 +301,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
 
     def authenticate(self, request, retried=False):
         token = request.META.get("HTTP_AUTHORIZATION")
+        print(token, "the token")
 
         if not token:
             return None

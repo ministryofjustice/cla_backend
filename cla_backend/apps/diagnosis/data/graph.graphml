@@ -6498,8 +6498,8 @@ Remember to record details of the conversation in your CHS notes.]*]]></data>
       </data>
     </node>
     <node id="n358">
-      <data key="d3" xml:space="preserve"><![CDATA[Inquest]]></data>
-      <data key="d4" xml:space="preserve"><![CDATA[Inquest]]></data>
+      <data key="d3" xml:space="preserve"><![CDATA[Inquests]]></data>
+      <data key="d4" xml:space="preserve"><![CDATA[Inquests]]></data>
       <data key="d7" xml:space="preserve">11</data>
       <data key="d10" xml:space="preserve"><![CDATA[n992]]></data>
       <data key="d13">
@@ -6507,7 +6507,7 @@ Remember to record details of the conversation in your CHS notes.]*]]></data>
           <y:Geometry height="30.0" width="150.0" x="10686.123129198222" y="0.0"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="47.1953125" x="51.40234375" xml:space="preserve" y="5.93359375">Inquest<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="47.1953125" x="51.40234375" xml:space="preserve" y="5.93359375">Inquests<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -6522,7 +6522,7 @@ We can provide helplines, websites or F2F however please be aware that you may h
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]*]]></data>
-      <data key="d4" xml:space="preserve"><![CDATA[Inquest]]></data>
+      <data key="d4" xml:space="preserve"><![CDATA[Inquests]]></data>
       <data key="d7" xml:space="preserve">11</data>
       <data key="d10" xml:space="preserve"><![CDATA[n993]]></data>
       <data key="d13">
@@ -6540,7 +6540,7 @@ Remember to record details of the conversation in your CHS notes.]*]]></data>
       <data key="d4" xml:space="preserve"><![CDATA[OUTOFSCOPE DISCLAIME]]></data>
       <data key="d6">
         <context xml:space="preserve" xmlns="">
-	<category xml:space="preserve">inquest</category>
+	<category xml:space="preserve">inq</category>
 </context>
       </data>
       <data key="d10" xml:space="preserve"><![CDATA[n994]]></data>

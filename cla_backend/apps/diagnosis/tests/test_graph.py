@@ -20,8 +20,8 @@ class GraphTestCase(TestCase):
         # Cannot put these into initial_category as initial categories are added during application standup
         # on non-prod environments but the inquest category is added in a migration.
         Category.objects.create(
-            name="Inquest",
-            code="inquest",
+            name="Inquests",
+            code="inq",
             mandatory=False,
             order=99,
         )

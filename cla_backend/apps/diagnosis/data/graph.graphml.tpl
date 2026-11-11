@@ -3251,8 +3251,8 @@ Remember to record details of the conversation in your CHS notes.]*{% endblocktr
       <data key="d11" xml:space="preserve"/>
       </node>
     <node id="n358">
-      <data key="d3" xml:space="preserve">{% trans "Inquest" %}</data>
-      <data key="d4" xml:space="preserve">Inquest</data>
+      <data key="d3" xml:space="preserve">{% trans "Inquests" %}</data>
+      <data key="d4" xml:space="preserve">Inquests</data>
       <data key="d7" xml:space="preserve">11</data>
       <data key="d10" xml:space="preserve">n992</data>
       </node>
@@ -3266,7 +3266,7 @@ We can provide helplines, websites or F2F however please be aware that you may h
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]*{% endblocktrans %}</data>
-      <data key="d4" xml:space="preserve">Inquest</data>
+      <data key="d4" xml:space="preserve">Inquests</data>
       <data key="d7" xml:space="preserve">11</data>
       <data key="d10" xml:space="preserve">n993</data>
       </node>
@@ -3275,7 +3275,7 @@ Remember to record details of the conversation in your CHS notes.]*{% endblocktr
       <data key="d4" xml:space="preserve">OUTOFSCOPE DISCLAIME</data>
       <data key="d6">
         <context xmlns="" xml:space="preserve">
-	<category xml:space="preserve">inquest</category>
+	<category xml:space="preserve">inq</category>
 </context>
       </data>
       <data key="d10" xml:space="preserve">n994</data>

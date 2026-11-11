@@ -7,8 +7,8 @@ from django.db import migrations
 def create_inquest_category(apps, schema_editor):
     Category = apps.get_model("legalaid", "Category")
     Category.objects.create(
-        name="Inquest",
-        code="inquest",
+        name="Inquests",
+        code="inq",
         mandatory=False,
         order=99,
     )

@@ -14,7 +14,7 @@ from django.contrib.auth.models import User
 from call_centre.models import Operator
 from cla_provider.models import Provider, Staff
 
-from cla_auth.constants import OPERATOR_ROLE, OPERATOR_MANAGER_ROLE, CONTRACT_MANAGER_ROLE, PROVIDER_ROLE, PROVIDER_MCC_ROLE, ENTRA_ALLOWED_OFFICE_CODES
+from cla_auth.constants import OPERATOR_ROLE, OPERATOR_MANAGER_ROLE, CONTRACT_MANAGER_ROLE, PROVIDER_ROLE, PROVIDER_MCC_ROLE, ENTRA_ALLOWED_OPERATOR_FIRM
 
 logger = logging.getLogger(__name__)
 
@@ -240,8 +240,8 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
             raise exceptions.AuthenticationFailed("Token payload is missing USER_EMAIL")
 
         if not self.perform_allowed_office_codes_check(payload):
-            logger.error("User does not have list of expected offices", exc_info=True)
-            raise exceptions.AuthenticationFailed("User does not have list of expected offices")
+            logger.error("User does not belong to allowed operator firm", exc_info=True)
+            raise exceptions.AuthenticationFailed("User does not belong to allowed operator firm")
 
         raw_roles = payload.get("APP_ROLES")
         if not raw_roles:
@@ -297,7 +297,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
 
         office_codes = normalize_codes(office_code_data)
 
-        return any(office_code in ENTRA_ALLOWED_OFFICE_CODES for office_code in office_codes)
+        return any(office_code in ENTRA_ALLOWED_OPERATOR_FIRM for office_code in office_codes)
 
     def authenticate(self, request, retried=False):
         token = request.META.get("HTTP_AUTHORIZATION")

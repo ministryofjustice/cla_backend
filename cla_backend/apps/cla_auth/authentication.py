@@ -18,9 +18,6 @@ from cla_auth.constants import OPERATOR_ROLE, OPERATOR_MANAGER_ROLE, CONTRACT_MA
 
 logger = logging.getLogger(__name__)
 
-OPERATOR_FIRM_NAME ="HINDUJA GLOBAL SOLUTIONS UK LTD"
- 
-
 class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
     def __init__(self):
         self.tenant_id = settings.ENTRA_TENANT_ID
@@ -55,10 +52,6 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         
         if not user_email or not firm_name:
             raise exceptions.AuthenticationFailed("Cannot create operator: USER_EMAIL missing from token payload")
-        
-        if firm_name != OPERATOR_FIRM_NAME:
-            logging.info("User try assign provider role when they are" % firm_name)
-            raise exceptions.AuthenticationFailed("Only HGS can have provider role attached, update silas to match this")
         
         try:
             user_name = self.get_unique_username(payload)
@@ -218,9 +211,6 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
             logging.info("User try assign provider role when they are" % firm_name)
             raise exceptions.AuthenticationFailed("Token payload is missing FIRM_NAME")
 
-        if firm_name != OPERATOR_FIRM_NAME:
-             raise exceptions.AuthenticationFailed("Only HGS can have provider role attached, update silas to match this")
-
         try:
             provider_staff = user.staff
         except Staff.DoesNotExist:
@@ -229,6 +219,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         local_firm_name = provider_staff.provider.name if provider_staff.provider else None
 
         if self._normalise_firm_name(local_firm_name) != self._normalise_firm_name(firm_name):
+            logging.error("User does not belong to the specified provider firm")
             raise exceptions.AuthenticationFailed("User does not belong to the specified provider firm")
 
         return True
@@ -301,8 +292,6 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
 
     def authenticate(self, request, retried=False):
         token = request.META.get("HTTP_AUTHORIZATION")
-        print(token, "the token")
-
         if not token:
             return None
 

@@ -48,9 +48,9 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
 
     def _create_operator(self, payload, is_manager=False):
         user_email = payload.get("USER_EMAIL")
-        firm_name = payload.get("FIRM_NAME")
         
-        if not user_email or not firm_name:
+        if not user_email:
+            logging.error("Cannot create operator: USER_EMAIL missing from token payload")
             raise exceptions.AuthenticationFailed("Cannot create operator: USER_EMAIL missing from token payload")
         
         try:

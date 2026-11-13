@@ -18,6 +18,7 @@ from cla_auth.constants import OPERATOR_ROLE, OPERATOR_MANAGER_ROLE, CONTRACT_MA
 
 logger = logging.getLogger(__name__)
 
+
 class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
     def __init__(self):
         self.tenant_id = settings.ENTRA_TENANT_ID
@@ -48,11 +49,11 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
 
     def _create_operator(self, payload, is_manager=False):
         user_email = payload.get("USER_EMAIL")
-        
+
         if not user_email:
             logging.error("Cannot create operator: USER_EMAIL missing from token payload")
             raise exceptions.AuthenticationFailed("Cannot create operator: USER_EMAIL missing from token payload")
-        
+
         try:
             user_name = self.get_unique_username(payload)
 
@@ -75,7 +76,7 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
 
     def _create_contract_manager(self, payload, is_manager=False, is_staff=False, is_superuser=False):
         user_email = payload.get("USER_EMAIL")
-      
+
         try:
             user_name = self.get_unique_username(payload)
 
@@ -208,7 +209,10 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         firm_name = payload.get("FIRM_NAME")
 
         if not firm_name:
-            logging.info("User try assign provider role when they are" % firm_name)
+            logging.info(
+                "User tried to assign provider role but token payload is missing FIRM_NAME (email: %s)",
+                payload.get("USER_EMAIL"),
+            )
             raise exceptions.AuthenticationFailed("Token payload is missing FIRM_NAME")
 
         try:
@@ -226,9 +230,8 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
 
     def get_or_create_user(self, payload):
         email = payload.get("USER_EMAIL")
-        firm_name = payload.get("FIRM_NAME")
 
-        if not email or not firm_name:
+        if not email:
             logger.error("Token payload is missing USER_EMAIL", exc_info=True)
             raise exceptions.AuthenticationFailed("Token payload is missing USER_EMAIL")
 

@@ -383,8 +383,11 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
         make_recipe("cla_provider.staff", user=user)
 
         payload = {"USER_EMAIL": user.email}
-        with self.assertRaises(exceptions.AuthenticationFailed):
+
+        with self.assertRaises(exceptions.AuthenticationFailed) as cm:
             self.auth._perform_provider_firm_check(payload, user, [PROVIDER_ROLE])
+
+        self.assertIn("FIRM_NAME", str(cm.exception))
 
     def test_perform_provider_firm_check__missing_staff_record(self):
         user = self.create_user(username="provider-user-2", email="provider2@test.com", is_active=True)

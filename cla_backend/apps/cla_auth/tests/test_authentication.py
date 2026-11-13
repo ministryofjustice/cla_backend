@@ -17,7 +17,7 @@ from core.tests.mommy_utils import make_recipe
 from django.core.urlresolvers import reverse
 from cla_common.constants import REQUIRES_ACTION_BY
 
-from cla_auth.constants import OPERATOR_ROLE, OPERATOR_MANAGER_ROLE, CONTRACT_MANAGER_ROLE, PROVIDER_ROLE, PROVIDER_MCC_ROLE, ENTRA_ALLOWED_OFFICE_CODES
+from cla_auth.constants import OPERATOR_ROLE, OPERATOR_MANAGER_ROLE, CONTRACT_MANAGER_ROLE, PROVIDER_ROLE, PROVIDER_MCC_ROLE, ENTRA_ALLOWED_OPERATOR_FIRM
 from call_centre.models import Operator
 
 
@@ -91,7 +91,7 @@ class EntraTokenGeneratorMixin(object):
 
         office_codes = office_code
         if app_roles == OPERATOR_ROLE or app_roles == OPERATOR_MANAGER_ROLE:
-            office_codes = unicode(",".join(ENTRA_ALLOWED_OFFICE_CODES))
+            office_codes = unicode(",".join(ENTRA_ALLOWED_OPERATOR_FIRM))
 
         payload = {
             "iss": self.issuer,
@@ -325,7 +325,7 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
 
         payload = {
             "APP_ROLES": OPERATOR_ROLE,
-            "LAA_ACCOUNTS": unicode(",".join(ENTRA_ALLOWED_OFFICE_CODES))
+            "LAA_ACCOUNTS": unicode(",".join(ENTRA_ALLOWED_OPERATOR_FIRM))
         }
         self.assertTrue(self.auth.perform_allowed_office_codes_check(payload))
 
@@ -334,7 +334,7 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
 
         payload = {
             "APP_ROLES": OPERATOR_MANAGER_ROLE,
-            "LAA_ACCOUNTS": unicode(",".join(ENTRA_ALLOWED_OFFICE_CODES))
+            "LAA_ACCOUNTS": unicode(",".join(ENTRA_ALLOWED_OPERATOR_FIRM))
         }
         self.assertTrue(self.auth.perform_allowed_office_codes_check(payload))
 
@@ -361,7 +361,7 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
 
         payload = {
             "APP_ROLES": CONTRACT_MANAGER_ROLE,
-            "LAA_ACCOUNTS": unicode(",".join(ENTRA_ALLOWED_OFFICE_CODES)),
+            "LAA_ACCOUNTS": unicode(",".join(ENTRA_ALLOWED_OPERATOR_FIRM)),
         }
         self.assertTrue(self.auth.perform_allowed_office_codes_check(payload))
 
@@ -383,8 +383,11 @@ class EntraAccessTokenAuthenticationTest(EntraTokenGeneratorMixin, TestCase):
         make_recipe("cla_provider.staff", user=user)
 
         payload = {"USER_EMAIL": user.email}
-        with self.assertRaises(exceptions.AuthenticationFailed):
+
+        with self.assertRaises(exceptions.AuthenticationFailed) as cm:
             self.auth._perform_provider_firm_check(payload, user, [PROVIDER_ROLE])
+
+        self.assertIn("FIRM_NAME", str(cm.exception))
 
     def test_perform_provider_firm_check__missing_staff_record(self):
         user = self.create_user(username="provider-user-2", email="provider2@test.com", is_active=True)

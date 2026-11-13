@@ -226,7 +226,9 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
 
     def get_or_create_user(self, payload):
         email = payload.get("USER_EMAIL")
-        if not email:
+        firm_name = payload.get("FIRM_NAME")
+
+        if not email or not firm_name:
             logger.error("Token payload is missing USER_EMAIL", exc_info=True)
             raise exceptions.AuthenticationFailed("Token payload is missing USER_EMAIL")
 

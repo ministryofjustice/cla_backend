@@ -76,7 +76,8 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
 
     def _create_contract_manager(self, payload, is_manager=False, is_staff=False, is_superuser=False):
         user_email = payload.get("USER_EMAIL")
-
+        if not user_email:
+            raise exceptions.AuthenticationFailed("Cannot create Contract Manager: USER_EMAIL missing from token payload")
         try:
             user_name = self.get_unique_username(payload)
 

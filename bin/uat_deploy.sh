@@ -30,5 +30,4 @@ helm upgrade $RELEASE_NAME \
   --set image.tag=$IMAGE_TAG \
   --set-string pingdomIPs=$PINGDOM_IPS \
   --set-string sharedIPRangesLAA=$SHARED_IP_RANGES_LAA \
-  --server-side=false \
   --install

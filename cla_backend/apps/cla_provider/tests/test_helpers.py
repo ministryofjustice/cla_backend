@@ -94,7 +94,7 @@ class ProviderAllocationHelperTestCase(TestCase):
         helper = ProviderAllocationHelper()
 
         winner = helper._get_random_provider(mock.MagicMock())
-        self.assertEqual(winner, None)
+        self.assertIsNone(winner)
 
     def test_get_qualifying_providers(self):
         category1 = make_recipe("legalaid.category")

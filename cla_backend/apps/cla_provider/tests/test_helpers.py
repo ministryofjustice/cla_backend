@@ -1034,3 +1034,131 @@ class TestAlwaysSuggestProvider(TestCase):
         mock_rota.assert_not_called()
         mock_best_fit.assert_called_once_with(self.category)
         self.assertEqual(result, self.provider)
+
+
+class TestSkipProviderIds(TestCase):
+    """
+    Test that providers in SKIP_PROVIDER_IDS are excluded from
+    get_qualifying_providers and get_qualifying_providers_allocation
+    """
+
+    def setUp(self):
+        """Set up test data with multiple providers"""
+        self.category = make_recipe("legalaid.category")
+        
+        self.provider_1 = make_recipe("cla_provider.provider")
+        self.provider_2 = make_recipe("cla_provider.provider")
+        self.provider_3 = make_recipe("cla_provider.provider")
+        self.provider_4 = make_recipe("cla_provider.provider")
+        
+        self.allocation_1 = make_recipe(
+            "cla_provider.provider_allocation",
+            provider=self.provider_1,
+            category=self.category,
+            weighted_distribution=1,
+        )
+        self.allocation_2 = make_recipe(
+            "cla_provider.provider_allocation",
+            provider=self.provider_2,
+            category=self.category,
+            weighted_distribution=1,
+        )
+        self.allocation_3 = make_recipe(
+            "cla_provider.provider_allocation",
+            provider=self.provider_3,
+            category=self.category,
+            weighted_distribution=1,
+        )
+        self.allocation_4 = make_recipe(
+            "cla_provider.provider_allocation",
+            provider=self.provider_4,
+            category=self.category,
+            weighted_distribution=1,
+        )
+
+    @mock.patch("cla_provider.helpers.settings.SKIP_PROVIDER_IDS", [])
+    def test_get_qualifying_providers_no_skip(self):
+        """When SKIP_PROVIDER_IDS is empty, all providers should be returned"""
+        helper = ProviderAllocationHelper()
+        providers = helper.get_qualifying_providers(self.category)
+        
+        provider_ids = {p.id for p in providers}
+        expected_ids = {self.provider_1.id, self.provider_2.id, self.provider_3.id, self.provider_4.id}
+        
+        self.assertEqual(provider_ids, expected_ids)
+        self.assertEqual(len(providers), 4)
+
+    @mock.patch("cla_provider.helpers.settings.SKIP_PROVIDER_IDS", [])
+    def test_get_qualifying_providers_allocation_no_skip(self):
+        """When SKIP_PROVIDER_IDS is empty, all allocations should be returned"""
+        helper = ProviderAllocationHelper()
+        allocations = helper.get_qualifying_providers_allocation(self.category)
+        
+        allocation_ids = {pa.provider.id for pa in allocations}
+        expected_ids = {self.provider_1.id, self.provider_2.id, self.provider_3.id, self.provider_4.id}
+        
+        self.assertEqual(allocation_ids, expected_ids)
+        self.assertEqual(len(allocations), 4)
+
+    def test_get_qualifying_providers_skip_single(self):
+        """When SKIP_PROVIDER_IDS contains one provider ID, it should be excluded"""
+        with mock.patch("cla_provider.helpers.settings.SKIP_PROVIDER_IDS", [str(self.provider_1.id)]):
+            helper = ProviderAllocationHelper()
+            providers = helper.get_qualifying_providers(self.category)
+            
+            provider_ids = {p.id for p in providers}
+            expected_ids = {self.provider_2.id, self.provider_3.id, self.provider_4.id}
+            
+            self.assertEqual(provider_ids, expected_ids)
+            self.assertEqual(len(providers), 3)
+            self.assertNotIn(self.provider_1.id, provider_ids)
+
+    def test_get_qualifying_providers_skip_multiple(self):
+        """When SKIP_PROVIDER_IDS contains multiple provider IDs, they should all be excluded"""
+        skip_ids = [str(self.provider_1.id), str(self.provider_3.id)]
+        with mock.patch("cla_provider.helpers.settings.SKIP_PROVIDER_IDS", skip_ids):
+            helper = ProviderAllocationHelper()
+            providers = helper.get_qualifying_providers(self.category)
+            
+            provider_ids = {p.id for p in providers}
+            expected_ids = {self.provider_2.id, self.provider_4.id}
+            
+            self.assertEqual(provider_ids, expected_ids)
+            self.assertEqual(len(providers), 2)
+            self.assertNotIn(self.provider_1.id, provider_ids)
+            self.assertNotIn(self.provider_3.id, provider_ids)
+
+    def test_get_qualifying_providers_allocation_skip_single(self):
+        """When SKIP_PROVIDER_IDS contains one provider ID, its allocation should be excluded"""
+        with mock.patch("cla_provider.helpers.settings.SKIP_PROVIDER_IDS", [str(self.provider_2.id)]):
+            helper = ProviderAllocationHelper()
+            allocations = helper.get_qualifying_providers_allocation(self.category)
+            
+            allocation_ids = {pa.provider.id for pa in allocations}
+            expected_ids = {self.provider_1.id, self.provider_3.id, self.provider_4.id}
+            
+            self.assertEqual(allocation_ids, expected_ids)
+            self.assertEqual(len(allocations), 3)
+            self.assertNotIn(self.provider_2.id, allocation_ids)
+
+    def test_get_qualifying_providers_allocation_skip_multiple(self):
+        """When SKIP_PROVIDER_IDS contains multiple IDs, all their allocations should be excluded"""
+        skip_ids = [str(self.provider_1.id), str(self.provider_2.id), str(self.provider_4.id)]
+        with mock.patch("cla_provider.helpers.settings.SKIP_PROVIDER_IDS", skip_ids):
+            helper = ProviderAllocationHelper()
+            allocations = helper.get_qualifying_providers_allocation(self.category)
+            
+            allocation_ids = {pa.provider.id for pa in allocations}
+            expected_ids = {self.provider_3.id}
+            
+            self.assertEqual(allocation_ids, expected_ids)
+            self.assertEqual(len(allocations), 1)
+
+    def test_skip_provider_ids_with_no_category(self):
+        """When category is None, get_qualifying_providers should still respect SKIP_PROVIDER_IDS"""
+        with mock.patch("cla_provider.helpers.settings.SKIP_PROVIDER_IDS", [str(self.provider_1.id)]):
+            helper = ProviderAllocationHelper()
+            providers = helper.get_qualifying_providers(None)
+            
+            provider_ids = {p.id for p in providers}
+            self.assertNotIn(self.provider_1.id, provider_ids)

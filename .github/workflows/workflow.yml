@@ -9,7 +9,6 @@ permissions:
   contents: read
 
 jobs:
-
   pip-compile:
     name: "Pip Compile"
     runs-on: "ubuntu-latest"

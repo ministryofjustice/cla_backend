@@ -14,7 +14,7 @@ from django.contrib.auth.models import User
 from call_centre.models import Operator
 from cla_provider.models import Provider, Staff
 
-from cla_auth.constants import OPERATOR_ROLE, OPERATOR_MANAGER_ROLE, CONTRACT_MANAGER_ROLE, PROVIDER_ROLE, PROVIDER_MCC_ROLE, ENTRA_ALLOWED_OFFICE_CODES
+from cla_auth.constants import OPERATOR_ROLE, OPERATOR_MANAGER_ROLE, CONTRACT_MANAGER_ROLE, PROVIDER_ROLE, PROVIDER_MCC_ROLE, ENTRA_ALLOWED_OPERATOR_FIRM
 
 logger = logging.getLogger(__name__)
 
@@ -49,7 +49,9 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
 
     def _create_operator(self, payload, is_manager=False):
         user_email = payload.get("USER_EMAIL")
+
         if not user_email:
+            logging.error("Cannot create operator: USER_EMAIL missing from token payload")
             raise exceptions.AuthenticationFailed("Cannot create operator: USER_EMAIL missing from token payload")
 
         try:
@@ -76,7 +78,6 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         user_email = payload.get("USER_EMAIL")
         if not user_email:
             raise exceptions.AuthenticationFailed("Cannot create Contract Manager: USER_EMAIL missing from token payload")
-
         try:
             user_name = self.get_unique_username(payload)
 
@@ -209,6 +210,10 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         firm_name = payload.get("FIRM_NAME")
 
         if not firm_name:
+            logging.info(
+                "User tried to assign provider role but token payload is missing FIRM_NAME (email: %s)",
+                payload.get("USER_EMAIL"),
+            )
             raise exceptions.AuthenticationFailed("Token payload is missing FIRM_NAME")
 
         try:
@@ -219,19 +224,21 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
         local_firm_name = provider_staff.provider.name if provider_staff.provider else None
 
         if self._normalise_firm_name(local_firm_name) != self._normalise_firm_name(firm_name):
+            logging.error("User does not belong to the specified provider firm")
             raise exceptions.AuthenticationFailed("User does not belong to the specified provider firm")
 
         return True
 
     def get_or_create_user(self, payload):
         email = payload.get("USER_EMAIL")
+
         if not email:
             logger.error("Token payload is missing USER_EMAIL", exc_info=True)
             raise exceptions.AuthenticationFailed("Token payload is missing USER_EMAIL")
 
         if not self.perform_allowed_office_codes_check(payload):
-            logger.error("User does not have list of expected offices", exc_info=True)
-            raise exceptions.AuthenticationFailed("User does not have list of expected offices")
+            logger.error("User does not belong to allowed operator firm", exc_info=True)
+            raise exceptions.AuthenticationFailed("User does not belong to allowed operator firm")
 
         raw_roles = payload.get("APP_ROLES")
         if not raw_roles:
@@ -287,11 +294,10 @@ class EntraAccessTokenAuthentication(authentication.BaseAuthentication):
 
         office_codes = normalize_codes(office_code_data)
 
-        return any(office_code in ENTRA_ALLOWED_OFFICE_CODES for office_code in office_codes)
+        return any(office_code in ENTRA_ALLOWED_OPERATOR_FIRM for office_code in office_codes)
 
     def authenticate(self, request, retried=False):
         token = request.META.get("HTTP_AUTHORIZATION")
-
         if not token:
             return None
 

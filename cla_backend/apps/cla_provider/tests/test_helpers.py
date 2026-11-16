@@ -87,9 +87,9 @@ class ProviderAllocationHelperTestCase(TestCase):
             {0: {"weight": 0, "expected_prob": 0}, 100: {"weight": 2, "expected_prob": 100}}
         )
 
-    @mock.patch("cla_provider.helpers.ProviderAllocation")
-    def test__get_random_provider_with_empty_list(self, MockedProviderAllocation):
-        MockedProviderAllocation.objects.filter.return_value = []
+    @mock.patch("cla_provider.helpers.ProviderAllocationHelper.get_qualifying_providers_allocation")    
+    def test__get_random_provider_with_empty_list(self, mocked_allocations):
+        mocked_allocations.return_value = []
 
         helper = ProviderAllocationHelper()
 

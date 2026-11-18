@@ -508,6 +508,12 @@ CALLBACK_CAPPING_THRESHOLD_NOTIFICATION = os.environ.get("CALLBACK_CAPPING_THRES
 ENTRA_TENANT_ID = os.environ.get("ENTRA_TENANT_ID", None)
 ENTRA_EXPECTED_AUDIENCE = os.environ.get("ENTRA_EXPECTED_AUDIENCE", None)
 
+SKIP_PROVIDER_IDS = {
+    int(provider_id.strip())
+    for provider_id in os.environ.get("SKIP_PROVIDER_IDS", "").split(",")
+    if provider_id.strip()
+}
+
 # .local.py overrides all the common settings.
 try:
     from .local import *

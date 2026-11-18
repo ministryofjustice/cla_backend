@@ -6,7 +6,7 @@ APP_DEPLOYMENT_NAME="${RELEASE_NAME}-cla-backend-app"
 
 echo "Attempting to delete release $RELEASE_NAME"
 
-RELEASES=$(helm list --all)
+RELEASES=$(helm list --all-namespaces)
 
 echo "Current releases:"
 echo "$RELEASES"

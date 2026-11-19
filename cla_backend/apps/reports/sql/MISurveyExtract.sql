@@ -11,6 +11,9 @@ SELECT
     ni_number,
     contact_for_research,
     category_agg.categories as "Categories",
+    trim((dv.diversity->'gender')::text, '"') AS gender,
+    trim((dv.diversity->'ethnicity')::text, '"') AS ethnicity,
+    trim((dv.diversity->'disability')::text, '"') AS disability,
     (SELECT string_agg(method::varchar, ', ') FROM legalaid_contactresearchmethod AS contactresearchmethod INNER JOIN legalaid_personaldetails_contact_for_research_methods AS pd_contactresearchmethod ON pd_contactresearchmethod.contactresearchmethod_id = contactresearchmethod.id AND personaldetails_id = pd.id) AS "contact_for_research_via",
     safe_to_contact,
     (SELECT COUNT(legalaid_thirdpartydetails.id) > 0 FROM legalaid_thirdpartydetails WHERE legalaid_thirdpartydetails.personal_details_id=pd.id) AS "Third Party Contact",
@@ -30,6 +33,8 @@ LEFT JOIN LATERAL (
     JOIN legalaid_category cat ON cat.id = dt.category_id
     WHERE c.personal_details_id = pd.id
 ) AS category_agg ON TRUE
+JOIN (select id, {diversity_expression} as diversity
+      from legalaid_personaldetails as pddv) as dv on pd.id = dv.id
 WHERE pd.contact_for_research = TRUE
     AND pd.safe_to_contact = 'SAFE'
     AND pd.created >= %s

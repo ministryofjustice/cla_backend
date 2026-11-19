@@ -108,8 +108,10 @@ class ProviderAllocationHelper(object):
         """
         @return: list
         """
-        if not self._providers_in_category:
-            self._providers_in_category = ProviderAllocation.objects.filter(category=category, provider__active=True)
+        if self._providers_in_category is None:
+            self._providers_in_category = (
+                ProviderAllocation.objects.filter(category=category, provider__active=True)
+            ).exclude(provider__id__in=settings.SKIP_PROVIDER_IDS)
 
         return self._providers_in_category
 
@@ -120,7 +122,7 @@ class ProviderAllocationHelper(object):
         if category:
             return [pa.provider for pa in self.get_qualifying_providers_allocation(category)]
 
-        return Provider.objects.active()
+        return Provider.objects.active().exclude(id__in=settings.SKIP_PROVIDER_IDS)
 
     def _get_random_provider(self, category, limit_choices_to=None):
         """

@@ -10,14 +10,26 @@ SELECT
     date_of_birth,
     ni_number,
     contact_for_research,
+    category_agg.categories as "Categories",
     (SELECT string_agg(method::varchar, ', ') FROM legalaid_contactresearchmethod AS contactresearchmethod INNER JOIN legalaid_personaldetails_contact_for_research_methods AS pd_contactresearchmethod ON pd_contactresearchmethod.contactresearchmethod_id = contactresearchmethod.id AND personaldetails_id = pd.id) AS "contact_for_research_via",
     safe_to_contact,
     (SELECT COUNT(legalaid_thirdpartydetails.id) > 0 FROM legalaid_thirdpartydetails WHERE legalaid_thirdpartydetails.personal_details_id=pd.id) AS "Third Party Contact",
     (SELECT string_agg(laa_reference::varchar, ', ') FROM legalaid_case c WHERE c.personal_details_id=pd.id),
     (SELECT string_agg(c.laa_reference::varchar, ', ') FROM legalaid_thirdpartydetails t RIGHT JOIN legalaid_case c ON c.thirdparty_details_id=t.id WHERE t.personal_details_id=pd.id),
-    (SELECT string_agg(DISTINCT cc_org.name::varchar, ', ' ORDER BY cc_org.name::varchar ASC) FROM call_centre_organisation cc_org INNER JOIN legalaid_case c ON cc_org.id = c.organisation_id WHERE c.personal_details_id=pd.id) as "Organisation"
+    (SELECT string_agg(DISTINCT cc_org.name::varchar, ', ' ORDER BY cc_org.name::varchar ASC) FROM call_centre_organisation cc_org INNER JOIN legalaid_case c ON cc_org.id = c.organisation_id WHERE c.personal_details_id=pd.id) as "Organisation",
+    (SELECT string_agg(DISTINCT c.outcome_code::varchar, ', ' ORDER BY c.outcome_code::varchar ASC) FROM legalaid_case c WHERE c.personal_details_id=pd.id) as "Outcome code"
 FROM
     legalaid_personaldetails AS pd
+LEFT JOIN LATERAL (
+    SELECT string_agg(
+               DISTINCT cat.code::text,
+               ', ' ORDER BY cat.code::text
+           ) AS categories
+    FROM legalaid_case c
+    JOIN diagnosis_diagnosistraversal dt ON dt.id = c.diagnosis_id
+    JOIN legalaid_category cat ON cat.id = dt.category_id
+    WHERE c.personal_details_id = pd.id
+) AS category_agg ON TRUE
 WHERE pd.contact_for_research = TRUE
     AND pd.safe_to_contact = 'SAFE'
     AND pd.created >= %s

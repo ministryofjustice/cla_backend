@@ -555,6 +555,7 @@ class MISurveyExtract(SQLFileDateRangeReport):
             "Third Party Case Refs",
             "Organisation",
             "Outcome code",
+            "Language"
         ]
 
     def get_queryset(self):

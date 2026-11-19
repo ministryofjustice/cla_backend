@@ -20,7 +20,8 @@ SELECT
     (SELECT string_agg(laa_reference::varchar, ', ') FROM legalaid_case c WHERE c.personal_details_id=pd.id),
     (SELECT string_agg(c.laa_reference::varchar, ', ') FROM legalaid_thirdpartydetails t RIGHT JOIN legalaid_case c ON c.thirdparty_details_id=t.id WHERE t.personal_details_id=pd.id),
     (SELECT string_agg(DISTINCT cc_org.name::varchar, ', ' ORDER BY cc_org.name::varchar ASC) FROM call_centre_organisation cc_org INNER JOIN legalaid_case c ON cc_org.id = c.organisation_id WHERE c.personal_details_id=pd.id) as "Organisation",
-    (SELECT string_agg(DISTINCT c.outcome_code::varchar, ', ' ORDER BY c.outcome_code::varchar ASC) FROM legalaid_case c WHERE c.personal_details_id=pd.id) as "Outcome code"
+    (SELECT string_agg(DISTINCT c.outcome_code::varchar, ', ' ORDER BY c.outcome_code::varchar ASC) FROM legalaid_case c WHERE c.personal_details_id=pd.id) as "Outcome code",
+    (SELECT string_agg(DISTINCT ad.language::varchar, ', ' ORDER BY ad.language::varchar ASC) FROM legalaid_case c JOIN legalaid_adaptationdetails ad ON ad.id=c.adaptation_details_id WHERE c.personal_details_id=pd.id) as "Language"
 FROM
     legalaid_personaldetails AS pd
 LEFT JOIN LATERAL (

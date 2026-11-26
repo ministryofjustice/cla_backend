@@ -527,6 +527,10 @@ class MIContactsPerCaseByCategoryExtract(SQLFileDateRangeReport):
 class MISurveyExtract(SQLFileDateRangeReport):
     QUERY_FILE = "MISurveyExtract.sql"
 
+    passphrase = forms.CharField(
+        required=False, help_text="Optional. If not provided, the report will not include diversity data"
+    )
+
     def get_headers(self):
         return [
             "Hash_ID",
@@ -540,13 +544,32 @@ class MISurveyExtract(SQLFileDateRangeReport):
             "date_of_birth",
             "ni_number",
             "contact_for_research",
+            "Categories",
+            "Diversity gender",
+            "Diversity ethnicity",
+            "Diversity disability",
             "contact_for_research_via",
             "safe_to_contact",
             "Third Party Contact",
             "Case Refs",
             "Third Party Case Refs",
             "Organisation",
+            "Outcome code",
+            "Language"
         ]
+
+    def get_queryset(self):
+        passphrase = self.cleaned_data.get("passphrase")
+        if passphrase:
+            diversity_expression = "pgp_pub_decrypt(pddv.diversity, dearmor('{key}'), %s)::json".format(
+                key=diversity.get_private_key()
+            )
+        else:
+            diversity_expression = "%s as placeholder, '{}'::json"
+
+        sql = self.query.format(diversity_expression=diversity_expression)
+        sql_args = [passphrase] + list(self.date_range)
+        return self.execute_query(sql, sql_args)
 
 
 class MICB1Extract(SQLFileDateRangeReport):
